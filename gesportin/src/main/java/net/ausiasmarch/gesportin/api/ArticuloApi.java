@@ -3,6 +3,7 @@ package net.ausiasmarch.gesportin.api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,7 +37,7 @@ public class ArticuloApi {
     }
 
     @GetMapping
-    public ResponseEntity<Page<ArticuloEntity>> getPage(Pageable pageable, ArticuloFilter filter) {
+    public ResponseEntity<Page<ArticuloEntity>> getPage(@PageableDefault(size = 1000) Pageable pageable, ArticuloFilter filter) {
         return ResponseEntity.ok(articuloService.getPage(pageable, filter));
     }
 
@@ -55,7 +56,7 @@ public class ArticuloApi {
         return ResponseEntity.ok(articuloService.delete(id));
     }
 
-    @PostMapping("/fill")
+    @GetMapping("/fill")
     public ResponseEntity<Long> fill() {
         return ResponseEntity.ok(articuloFiller.fill());
     }
