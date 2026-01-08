@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `temporada`
+-- Estructura de tabla para la tabla `temporada` (Alejandro Pavón Martínez)
 --
 
 CREATE TABLE `temporada` (
