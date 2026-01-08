@@ -24,7 +24,7 @@ public class PuntuacionEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(name = "puntuacion")
     @NotNull
@@ -34,9 +34,9 @@ public class PuntuacionEntity {
 
     @Column(name = "id_articulo")
     @NotNull
-    private long idArticulo;
+    private Long idArticulo;
 
     @Column(name = "id_usuario")
     @NotNull
-    private long idUsuario;
+    private Long idUsuario;
 }
