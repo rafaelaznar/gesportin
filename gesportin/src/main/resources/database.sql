@@ -116,6 +116,23 @@ ALTER TABLE `Tipoarticulo`
 
 ALTER TABLE `Tipoarticulo`
   MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
+
+-- OLGA GARCIA QUINTANA:
+
+--
+-- Estructura de tabla para la tabla compra 
+--
+
+CREATE TABLE compra (
+  id bigint NOT NULL AUTO_INCREMENT,
+  cantidad int NOT NULL,
+  precio decimal(10,2) NOT NULL,
+  id_articulo bigint NOT NULL,
+  id_factura bigint NOT NULL,
+   PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf32 COLLATE=utf32_unicode_ci;
+
+
 --
 -- Índices para tablas volcadas
 --
