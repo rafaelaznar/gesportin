@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import net.ausiasmarch.gesportin.entity.PartidoEntity;
 import net.ausiasmarch.gesportin.exception.ResourceNotFoundException;
-import net.ausiasmarch.gesportin.exception.UnauthorizedException;
 import net.ausiasmarch.gesportin.repository.PartidoRepository;
 
 @Service
@@ -42,9 +41,6 @@ public class PartidoService {
 
     //CREATE:
     public Long create(PartidoEntity partidoEntity) {
-        if (!oSessionService.isSessionActive()) {
-            throw new UnauthorizedException("No active session");
-        }
         partidoEntity.setNombre_rival(null);
         partidoEntity.setId_equipo(0);
         partidoEntity.setLocal(null);
@@ -55,9 +51,6 @@ public class PartidoService {
 
     //UPDATE:
     public Long update(PartidoEntity partidoEntity) {
-        if (!oSessionService.isSessionActive()) {
-            throw new UnauthorizedException("No active session");
-        }
         PartidoEntity existingPartido = oPartidoRepository.findById(partidoEntity.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Post not found"));
         existingPartido.setNombre_rival(partidoEntity.getNombre_rival());
@@ -70,19 +63,12 @@ public class PartidoService {
 
     //DELETE:
     public Long delete(Long id) {
-        if (!oSessionService.isSessionActive()) {
-            throw new UnauthorizedException("No active session");
-        }
         oPartidoRepository.deleteById(id);
         return id;
     }
 
     //FILL:
     public Long rellenaPartido(Long numPosts) {
-
-        if (!oSessionService.isSessionActive()) {
-            throw new UnauthorizedException("No active session");
-        }
 
         for (long j = 0; j < numPosts; j++) {
             PartidoEntity oPartidoEntity = new PartidoEntity();
@@ -100,9 +86,6 @@ public class PartidoService {
 
     //EMPTY (VACIAR TABLA):
     public Long empty() {
-        if (!oSessionService.isSessionActive()) {
-            throw new UnauthorizedException("No active session");
-        }
         Long total = oPartidoRepository.count();
         oPartidoRepository.deleteAll();
         return total;
