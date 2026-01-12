@@ -102,17 +102,4 @@ public class NoticiaApi {
         return ResponseEntity.ok(oNoticiaService.count());
     }
 
-    // -----
-
-    // publicar post
-    @PutMapping("/publicar/{id}")
-    public ResponseEntity<Long> publicar(@PathVariable Long id) {
-        return ResponseEntity.ok(oNoticiaService.publicar(id));
-    }
-
-    // despublicar post
-    @PutMapping("/despublicar/{id}")
-    public ResponseEntity<Long> despublicar(@PathVariable Long id) {
-        return ResponseEntity.ok(oNoticiaService.despublicar(id));
-    }
 }

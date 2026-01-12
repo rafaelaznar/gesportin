@@ -29,7 +29,7 @@ public class NoticiaEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     @NotNull
     @Size(min = 3, max = 1024)
     private String titulo;
@@ -39,6 +39,7 @@ public class NoticiaEntity {
     @NotNull
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
     private LocalDateTime fecha;
+    @Nullable
     @Lob
     private byte[] imagen;
     @NotNull
