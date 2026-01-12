@@ -38,7 +38,7 @@ public class PuntuacionService {
                 .orElseThrow(() -> new ResourceNotFoundException("The record not found in the database."));
     }
 
-    // create a new record 
+    // create a new record
     public Long create(PuntuacionEntity oPuntuacionEntity) {
         oPuntuacionEntity.setId(null);
         oPuntuacionRepository.save(oPuntuacionEntity);
@@ -49,11 +49,11 @@ public class PuntuacionService {
     public Long update(PuntuacionEntity oPuntuacionEntity) {
         PuntuacionEntity existingRecord = oPuntuacionRepository.findById(oPuntuacionEntity.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("The record not found."));
-        
+
         existingRecord.setPuntuacion(oPuntuacionEntity.getPuntuacion());
         existingRecord.setIdArticulo(oPuntuacionEntity.getIdArticulo());
         existingRecord.setIdUsuario(oPuntuacionEntity.getIdUsuario());
-        
+
         oPuntuacionRepository.save(existingRecord);
 
         return existingRecord.getId();
@@ -78,15 +78,15 @@ public class PuntuacionService {
     }
 
     // fill database with fake data
-    public Long fillDatabase() {
+    public Long fillDatabase(int quantity) {
 
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < quantity; i++) {
             PuntuacionEntity newEntity = new PuntuacionEntity();
-            
+
             newEntity.setPuntuacion(oAleatorioService.GenerarNumeroAleatorioEnteroEnRango(1, 5));
             newEntity.setIdArticulo(Long.valueOf(oAleatorioService.GenerarNumeroAleatorioEnteroEnRango(1, 50)));
             newEntity.setIdUsuario(Long.valueOf(oAleatorioService.GenerarNumeroAleatorioEnteroEnRango(1, 50)));
-            
+
             oPuntuacionRepository.save(newEntity);
         }
 

@@ -22,7 +22,7 @@ import net.ausiasmarch.gesportin.service.PuntuacionService;
 @RestController
 @RequestMapping("/puntuacion")
 public class PuntuacionApi {
-    
+
     @Autowired
     PuntuacionService oPuntuacionService;
 
@@ -69,8 +69,8 @@ public class PuntuacionApi {
     }
 
     // POST fake data in the DB
-    @PostMapping("/fill")
-    public ResponseEntity<Long> fillDatabase() {
-        return ResponseEntity.ok(oPuntuacionService.fillDatabase());
+    @PostMapping("/fill/{quantity}")
+    public ResponseEntity<Long> fillDatabase(@NotNull @PathVariable int quantity) {
+        return ResponseEntity.ok(oPuntuacionService.fillDatabase(quantity));
     }
 }
