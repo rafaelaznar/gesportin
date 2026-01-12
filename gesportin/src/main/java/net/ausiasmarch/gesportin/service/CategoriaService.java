@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import net.ausiasmarch.gesportin.entity.CategoriaEntity;
 import net.ausiasmarch.gesportin.exception.ResourceNotFoundException;
-import net.ausiasmarch.gesportin.exception.UnauthorizedException;
+// import net.ausiasmarch.gesportin.exception.UnauthorizedException;
 import net.ausiasmarch.gesportin.repository.CategoriaRepository;
 
 @Service
@@ -19,34 +19,36 @@ public class CategoriaService {
     @Autowired
     CategoriaRepository categoriaRepository;
 
-    @Autowired
-    SessionService sessionService;
+    // @Autowired
+    // SessionService sessionService;
 
     // Lista de Categorias
     private static final String[] CATEGORIAS = {"Querubín", "Pre-benjamín", "Benjamín", "Alevín", "Infantil", "Cadete", "Juvenil", "Amateur"};
 
     // ----------------------------CRUD---------------------------------
     public CategoriaEntity get(Long id){
-        if(!sessionService.isSessionActive()) {
-            throw new UnauthorizedException("No active session");
-        } else {
-            return categoriaRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Category not found"));
-        }
+        // if(!sessionService.isSessionActive()) {
+        //     throw new UnauthorizedException("No active session");
+        // } else {
+        //     return categoriaRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Category not found"));
+        // }
+        return categoriaRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Category not found"));
     }
 
     public Page<CategoriaEntity> getPage(Pageable pageable) {
-        if(!sessionService.isSessionActive()) {
-            throw new UnauthorizedException("No active session");
-        } else {
-            return categoriaRepository.findAll(pageable);
-        }
+        // if(!sessionService.isSessionActive()) {
+        //     throw new UnauthorizedException("No active session");
+        // } else {
+        //     return categoriaRepository.findAll(pageable);
+        // }
+        return categoriaRepository.findAll(pageable);
     }
 
     public Long create(CategoriaEntity categoriaEntity) {
      
-        if(!sessionService.isSessionActive()) {
-            throw new UnauthorizedException("No active session");
-        }
+        // if(!sessionService.isSessionActive()) {
+        //     throw new UnauthorizedException("No active session");
+        // }
 
         categoriaRepository.save(categoriaEntity);
         return categoriaEntity.getId();
@@ -54,9 +56,9 @@ public class CategoriaService {
 
     public Long update(CategoriaEntity categoriaEntity) {
 
-        if (!sessionService.isSessionActive()) {
-            throw new UnauthorizedException("No active session");
-        }
+        // if (!sessionService.isSessionActive()) {
+        //     throw new UnauthorizedException("No active session");
+        // }
 
         CategoriaEntity existingCategoria = categoriaRepository.findById(categoriaEntity.getId()).orElseThrow(() -> new ResourceNotFoundException("Category not found"));
         existingCategoria.setNombre(categoriaEntity.getNombre());
@@ -66,18 +68,18 @@ public class CategoriaService {
 
     public Long delete(Long id) {
 
-        if (!sessionService.isSessionActive()) {
-            throw new UnauthorizedException("No active session");
-        }
+        // if (!sessionService.isSessionActive()) {
+        //     throw new UnauthorizedException("No active session");
+        // }
 
         categoriaRepository.deleteById(id);
         return id;
     }
 
     public Long fill(Long numCategorias) {
-        if (!sessionService.isSessionActive()) {
-            throw new UnauthorizedException("No active session");
-        }
+        // if (!sessionService.isSessionActive()) {
+        //     throw new UnauthorizedException("No active session");
+        // }
 
         for (long j = 0; j < numCategorias; j++) {
             CategoriaEntity categoriaEntity = new CategoriaEntity();
@@ -89,9 +91,9 @@ public class CategoriaService {
     }
 
     public Long empty() {
-        if (!sessionService.isSessionActive()) {
-            throw new UnauthorizedException("No active session");
-        }
+        // if (!sessionService.isSessionActive()) {
+        //     throw new UnauthorizedException("No active session");
+        // }
 
         Long total = count();
         categoriaRepository.deleteAll();
