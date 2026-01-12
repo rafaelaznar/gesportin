@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import net.ausiasmarch.gesportin.entity.PuntuacionEntity;
 import net.ausiasmarch.gesportin.service.PuntuacionService;
@@ -70,7 +71,7 @@ public class PuntuacionApi {
 
     // POST fake data in the DB
     @PostMapping("/fill/{quantity}")
-    public ResponseEntity<Long> fillDatabase(@NotNull @PathVariable int quantity) {
+    public ResponseEntity<Long> fillDatabase(@PathVariable @Min(1) int quantity) {
         return ResponseEntity.ok(oPuntuacionService.fillDatabase(quantity));
     }
 }
