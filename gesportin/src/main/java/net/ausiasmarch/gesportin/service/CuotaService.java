@@ -9,7 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import net.ausiasmarch.gesportin.entity.CuotaEntity;
-import net.ausiasmarch.gesportin.exception.UnauthorizedException;
 import net.ausiasmarch.gesportin.repository.CuotaRepository;
 
 @Service
@@ -17,9 +16,6 @@ public class CuotaService {
     
     @Autowired
     CuotaRepository oCuotaRepository;
-
-    @Autowired
-    SessionService oSessionService;
 
     public CuotaEntity get(Long id) {
         return oCuotaRepository.findById(id).orElseThrow(() -> new RuntimeException("Recurso not found"));
@@ -53,18 +49,12 @@ public class CuotaService {
     }    
 
     public Long empty() {
-        if (!oSessionService.isSessionActive()) {
-            throw new UnauthorizedException("No active session");
-        }
         Long total = oCuotaRepository.count();
         oCuotaRepository.deleteAll();
         return total;
     }
 
     public Long generarDatos(int cantidad) {
-        if (!oSessionService.isSessionActive()) {
-            throw new UnauthorizedException("No active session");
-        }
         Random rnd = new Random();
         String[] nombres = {"Matrícula", "Mensualidad", "Cuota Extra", "Inscripción", "Cuota Anual"};
         long created = 0;
