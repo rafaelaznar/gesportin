@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import net.ausiasmarch.gesportin.entity.PagoEntity;
 import net.ausiasmarch.gesportin.exception.ResourceNotFoundException;
-import net.ausiasmarch.gesportin.exception.UnauthorizedException;
 import net.ausiasmarch.gesportin.repository.PagoRepository;
 
 @Service
@@ -17,9 +16,6 @@ public class PagoService {
 
     @Autowired
     AleatorioService oAleatorioService;
-
-    @Autowired
-    SessionService oSessionService;
 
     // ----------------------------CRUD---------------------------------
     public PagoEntity get(Long id) {
