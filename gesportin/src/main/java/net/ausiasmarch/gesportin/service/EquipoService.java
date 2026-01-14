@@ -26,17 +26,17 @@ public class EquipoService {
         return equipoRepository.findAll(pageable);
     }
 
-    public Long create(EquipoEntity equipoEntity) {
+    public EquipoEntity create(EquipoEntity equipoEntity) {
         equipoEntity.setId(null);
-        return equipoRepository.save(equipoEntity).getId();
+        return equipoRepository.save(equipoEntity);
     }
 
-    public Long update(EquipoEntity equipoEntity) {
+    public EquipoEntity update(EquipoEntity equipoEntity) {
         EquipoEntity oEquipoEntity = equipoRepository.findById(equipoEntity.getId()).orElseThrow(() -> new ResourceNotFoundException("Equipo not found"));
         oEquipoEntity.setNombre(equipoEntity.getNombre());
         oEquipoEntity.setIdEntrenador(equipoEntity.getIdEntrenador());
         oEquipoEntity.setIdCategoria(equipoEntity.getIdCategoria());
-        return equipoRepository.save(oEquipoEntity).getId();
+        return equipoRepository.save(oEquipoEntity);
     }
 
     public Long delete(Long id) {
@@ -52,19 +52,19 @@ public class EquipoService {
     }
 
     public Long empty() {
-        Long i = equipoRepository.count();
         equipoRepository.deleteAll();
-        return i;
+        equipoRepository.flush();
+        return 0L;
     }
 
     public Long fill(Long cantidad) {
         for (int i = 0; i < cantidad; i++) {
             EquipoEntity equipoEntity = new EquipoEntity();
             equipoEntity.setNombre("Equipo " + i);
-            equipoEntity.setIdEntrenador((Long) (long) aleatorioService.GenerarNumeroAleatorioEnteroEnRango(1, 50));
-            equipoEntity.setIdCategoria((Long) (long) aleatorioService.GenerarNumeroAleatorioEnteroEnRango(1, 50));
+            equipoEntity.setIdEntrenador((long) aleatorioService.GenerarNumeroAleatorioEnteroEnRango(1, 50));
+            equipoEntity.setIdCategoria((long) aleatorioService.GenerarNumeroAleatorioEnteroEnRango(1, 50));
             equipoRepository.save(equipoEntity);
         }
-        return count();
+        return cantidad;
     }
 }

@@ -22,19 +22,18 @@ public class TemporadaService {
                 .orElseThrow(() -> new ResourceNotFoundException("Temporada not found"));
     }
 
-    public Long create(TemporadaEntity oTemporadaEntity) {
-        oTemporadaRepository.save(oTemporadaEntity);
-        return oTemporadaEntity.getId();
+    public TemporadaEntity create(TemporadaEntity oTemporadaEntity) {
+        oTemporadaEntity.setId(null);
+        return oTemporadaRepository.save(oTemporadaEntity);
     }
 
-    public Long update(TemporadaEntity oTemporadaEntity) {
+    public TemporadaEntity update(TemporadaEntity oTemporadaEntity) {
         TemporadaEntity existing = oTemporadaRepository.findById(oTemporadaEntity.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Temporada not found"));
 
         existing.setDescripcion(oTemporadaEntity.getDescripcion());
-        oTemporadaRepository.save(existing);
-
-        return existing.getId();
+        existing.setIdClub(oTemporadaEntity.getIdClub());
+        return oTemporadaRepository.save(existing);
     }
 
     public Long delete(Long id) {
@@ -73,16 +72,17 @@ public class TemporadaService {
             TemporadaEntity t = new TemporadaEntity();
             int indice = (int) (Math.random() * nombres.length);
             t.setDescripcion(nombres[indice]);
+            t.setIdClub((long)(Math.random() * 50 + 1));
             oTemporadaRepository.save(t);
         }
 
-        return oTemporadaRepository.count();
+        return cantidad;
     }
 
     public Long empty() {
-        Long total = oTemporadaRepository.count();
         oTemporadaRepository.deleteAll();
-        return total;
+        oTemporadaRepository.flush();
+        return 0L;
     }
 }
 

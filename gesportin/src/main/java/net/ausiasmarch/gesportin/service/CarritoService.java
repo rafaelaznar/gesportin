@@ -27,20 +27,18 @@ public class CarritoService {
         return oCarritoRepository.findAll(oPageable);
     }
 
-    public Long create(CarritoEntity oCarritoEntity) {
+    public CarritoEntity create(CarritoEntity oCarritoEntity) {
         oCarritoEntity.setId(null);
-        oCarritoRepository.save(oCarritoEntity);
-        return oCarritoEntity.getId();
+        return oCarritoRepository.save(oCarritoEntity);
     }
 
-    public Long update(CarritoEntity oCarritoEntity) {
+    public CarritoEntity update(CarritoEntity oCarritoEntity) {
         CarritoEntity existingCarrito = oCarritoRepository.findById(oCarritoEntity.getId())
                 .orElseThrow(() -> new EntityNotFoundException("No se puede actualizar ID no encontrado"));
         existingCarrito.setCantidad(oCarritoEntity.getCantidad());
         existingCarrito.setIdArticulo(oCarritoEntity.getIdArticulo());
         existingCarrito.setIdUsuario(oCarritoEntity.getIdUsuario());
-        oCarritoRepository.save(existingCarrito);
-        return existingCarrito.getId();
+        return oCarritoRepository.save(existingCarrito);
     }
 
     public Long delete(Long id) {
@@ -64,9 +62,9 @@ public class CarritoService {
     }
 
     public Long empty() {
-        Long total = oCarritoRepository.count();
         oCarritoRepository.deleteAll();
-        return total;
+        oCarritoRepository.flush();
+        return 0L;
     }
 
     public Long count() {

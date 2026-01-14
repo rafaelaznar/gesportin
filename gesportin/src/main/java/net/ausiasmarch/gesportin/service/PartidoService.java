@@ -37,25 +37,20 @@ public class PartidoService {
     }
 
     //CREATE:
-    public Long create(PartidoEntity partidoEntity) {
-        partidoEntity.setRival(null);
-        partidoEntity.setIdLiga(0L);
-        partidoEntity.setLocal(null);
-        partidoEntity.setResultado(null);
-        oPartidoRepository.save(partidoEntity);
-        return partidoEntity.getId();
+    public PartidoEntity create(PartidoEntity partidoEntity) {
+        partidoEntity.setId(null);
+        return oPartidoRepository.save(partidoEntity);
     }
 
     //UPDATE:
-    public Long update(PartidoEntity partidoEntity) {
+    public PartidoEntity update(PartidoEntity partidoEntity) {
         PartidoEntity existingPartido = oPartidoRepository.findById(partidoEntity.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Post not found"));
         existingPartido.setRival(partidoEntity.getRival());
         existingPartido.setIdLiga(partidoEntity.getIdLiga());
         existingPartido.setLocal(partidoEntity.getLocal());
         existingPartido.setResultado(partidoEntity.getResultado());
-        oPartidoRepository.save(existingPartido);
-        return existingPartido.getId();
+        return oPartidoRepository.save(existingPartido);
     }
 
     //DELETE:
@@ -65,7 +60,7 @@ public class PartidoService {
     }
 
     //FILL:
-    public Long rellenaPartido(Long numPosts) {
+    public Long fill(Long numPosts) {
 
         for (long j = 0; j < numPosts; j++) {
             PartidoEntity oPartidoEntity = new PartidoEntity();
@@ -78,14 +73,14 @@ public class PartidoService {
             oPartidoEntity.setResultado(golesLocal + "-" + golesVisitante);
             oPartidoRepository.save(oPartidoEntity);
         }
-        return oPartidoRepository.count();
+        return numPosts;
     }
 
     //EMPTY (VACIAR TABLA):
     public Long empty() {
-        Long total = oPartidoRepository.count();
         oPartidoRepository.deleteAll();
-        return total;
+        oPartidoRepository.flush();
+        return 0L;
     }
 
     //COUNT:

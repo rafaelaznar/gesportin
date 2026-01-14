@@ -42,7 +42,7 @@ public class NoticiaService {
         alFrases.add("El tiempo lo dirá.");
     }
 
-    public Long rellenaNoticia(Long numPosts) {
+    public Long fill(Long numPosts) {
 
         // if (!oSessionService.isSessionActive()) {
         //     throw new UnauthorizedException("No active session");
@@ -76,16 +76,16 @@ public class NoticiaService {
         .orElseThrow(() -> new ResourceNotFoundException("Noticia no encontrada"));
     }
 
-    public Long create(NoticiaEntity noticiaEntity) {
+    public NoticiaEntity create(NoticiaEntity noticiaEntity) {
         // if (!oSessionService.isSessionActive()) {
         //     throw new UnauthorizedException("No active session");
         // }
+        noticiaEntity.setId(null);
         noticiaEntity.setFecha(LocalDateTime.now());
-        oNoticiaRepository.save(noticiaEntity);
-        return noticiaEntity.getId();
+        return oNoticiaRepository.save(noticiaEntity);
     }
 
-    public Long update(NoticiaEntity noticiaEntity) {
+    public NoticiaEntity update(NoticiaEntity noticiaEntity) {
         // if (!oSessionService.isSessionActive()) {
         //     throw new UnauthorizedException("No active session");
         // }
@@ -96,8 +96,7 @@ public class NoticiaService {
         existingNoticia.setFecha(noticiaEntity.getFecha());
         existingNoticia.setIdClub(noticiaEntity.getIdClub());
         existingNoticia.setImagen(noticiaEntity.getImagen());
-        oNoticiaRepository.save(existingNoticia);
-        return existingNoticia.getId();
+        return oNoticiaRepository.save(existingNoticia);
     }
 
     public Long delete(Long id) {

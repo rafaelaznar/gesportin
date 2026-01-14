@@ -44,17 +44,17 @@ public class CategoriaService {
         return categoriaRepository.findAll(pageable);
     }
 
-    public Long create(CategoriaEntity categoriaEntity) {
+    public CategoriaEntity create(CategoriaEntity categoriaEntity) {
      
         // if(!sessionService.isSessionActive()) {
         //     throw new UnauthorizedException("No active session");
         // }
 
-        categoriaRepository.save(categoriaEntity);
-        return categoriaEntity.getId();
+        categoriaEntity.setId(null);
+        return categoriaRepository.save(categoriaEntity);
     }
 
-    public Long update(CategoriaEntity categoriaEntity) {
+    public CategoriaEntity update(CategoriaEntity categoriaEntity) {
 
         // if (!sessionService.isSessionActive()) {
         //     throw new UnauthorizedException("No active session");
@@ -62,8 +62,8 @@ public class CategoriaService {
 
         CategoriaEntity existingCategoria = categoriaRepository.findById(categoriaEntity.getId()).orElseThrow(() -> new ResourceNotFoundException("Category not found"));
         existingCategoria.setNombre(categoriaEntity.getNombre());
-        categoriaRepository.save(existingCategoria);
-        return existingCategoria.getId();
+        existingCategoria.setIdTemporada(categoriaEntity.getIdTemporada());
+        return categoriaRepository.save(existingCategoria);
     }
 
     public Long delete(Long id) {
@@ -84,10 +84,11 @@ public class CategoriaService {
         for (long j = 0; j < numCategorias; j++) {
             CategoriaEntity categoriaEntity = new CategoriaEntity();
             categoriaEntity.setNombre(CATEGORIAS[aleatorioService.GenerarNumeroAleatorioEnteroEnRango(0, CATEGORIAS.length - 1)]);
+            categoriaEntity.setIdTemporada((long) aleatorioService.GenerarNumeroAleatorioEnteroEnRango(1, 50));
             categoriaRepository.save(categoriaEntity);
         }
 
-        return count();
+        return numCategorias;
     }
 
     public Long empty() {
@@ -95,9 +96,9 @@ public class CategoriaService {
         //     throw new UnauthorizedException("No active session");
         // }
 
-        Long total = count();
         categoriaRepository.deleteAll();
-        return total;
+        categoriaRepository.flush();
+        return 0L;
 
     }
 

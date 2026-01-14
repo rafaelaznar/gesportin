@@ -25,20 +25,19 @@ public class PagoService {
                 .orElseThrow(() -> new ResourceNotFoundException("Pago no encontrado"));
     }
 
-    public Long create(PagoEntity pagoEntity) {
-        oPagoRepository.save(pagoEntity);
-        return pagoEntity.getId();
+    public PagoEntity create(PagoEntity pagoEntity) {
+        pagoEntity.setId(null);
+        return oPagoRepository.save(pagoEntity);
     }
 
-    public Long update(PagoEntity pagoEntity) {
+    public PagoEntity update(PagoEntity pagoEntity) {
         PagoEntity existingPago = oPagoRepository.findById(pagoEntity.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Pago no encontrado"));
         existingPago.setIdCuota(pagoEntity.getIdCuota());
         existingPago.setIdJugador(pagoEntity.getIdJugador());
         existingPago.setAbonado(pagoEntity.getAbonado());
         existingPago.setFecha(pagoEntity.getFecha());
-        oPagoRepository.save(existingPago);
-        return existingPago.getId();
+        return oPagoRepository.save(existingPago);
     }
 
     public Long delete(Long id) {
@@ -57,9 +56,9 @@ public class PagoService {
 
     // vaciar tabla pago
     public Long empty() {
-        Long total = oPagoRepository.count();
         oPagoRepository.deleteAll();
-        return total;
+        oPagoRepository.flush();
+        return 0L;
     }
 
     // llenar tabla pago con datos de prueba

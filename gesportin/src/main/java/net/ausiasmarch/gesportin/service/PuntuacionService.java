@@ -39,14 +39,13 @@ public class PuntuacionService {
     }
 
     // create a new record
-    public Long create(PuntuacionEntity oPuntuacionEntity) {
+    public PuntuacionEntity create(PuntuacionEntity oPuntuacionEntity) {
         oPuntuacionEntity.setId(null);
-        oPuntuacionRepository.save(oPuntuacionEntity);
-        return oPuntuacionEntity.getId();
+        return oPuntuacionRepository.save(oPuntuacionEntity);
     }
 
     // update the record
-    public Long update(PuntuacionEntity oPuntuacionEntity) {
+    public PuntuacionEntity update(PuntuacionEntity oPuntuacionEntity) {
         PuntuacionEntity existingRecord = oPuntuacionRepository.findById(oPuntuacionEntity.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("The record not found."));
 
@@ -54,9 +53,7 @@ public class PuntuacionService {
         existingRecord.setIdNoticia(oPuntuacionEntity.getIdNoticia());
         existingRecord.setIdUsuario(oPuntuacionEntity.getIdUsuario());
 
-        oPuntuacionRepository.save(existingRecord);
-
-        return existingRecord.getId();
+        return oPuntuacionRepository.save(existingRecord);
     }
 
     // delete the record by id
@@ -70,15 +67,14 @@ public class PuntuacionService {
     }
 
     // delete all records
-    public Long deleteAll() {
-        Long total = oPuntuacionRepository.count();
+    public Long empty() {
         oPuntuacionRepository.deleteAll();
-
-        return total;
+        oPuntuacionRepository.flush();
+        return 0L;
     }
 
     // fill database with fake data
-    public Long fillDatabase(int quantity) {
+    public Long fill(Long quantity) {
 
         for (int i = 0; i < quantity; i++) {
             PuntuacionEntity newEntity = new PuntuacionEntity();
@@ -90,7 +86,7 @@ public class PuntuacionService {
             oPuntuacionRepository.save(newEntity);
         }
 
-        return oPuntuacionRepository.count();
+        return quantity;
     }
 
 }

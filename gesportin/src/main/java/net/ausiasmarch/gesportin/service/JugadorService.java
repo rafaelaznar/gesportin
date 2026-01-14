@@ -38,7 +38,7 @@ public class JugadorService {
         posiciones.add("Delantero centro");
     }
 
-    public Long crearJugador(Long numPosts) {
+    public Long fill(Long numPosts) {
         // if (!oSessionService.isSessionActive()) {
         //     throw new UnauthorizedException("Sesión no activa");
         // }
@@ -64,7 +64,7 @@ public class JugadorService {
             // Guardar la entidad en la base de datos
             oJugadorRepository.save(oJugadorEntity);
         }
-        return oJugadorRepository.count();
+        return numPosts;
     }
 
     // -------------------------------------------------- CRUD --------------------------------------------------
@@ -85,7 +85,7 @@ public class JugadorService {
         return oJugadorRepository.save(jugadorEntity);
     }
 
-    public Long update(JugadorEntity JugadorEntity) {
+    public JugadorEntity update(JugadorEntity JugadorEntity) {
         // if (!oSessionService.isSessionActive()) {
         //     throw new UnauthorizedException("Sesión no activa");
         // }
@@ -98,8 +98,7 @@ public class JugadorService {
         oExistingJugador.setImagen(JugadorEntity.getImagen());
         oExistingJugador.setIdUsuario(JugadorEntity.getIdUsuario());
         oExistingJugador.setIdEquipo(JugadorEntity.getIdEquipo());
-        oJugadorRepository.save(oExistingJugador);
-        return oExistingJugador.getId();
+        return oJugadorRepository.save(oExistingJugador);
     }
 
     public Long delete(Long id) {
@@ -131,8 +130,8 @@ public class JugadorService {
         //     throw new UnauthorizedException("Sesión no activa");
         // }
 
-        Long total = count();
         oJugadorRepository.deleteAll();
-        return total;
+        oJugadorRepository.flush();
+        return 0L;
     }
 }

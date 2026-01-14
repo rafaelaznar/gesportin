@@ -17,36 +17,37 @@ public class FacturaService {
     @Autowired
     FacturaRepository oFacturaRepository;
 
+    @Autowired
+    AleatorioService oAleatorioService;
+
     public FacturaEntity get(Long id) {
     return oFacturaRepository.findById(id)
         .orElseThrow(() -> new ResourceNotFoundException("Factura no encontrada"));
     }
 
-    public Long create(FacturaEntity facturaEntity) {
+    public FacturaEntity create(FacturaEntity facturaEntity) {
+        facturaEntity.setId(null);
         facturaEntity.setFecha(LocalDateTime.now());
         Long idUsuario = facturaEntity.getIdUsuario();
-        if (idUsuario <= 0) {
-            facturaEntity.setIdUsuario((long)GenerarNumeroAleatorioEnRango(1, 50));
+        if (idUsuario == null || idUsuario <= 0) {
+            facturaEntity.setIdUsuario((long)oAleatorioService.GenerarNumeroAleatorioEnteroEnRango(1, 50));
         }
-        oFacturaRepository.save(facturaEntity);
-        return facturaEntity.getId();
+        return oFacturaRepository.save(facturaEntity);
     }
 
-    public Long update(FacturaEntity facturaEntity) {
+    public FacturaEntity update(FacturaEntity facturaEntity) {
         FacturaEntity existingFacturaCompra = oFacturaRepository.findById(facturaEntity.getId())
-                .orElseThrow(() -> new RuntimeException("Factura no encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Factura no encontrada"));
         existingFacturaCompra.setIdUsuario(facturaEntity.getIdUsuario());
-        existingFacturaCompra.setFecha(LocalDateTime.now());
-        oFacturaRepository.save(existingFacturaCompra);
-        return existingFacturaCompra.getId();
+        existingFacturaCompra.setFecha(facturaEntity.getFecha());
+        return oFacturaRepository.save(existingFacturaCompra);
     }
 
     public Long delete(Long id) {
-        if (!oFacturaRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Factura no encontrada");
-        }
-        oFacturaRepository.deleteById(id);
-        return oFacturaRepository.count();
+        FacturaEntity factura = oFacturaRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Factura no encontrada"));
+        oFacturaRepository.delete(factura);
+        return id;
     }
 
     public Page<FacturaEntity> getPage(Pageable oPageable) {
@@ -57,27 +58,19 @@ public class FacturaService {
         return oFacturaRepository.count();
     }
 
-    public Long fillFacturas(int numQuestions) {
+    public Long fill(Long numQuestions) {
         for (int i = 0; i < numQuestions; i++) {
             FacturaEntity oFacturaEntity = new FacturaEntity();
             oFacturaEntity.setFecha(LocalDateTime.now());
-            oFacturaEntity.setIdUsuario((long)GenerarNumeroAleatorioEnRango(1, 50));
+            oFacturaEntity.setIdUsuario((long)oAleatorioService.GenerarNumeroAleatorioEnteroEnRango(1, 50));
             oFacturaRepository.save(oFacturaEntity);
         }
-        return oFacturaRepository.count();
-    }
-
-    public int GenerarNumeroAleatorio() {
-        return GenerarNumeroAleatorioEnRango(1, 4);
-    }
-
-    public int GenerarNumeroAleatorioEnRango(int min, int max) {
-        return (int) (Math.random() * (max - min + 1)) + min;
+        return numQuestions;
     }
 
     public Long empty() {
-        Long total = oFacturaRepository.count();
         oFacturaRepository.deleteAll();
-        return total;
+        oFacturaRepository.flush();
+        return 0L;
     }
 }

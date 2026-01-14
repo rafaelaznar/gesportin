@@ -56,7 +56,7 @@ public class CompraService {
             // guardar entity en base de datos
             oCompraRepository.save(oCompraEntity);
         }
-        return oCompraRepository.count();
+        return cantidad;
     }
 
     // ----------------------------CRUD---------------------------------
@@ -64,20 +64,19 @@ public class CompraService {
         return oCompraRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Compra not found"));
     }
 
-    public Long create(CompraEntity compraEntity) {
-        oCompraRepository.save(compraEntity);
-        return compraEntity.getId();
+    public CompraEntity create(CompraEntity compraEntity) {
+        compraEntity.setId(null);
+        return oCompraRepository.save(compraEntity);
     }
 
-    public Long update(CompraEntity compraEntity) {
+    public CompraEntity update(CompraEntity compraEntity) {
         CompraEntity existingCompra = oCompraRepository.findById(compraEntity.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Compra not found"));
         existingCompra.setCantidad(compraEntity.getCantidad());
         existingCompra.setPrecio(compraEntity.getPrecio());
         existingCompra.setIdArticulo(compraEntity.getIdArticulo());
         existingCompra.setIdFactura(compraEntity.getIdFactura());
-        oCompraRepository.save(existingCompra);
-        return existingCompra.getId();
+        return oCompraRepository.save(existingCompra);
     }
 
     public Long delete(Long id) {
@@ -95,9 +94,9 @@ public class CompraService {
 
     // vaciar tabla compra (solo administrador más adelante)
     public Long empty() {
-        Long total = oCompraRepository.count();
         oCompraRepository.deleteAll();
-        return total;
+        oCompraRepository.flush();
+        return 0L;
     }
 
 }
