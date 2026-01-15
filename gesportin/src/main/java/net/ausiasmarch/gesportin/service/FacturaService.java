@@ -32,17 +32,18 @@ public class FacturaService {
     public FacturaEntity create(FacturaEntity factura) {
         factura.setId(null);
         factura.setFecha(LocalDateTime.now());
-        Long idUsuario = factura.getIdUsuario();
-        if (idUsuario == null || idUsuario <= 0) {
-            factura.setIdUsuario((long) oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 50));
-        }
+        // Long idUsuario = factura.getIdUsuario();
+        // if (idUsuario == null || idUsuario <= 0) {
+        // factura.setIdUsuario((long)
+        // oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 50));
+        // }
         return oFacturaRepository.save(factura);
     }
 
     public FacturaEntity update(FacturaEntity factura) {
         FacturaEntity existingFactura = oFacturaRepository.findById(factura.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Factura no encontrado con id: " + factura.getId()));
-        existingFactura.setIdUsuario(factura.getIdUsuario());
+        // existingFactura.setIdUsuario(factura.getIdUsuario());
         existingFactura.setFecha(factura.getFecha());
         return oFacturaRepository.save(existingFactura);
     }
@@ -68,7 +69,8 @@ public class FacturaService {
         for (int i = 0; i < cantidad; i++) {
             FacturaEntity factura = new FacturaEntity();
             factura.setFecha(LocalDateTime.now());
-            factura.setIdUsuario((long) oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 50));
+            // factura.setIdUsuario((long)
+            // oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 50));
             oFacturaRepository.save(factura);
         }
         return cantidad;

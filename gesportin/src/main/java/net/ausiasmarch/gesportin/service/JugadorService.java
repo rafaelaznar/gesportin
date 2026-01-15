@@ -84,8 +84,8 @@ public class JugadorService {
             jugador.setPosicion(posiciones.get(oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, posiciones.size() - 1)));
             jugador.setCapitan(oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, 1) == 1);
             jugador.setImagen(null);
-            jugador.setIdUsuario((long) oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 50));
-            jugador.setIdEquipo((long) oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 50));
+            // jugador.setIdUsuario((long) oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 50));
+            // jugador.setIdEquipo((long) oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 50));
             oJugadorRepository.save(jugador);
         }
         return cantidad;

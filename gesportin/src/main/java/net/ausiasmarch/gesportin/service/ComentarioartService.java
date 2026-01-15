@@ -54,8 +54,8 @@ public class ComentarioartService {
             oComentarioartEntity.setContenido(contenidoGenerado.trim());
 
             // Generar id_articulo e id_usuario aleatorios entre 0 y 50
-            oComentarioartEntity.setIdArticulo((Long) (long) oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, 50));
-            oComentarioartEntity.setIdUsuario((Long) (long) oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, 50));
+            // oComentarioartEntity.setIdArticulo((Long) (long) oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, 50));
+            // oComentarioartEntity.setIdUsuario((Long) (long) oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, 50));
 
             // Guardar entity en base de datos
             oComentarioartRepository.save(oComentarioartEntity);
@@ -71,12 +71,12 @@ public class ComentarioartService {
 
     public Long create(ComentarioartEntity comentarioartEntity) {
         // Si no se especifican id_articulo o id_usuario, generar valores aleatorios
-        if (comentarioartEntity.getIdArticulo() == null) {
-            comentarioartEntity.setIdArticulo((Long) (long) oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, 50));
-        }
-        if (comentarioartEntity.getIdUsuario() == null) {
-            comentarioartEntity.setIdUsuario((Long) (long) oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, 50));
-        }
+        // if (comentarioartEntity.getIdArticulo() == null) {
+        //     comentarioartEntity.setIdArticulo((Long) (long) oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, 50));
+        // }
+        // if (comentarioartEntity.getIdUsuario() == null) {
+        //     comentarioartEntity.setIdUsuario((Long) (long) oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, 50));
+        // }
         oComentarioartRepository.save(comentarioartEntity);
         return comentarioartEntity.getId();
     }
@@ -85,8 +85,8 @@ public class ComentarioartService {
         ComentarioartEntity existingComentario = oComentarioartRepository.findById(comentarioartEntity.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Comentarioart not found"));
         existingComentario.setContenido(comentarioartEntity.getContenido());
-        existingComentario.setIdArticulo(comentarioartEntity.getIdArticulo());
-        existingComentario.setIdUsuario(comentarioartEntity.getIdUsuario());
+        // existingComentario.setIdArticulo(comentarioartEntity.getIdArticulo());
+        // existingComentario.setIdUsuario(comentarioartEntity.getIdUsuario());
         oComentarioartRepository.save(existingComentario);
         return existingComentario.getId();
     }
