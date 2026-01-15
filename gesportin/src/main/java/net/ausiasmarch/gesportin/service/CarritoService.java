@@ -36,8 +36,8 @@ public class CarritoService {
         CarritoEntity existingCarrito = oCarritoRepository.findById(carrito.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Carrito no encontrado con id: " + carrito.getId()));
         existingCarrito.setCantidad(carrito.getCantidad());
-        existingCarrito.setIdArticulo(carrito.getIdArticulo());
-        existingCarrito.setIdUsuario(carrito.getIdUsuario());
+        //existingCarrito.setIdArticulo(carrito.getIdArticulo());
+        //existingCarrito.setIdUsuario(carrito.getIdUsuario());
         return oCarritoRepository.save(existingCarrito);
     }
 
