@@ -35,9 +35,8 @@ public class LigaApi {
     @GetMapping
     public ResponseEntity<Page<LigaEntity>> getPage(
             @PageableDefault(size = 1000) Pageable pageable,
-            @RequestParam(required = false) String nombre,
-            @RequestParam(required = false) Long idEquipo) {
-        return ResponseEntity.ok(oLigaService.getPage(pageable, nombre, idEquipo));
+            @RequestParam(required = false) String nombre) {
+        return ResponseEntity.ok(oLigaService.getPage(pageable, nombre));
     }
 
     @PostMapping

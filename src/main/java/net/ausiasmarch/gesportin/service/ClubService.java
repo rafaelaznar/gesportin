@@ -43,8 +43,8 @@ public class ClubService {
         clubExistente.setDireccion(club.getDireccion());
         clubExistente.setTelefono(club.getTelefono());
         clubExistente.setFechaAlta(club.getFechaAlta());
-        clubExistente.setIdPresidente(club.getIdPresidente());
-        clubExistente.setIdVicepresidente(club.getIdVicepresidente());
+        //clubExistente.setIdPresidente(club.getIdPresidente());
+        //clubExistente.setIdVicepresidente(club.getIdVicepresidente());
         clubExistente.setImagen(club.getImagen());
         
         return oClubRepository.save(clubExistente);
@@ -74,8 +74,8 @@ public class ClubService {
             club.setDireccion("Dirección " + i);
             club.setTelefono("600000" + i);
             club.setFechaAlta(LocalDateTime.now());
-            club.setIdPresidente((long) (random.nextInt(50) + 1));
-            club.setIdVicepresidente((long) (random.nextInt(50) + 1));
+            //club.setIdPresidente((long) (random.nextInt(50) + 1));
+            //club.setIdVicepresidente((long) (random.nextInt(50) + 1));
             club.setImagen(("imagen" + i).getBytes());
             oClubRepository.save(club);
         }
