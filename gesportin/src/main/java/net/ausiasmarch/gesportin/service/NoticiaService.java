@@ -63,7 +63,7 @@ public class NoticiaService {
         existingNoticia.setTitulo(noticia.getTitulo());
         existingNoticia.setContenido(noticia.getContenido());
         existingNoticia.setFecha(noticia.getFecha());
-        existingNoticia.setIdClub(noticia.getIdClub());
+        //existingNoticia.setIdClub(noticia.getIdClub());
         existingNoticia.setImagen(noticia.getImagen());
         return oNoticiaRepository.save(existingNoticia);
     }
@@ -99,7 +99,7 @@ public class NoticiaService {
             }
             noticia.setContenido(contenidoGenerado.trim());
             noticia.setFecha(LocalDateTime.now());
-            noticia.setIdClub((long) oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 10));
+            //noticia.setIdClub((long) oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 10));
             noticia.setImagen(null);
             oNoticiaRepository.save(noticia);
         }
