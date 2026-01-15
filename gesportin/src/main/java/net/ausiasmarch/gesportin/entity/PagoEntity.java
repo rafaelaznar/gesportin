@@ -30,7 +30,7 @@ public class PagoEntity {
 
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "getIdCuota")
+    @JoinColumn(name = "id_cuota")
     private CuotaEntity cuota;
 
     @NotNull

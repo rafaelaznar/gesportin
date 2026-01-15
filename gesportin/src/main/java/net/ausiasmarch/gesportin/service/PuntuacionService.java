@@ -37,8 +37,8 @@ public class PuntuacionService {
                 .orElseThrow(() -> new ResourceNotFoundException("Puntuación no encontrado con id: " + puntuacion.getId()));
 
         existingRecord.setPuntuacion(puntuacion.getPuntuacion());
-        existingRecord.setIdNoticia(puntuacion.getIdNoticia());
-        existingRecord.setIdUsuario(puntuacion.getIdUsuario());
+        //existingRecord.setIdNoticia(puntuacion.getIdNoticia());
+        //existingRecord.setIdUsuario(puntuacion.getIdUsuario());
 
         return oPuntuacionRepository.save(existingRecord);
     }
@@ -64,8 +64,8 @@ public class PuntuacionService {
         for (int i = 0; i < cantidad; i++) {
             PuntuacionEntity puntuacion = new PuntuacionEntity();
             puntuacion.setPuntuacion(oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 5));
-            puntuacion.setIdNoticia((long) oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 50));
-            puntuacion.setIdUsuario((long) oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 50));
+            //puntuacion.setIdNoticia((long) oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 50));
+            //puntuacion.setIdUsuario((long) oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 50));
             oPuntuacionRepository.save(puntuacion);
         }
         return cantidad;

@@ -46,11 +46,12 @@ public class UsuarioService {
             return oUsuarioRepository.findByNombreContainingIgnoreCase(nombre, pageable);
         } else if (username != null && !username.isEmpty()) {
             return oUsuarioRepository.findByUsernameContainingIgnoreCase(username, pageable);
-        } else if (idTipousuario != null) {
-            return oUsuarioRepository.findByIdTipousuario(idTipousuario, pageable);
-        } else if (idClub != null) {
-            return oUsuarioRepository.findByIdClub(idClub, pageable);
-        } else {
+         }//  else if (idTipousuario != null) {
+        //     return oUsuarioRepository.findByIdTipousuario(idTipousuario, pageable);
+        //  } // else if (idClub != null) {
+        //     // return oUsuarioRepository.findByIdClub(idClub, pageable);
+         //} else {
+            {
             return oUsuarioRepository.findAll(pageable);
         }
     }
@@ -71,8 +72,8 @@ public class UsuarioService {
         usuarioExistente.setPassword(usuario.getPassword());
         usuarioExistente.setFechaAlta(usuario.getFechaAlta());
         usuarioExistente.setGenero(usuario.getGenero());
-        usuarioExistente.setIdTipousuario(usuario.getIdTipousuario());
-        usuarioExistente.setIdClub(usuario.getIdClub());
+        // usuarioExistente.setIdTipousuario(usuario.getIdTipousuario());
+        // usuarioExistente.setIdClub(usuario.getIdClub());
         
         return oUsuarioRepository.save(usuarioExistente);
     }
@@ -104,8 +105,8 @@ public class UsuarioService {
             usuario.setPassword("password" + (i + 1));
             usuario.setFechaAlta(LocalDateTime.now().minusDays(random.nextInt(365)));
             usuario.setGenero(random.nextInt(2));
-            usuario.setIdTipousuario((long) (random.nextInt(5) + 1));
-            usuario.setIdClub((long) (random.nextInt(50) + 1));
+            // usuario.setIdTipousuario((long) (random.nextInt(5) + 1));
+            // usuario.setIdClub((long) (random.nextInt(50) + 1));
             oUsuarioRepository.save(usuario);
         }
         return cantidad;

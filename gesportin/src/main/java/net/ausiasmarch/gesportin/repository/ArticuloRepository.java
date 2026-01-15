@@ -10,6 +10,6 @@ public interface ArticuloRepository extends JpaRepository<ArticuloEntity, Long> 
 
     Page<ArticuloEntity> findByDescripcionContainingIgnoreCase(String descripcion, Pageable pageable);
 
-    Page<ArticuloEntity> findByIdTipoarticulo(Long idTipoarticulo, Pageable pageable);    
+    //Page<ArticuloEntity> findByIdTipoarticulo(Long idTipoarticulo, Pageable pageable);    
 
 }

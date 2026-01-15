@@ -42,7 +42,7 @@ public class PartidoService {
         PartidoEntity existingPartido = oPartidoRepository.findById(partido.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Partido no encontrado con id: " + partido.getId()));
         existingPartido.setRival(partido.getRival());
-        existingPartido.setIdLiga(partido.getIdLiga());
+        //existingPartido.setIdLiga(partido.getIdLiga());
         existingPartido.setLocal(partido.getLocal());
         existingPartido.setResultado(partido.getResultado());
         return oPartidoRepository.save(existingPartido);
@@ -70,7 +70,7 @@ public class PartidoService {
             PartidoEntity partido = new PartidoEntity();
             String rival = alRivales.get(oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, alRivales.size() - 1));
             partido.setRival(rival);
-            partido.setIdLiga((long) oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 50));
+            //partido.setIdLiga((long) oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 50));
             partido.setLocal(oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, 1) == 1);
             int golesLocal = oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, 10);
             int golesVisitante = oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, 10);

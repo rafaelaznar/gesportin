@@ -2,9 +2,12 @@ package net.ausiasmarch.gesportin.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -30,11 +33,14 @@ public class PuntuacionEntity {
     @Max(5)
     private Integer puntuacion;
 
-    @Column(name = "id_noticia")
     @NotNull
-    private Long idNoticia;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_noticia")
+    private NoticiaEntity noticia;
 
-    @Column(name = "id_usuario")
     @NotNull
-    private Long idUsuario;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_usuario")
+    private UsuarioEntity usuario;
+
 }
