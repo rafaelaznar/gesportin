@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -43,5 +44,15 @@ public class ArticuloEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_tipoarticulo")
     private TipoarticuloEntity tipoArticulo;
+
+    @OneToMany(mappedBy = "articulo", fetch = FetchType.LAZY)
+    private java.util.List<ComentarioartEntity> comentariosart;
+
+    @OneToMany(mappedBy = "Articulo", fetch = FetchType.LAZY)
+    private java.util.List<CompraEntity> compras;
+
+    @OneToMany(mappedBy = "id_articulo", fetch = FetchType.LAZY)
+    private java.util.List<CompraEntity> carritos;
+   
 
 }
