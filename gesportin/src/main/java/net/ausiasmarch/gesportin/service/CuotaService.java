@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import net.ausiasmarch.gesportin.entity.CuotaEntity;
+import net.ausiasmarch.gesportin.entity.EquipoEntity;
 import net.ausiasmarch.gesportin.exception.ResourceNotFoundException;
 import net.ausiasmarch.gesportin.repository.CuotaRepository;
 
@@ -39,7 +40,7 @@ public class CuotaService {
         existingCuota.setDescripcion(cuota.getDescripcion());
         existingCuota.setCantidad(cuota.getCantidad());
         existingCuota.setFecha(cuota.getFecha());
-        existingCuota.setIdEquipo(cuota.getIdEquipo());
+        existingCuota.setEquipo(cuota.getEquipo());
         return oCuotaRepository.save(existingCuota);
     }
 
@@ -68,7 +69,9 @@ public class CuotaService {
             cuota.setDescripcion(nombres[random.nextInt(nombres.length)] + " " + (random.nextInt(9000) + 1000));
             cuota.setCantidad(BigDecimal.valueOf(random.nextDouble() * 100.0 + 1.0));
             cuota.setFecha(LocalDateTime.now().minusDays(random.nextInt(365)));
-            cuota.setIdEquipo((long) (random.nextInt(5) + 1));
+            EquipoEntity equipo = new EquipoEntity();
+            equipo.setId(Long.valueOf(random.nextInt(50) + 1));
+            cuota.setEquipo(equipo);
             oCuotaRepository.save(cuota);
         }
         return cantidad;
