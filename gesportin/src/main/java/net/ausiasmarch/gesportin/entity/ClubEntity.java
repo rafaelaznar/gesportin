@@ -43,12 +43,12 @@ public class ClubEntity {
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_presidente")
-    private UsuarioEntity usuarioPresidentes;
+    private UsuarioEntity presidente;
     
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_vicepresidente")
-    private UsuarioEntity usuarioVicepresidentes;
+    private UsuarioEntity vicepresidente;
 
     @Lob
     @Column(nullable = false)
