@@ -50,6 +50,8 @@ public class ArticuloEntity {
 
     @OneToMany(mappedBy = "Articulo", fetch = FetchType.LAZY)
     private java.util.List<CompraEntity> compras;
+
+    
    
 
 }
