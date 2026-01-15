@@ -1,11 +1,13 @@
 package net.ausiasmarch.gesportin.entity;
 
 import jakarta.annotation.Nullable;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -41,10 +43,12 @@ public class JugadorEntity {
     private String imagen;
     
     @NotNull
-    @Column(name = "id_usuario")
-    private Long idUsuario;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_usuario")
+    private UsuarioEntity idUsuario;
     
     @NotNull
-    @Column(name = "id_equipo")
-    private Long idEquipo;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_equipo")
+    private EquipoEntity idEquipo;
 }

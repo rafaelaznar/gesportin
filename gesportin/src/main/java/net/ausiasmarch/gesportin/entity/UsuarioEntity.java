@@ -4,9 +4,12 @@ import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -54,10 +57,12 @@ public class UsuarioEntity {
     private Integer genero;
 
     @NotNull
-    @Column(name = "id_tipousuario", nullable = false)
-    private Long idTipousuario;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_tipousuario")
+    private TipousuarioEntity tipousuario;
 
     @NotNull
-    @Column(name = "id_club", nullable = false)
-    private Long idClub;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_club")
+    private ClubEntity club;
 }

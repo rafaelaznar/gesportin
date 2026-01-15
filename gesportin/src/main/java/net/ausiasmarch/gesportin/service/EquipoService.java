@@ -34,8 +34,8 @@ public class EquipoService {
     public EquipoEntity update(EquipoEntity equipo) {
         EquipoEntity oEquipoEntity = oEquipoRepository.findById(equipo.getId()).orElseThrow(() -> new ResourceNotFoundException("Equipo no encontrado con id: " + equipo.getId()));
         oEquipoEntity.setNombre(equipo.getNombre());
-        oEquipoEntity.setIdEntrenador(equipo.getIdEntrenador());
-        oEquipoEntity.setIdCategoria(equipo.getIdCategoria());
+        // oEquipoEntity.setIdEntrenador(equipo.getIdEntrenador());
+        // oEquipoEntity.setIdCategoria(equipo.getIdCategoria());
         return oEquipoRepository.save(oEquipoEntity);
     }
 
@@ -60,8 +60,8 @@ public class EquipoService {
         for (int i = 0; i < cantidad; i++) {
             EquipoEntity equipo = new EquipoEntity();
             equipo.setNombre("Equipo " + i);
-            equipo.setIdEntrenador((long) oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 50));
-            equipo.setIdCategoria((long) oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 50));
+            // equipo.setIdEntrenador((long) oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 50));
+            // equipo.setIdCategoria((long) oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 50));
             oEquipoRepository.save(equipo);
         }
         return cantidad;
