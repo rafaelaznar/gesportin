@@ -36,7 +36,7 @@ public class CategoriaService {
     public CategoriaEntity update(CategoriaEntity categoria) {
         CategoriaEntity existingCategoria = oCategoriaRepository.findById(categoria.getId()).orElseThrow(() -> new ResourceNotFoundException("Categoria no encontrado con id: " + categoria.getId()));
         existingCategoria.setNombre(categoria.getNombre());
-        existingCategoria.setIdTemporada(categoria.getIdTemporada());
+        //existingCategoria.setIdTemporada(categoria.getIdTemporada());
         return oCategoriaRepository.save(existingCategoria);
     }
 
@@ -61,7 +61,7 @@ public class CategoriaService {
         for (long j = 0; j < cantidad; j++) {
             CategoriaEntity categoria = new CategoriaEntity();
             categoria.setNombre(CATEGORIAS[oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, CATEGORIAS.length - 1)]);
-            categoria.setIdTemporada((long) oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 50));
+            //categoria.setIdTemporada((long) oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 50));
             oCategoriaRepository.save(categoria);
         }
         return cantidad;

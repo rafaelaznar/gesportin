@@ -1,6 +1,6 @@
 package net.ausiasmarch.gesportin.service;
 
-import java.util.Random;
+//import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,7 +17,7 @@ public class TipoarticuloService {
     @Autowired
     private TipoarticuloRepository oTipoarticuloRepository;
 
-    private final Random random = new Random();
+    //private final Random random = new Random();
 
     private final String[] descripciones = {
         "Equipación oficial", "Material deportivo", "Accesorios", "Calzado deportivo", "Ropa de entrenamiento",
@@ -41,7 +41,7 @@ public class TipoarticuloService {
         if (descripcion != null && !descripcion.isEmpty()) {
             return oTipoarticuloRepository.findByDescripcionContainingIgnoreCase(descripcion, pageable);
         } else if (idClub != null) {
-            return oTipoarticuloRepository.findByIdClub(idClub, pageable);
+            return oTipoarticuloRepository.findByClubId(idClub, pageable);
         } else {
             return oTipoarticuloRepository.findAll(pageable);
         }
@@ -57,7 +57,7 @@ public class TipoarticuloService {
                 .orElseThrow(() -> new ResourceNotFoundException("Tipoarticulo no encontrado con id: " + tipoarticulo.getId()));
         
         tipoarticuloExistente.setDescripcion(tipoarticulo.getDescripcion());
-        tipoarticuloExistente.setIdClub(tipoarticulo.getIdClub());
+        //tipoarticuloExistente.setIdClub(tipoarticulo.getIdClub());
         
         return oTipoarticuloRepository.save(tipoarticuloExistente);
     }
@@ -83,7 +83,7 @@ public class TipoarticuloService {
         for (int i = 0; i < cantidad; i++) {
             TipoarticuloEntity tipoarticulo = new TipoarticuloEntity();
             tipoarticulo.setDescripcion(descripciones[i % descripciones.length] + " " + (i + 1));
-            tipoarticulo.setIdClub((long) (random.nextInt(50) + 1));
+            //tipoarticulo.setIdClub((long) (random.nextInt(50) + 1));
             oTipoarticuloRepository.save(tipoarticulo);
         }
         return cantidad;
