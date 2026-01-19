@@ -27,17 +27,19 @@ public class CarritoService {
         return oCarritoRepository.findAll(pageable);
     }
 
-    public CarritoEntity create(CarritoEntity carrito) {
-        carrito.setId(null);
-        return oCarritoRepository.save(carrito);
+    public CarritoEntity create(CarritoEntity oCarritoEntity) {
+        oCarritoEntity.setId(null);
+        oCarritoEntity.setArticulo(oCarritoEntity.getArticulo());
+        oCarritoEntity.setUsuario(oCarritoEntity.getUsuario());
+        return oCarritoRepository.save(oCarritoEntity);
     }
 
-    public CarritoEntity update(CarritoEntity carrito) {
-        CarritoEntity existingCarrito = oCarritoRepository.findById(carrito.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Carrito no encontrado con id: " + carrito.getId()));
-        existingCarrito.setCantidad(carrito.getCantidad());
-        //existingCarrito.setIdArticulo(carrito.getIdArticulo());
-        //existingCarrito.setIdUsuario(carrito.getIdUsuario());
+    public CarritoEntity update(CarritoEntity oCarritoEntity) {
+        CarritoEntity existingCarrito = oCarritoRepository.findById(oCarritoEntity.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Carrito no encontrado con id: " + oCarritoEntity.getId()));
+        existingCarrito.setCantidad(oCarritoEntity.getCantidad());
+        existingCarrito.setArticulo(oCarritoEntity.getArticulo());
+        existingCarrito.setUsuario(oCarritoEntity.getUsuario());
         return oCarritoRepository.save(existingCarrito);
     }
 

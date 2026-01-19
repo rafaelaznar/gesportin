@@ -25,19 +25,19 @@ public class ArticuloService {
     private final Random random = new Random();
 
     private final String[] descripciones = {
-            "Camiseta oficial", "Pantalón corto", "Medias deportivas", "Balón oficial",
-            "Zapatillas de fútbol", "Guantes de portero", "Espinilleras", "Sudadera",
-            "Chaqueta de chándal", "Mochila deportiva", "Botella de agua", "Bufanda del club",
-            "Gorra deportiva", "Muñequeras", "Cinta para el pelo", "Rodilleras",
-            "Protector bucal", "Silbato", "Cronómetro", "Conos de entrenamiento",
-            "Petos de entrenamiento", "Red de portería", "Bomba de aire", "Aguja para balones",
-            "Camiseta de entrenamiento", "Pantalón largo", "Bolsa de deporte", "Toalla",
-            "Chanclas", "Calcetines térmicos", "Chubasquero", "Polo del club",
-            "Bermudas", "Leggins deportivos", "Top deportivo", "Cortavientos",
-            "Chaleco reflectante", "Gafas de sol deportivas", "Reloj deportivo", "Pulsera fitness",
-            "Protector solar", "Vendas elásticas", "Spray frío", "Crema muscular",
-            "Bidón isotérmico", "Portabotellas", "Silbato electrónico", "Tarjetas de árbitro",
-            "Marcador deportivo", "Pizarra táctica"
+        "Camiseta oficial", "Pantalón corto", "Medias deportivas", "Balón oficial",
+        "Zapatillas de fútbol", "Guantes de portero", "Espinilleras", "Sudadera",
+        "Chaqueta de chándal", "Mochila deportiva", "Botella de agua", "Bufanda del club",
+        "Gorra deportiva", "Muñequeras", "Cinta para el pelo", "Rodilleras",
+        "Protector bucal", "Silbato", "Cronómetro", "Conos de entrenamiento",
+        "Petos de entrenamiento", "Red de portería", "Bomba de aire", "Aguja para balones",
+        "Camiseta de entrenamiento", "Pantalón largo", "Bolsa de deporte", "Toalla",
+        "Chanclas", "Calcetines térmicos", "Chubasquero", "Polo del club",
+        "Bermudas", "Leggins deportivos", "Top deportivo", "Cortavientos",
+        "Chaleco reflectante", "Gafas de sol deportivas", "Reloj deportivo", "Pulsera fitness",
+        "Protector solar", "Vendas elásticas", "Spray frío", "Crema muscular",
+        "Bidón isotérmico", "Portabotellas", "Silbato electrónico", "Tarjetas de árbitro",
+        "Marcador deportivo", "Pizarra táctica"
     };
 
     public ArticuloEntity get(Long id) {
@@ -50,26 +50,26 @@ public class ArticuloService {
             return oArticuloRepository.findByDescripcionContainingIgnoreCase(descripcion, pageable);
         } /*else if (idTipoarticulo != null) {
             return oArticuloRepository.findByIdTipoarticulo(idTipoarticulo, pageable);        
-        } */else {
+        } */ else {
             return oArticuloRepository.findAll(pageable);
         }
     }
 
-    public ArticuloEntity create(ArticuloEntity articulo) {
-        articulo.setId(null);
-        return oArticuloRepository.save(articulo);
+    public ArticuloEntity create(ArticuloEntity oArticuloEntity) {
+        oArticuloEntity.setId(null);
+        oArticuloEntity.setTipoArticulo(oArticuloEntity.getTipoArticulo());
+        return oArticuloRepository.save(oArticuloEntity);
     }
 
     public ArticuloEntity update(ArticuloEntity oArticuloEntity) {
         ArticuloEntity oArticuloExistente = oArticuloRepository.findById(oArticuloEntity.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Articulo no encontrado con id: " + oArticuloEntity.getId()));
-        
+
         oArticuloExistente.setDescripcion(oArticuloEntity.getDescripcion());
         oArticuloExistente.setPrecio(oArticuloEntity.getPrecio());
         oArticuloExistente.setDescuento(oArticuloEntity.getDescuento());
         oArticuloExistente.setImagen(oArticuloEntity.getImagen());
-        //oArticuloExistente.setIdTipoarticulo(oArticuloEntity.getIdTipoarticulo());        
-        
+        oArticuloExistente.setTipoArticulo(oArticuloEntity.getTipoArticulo());
         return oArticuloRepository.save(oArticuloExistente);
     }
 
@@ -95,7 +95,7 @@ public class ArticuloService {
             ArticuloEntity oArticulo = new ArticuloEntity();
             oArticulo.setDescripcion(descripciones[i % descripciones.length] + " " + (i + 1));
             oArticulo.setPrecio(BigDecimal.valueOf(random.nextDouble() * 100 + 5).setScale(2, RoundingMode.HALF_UP));
-            oArticulo.setDescuento(random.nextBoolean() ? BigDecimal.valueOf(random.nextDouble() * 30).setScale(2, RoundingMode.HALF_UP) : null);            
+            oArticulo.setDescuento(random.nextBoolean() ? BigDecimal.valueOf(random.nextDouble() * 30).setScale(2, RoundingMode.HALF_UP) : null);
             oArticulo.setTipoArticulo(oTipoarticuloService.getOneRandom());
             oArticuloRepository.save(oArticulo);
         }

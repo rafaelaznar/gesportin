@@ -31,15 +31,16 @@ public class CategoriaService {
         return oCategoriaRepository.findAll(pageable);
     }
 
-    public CategoriaEntity create(CategoriaEntity categoria) {
-        categoria.setId(null);
-        return oCategoriaRepository.save(categoria);
+    public CategoriaEntity create(CategoriaEntity oCategoriaEntity) {        
+        oCategoriaEntity.setId(null);
+        oCategoriaEntity.setTemporada(oCategoriaEntity.getTemporada());
+        return oCategoriaRepository.save(oCategoriaEntity);
     }
 
-    public CategoriaEntity update(CategoriaEntity categoria) {
-        CategoriaEntity existingCategoria = oCategoriaRepository.findById(categoria.getId()).orElseThrow(() -> new ResourceNotFoundException("Categoria no encontrado con id: " + categoria.getId()));
-        existingCategoria.setNombre(categoria.getNombre());
-        //existingCategoria.setIdTemporada(categoria.getIdTemporada());
+    public CategoriaEntity update(CategoriaEntity oCategoriaEntity) {
+        CategoriaEntity existingCategoria = oCategoriaRepository.findById(oCategoriaEntity.getId()).orElseThrow(() -> new ResourceNotFoundException("Categoria no encontrado con id: " + oCategoriaEntity.getId()));
+        existingCategoria.setNombre(oCategoriaEntity.getNombre());
+        existingCategoria.setTemporada(oCategoriaEntity.getTemporada());
         return oCategoriaRepository.save(existingCategoria);
     }
 

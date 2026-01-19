@@ -32,25 +32,25 @@ public class ClubService {
         return oClubRepository.findAll(pageable);
     }
 
-    public ClubEntity create(ClubEntity club) {
-        club.setId(null);
-        club.setFechaAlta(LocalDateTime.now());
-        return oClubRepository.save(club);
+    public ClubEntity create(ClubEntity oClubEntity) {
+        oClubEntity.setId(null);
+        oClubEntity.setFechaAlta(LocalDateTime.now());
+        oClubEntity.setPresidente(oClubEntity.getPresidente());
+        oClubEntity.setVicepresidente(oClubEntity.getVicepresidente());
+        return oClubRepository.save(oClubEntity);
     }
 
-    public ClubEntity update(ClubEntity club) {
-        ClubEntity clubExistente = oClubRepository.findById(club.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Club no encontrado con id: " + club.getId()));
+    public ClubEntity update(ClubEntity oClubEntity) {
+        ClubEntity oClubExistente = oClubRepository.findById(oClubEntity.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Club no encontrado con id: " + oClubEntity.getId()));
 
-        clubExistente.setNombre(club.getNombre());
-        clubExistente.setDireccion(club.getDireccion());
-        clubExistente.setTelefono(club.getTelefono());
-        clubExistente.setFechaAlta(club.getFechaAlta());
-        //clubExistente.setIdPresidente(club.getIdPresidente());
-        //clubExistente.setIdVicepresidente(club.getIdVicepresidente());
-        // clubExistente.setImagen(club.getImagen());
-
-        return oClubRepository.save(clubExistente);
+        oClubExistente.setNombre(oClubEntity.getNombre());
+        oClubExistente.setDireccion(oClubEntity.getDireccion());
+        oClubExistente.setTelefono(oClubEntity.getTelefono());
+        oClubExistente.setFechaAlta(oClubEntity.getFechaAlta());
+        oClubExistente.setPresidente(oClubEntity.getPresidente());
+        oClubExistente.setVicepresidente(oClubEntity.getVicepresidente());
+        return oClubRepository.save(oClubExistente);
     }
 
     public Long delete(Long id) {
