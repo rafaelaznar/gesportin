@@ -21,6 +21,9 @@ public class PartidoService {
     @Autowired
     private AleatorioService oAleatorioService;
 
+    @Autowired
+    private LigaService oLigaService;
+
     private final List<String> alRivales = Arrays.asList(
             "Atlético", "Barcelona", "Real Madrid", "Sevilla", "Valencia", "Villarreal", "Betis",
             "Real Sociedad", "Granada", "Celta", "Getafe", "Espanyol", "Mallorca", "Osasuna", "Alavés");
@@ -42,7 +45,7 @@ public class PartidoService {
         PartidoEntity existingPartido = oPartidoRepository.findById(partido.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Partido no encontrado con id: " + partido.getId()));
         existingPartido.setRival(partido.getRival());
-        //existingPartido.setIdLiga(partido.getIdLiga());
+        existingPartido.setLiga(oLigaService.getOneRandom());
         existingPartido.setLocal(partido.getLocal());
         existingPartido.setResultado(partido.getResultado());
         return oPartidoRepository.save(existingPartido);
@@ -70,7 +73,7 @@ public class PartidoService {
             PartidoEntity partido = new PartidoEntity();
             String rival = alRivales.get(oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, alRivales.size() - 1));
             partido.setRival(rival);
-            //partido.setIdLiga((long) oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 50));
+            partido.setLiga(oLigaService.getOneRandom());
             partido.setLocal(oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, 1) == 1);
             int golesLocal = oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, 10);
             int golesVisitante = oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, 10);

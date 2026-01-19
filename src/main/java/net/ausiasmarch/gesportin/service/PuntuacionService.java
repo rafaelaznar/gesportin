@@ -18,6 +18,12 @@ public class PuntuacionService {
     @Autowired
     private AleatorioService oAleatorioService;
 
+    @Autowired
+    private NoticiaService oNoticiaService;
+
+    @Autowired
+    private UsuarioService oUsuarioService;
+
     public PuntuacionEntity get(Long id) {
         return oPuntuacionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Puntuación no encontrado con id: " + id));
@@ -37,8 +43,8 @@ public class PuntuacionService {
                 .orElseThrow(() -> new ResourceNotFoundException("Puntuación no encontrado con id: " + puntuacion.getId()));
 
         existingRecord.setPuntuacion(puntuacion.getPuntuacion());
-        //existingRecord.setIdNoticia(puntuacion.getIdNoticia());
-        //existingRecord.setIdUsuario(puntuacion.getIdUsuario());
+        existingRecord.setNoticia(oNoticiaService.getOneRandom());
+        existingRecord.setUsuario(oUsuarioService.getOneRandom());
 
         return oPuntuacionRepository.save(existingRecord);
     }
@@ -62,11 +68,11 @@ public class PuntuacionService {
 
     public Long fill(Long cantidad) {
         for (int i = 0; i < cantidad; i++) {
-            PuntuacionEntity puntuacion = new PuntuacionEntity();
-            puntuacion.setPuntuacion(oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 5));
-            //puntuacion.setIdNoticia((long) oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 50));
-            //puntuacion.setIdUsuario((long) oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 50));
-            oPuntuacionRepository.save(puntuacion);
+            PuntuacionEntity oPuntuacion = new PuntuacionEntity();
+            oPuntuacion.setPuntuacion(oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 5));
+            oPuntuacion.setNoticia(oNoticiaService.getOneRandom());
+            oPuntuacion.setUsuario(oUsuarioService.getOneRandom());
+            oPuntuacionRepository.save(oPuntuacion);
         }
         return cantidad;
     }

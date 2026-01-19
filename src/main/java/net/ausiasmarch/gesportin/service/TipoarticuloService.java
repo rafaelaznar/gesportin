@@ -16,6 +16,9 @@ public class TipoarticuloService {
     @Autowired
     private TipoarticuloRepository oTipoarticuloRepository;
 
+    @Autowired
+    private ClubService oClubService;
+
     //private final Random random = new Random();
     private final String[] descripciones = {
         "Equipación oficial", "Material deportivo", "Accesorios", "Calzado deportivo", "Ropa de entrenamiento",
@@ -55,7 +58,7 @@ public class TipoarticuloService {
                 .orElseThrow(() -> new ResourceNotFoundException("Tipoarticulo no encontrado con id: " + tipoarticulo.getId()));
 
         tipoarticuloExistente.setDescripcion(tipoarticulo.getDescripcion());
-        //tipoarticuloExistente.setIdClub(tipoarticulo.getIdClub());
+        tipoarticuloExistente.setClub(oClubService.getOneRandom());
 
         return oTipoarticuloRepository.save(tipoarticuloExistente);
     }
@@ -79,10 +82,10 @@ public class TipoarticuloService {
 
     public Long fill(Long cantidad) {
         for (int i = 0; i < cantidad; i++) {
-            TipoarticuloEntity tipoarticulo = new TipoarticuloEntity();
-            tipoarticulo.setDescripcion(descripciones[i % descripciones.length] + " " + (i + 1));
-            //tipoarticulo.setIdClub((long) (random.nextInt(50) + 1));
-            oTipoarticuloRepository.save(tipoarticulo);
+            TipoarticuloEntity oTipoarticulo = new TipoarticuloEntity();
+            oTipoarticulo.setDescripcion(descripciones[i % descripciones.length] + " " + (i + 1));
+            oTipoarticulo.setClub(oClubService.getOneRandom());
+            oTipoarticuloRepository.save(oTipoarticulo);
         }
         return cantidad;
     }

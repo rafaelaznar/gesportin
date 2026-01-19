@@ -15,6 +15,9 @@ public class TemporadaService {
     @Autowired
     private TemporadaRepository oTemporadaRepository;
 
+    @Autowired
+    private ClubService oClubService;
+
     private final String[] nombres = {
         "Temporada 2019/2020",
         "Temporada 2020/2021",
@@ -49,7 +52,7 @@ public class TemporadaService {
                 .orElseThrow(() -> new ResourceNotFoundException("Temporada no encontrado con id: " + temporada.getId()));
 
         existing.setDescripcion(temporada.getDescripcion());
-        //existing.setIdClub(temporada.getIdClub());
+        existing.setClub(oClubService.getOneRandom());
         return oTemporadaRepository.save(existing);
     }
 
@@ -72,11 +75,11 @@ public class TemporadaService {
 
     public Long fill(Long cantidad) {
         for (long i = 0; i < cantidad; i++) {
-            TemporadaEntity temporada = new TemporadaEntity();
+            TemporadaEntity oTemporada = new TemporadaEntity();
             int indice = (int) (Math.random() * nombres.length);
-            temporada.setDescripcion(nombres[indice]);
-            //temporada.setIdClub((long) (Math.random() * 50 + 1));
-            oTemporadaRepository.save(temporada);
+            oTemporada.setDescripcion(nombres[indice]);
+            oTemporada.setClub(oClubService.getOneRandom());
+            oTemporadaRepository.save(oTemporada);
         }
         return cantidad;
     }

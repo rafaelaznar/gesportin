@@ -18,6 +18,12 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository oUsuarioRepository;
 
+    @Autowired
+    private ClubService oClubService;
+
+    @Autowired
+    private TipousuarioService oTipousuarioService; 
+
     private final Random random = new Random();
 
     private final String[] nombres = {
@@ -72,8 +78,8 @@ public class UsuarioService {
         usuarioExistente.setPassword(usuario.getPassword());
         usuarioExistente.setFechaAlta(usuario.getFechaAlta());
         usuarioExistente.setGenero(usuario.getGenero());
-        // usuarioExistente.setIdTipousuario(usuario.getIdTipousuario());
-        // usuarioExistente.setIdClub(usuario.getIdClub());
+        usuarioExistente.setTipousuario(oTipousuarioService.getOneRandom());
+        usuarioExistente.setClub(oClubService.getOneRandom());
 
         return oUsuarioRepository.save(usuarioExistente);
     }
@@ -105,8 +111,8 @@ public class UsuarioService {
             usuario.setPassword("password" + (i + 1));
             usuario.setFechaAlta(LocalDateTime.now().minusDays(random.nextInt(365)));
             usuario.setGenero(random.nextInt(2));
-            // usuario.setIdTipousuario((long) (random.nextInt(5) + 1));
-            // usuario.setIdClub((long) (random.nextInt(50) + 1));
+            usuario.setTipousuario(oTipousuarioService.getOneRandom());
+            usuario.setClub(oClubService.getOneRandom());
             oUsuarioRepository.save(usuario);
         }
         return cantidad;
