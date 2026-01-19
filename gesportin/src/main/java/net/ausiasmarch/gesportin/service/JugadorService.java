@@ -20,6 +20,12 @@ public class JugadorService {
     @Autowired
     private AleatorioService oAleatorioService;
 
+    @Autowired
+    private UsuarioService oUsuarioService;
+
+    @Autowired
+    private EquipoService oEquipoService;
+
     ArrayList<String> posiciones = new ArrayList<>();
 
     public JugadorService() {
@@ -84,8 +90,8 @@ public class JugadorService {
             jugador.setPosicion(posiciones.get(oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, posiciones.size() - 1)));
             jugador.setCapitan(oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, 1) == 1);
             jugador.setImagen(null);
-            // jugador.setIdUsuario((long) oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 50));
-            // jugador.setIdEquipo((long) oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 50));
+            jugador.setIdUsuario(oUsuarioService.getOneRandom());
+            jugador.setIdEquipo(oEquipoService.getOneRandom());
             oJugadorRepository.save(jugador);
         }
         return cantidad;

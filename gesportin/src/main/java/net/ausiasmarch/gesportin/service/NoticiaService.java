@@ -21,6 +21,9 @@ public class NoticiaService {
     @Autowired
     private AleatorioService oAleatorioService;
 
+    @Autowired
+    private ClubService oClubService;
+
     ArrayList<String> alFrases = new ArrayList<>();
 
     public NoticiaService() {
@@ -99,7 +102,7 @@ public class NoticiaService {
             }
             noticia.setContenido(contenidoGenerado.trim());
             noticia.setFecha(LocalDateTime.now());
-            //noticia.setIdClub((long) oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 10));
+            noticia.setClub(oClubService.getOneRandom());
             noticia.setImagen(null);
             oNoticiaRepository.save(noticia);
         }
