@@ -58,6 +58,6 @@ public class ClubEntity {
     @OneToMany(mappedBy = "club")
     private List<NoticiaEntity> noticias;
 
-    @OneToMany(mappedBy = "club")
+    @OneToMany(mappedBy = "idClub")
     private List<TipoarticuloEntity> tipoarticulos;
 }
