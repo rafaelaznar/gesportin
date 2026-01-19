@@ -46,7 +46,7 @@ public class ArticuloEntity {
     private TipoarticuloEntity tipoArticulo;
 
     @OneToMany(mappedBy = "articulo", fetch = FetchType.LAZY)
-    private java.util.List<ComentarioartEntity> comentariosart;
+    private java.util.List<ComentarioartEntity> comentarioarts;
 
     @OneToMany(mappedBy = "Articulo", fetch = FetchType.LAZY)
     private java.util.List<CompraEntity> compras;
