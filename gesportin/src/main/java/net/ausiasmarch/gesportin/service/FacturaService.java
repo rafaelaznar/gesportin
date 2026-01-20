@@ -18,7 +18,7 @@ public class FacturaService {
     private FacturaRepository oFacturaRepository;
 
     @Autowired
-    private AleatorioService oAleatorioService;
+    private FacturaEntity oFacturaEntity;
 
     @Autowired
     private UsuarioService oUsuarioService;
@@ -35,18 +35,17 @@ public class FacturaService {
     public FacturaEntity create(FacturaEntity factura) {
         factura.setId(null);
         factura.setFecha(LocalDateTime.now());
-        // Long idUsuario = factura.getIdUsuario();
-        // if (idUsuario == null || idUsuario <= 0) {
-        // factura.setIdUsuario((long)
-        // oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 50));
-        // }
+        factura.setUsuario(oUsuarioService.get(oFacturaEntity.getUsuario().getId()));
+        if (factura.getUsuario().getId() == null || factura.getUsuario().getId() <= 0) {
+        factura.setUsuario(oUsuarioService.get(oFacturaEntity.getUsuario().getId()));
+        }
         return oFacturaRepository.save(factura);
     }
 
     public FacturaEntity update(FacturaEntity factura) {
         FacturaEntity existingFactura = oFacturaRepository.findById(factura.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Factura no encontrado con id: " + factura.getId()));
-        // existingFactura.setIdUsuario(factura.getIdUsuario());
+        existingFactura.setUsuario(oUsuarioService.get(oFacturaEntity.getUsuario().getId()));
         existingFactura.setFecha(factura.getFecha());
         return oFacturaRepository.save(existingFactura);
     }
