@@ -42,18 +42,19 @@ public class TemporadaService {
         return oTemporadaRepository.findAll(pageable);
     }
 
-    public TemporadaEntity create(TemporadaEntity temporada) {
-        temporada.setId(null);
-        return oTemporadaRepository.save(temporada);
+    public TemporadaEntity create(TemporadaEntity oTemporadaEntity) {
+        oTemporadaEntity.setId(null);
+        oTemporadaEntity.setClub(oClubService.get(oTemporadaEntity.getClub().getId()));
+        return oTemporadaRepository.save(oTemporadaEntity);
     }
 
-    public TemporadaEntity update(TemporadaEntity temporada) {
-        TemporadaEntity existing = oTemporadaRepository.findById(temporada.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Temporada no encontrado con id: " + temporada.getId()));
+    public TemporadaEntity update(TemporadaEntity oTemporadaEntity) {
+        TemporadaEntity oTemporadaExistente = oTemporadaRepository.findById(oTemporadaEntity.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Temporada no encontrado con id: " + oTemporadaEntity.getId()));
 
-        existing.setDescripcion(temporada.getDescripcion());
-        existing.setClub(oClubService.getOneRandom());
-        return oTemporadaRepository.save(existing);
+        oTemporadaExistente.setDescripcion(oTemporadaEntity.getDescripcion());
+        oTemporadaEntity.setClub(oClubService.get(oTemporadaEntity.getClub().getId()));
+        return oTemporadaRepository.save(oTemporadaExistente);
     }
 
     public Long delete(Long id) {

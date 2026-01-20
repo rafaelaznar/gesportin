@@ -54,21 +54,24 @@ public class NoticiaService {
         return oNoticiaRepository.findAll(pageable);
     }
 
-    public NoticiaEntity create(NoticiaEntity noticia) {
-        noticia.setId(null);
-        noticia.setFecha(LocalDateTime.now());
-        return oNoticiaRepository.save(noticia);
+    public NoticiaEntity create(NoticiaEntity oNoticiaEntity) {
+        oNoticiaEntity.setId(null);
+        oNoticiaEntity.setFecha(LocalDateTime.now());
+        oNoticiaEntity.setClub(oClubService.get(oNoticiaEntity.getClub().getId()));
+
+        return oNoticiaRepository.save(oNoticiaEntity);
     }
 
-    public NoticiaEntity update(NoticiaEntity noticia) {
-        NoticiaEntity existingNoticia = oNoticiaRepository.findById(noticia.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Noticia no encontrado con id: " + noticia.getId()));
-        existingNoticia.setTitulo(noticia.getTitulo());
-        existingNoticia.setContenido(noticia.getContenido());
-        existingNoticia.setFecha(noticia.getFecha());
-        //existingNoticia.setIdClub(noticia.getIdClub());
-        existingNoticia.setImagen(noticia.getImagen());
-        return oNoticiaRepository.save(existingNoticia);
+    public NoticiaEntity update(NoticiaEntity oNoticiaEntity) {
+        NoticiaEntity oNoticiaExistente = oNoticiaRepository.findById(oNoticiaEntity.getId())
+                .orElseThrow(
+                        () -> new ResourceNotFoundException("Noticia no encontrado con id: " + oNoticiaEntity.getId()));
+        oNoticiaExistente.setTitulo(oNoticiaEntity.getTitulo());
+        oNoticiaExistente.setContenido(oNoticiaEntity.getContenido());
+        oNoticiaExistente.setFecha(oNoticiaEntity.getFecha());
+        oNoticiaExistente.setImagen(oNoticiaEntity.getImagen());
+        oNoticiaExistente.setClub(oClubService.get(oNoticiaEntity.getClub().getId()));
+        return oNoticiaRepository.save(oNoticiaExistente);
     }
 
     public Long delete(Long id) {
@@ -91,11 +94,13 @@ public class NoticiaService {
     public Long fill(Long cantidad) {
         for (long j = 0; j < cantidad; j++) {
             NoticiaEntity noticia = new NoticiaEntity();
-            noticia.setTitulo(alFrases.get(oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, alFrases.size() - 1)));
+            noticia.setTitulo(
+                    alFrases.get(oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, alFrases.size() - 1)));
             String contenidoGenerado = "";
             int numFrases = oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 30);
             for (int i = 1; i <= numFrases; i++) {
-                contenidoGenerado += alFrases.get(oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, alFrases.size() - 1)) + " ";
+                contenidoGenerado += alFrases
+                        .get(oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, alFrases.size() - 1)) + " ";
                 if (oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, 10) == 1) {
                     contenidoGenerado += "\n";
                 }

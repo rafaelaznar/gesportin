@@ -31,20 +31,21 @@ public class CuotaService {
         return oCuotaRepository.findAll(pageable);
     }
 
-    public CuotaEntity create(CuotaEntity cuota) {
-        cuota.setId(null);
-        cuota.setFecha(LocalDateTime.now());
-        return oCuotaRepository.save(cuota);
+    public CuotaEntity create(CuotaEntity oCuotaEntity) {
+        oCuotaEntity.setId(null);
+        oCuotaEntity.setFecha(LocalDateTime.now());
+        oCuotaEntity.setEquipo(oEquipoService.get(oCuotaEntity.getEquipo().getId()));
+        return oCuotaRepository.save(oCuotaEntity);
     }
 
-    public CuotaEntity update(CuotaEntity cuota) {
-        CuotaEntity existingCuota = oCuotaRepository.findById(cuota.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Cuota no encontrado con id: " + cuota.getId()));
-        existingCuota.setDescripcion(cuota.getDescripcion());
-        existingCuota.setCantidad(cuota.getCantidad());
-        existingCuota.setFecha(cuota.getFecha());
-        // existingCuota.setIdEquipo(cuota.getIdEquipo());
-        return oCuotaRepository.save(existingCuota);
+    public CuotaEntity update(CuotaEntity oCuotaEntity) {
+        CuotaEntity oCuotaExistente = oCuotaRepository.findById(oCuotaEntity.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Cuota no encontrado con id: " + oCuotaEntity.getId()));
+        oCuotaExistente.setDescripcion(oCuotaEntity.getDescripcion());
+        oCuotaExistente.setCantidad(oCuotaEntity.getCantidad());
+        oCuotaExistente.setFecha(oCuotaEntity.getFecha());
+        oCuotaExistente.setEquipo(oEquipoService.get(oCuotaEntity.getEquipo().getId()));
+        return oCuotaRepository.save(oCuotaExistente);
     }
 
     public Long delete(Long id) {

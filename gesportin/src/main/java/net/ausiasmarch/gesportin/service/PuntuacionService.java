@@ -33,20 +33,21 @@ public class PuntuacionService {
         return oPuntuacionRepository.findAll(pageable);
     }
 
-    public PuntuacionEntity create(PuntuacionEntity puntuacion) {
-        puntuacion.setId(null);
-        return oPuntuacionRepository.save(puntuacion);
+    public PuntuacionEntity create(PuntuacionEntity oPuntuacionEntity) {
+        oPuntuacionEntity.setId(null); 
+        oPuntuacionEntity.setNoticia(oNoticiaService.get(oPuntuacionEntity.getNoticia().getId()));
+        oPuntuacionEntity.setUsuario(oUsuarioService.get(oPuntuacionEntity.getUsuario().getId()));
+        return oPuntuacionRepository.save(oPuntuacionEntity);
     }
 
-    public PuntuacionEntity update(PuntuacionEntity puntuacion) {
-        PuntuacionEntity existingRecord = oPuntuacionRepository.findById(puntuacion.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Puntuación no encontrado con id: " + puntuacion.getId()));
+    public PuntuacionEntity update(PuntuacionEntity oPuntuacionEntity) {
+        PuntuacionEntity oPuntuacionExistente = oPuntuacionRepository.findById(oPuntuacionEntity.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Puntuación no encontrado con id: " + oPuntuacionEntity.getId()));
 
-        existingRecord.setPuntuacion(puntuacion.getPuntuacion());
-        existingRecord.setNoticia(oNoticiaService.getOneRandom());
-        existingRecord.setUsuario(oUsuarioService.getOneRandom());
-
-        return oPuntuacionRepository.save(existingRecord);
+        oPuntuacionExistente.setPuntuacion(oPuntuacionEntity.getPuntuacion());
+        oPuntuacionExistente.setNoticia(oNoticiaService.get(oPuntuacionEntity.getNoticia().getId()));
+        oPuntuacionExistente.setUsuario(oUsuarioService.get(oPuntuacionEntity.getUsuario().getId()));
+        return oPuntuacionRepository.save(oPuntuacionExistente);
     }
 
     public Long delete(Long id) {
