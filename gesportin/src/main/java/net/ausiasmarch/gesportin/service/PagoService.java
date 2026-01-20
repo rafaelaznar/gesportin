@@ -30,26 +30,48 @@ public class PagoService {
     @Autowired
     AleatorioService oAleatorioService;
 
+
+
     // ----------------------------CRUD---------------------------------
     public PagoEntity get(Long id) {
         return oPagoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Pago no encontrado con id: " + id));
     }
 
-    public PagoEntity create(PagoEntity pagoEntity) {
-        pagoEntity.setId(null);
-        pagoEntity.setFecha(LocalDateTime.now());
-        return oPagoRepository.save(pagoEntity);
+    public PagoEntity create(PagoEntity oPagoEntity) {
+        oPagoEntity.setId(null);
+        oPagoEntity.setFecha(LocalDateTime.now());
+        
+        if (oPagoEntity.getCuota() == null || oPagoEntity.getJugador() == null) {
+            throw new IllegalArgumentException("La cuota y el jugador no pueden ser nulos");
+        }
+
+        CuotaEntity existingCuota= oCuotaRepository.findById(oPagoEntity.getCuota().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Cuota no encontrada con id: " + oPagoEntity.getCuota().getId()));
+
+        JugadorEntity existingJugador = oJugadorRepository.findById(oPagoEntity.getJugador().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Jugador no encontrado con id: " + oPagoEntity.getJugador().getId()));
+
+        oPagoEntity.setCuota(existingCuota);
+        oPagoEntity.setJugador(existingJugador);
+
+        return oPagoRepository.save(oPagoEntity);
     }
 
-    public PagoEntity update(PagoEntity pagoEntity) {
-        PagoEntity existingPago = oPagoRepository.findById(pagoEntity.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Pago no encontrado con id: " + pagoEntity.getId()));
+    public PagoEntity update(PagoEntity oPagoEntity) {
+        PagoEntity existingPago = oPagoRepository.findById(oPagoEntity.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Pago no encontrado con id: " + oPagoEntity.getId()));
 
-        existingPago.setCuota(pagoEntity.getCuota());
-        existingPago.setJugador(pagoEntity.getJugador());
-        existingPago.setAbonado(pagoEntity.getAbonado());
-        existingPago.setFecha(pagoEntity.getFecha());
+        CuotaEntity existingCuota= oCuotaRepository.findById(oPagoEntity.getCuota().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Cuota no encontrada con id: " + oPagoEntity.getCuota().getId()));
+
+        JugadorEntity existingJugador = oJugadorRepository.findById(oPagoEntity.getJugador().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Jugador no encontrado con id: " + oPagoEntity.getJugador().getId()));
+
+        existingPago.setCuota(existingCuota);
+        existingPago.setJugador(existingJugador);
+        existingPago.setAbonado(oPagoEntity.getAbonado());
+        existingPago.setFecha(oPagoEntity.getFecha());
 
         return oPagoRepository.save(existingPago);
     }
