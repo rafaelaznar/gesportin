@@ -49,7 +49,7 @@ public class ArticuloService {
         if (descripcion != null && !descripcion.isEmpty()) {
             return oArticuloRepository.findByDescripcionContainingIgnoreCase(descripcion, pageable);
         } else if (id_tipoarticulo != null) {
-            return oArticuloRepository.findByIdTipoarticulo(id_tipoarticulo, pageable);
+            return oArticuloRepository.findByTipoarticuloId(id_tipoarticulo, pageable);
         } else {
             return oArticuloRepository.findAll(pageable);
         }

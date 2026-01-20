@@ -38,12 +38,12 @@ public class ComentarioApi {
     }
 
     @PostMapping
-    public ResponseEntity<Long> create(@RequestBody ComentarioEntity comentario) {
+    public ResponseEntity<ComentarioEntity> create(@RequestBody ComentarioEntity comentario) {
         return ResponseEntity.ok(oComentarioService.create(comentario));
     }
 
     @PutMapping
-    public ResponseEntity<Long> update(@RequestBody ComentarioEntity comentario) {
+    public ResponseEntity<ComentarioEntity> update(@RequestBody ComentarioEntity comentario) {
         return ResponseEntity.ok(oComentarioService.update(comentario));
     }
 

@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import net.ausiasmarch.gesportin.entity.RolusuarioEntity;
 import net.ausiasmarch.gesportin.service.RolusuarioService;
-import net.ausiasmarch.gesportin.service.TipoarticuloService;
+
 
 @CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 3600)
 @RestController
