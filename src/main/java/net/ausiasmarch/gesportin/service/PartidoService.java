@@ -36,26 +36,26 @@ public class PartidoService {
         return oPartidoRepository.findAll(pageable);
     }
 
-    public PartidoEntity create(PartidoEntity oPartidoEntity) {
-        oPartidoEntity.setId(null);
-        oPartidoEntity.setLiga(oLigaService.get(oPartidoEntity.getLiga().getId()));
-        return oPartidoRepository.save(oPartidoEntity);
+    public PartidoEntity create(PartidoEntity partido) {
+        partido.setId(null);
+        partido.setLiga(oLigaService.get(partido.getLiga().getId()));
+        return oPartidoRepository.save(partido);
     }
 
-    public PartidoEntity update(PartidoEntity oPartidoEntity) {
-        PartidoEntity oPartidoExistente = oPartidoRepository.findById(oPartidoEntity.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Partido no encontrado con id: " + oPartidoEntity.getId()));
-        oPartidoExistente.setRival(oPartidoEntity.getRival());
-        oPartidoExistente.setLiga(oLigaService.get(oPartidoEntity.getLiga().getId()));
-        oPartidoExistente.setLocal(oPartidoEntity.getLocal());
-        oPartidoExistente.setResultado(oPartidoEntity.getResultado());
-        return oPartidoRepository.save(oPartidoExistente);
+    public PartidoEntity update(PartidoEntity partido) {
+        PartidoEntity existingPartido = oPartidoRepository.findById(partido.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Partido no encontrado con id: " + partido.getId()));
+        existingPartido.setRival(partido.getRival());
+        existingPartido.setLiga(oLigaService.get(partido.getLiga().getId()));
+        existingPartido.setLocal(partido.getLocal());
+        existingPartido.setResultado(partido.getResultado());
+        return oPartidoRepository.save(existingPartido);
     }
 
     public Long delete(Long id) {
-        PartidoEntity oPartidoEntity = oPartidoRepository.findById(id)
+        PartidoEntity partido = oPartidoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Partido no encontrado con id: " + id));
-        oPartidoRepository.delete(oPartidoEntity);
+        oPartidoRepository.delete(partido);
         return id;
     }
 
@@ -71,15 +71,15 @@ public class PartidoService {
 
     public Long fill(Long cantidad) {
         for (long j = 0; j < cantidad; j++) {
-            PartidoEntity oPartidoEntity = new PartidoEntity();
+            PartidoEntity partido = new PartidoEntity();
             String rival = alRivales.get(oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, alRivales.size() - 1));
-            oPartidoEntity.setRival(rival);
-            oPartidoEntity.setLiga(oLigaService.getOneRandom());
-            oPartidoEntity.setLocal(oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, 1) == 1);
+            partido.setRival(rival);
+            partido.setLiga(oLigaService.getOneRandom());
+            partido.setLocal(oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, 1) == 1);
             int golesLocal = oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, 10);
             int golesVisitante = oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, 10);
-            oPartidoEntity.setResultado(golesLocal + "-" + golesVisitante);
-            oPartidoRepository.save(oPartidoEntity);
+            partido.setResultado(golesLocal + "-" + golesVisitante);
+            oPartidoRepository.save(partido);
         }
         return cantidad;
     }

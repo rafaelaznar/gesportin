@@ -50,6 +50,7 @@ public class LigaService {
 
     public LigaEntity create(LigaEntity liga) {
         liga.setId(null);
+        liga.setEquipo(oEquipoService.get(liga.getEquipo().getId()));
         return oLigaRepository.save(liga);
     }
 
@@ -58,7 +59,7 @@ public class LigaService {
                 .orElseThrow(() -> new ResourceNotFoundException("Liga no encontrado con id: " + liga.getId()));
 
         ligaExistente.setNombre(liga.getNombre());
-        // ligaExistente.setIdEquipo(liga.getIdEquipo());
+        ligaExistente.setEquipo(oEquipoService.get(liga.getEquipo().getId()));
 
         return oLigaRepository.save(ligaExistente);
     }

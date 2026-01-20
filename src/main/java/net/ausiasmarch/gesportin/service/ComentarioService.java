@@ -23,6 +23,9 @@ public class ComentarioService {
     @Autowired
     UsuarioService oUsuarioService;
 
+    @Autowired
+    NoticiaService oNoticiaService;
+
     ArrayList<String> alComentarios = new ArrayList<>();
 
     public ComentarioService() {
@@ -53,6 +56,7 @@ public class ComentarioService {
                         .get(oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, alComentarios.size() - 1)) + " ";
             }
             oComentariosEntity.setContenido(contenidoGenerado.trim());        
+            oComentariosEntity.setNoticia(oNoticiaService.getOneRandom());
             oComentariosEntity.setUsuario(oUsuarioService.getOneRandom());
             oComentariosRepository.save(oComentariosEntity);
         }
@@ -66,13 +70,9 @@ public class ComentarioService {
     }
 
     public Long create(ComentarioEntity comentariosEntity) {
-        // Si no se especifican id_noticia o id_usuario, generar valores aleatorios
-        // if (comentariosEntity.getIdNoticia() == null) {
-        //     comentariosEntity.setIdNoticia((Long) (long) oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, 50));
-        // }
-        if (comentariosEntity.getIdUsuario() == null) {
-            comentariosEntity.setIdUsuario((Long) (long) oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, 50));
-        }
+        comentariosEntity.setId(null);
+        comentariosEntity.setNoticia(oNoticiaService.get(comentariosEntity.getNoticia().getId()));
+        comentariosEntity.setUsuario(oUsuarioService.get(comentariosEntity.getUsuario().getId()));
         oComentariosRepository.save(comentariosEntity);
         return comentariosEntity.getId();
     }
@@ -81,8 +81,8 @@ public class ComentarioService {
         ComentarioEntity existingComentario = oComentariosRepository.findById(comentariosEntity.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Comentario not found"));
         existingComentario.setContenido(comentariosEntity.getContenido());
-        // existingComentario.setIdNoticia(comentariosEntity.getIdNoticia());
-        existingComentario.setIdUsuario(comentariosEntity.getIdUsuario());
+        existingComentario.setNoticia(oNoticiaService.get(comentariosEntity.getNoticia().getId()));
+        existingComentario.setUsuario(oUsuarioService.get(comentariosEntity.getUsuario().getId()));
         oComentariosRepository.save(existingComentario);
         return existingComentario.getId();
     }
