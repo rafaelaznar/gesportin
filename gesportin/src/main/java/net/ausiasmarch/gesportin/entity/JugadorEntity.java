@@ -48,12 +48,12 @@ public class JugadorEntity {
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_usuario")
-    private UsuarioEntity idUsuario;
+    private UsuarioEntity usuario;
     
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_equipo")
-    private EquipoEntity idEquipo;
+    private EquipoEntity equipo;
 
     @OneToMany(mappedBy = "jugador", fetch = FetchType.LAZY)
     private List<PagoEntity> pagos;
