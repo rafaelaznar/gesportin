@@ -33,15 +33,15 @@ public class CategoriaService {
 
     public CategoriaEntity create(CategoriaEntity oCategoriaEntity) {        
         oCategoriaEntity.setId(null);
-        oCategoriaEntity.setTemporada(oCategoriaEntity.getTemporada());
+        oCategoriaEntity.setTemporada(oTemporadaService.get(oCategoriaEntity.getTemporada().getId()));
         return oCategoriaRepository.save(oCategoriaEntity);
     }
 
     public CategoriaEntity update(CategoriaEntity oCategoriaEntity) {
-        CategoriaEntity existingCategoria = oCategoriaRepository.findById(oCategoriaEntity.getId()).orElseThrow(() -> new ResourceNotFoundException("Categoria no encontrado con id: " + oCategoriaEntity.getId()));
-        existingCategoria.setNombre(oCategoriaEntity.getNombre());
-        existingCategoria.setTemporada(oCategoriaEntity.getTemporada());
-        return oCategoriaRepository.save(existingCategoria);
+        CategoriaEntity oCategoriaExistente = oCategoriaRepository.findById(oCategoriaEntity.getId()).orElseThrow(() -> new ResourceNotFoundException("Categoria no encontrado con id: " + oCategoriaEntity.getId()));
+        oCategoriaExistente.setNombre(oCategoriaEntity.getNombre());
+        oCategoriaExistente.setTemporada(oTemporadaService.get(oCategoriaEntity.getTemporada().getId()));
+        return oCategoriaRepository.save(oCategoriaExistente);
     }
 
     public Long delete(Long id) {
