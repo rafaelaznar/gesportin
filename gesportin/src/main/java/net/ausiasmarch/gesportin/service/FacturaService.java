@@ -36,9 +36,6 @@ public class FacturaService {
         factura.setId(null);
         factura.setFecha(LocalDateTime.now());
         factura.setUsuario(oUsuarioService.get(oFacturaEntity.getUsuario().getId()));
-        if (factura.getUsuario().getId() == null || factura.getUsuario().getId() <= 0) {
-        factura.setUsuario(oUsuarioService.get(oFacturaEntity.getUsuario().getId()));
-        }
         return oFacturaRepository.save(factura);
     }
 
