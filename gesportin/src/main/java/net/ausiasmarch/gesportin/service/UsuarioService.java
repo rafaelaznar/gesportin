@@ -62,26 +62,30 @@ public class UsuarioService {
         }
     }
 
-    public UsuarioEntity create(UsuarioEntity usuario) {
-        usuario.setId(null);
-        return oUsuarioRepository.save(usuario);
+    public UsuarioEntity create(UsuarioEntity oUsuarioEntity) {
+        oUsuarioEntity.setId(null);
+        oUsuarioEntity.setTipousuario(oTipousuarioService.get(oUsuarioEntity.getTipousuario().getId()));
+        oUsuarioEntity.setClub(oClubService.get(oUsuarioEntity.getClub().getId()));
+        return oUsuarioRepository.save(oUsuarioEntity);
     }
 
-    public UsuarioEntity update(UsuarioEntity usuario) {
-        UsuarioEntity usuarioExistente = oUsuarioRepository.findById(usuario.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con id: " + usuario.getId()));
+    public UsuarioEntity update(UsuarioEntity oUsuarioEntity) {
+        UsuarioEntity oUsuarioExistente = oUsuarioRepository.findById(oUsuarioEntity.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con id: " + oUsuarioEntity.getId()));
 
-        usuarioExistente.setNombre(usuario.getNombre());
-        usuarioExistente.setApellido1(usuario.getApellido1());
-        usuarioExistente.setApellido2(usuario.getApellido2());
-        usuarioExistente.setUsername(usuario.getUsername());
-        usuarioExistente.setPassword(usuario.getPassword());
-        usuarioExistente.setFechaAlta(usuario.getFechaAlta());
-        usuarioExistente.setGenero(usuario.getGenero());
-        usuarioExistente.setTipousuario(oTipousuarioService.getOneRandom());
-        usuarioExistente.setClub(oClubService.getOneRandom());
+        oUsuarioExistente.setNombre(oUsuarioEntity.getNombre());
+        oUsuarioExistente.setApellido1(oUsuarioEntity.getApellido1());
+        oUsuarioExistente.setApellido2(oUsuarioEntity.getApellido2());
+        oUsuarioExistente.setUsername(oUsuarioEntity.getUsername());
+        oUsuarioExistente.setPassword(oUsuarioEntity.getPassword());
+        oUsuarioExistente.setFechaAlta(oUsuarioEntity.getFechaAlta());
+        oUsuarioExistente.setGenero(oUsuarioEntity.getGenero());
+        oUsuarioExistente.setTipousuario(oTipousuarioService.get(oUsuarioEntity.getTipousuario().getId()));
+        oUsuarioExistente.setClub(oClubService.get(oUsuarioEntity.getClub().getId()));
 
-        return oUsuarioRepository.save(usuarioExistente);
+
+
+        return oUsuarioRepository.save(oUsuarioExistente);
     }
 
     public Long delete(Long id) {

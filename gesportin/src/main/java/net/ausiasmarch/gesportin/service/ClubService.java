@@ -35,8 +35,8 @@ public class ClubService {
     public ClubEntity create(ClubEntity oClubEntity) {
         oClubEntity.setId(null);
         oClubEntity.setFechaAlta(LocalDateTime.now());
-        oClubEntity.setPresidente(oClubEntity.getPresidente());
-        oClubEntity.setVicepresidente(oClubEntity.getVicepresidente());
+        oClubEntity.setPresidente(oUsuarioService.get(oClubEntity.getPresidente().getId()));
+        oClubEntity.setVicepresidente(oUsuarioService.get(oClubEntity.getVicepresidente().getId()));
         return oClubRepository.save(oClubEntity);
     }
 
@@ -48,8 +48,8 @@ public class ClubService {
         oClubExistente.setDireccion(oClubEntity.getDireccion());
         oClubExistente.setTelefono(oClubEntity.getTelefono());
         oClubExistente.setFechaAlta(oClubEntity.getFechaAlta());
-        oClubExistente.setPresidente(oClubEntity.getPresidente());
-        oClubExistente.setVicepresidente(oClubEntity.getVicepresidente());
+        oClubExistente.setPresidente(oUsuarioService.get(oClubEntity.getPresidente().getId()));
+        oClubExistente.setVicepresidente(oUsuarioService.get(oClubEntity.getVicepresidente().getId()));
         return oClubRepository.save(oClubExistente);
     }
 
