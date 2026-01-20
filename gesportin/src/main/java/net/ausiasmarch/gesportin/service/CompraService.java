@@ -44,19 +44,21 @@ public class CompraService {
         return oCompraRepository.findAll(pageable);
     }
 
-    public CompraEntity create(CompraEntity compra) {
-        compra.setId(null);
-        return oCompraRepository.save(compra);
+    public CompraEntity create(CompraEntity oCompraEntity) {
+        oCompraEntity.setId(null);
+        oCompraEntity.setArticulo(oArticuloService.get(oCompraEntity.getArticulo().getId()));
+        oCompraEntity.setFactura(oFacturaService.get(oCompraEntity.getFactura().getId()));
+        return oCompraRepository.save(oCompraEntity);
     }
 
-    public CompraEntity update(CompraEntity compra) {
-        CompraEntity existingCompra = oCompraRepository.findById(compra.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Compra no encontrada con id: " + compra.getId()));
-        existingCompra.setCantidad(compra.getCantidad());
-        existingCompra.setPrecio(compra.getPrecio());
-       //existingCompra.setIdArticulo(compra.getIdArticulo());
-       //existingCompra.setIdFactura(compra.getIdFactura());
-        return oCompraRepository.save(existingCompra);
+    public CompraEntity update(CompraEntity oCompraEntity) {
+        CompraEntity oCompraExistente = oCompraRepository.findById(oCompraEntity.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Compra no encontrada con id: " + oCompraEntity.getId()));
+        oCompraExistente.setCantidad(oCompraEntity.getCantidad());
+        oCompraExistente.setPrecio(oCompraEntity.getPrecio());
+        oCompraExistente.setArticulo(oArticuloService.get(oCompraEntity.getArticulo().getId()));
+        oCompraExistente.setFactura(oFacturaService.get(oCompraEntity.getFactura().getId()));
+        return oCompraRepository.save(oCompraExistente);
     }
 
     public Long delete(Long id) {

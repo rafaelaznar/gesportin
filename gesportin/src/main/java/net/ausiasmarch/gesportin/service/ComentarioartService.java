@@ -80,21 +80,22 @@ public class ComentarioartService {
         //     comentarioartEntity.setIdUsuario((Long) (long) oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, 50));
         // }
 
-        oComentarioartEntity.setArticulo(oComentarioartEntity.getArticulo());
-        oComentarioartEntity.setUsuario(oComentarioartEntity.getUsuario());
+        oComentarioartEntity.setId(null);
+        oComentarioartEntity.setArticulo(oArticuloService.get(oComentarioartEntity.getArticulo().getId()));
+        oComentarioartEntity.setUsuario(oUsuarioService.get(oComentarioartEntity.getUsuario().getId()));
 
         oComentarioartRepository.save(oComentarioartEntity);
         return oComentarioartEntity.getId();
     }
 
-    public Long update(ComentarioartEntity comentarioartEntity) {
-        ComentarioartEntity existingComentario = oComentarioartRepository.findById(comentarioartEntity.getId())
+    public Long update(ComentarioartEntity oComentarioartEntity) {
+        ComentarioartEntity oComentarioartExistente = oComentarioartRepository.findById(oComentarioartEntity.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Comentarioart not found"));
-        existingComentario.setContenido(comentarioartEntity.getContenido());
-        // existingComentario.setIdArticulo(comentarioartEntity.getIdArticulo());
-        // existingComentario.setIdUsuario(comentarioartEntity.getIdUsuario());
-        oComentarioartRepository.save(existingComentario);
-        return existingComentario.getId();
+        oComentarioartExistente.setContenido(oComentarioartEntity.getContenido());
+        oComentarioartExistente.setArticulo(oArticuloService.get(oComentarioartEntity.getArticulo().getId()));
+        oComentarioartExistente.setUsuario(oUsuarioService.get(oComentarioartEntity.getUsuario().getId()));
+        oComentarioartRepository.save(oComentarioartExistente);
+        return oComentarioartExistente.getId();
     }
 
     public Long delete(Long id) {
