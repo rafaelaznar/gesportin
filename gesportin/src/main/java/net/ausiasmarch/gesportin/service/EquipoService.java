@@ -29,9 +29,9 @@ public class EquipoService {
         if (descripcion != null && !descripcion.isEmpty()) {
             return oEquipoRepository.findByNombreContainingIgnoreCase(descripcion, pageable);
         } else if (id_categoria != null) {
-            return oEquipoRepository.findByCuotaId(id_categoria, pageable);
+            return oEquipoRepository.findByCategoriaId(id_categoria, pageable);
         } else if (id_usuario != null) {
-            return oEquipoRepository.findByUsuarioId(id_usuario, pageable);
+            return oEquipoRepository.findByEntrenadorId(id_usuario, pageable);
         } else {
             return oEquipoRepository.findAll(pageable);
         }
