@@ -19,6 +19,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -53,11 +55,21 @@ public class NoticiaEntity {
     @JoinColumn(name = "id_club")
     private ClubEntity club;
 
+    @Getter(AccessLevel.NONE)
     @OneToMany(mappedBy = "noticia", fetch = FetchType.LAZY)
     private java.util.List<ComentarioEntity> comentarios;
 
+    @Getter(AccessLevel.NONE)
     @OneToMany(mappedBy = "noticia", fetch = FetchType.LAZY)
     private java.util.List<PuntuacionEntity> puntuaciones;
 
+
+    public int getComentarios() {
+        return comentarios.size();
+        }
+
+    public int getPuntuaciones() {
+        return puntuaciones.size();
+    }
 }
 
