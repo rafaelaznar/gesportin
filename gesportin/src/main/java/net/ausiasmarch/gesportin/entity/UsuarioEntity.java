@@ -114,6 +114,4 @@ public class UsuarioEntity {
     public int getFacturas() {
         return facturas.size();
     }
-
-
 }
