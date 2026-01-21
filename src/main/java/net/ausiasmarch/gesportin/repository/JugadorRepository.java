@@ -9,8 +9,6 @@ import net.ausiasmarch.gesportin.entity.JugadorEntity;
 public interface JugadorRepository extends JpaRepository<JugadorEntity, Long> {
     Page<JugadorEntity> findByPosicionContainingIgnoreCase(String posicion, Pageable pageable);
 
-    Page<JugadorEntity> findByCapitanContainingIgnoreCase(Boolean capitan, Pageable pageable);
-
     Page<JugadorEntity> findByUsuarioId(Long idUsuario, Pageable pageable);
 
     Page<JugadorEntity> findByEquipoId(Long idEquipo, Pageable pageable);
