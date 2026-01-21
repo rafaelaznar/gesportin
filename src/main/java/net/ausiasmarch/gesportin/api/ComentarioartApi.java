@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import net.ausiasmarch.gesportin.entity.ComentarioartEntity;
@@ -33,8 +34,11 @@ public class ComentarioartApi {
 
     @GetMapping
     public ResponseEntity<Page<ComentarioartEntity>> getPage(
-            @PageableDefault(size = 1000) Pageable pageable) {
-        return ResponseEntity.ok(oComentarioartService.getPage(pageable));
+            @PageableDefault(size = 1000) Pageable pageable,
+            @RequestParam(required = false) Long id_articulo,
+            @RequestParam(required = false) Long id_usuario
+            ) {
+        return ResponseEntity.ok(oComentarioartService.getPage(pageable, id_articulo, id_usuario));
     }
 
     @PostMapping
