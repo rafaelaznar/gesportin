@@ -55,8 +55,6 @@ public class JugadorService {
 
         if (posicion != null && !posicion.isEmpty()) {
             return oJugadorRepository.findByPosicionContainingIgnoreCase(posicion, pageable);
-        } else if (capitan != null && capitan) {
-            return oJugadorRepository.findByCapitanContainingIgnoreCase(capitan, pageable);
         } else if (idUsuario != null) {
             return oJugadorRepository.findByUsuarioId(idUsuario, pageable);
         } else if (idEquipo != null) {
