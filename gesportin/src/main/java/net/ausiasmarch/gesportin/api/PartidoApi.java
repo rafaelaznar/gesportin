@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import net.ausiasmarch.gesportin.entity.PartidoEntity;
@@ -31,8 +32,9 @@ public class PartidoApi {
     }
 
     @GetMapping
-    public ResponseEntity<Page<PartidoEntity>> getPage(Pageable oPageable) {
-        return ResponseEntity.ok(oPartidoService.getPage(oPageable));
+    public ResponseEntity<Page<PartidoEntity>> getPage(Pageable oPageable,
+            @RequestParam(required = false) Long id_liga) {
+        return ResponseEntity.ok(oPartidoService.getPage(oPageable, id_liga));
     }
 
     @PostMapping
