@@ -16,8 +16,10 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -41,6 +43,11 @@ public class FacturaEntity {
     @JoinColumn(name = "id_usuario")
     private UsuarioEntity usuario;
 
+    @Getter(AccessLevel.NONE)
     @OneToMany(mappedBy = "factura", fetch = FetchType.LAZY)
     private List<CompraEntity> compras;
+
+    public int getCompras()  {
+        return compras.size();
+    }
 }
