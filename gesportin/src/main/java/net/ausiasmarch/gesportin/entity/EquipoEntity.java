@@ -13,8 +13,10 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -43,12 +45,28 @@ public class EquipoEntity {
     @JoinColumn(name = "id_entrenador")
     private UsuarioEntity entrenador;
 
+    @Getter(AccessLevel.NONE)
     @OneToMany(mappedBy = "equipo", fetch = FetchType.LAZY)
     private List<JugadorEntity> jugadores;
 
+    @Getter(AccessLevel.NONE)
     @OneToMany(mappedBy = "equipo", fetch = FetchType.LAZY)
     private List<CuotaEntity> cuotas;
 
+    @Getter(AccessLevel.NONE)
     @OneToMany(mappedBy = "equipo", fetch = FetchType.LAZY)
     private List<LigaEntity> ligas;
+
+    public int getJugadores() {
+        return jugadores.size();
+    }
+
+    public int getCuotas() {
+        return cuotas.size();
+    }
+
+    public int getLigas() {
+        return ligas.size();
+    }
+
 }
