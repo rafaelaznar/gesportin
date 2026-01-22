@@ -30,8 +30,14 @@ public class PagoService {
                 .orElseThrow(() -> new ResourceNotFoundException("Pago no encontrado con id: " + id));
     }
 
-    public Page<PagoEntity> getPage(Pageable oPageable) {
-        return oPagoRepository.findAll(oPageable);
+    public Page<PagoEntity> getPage(Pageable oPageable, Long idCuota, Long idJugador) {
+        if (idCuota != null) {
+            return oPagoRepository.findByCuotaId(idCuota, oPageable);
+        } else if (idJugador != null) {
+            return oPagoRepository.findByJugadorId(idJugador, oPageable);
+        } else {
+            return oPagoRepository.findAll(oPageable);
+        }
     }
 
     public PagoEntity create(PagoEntity oPagoEntity) {

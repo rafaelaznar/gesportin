@@ -10,28 +10,55 @@ Gesportin es una API REST desarrollada con Spring Boot para la gestión integral
 
 ---
 
+## Nota Importante sobre Relaciones OneToMany
+
+En esta API, las relaciones **OneToMany** en las entidades se serializan como **valores numéricos** (Integer) que representan el **tamaño/cantidad** de elementos en la colección, en lugar de devolver la lista completa de objetos relacionados.
+
+**Ejemplo:** 
+- En `UsuarioEntity`, el campo `comentarios` (que es una relación OneToMany con `ComentarioEntity`) aparece en el JSON como un número entero: `"comentarios": 5`
+- Esto indica que el usuario tiene 5 comentarios asociados, pero no devuelve el array de comentarios.
+
+**Motivo:** Esta implementación evita problemas de recursión infinita en la serialización JSON y mejora el rendimiento al no cargar colecciones completas innecesariamente.
+
+**Entidades afectadas:**
+- Usuario: comentarios, puntuaciones, comentarioarts, carritos, facturas
+- Club: temporadas, noticias, tipoarticulos, usuarios
+- Noticia: comentarios, puntuaciones
+- Articulo: comentarioarts, compras, carritos
+- Equipo: jugadores, cuotas, ligas
+- Categoria: equipos
+- Temporada: categorias
+- Liga: partidos
+- Tipoarticulo: articulos
+- Factura: compras
+- Cuota: pagos
+- Jugador: pagos
+
+---
+
 ## Índice de Recursos
 
 1. [Autenticación](#autenticación)
 2. [Usuarios](#usuarios)
 3. [Tipos de Usuario](#tipos-de-usuario)
-4. [Clubes](#clubes)
-5. [Equipos](#equipos)
-6. [Jugadores](#jugadores)
-7. [Categorías](#categorías)
-8. [Temporadas](#temporadas)
-9. [Ligas](#ligas)
-10. [Partidos](#partidos)
-11. [Noticias](#noticias)
-12. [Comentarios](#comentarios)
-13. [Puntuaciones](#puntuaciones)
-14. [Artículos](#artículos)
-15. [Tipos de Artículo](#tipos-de-artículo)
-16. [Carrito](#carrito)
-17. [Facturas](#facturas)
-18. [Compras](#compras)
-19. [Cuotas](#cuotas)
-20. [Pagos](#pagos)
+4. [Roles de Usuario](#roles-de-usuario)
+5. [Clubes](#clubes)
+6. [Equipos](#equipos)
+7. [Jugadores](#jugadores)
+8. [Categorías](#categorías)
+9. [Temporadas](#temporadas)
+10. [Ligas](#ligas)
+11. [Partidos](#partidos)
+12. [Noticias](#noticias)
+13. [Comentarios](#comentarios)
+14. [Puntuaciones](#puntuaciones)
+15. [Artículos](#artículos)
+16. [Tipos de Artículo](#tipos-de-artículo)
+17. [Carrito](#carrito)
+18. [Facturas](#facturas)
+19. [Compras](#compras)
+20. [Cuotas](#cuotas)
+21. [Pagos](#pagos)
 
 ---
 
@@ -106,8 +133,14 @@ false
 | password | String | Not blank, Not null | Contraseña (hash) |
 | fechaAlta | LocalDateTime | Not null | Fecha de alta en el sistema |
 | genero | Integer | Not null | Género (0: Femenino, 1: Masculino, etc.) |
-| idTipousuario | Long | Not null | FK: Tipo de usuario |
-| idClub | Long | Not null | FK: Club al que pertenece |
+| tipousuario | TipousuarioEntity | Not null | Objeto del tipo de usuario |
+| rolusuario | RolusuarioEntity | Not null | Objeto del rol de usuario |
+| club | ClubEntity | Not null | Objeto del club al que pertenece |
+| comentarios | Integer | - | Cantidad de comentarios del usuario |
+| puntuaciones | Integer | - | Cantidad de puntuaciones del usuario |
+| comentarioarts | Integer | - | Cantidad de comentarios en artículos del usuario |
+| carritos | Integer | - | Cantidad de items en el carrito del usuario |
+| facturas | Integer | - | Cantidad de facturas del usuario |
 
 ### Endpoints
 
@@ -128,8 +161,26 @@ Obtiene un usuario por su ID.
   "password": "$2a$10$...",
   "fechaAlta": "2024-01-15 10:30:00",
   "genero": 1,
-  "idTipousuario": 2,
-  "idClub": 1
+  "tipousuario": {
+    "id": 2,
+    "descripcion": "Jugador"
+  },
+  "rolusuario": {
+    "id": 1,
+    "descripcion": "Administrador"
+  },
+  "club": {
+    "id": 1,
+    "nombre": "CD Deportivo",
+    "direccion": "Calle Mayor 123",
+    "telefono": "963123456",
+    "fechaAlta": "2020-01-01 10:00:00"
+  },
+  "comentarios": 5,
+  "puntuaciones": 12,
+  "comentarioarts": 3,
+  "carritos": 2,
+  "facturas": 8
 }
 ```
 
@@ -163,8 +214,23 @@ Obtiene una página de usuarios con filtros opcionales.
       "password": "$2a$10$...",
       "fechaAlta": "2024-01-15 10:30:00",
       "genero": 1,
-      "idTipousuario": 2,
-      "idClub": 1
+      "tipousuario": {
+        "id": 2,
+        "descripcion": "Jugador"
+      },
+      "rolusuario": {
+        "id": 1,
+        "descripcion": "Administrador"
+      },
+      "club": {
+        "id": 1,
+        "nombre": "CD Deportivo"
+      },
+      "comentarios": 5,
+      "puntuaciones": 12,
+      "comentarioarts": 3,
+      "carritos": 2,
+      "facturas": 8
     }
   ],
   "pageable": {
@@ -191,8 +257,15 @@ Crea un nuevo usuario.
   "password": "password123",
   "fechaAlta": "2024-01-20 14:00:00",
   "genero": 0,
-  "idTipousuario": 3,
-  "idClub": 1
+  "tipousuario": {
+    "id": 3
+  },
+  "rolusuario": {
+    "id": 2
+  },
+  "club": {
+    "id": 1
+  }
 }
 ```
 
@@ -207,8 +280,23 @@ Crea un nuevo usuario.
   "password": "$2a$10$...",
   "fechaAlta": "2024-01-20 14:00:00",
   "genero": 0,
-  "idTipousuario": 3,
-  "idClub": 1
+  "tipousuario": {
+    "id": 3,
+    "descripcion": "Entrenador"
+  },
+  "rolusuario": {
+    "id": 2,
+    "descripcion": "Usuario"
+  },
+  "club": {
+    "id": 1,
+    "nombre": "CD Deportivo"
+  },
+  "comentarios": 0,
+  "puntuaciones": 0,
+  "comentarioarts": 0,
+  "carritos": 0,
+  "facturas": 0
 }
 ```
 
@@ -232,8 +320,15 @@ Actualiza un usuario existente.
   "password": "newpassword",
   "fechaAlta": "2024-01-20 14:00:00",
   "genero": 0,
-  "idTipousuario": 3,
-  "idClub": 1
+  "tipousuario": {
+    "id": 3
+  },
+  "rolusuario": {
+    "id": 2
+  },
+  "club": {
+    "id": 1
+  }
 }
 ```
 
@@ -248,8 +343,23 @@ Actualiza un usuario existente.
   "password": "$2a$10$...",
   "fechaAlta": "2024-01-20 14:00:00",
   "genero": 0,
-  "idTipousuario": 3,
-  "idClub": 1
+  "tipousuario": {
+    "id": 3,
+    "descripcion": "Entrenador"
+  },
+  "rolusuario": {
+    "id": 2,
+    "descripcion": "Usuario"
+  },
+  "club": {
+    "id": 1,
+    "nombre": "CD Deportivo"
+  },
+  "comentarios": 0,
+  "puntuaciones": 0,
+  "comentarioarts": 0,
+  "carritos": 0,
+  "facturas": 0
 }
 ```
 
@@ -385,7 +495,153 @@ Cuenta el total de tipos de usuario.
 
 ---
 
-## 4. Clubes
+## 4. Roles de Usuario
+
+### Modelo de Datos: RolusuarioEntity
+
+| Campo | Tipo | Restricciones | Descripción |
+|-------|------|---------------|-------------|
+| id | Long | Auto-generado | Identificador único |
+| descripcion | String | Not blank | Descripción del rol (ej: Admin, Usuario, etc.) |
+
+### Endpoints
+
+#### GET /rolusuario/{id}
+Obtiene un rol de usuario por su ID.
+
+**Response 200:**
+```json
+{
+  "id": 1,
+  "descripcion": "Administrador"
+}
+```
+
+---
+
+#### GET /rolusuario/all
+Obtiene todos los roles de usuario disponibles sin paginación.
+
+**Response 200:**
+```json
+[
+  {
+    "id": 1,
+    "descripcion": "Administrador"
+  },
+  {
+    "id": 2,
+    "descripcion": "Usuario"
+  }
+]
+```
+
+---
+
+#### GET /rolusuario
+Obtiene una página de roles de usuario con filtros opcionales.
+
+**Parámetros de Query (opcionales):**
+- `descripcion` (String): Filtrar por descripción
+- `page` (Integer): Número de página (default: 0)
+- `size` (Integer): Tamaño de página (default: 1000)
+- `sort` (String): Campo de ordenación
+
+**Response 200:**
+```json
+{
+  "content": [
+    {
+      "id": 1,
+      "descripcion": "Administrador"
+    }
+  ],
+  "totalElements": 1,
+  "totalPages": 1
+}
+```
+
+---
+
+#### POST /rolusuario
+Crea un nuevo rol de usuario.
+
+**Request Body:**
+```json
+{
+  "descripcion": "Moderador"
+}
+```
+
+**Response 200:**
+```json
+{
+  "id": 3,
+  "descripcion": "Moderador"
+}
+```
+
+---
+
+#### PUT /rolusuario
+Actualiza un rol de usuario existente.
+
+**Request Body:**
+```json
+{
+  "id": 3,
+  "descripcion": "Moderador Principal"
+}
+```
+
+**Response 200:** Retorna el rol actualizado
+
+---
+
+#### DELETE /rolusuario/{id}
+Elimina un rol de usuario por su ID.
+
+**Parámetros:**
+- `id` (path): Long - ID del rol
+
+**Response 200:**
+```json
+1
+```
+
+---
+
+#### POST /rolusuario/fill
+Rellena la tabla con roles de usuario predeterminados.
+
+**Response 200:**
+```json
+2
+```
+
+---
+
+#### DELETE /rolusuario/empty
+Vacía todos los roles de usuario.
+
+**Response 200:**
+```json
+2
+```
+
+---
+
+#### GET /rolusuario/count
+Cuenta el total de roles de usuario.
+
+**Response 200:**
+```json
+2
+```
+
+---
+
+## 5. Clubes
 
 ### Modelo de Datos: ClubEntity
 
@@ -396,9 +652,11 @@ Cuenta el total de tipos de usuario.
 | direccion | String | Not null | Dirección del club |
 | telefono | String | Not null | Teléfono de contacto |
 | fechaAlta | LocalDateTime | Not null | Fecha de alta del club |
-| idPresidente | Long | Not null | FK: Usuario presidente |
-| idVicepresidente | Long | Not null | FK: Usuario vicepresidente |
 | imagen | byte[] | Not null | Logo del club (BLOB) |
+| temporadas | Integer | - | Cantidad de temporadas del club |
+| noticias | Integer | - | Cantidad de noticias del club |
+| tipoarticulos | Integer | - | Cantidad de tipos de artículos del club |
+| usuarios | Integer | - | Cantidad de usuarios del club |
 
 ### Endpoints
 
@@ -413,9 +671,11 @@ Obtiene un club por su ID.
   "direccion": "Calle Mayor 123",
   "telefono": "963123456",
   "fechaAlta": "2020-01-01 10:00:00",
-  "idPresidente": 5,
-  "idVicepresidente": 6,
-  "imagen": [...]
+  "imagen": [...],
+  "temporadas": 5,
+  "noticias": 23,
+  "tipoarticulos": 8,
+  "usuarios": 45
 }
 ```
 
@@ -439,9 +699,11 @@ Obtiene una página de clubes.
       "direccion": "Calle Mayor 123",
       "telefono": "963123456",
       "fechaAlta": "2020-01-01 10:00:00",
-      "idPresidente": 5,
-      "idVicepresidente": 6,
-      "imagen": [...]
+      "imagen": [...],
+      "temporadas": 5,
+      "noticias": 23,
+      "tipoarticulos": 8,
+      "usuarios": 45
     }
   ],
   "totalElements": 1,
@@ -461,8 +723,6 @@ Crea un nuevo club.
   "direccion": "Avenida del Deporte 45",
   "telefono": "961987654",
   "fechaAlta": "2024-01-20 12:00:00",
-  "idPresidente": 10,
-  "idVicepresidente": 11,
   "imagen": [...]
 }
 ```
@@ -475,9 +735,11 @@ Crea un nuevo club.
   "direccion": "Avenida del Deporte 45",
   "telefono": "961987654",
   "fechaAlta": "2024-01-20 12:00:00",
-  "idPresidente": 10,
-  "idVicepresidente": 11,
-  "imagen": [...]
+  "imagen": [...],
+  "temporadas": 0,
+  "noticias": 0,
+  "tipoarticulos": 0,
+  "usuarios": 0
 }
 ```
 
@@ -532,7 +794,7 @@ Cuenta el total de clubes.
 
 ---
 
-## 5. Equipos
+## 6. Equipos
 
 ### Modelo de Datos: EquipoEntity
 
@@ -540,8 +802,11 @@ Cuenta el total de clubes.
 |-------|------|---------------|-------------|
 | id | Long | Auto-generado | Identificador único |
 | nombre | String | Not null, Size(3-1024) | Nombre del equipo |
-| idEntrenador | Long | Not null | FK: Usuario entrenador |
-| idCategoria | Long | Not null | FK: Categoría del equipo |
+| entrenador | UsuarioEntity | Not null | Objeto del usuario entrenador |
+| categoria | CategoriaEntity | Not null | Objeto de la categoría del equipo |
+| jugadores | Integer | - | Cantidad de jugadores del equipo |
+| cuotas | Integer | - | Cantidad de cuotas del equipo |
+| ligas | Integer | - | Cantidad de ligas en las que participa el equipo |
 
 ### Endpoints
 
@@ -553,8 +818,17 @@ Obtiene un equipo por su ID.
 {
   "id": 1,
   "nombre": "Equipo Juvenil A",
-  "idEntrenador": 15,
-  "idCategoria": 3
+  "entrenador": {
+    "id": 15,
+    "nombre": "Carlos"
+  },
+  "categoria": {
+    "id": 3,
+    "nombre": "Juvenil"
+  },
+  "jugadores": 18,
+  "cuotas": 12,
+  "ligas": 2
 }
 ```
 
@@ -570,8 +844,17 @@ Obtiene una página de equipos.
     {
       "id": 1,
       "nombre": "Equipo Juvenil A",
-      "idEntrenador": 15,
-      "idCategoria": 3
+      "entrenador": {
+        "id": 15,
+        "nombre": "Carlos"
+      },
+      "categoria": {
+        "id": 3,
+        "nombre": "Juvenil"
+      },
+      "jugadores": 18,
+      "cuotas": 12,
+      "ligas": 2
     }
   ],
   "totalElements": 1,
@@ -588,8 +871,12 @@ Crea un nuevo equipo.
 ```json
 {
   "nombre": "Equipo Infantil B",
-  "idEntrenador": 20,
-  "idCategoria": 2
+  "entrenador": {
+    "id": 20
+  },
+  "categoria": {
+    "id": 2
+  }
 }
 ```
 
@@ -629,7 +916,7 @@ Cuenta el total de equipos.
 
 ---
 
-## 6. Jugadores
+## 7. Jugadores
 
 ### Modelo de Datos: JugadorEntity
 
@@ -640,8 +927,9 @@ Cuenta el total de equipos.
 | posicion | String | Not null, Size(3-255) | Posición en el campo |
 | capitan | Boolean | Not null | Si es capitán del equipo |
 | imagen | String | Nullable, Size(3-255) | URL de la imagen del jugador |
-| idUsuario | Long | Not null | FK: Usuario asociado |
-| idEquipo | Long | Not null | FK: Equipo al que pertenece |
+| usuario | UsuarioEntity | Not null | Objeto del usuario asociado |
+| equipo | EquipoEntity | Not null | Objeto del equipo al que pertenece |
+| pagos | Integer | - | Cantidad de pagos del jugador |
 
 ### Endpoints
 
@@ -656,8 +944,15 @@ Obtiene un jugador por su ID.
   "posicion": "Delantero",
   "capitan": true,
   "imagen": "jugador1.jpg",
-  "idUsuario": 25,
-  "idEquipo": 5
+  "usuario": {
+    "id": 25,
+    "nombre": "Carlos"
+  },
+  "equipo": {
+    "id": 5,
+    "nombre": "Equipo Juvenil A"
+  },
+  "pagos": 10
 }
 ```
 
@@ -676,8 +971,15 @@ Obtiene una página de jugadores.
       "posicion": "Delantero",
       "capitan": true,
       "imagen": "jugador1.jpg",
-      "idUsuario": 25,
-      "idEquipo": 5
+      "usuario": {
+        "id": 25,
+        "nombre": "Carlos"
+      },
+      "equipo": {
+        "id": 5,
+        "nombre": "Equipo Juvenil A"
+      },
+      "pagos": 10
     }
   ],
   "totalElements": 1,
@@ -697,8 +999,12 @@ Crea un nuevo jugador.
   "posicion": "Centrocampista",
   "capitan": false,
   "imagen": "jugador2.jpg",
-  "idUsuario": 30,
-  "idEquipo": 5
+  "usuario": {
+    "id": 30
+  },
+  "equipo": {
+    "id": 5
+  }
 }
 ```
 
@@ -731,7 +1037,7 @@ Cuenta el total de jugadores.
 
 ---
 
-## 7. Categorías
+## 8. Categorías
 
 ### Modelo de Datos: CategoriaEntity
 
@@ -739,7 +1045,8 @@ Cuenta el total de jugadores.
 |-------|------|---------------|-------------|
 | id | Long | Auto-generado | Identificador único |
 | nombre | String | Not null, Size(4-255) | Nombre de la categoría |
-| idTemporada | Long | Not null | FK: Temporada asociada |
+| temporada | TemporadaEntity | Not null | Objeto de la temporada asociada |
+| equipos | Integer | - | Cantidad de equipos en la categoría |
 
 ### Endpoints
 
@@ -751,7 +1058,11 @@ Obtiene una categoría por su ID.
 {
   "id": 1,
   "nombre": "Juvenil",
-  "idTemporada": 2
+  "temporada": {
+    "id": 2,
+    "descripcion": "Temporada 2024/2025"
+  },
+  "equipos": 6
 }
 ```
 
@@ -769,7 +1080,9 @@ Crea una nueva categoría.
 ```json
 {
   "nombre": "Infantil",
-  "idTemporada": 2
+  "temporada": {
+    "id": 2
+  }
 }
 ```
 
@@ -800,7 +1113,7 @@ Cuenta el total de categorías.
 
 ---
 
-## 8. Temporadas
+## 9. Temporadas
 
 ### Modelo de Datos: TemporadaEntity
 
@@ -808,7 +1121,8 @@ Cuenta el total de categorías.
 |-------|------|---------------|-------------|
 | id | Long | Auto-generado | Identificador único |
 | descripcion | String | Not null, Size(1-256) | Descripción de la temporada |
-| idClub | Long | Not null | FK: Club asociado |
+| club | ClubEntity | Not null | Objeto del club asociado |
+| categorias | Integer | - | Cantidad de categorías en la temporada |
 
 ### Endpoints
 
@@ -820,7 +1134,11 @@ Obtiene una temporada por su ID.
 {
   "id": 1,
   "descripcion": "Temporada 2023/2024",
-  "idClub": 1
+  "club": {
+    "id": 1,
+    "nombre": "Club Deportivo"
+  },
+  "categorias": 8
 }
 ```
 
@@ -838,7 +1156,9 @@ Crea una nueva temporada.
 ```json
 {
   "descripcion": "Temporada 2024/2025",
-  "idClub": 1
+  "club": {
+    "id": 1
+  }
 }
 ```
 
@@ -869,7 +1189,7 @@ Cuenta el total de temporadas.
 
 ---
 
-## 9. Ligas
+## 10. Ligas
 
 ### Modelo de Datos: LigaEntity
 
@@ -877,7 +1197,8 @@ Cuenta el total de temporadas.
 |-------|------|---------------|-------------|
 | id | Long | Auto-generado | Identificador único |
 | nombre | String | Not blank, Not null | Nombre de la liga |
-| idEquipo | Long | Not null | FK: Equipo participante |
+| equipo | EquipoEntity | Not null | Objeto del equipo participante |
+| partidos | Integer | - | Cantidad de partidos de la liga |
 
 ### Endpoints
 
@@ -889,7 +1210,11 @@ Obtiene una liga por su ID.
 {
   "id": 1,
   "nombre": "Liga Provincial Juvenil",
-  "idEquipo": 5
+  "equipo": {
+    "id": 5,
+    "nombre": "Equipo Juvenil A"
+  },
+  "partidos": 22
 }
 ```
 
@@ -910,7 +1235,11 @@ Obtiene una página de ligas con filtros opcionales.
     {
       "id": 1,
       "nombre": "Liga Provincial Juvenil",
-      "idEquipo": 5
+      "equipo": {
+        "id": 5,
+        "nombre": "Equipo Juvenil A"
+      },
+      "partidos": 22
     }
   ],
   "totalElements": 1,
@@ -927,7 +1256,9 @@ Crea una nueva liga.
 ```json
 {
   "nombre": "Copa Federación",
-  "idEquipo": 7
+  "equipo": {
+    "id": 7
+  }
 }
 ```
 
@@ -958,7 +1289,7 @@ Cuenta el total de ligas.
 
 ---
 
-## 10. Partidos
+## 11. Partidos
 
 ### Modelo de Datos: PartidoEntity
 
@@ -966,7 +1297,7 @@ Cuenta el total de ligas.
 |-------|------|---------------|-------------|
 | id | Long | Auto-generado | Identificador único |
 | rival | String | Not null, Size(3-1024) | Nombre del equipo rival |
-| idLiga | Long | Not null | FK: Liga donde se juega |
+| liga | LigaEntity | Not null | Objeto de la liga donde se juega |
 | local | Boolean | Not null | true si es local, false si es visitante |
 | resultado | String | Not null, Size(3-1024) | Resultado del partido (ej: "2-1") |
 
@@ -980,7 +1311,10 @@ Obtiene un partido por su ID.
 {
   "id": 1,
   "rival": "CD Rival FC",
-  "idLiga": 3,
+  "liga": {
+    "id": 3,
+    "nombre": "Liga Regional"
+  },
   "local": true,
   "resultado": "3-1"
 }
@@ -998,7 +1332,10 @@ Obtiene una página de partidos.
     {
       "id": 1,
       "rival": "CD Rival FC",
-      "idLiga": 3,
+      "liga": {
+        "id": 3,
+        "nombre": "Liga Regional"
+      },
       "local": true,
       "resultado": "3-1"
     }
@@ -1017,7 +1354,9 @@ Crea un nuevo partido.
 ```json
 {
   "rival": "UD Competidor",
-  "idLiga": 3,
+  "liga": {
+    "id": 3
+  },
   "local": false,
   "resultado": "1-1"
 }
@@ -1050,7 +1389,7 @@ Cuenta el total de partidos.
 
 ---
 
-## 11. Noticias
+## 12. Noticias
 
 ### Modelo de Datos: NoticiaEntity
 
@@ -1061,7 +1400,9 @@ Cuenta el total de partidos.
 | contenido | String | Not null, Size(min=3) | Contenido de la noticia |
 | fecha | LocalDateTime | Not null, Format: yyyy-MM-dd HH:mm:ss | Fecha de publicación |
 | imagen | byte[] | Nullable | Imagen de la noticia (BLOB) |
-| idClub | Long | Not null | FK: Club que publica |
+| club | ClubEntity | Not null | Objeto del club que publica |
+| comentarios | Integer | - | Cantidad de comentarios de la noticia |
+| puntuaciones | Integer | - | Cantidad de puntuaciones de la noticia |
 
 ### Endpoints
 
@@ -1076,7 +1417,12 @@ Obtiene una noticia por su ID.
   "contenido": "El equipo juvenil consigue una gran victoria...",
   "fecha": "2024-01-15 18:30:00",
   "imagen": [...],
-  "idClub": 1
+  "club": {
+    "id": 1,
+    "nombre": "CD Deportivo"
+  },
+  "comentarios": 15,
+  "puntuaciones": 42
 }
 ```
 
@@ -1095,7 +1441,12 @@ Obtiene una página de noticias.
       "contenido": "El equipo juvenil consigue una gran victoria...",
       "fecha": "2024-01-15 18:30:00",
       "imagen": [...],
-      "idClub": 1
+      "club": {
+        "id": 1,
+        "nombre": "CD Deportivo"
+      },
+      "comentarios": 15,
+      "puntuaciones": 42
     }
   ],
   "totalElements": 1,
@@ -1115,7 +1466,9 @@ Crea una nueva noticia.
   "contenido": "El club ficha a un nuevo jugador...",
   "fecha": "2024-01-20 10:00:00",
   "imagen": [...],
-  "idClub": 1
+  "club": {
+    "id": 1
+  }
 }
 ```
 
@@ -1146,7 +1499,7 @@ Cuenta el total de noticias.
 
 ---
 
-## 12. Comentarios
+## 13. Comentarios
 
 ### Modelo de Datos: ComentarioEntity
 
@@ -1154,8 +1507,8 @@ Cuenta el total de noticias.
 |-------|------|---------------|-------------|
 | id | Long | Auto-generado | Identificador único |
 | contenido | String | Not null, Size(3-1024) | Contenido del comentario |
-| idNoticia | Long | Not null | FK: Noticia comentada |
-| idUsuario | Long | Not null | FK: Usuario que comenta |
+| noticia | NoticiaEntity | Not null | Objeto de la noticia comentada |
+| usuario | UsuarioEntity | Not null | Objeto del usuario que comenta |
 
 ### Endpoints
 
@@ -1167,8 +1520,14 @@ Obtiene un comentario por su ID.
 {
   "id": 1,
   "contenido": "Excelente partido, enhorabuena!",
-  "idNoticia": 5,
-  "idUsuario": 12
+  "noticia": {
+    "id": 5,
+    "titulo": "Victoria importante"
+  },
+  "usuario": {
+    "id": 12,
+    "nombre": "Juan"
+  }
 }
 ```
 
@@ -1187,8 +1546,14 @@ Obtiene una página de comentarios.
     {
       "id": 1,
       "contenido": "Excelente partido, enhorabuena!",
-      "idNoticia": 5,
-      "idUsuario": 12
+      "noticia": {
+        "id": 5,
+        "titulo": "Victoria importante"
+      },
+      "usuario": {
+        "id": 12,
+        "nombre": "Juan"
+      }
     }
   ],
   "totalElements": 1,
@@ -1205,8 +1570,12 @@ Crea un nuevo comentario.
 ```json
 {
   "contenido": "Gran resultado del equipo!",
-  "idNoticia": 5,
-  "idUsuario": 15
+  "noticia": {
+    "id": 5
+  },
+  "usuario": {
+    "id": 15
+  }
 }
 ```
 
@@ -1254,7 +1623,7 @@ Cuenta el total de comentarios.
 
 ---
 
-## 12.1 Comentarios de Artículos
+## 13.1 Comentarios de Artículos
 
 ### Modelo de Datos: ComentarioartEntity
 
@@ -1262,8 +1631,8 @@ Cuenta el total de comentarios.
 |-------|------|---------------|-------------|
 | id | Long | Auto-generado | Identificador único |
 | contenido | String | Not null, Size(3-1024) | Contenido del comentario |
-| idArticulo | Long | Not null | FK: Artículo comentado |
-| idUsuario | Long | Not null | FK: Usuario que comenta |
+| articulo | ArticuloEntity | Not null | Objeto del artículo comentado |
+| usuario | UsuarioEntity | Not null | Objeto del usuario que comenta |
 
 ### Endpoints
 
@@ -1275,8 +1644,14 @@ Obtiene un comentario de artículo por su ID.
 {
   "id": 1,
   "contenido": "Gran análisis del artículo, gracias!",
-  "idArticulo": 3,
-  "idUsuario": 15
+  "articulo": {
+    "id": 3,
+    "descripcion": "Camiseta oficial"
+  },
+  "usuario": {
+    "id": 15,
+    "nombre": "Pedro"
+  }
 }
 ```
 
@@ -1295,8 +1670,14 @@ Obtiene una página de comentarios de artículos.
     {
       "id": 1,
       "contenido": "Gran análisis del artículo, gracias!",
-      "idArticulo": 3,
-      "idUsuario": 15
+      "articulo": {
+        "id": 3,
+        "descripcion": "Camiseta oficial"
+      },
+      "usuario": {
+        "id": 15,
+        "nombre": "Pedro"
+      }
     }
   ],
   "totalElements": 1,
@@ -1313,8 +1694,12 @@ Crea un nuevo comentario de artículo.
 ```json
 {
   "contenido": "Me ha gustado mucho este artículo",
-  "idArticulo": 3,
-  "idUsuario": 15
+  "articulo": {
+    "id": 3
+  },
+  "usuario": {
+    "id": 15
+  }
 }
 ```
 
@@ -1334,8 +1719,12 @@ Actualiza un comentario de artículo existente.
 {
   "id": 1,
   "contenido": "Actualizado: una corrección en el comentario",
-  "idArticulo": 3,
-  "idUsuario": 15
+  "articulo": {
+    "id": 3
+  },
+  "usuario": {
+    "id": 15
+  }
 }
 ```
 
@@ -1372,7 +1761,7 @@ Cuenta el total de comentarios de artículos.
 
 ---
 
-## 13. Puntuaciones
+## 14. Puntuaciones
 
 ### Modelo de Datos: PuntuacionEntity
 
@@ -1380,8 +1769,8 @@ Cuenta el total de comentarios de artículos.
 |-------|------|---------------|-------------|
 | id | Long | Auto-generado | Identificador único |
 | puntuacion | Integer | Not null, Min(1), Max(5) | Puntuación de 1 a 5 estrellas |
-| idNoticia | Long | Not null | FK: Noticia puntuada |
-| idUsuario | Long | Not null | FK: Usuario que puntúa |
+| noticia | NoticiaEntity | Not null | Objeto de la noticia puntuada |
+| usuario | UsuarioEntity | Not null | Objeto del usuario que puntúa |
 
 ### Endpoints
 
@@ -1393,8 +1782,14 @@ Obtiene una puntuación por su ID.
 {
   "id": 1,
   "puntuacion": 5,
-  "idNoticia": 8,
-  "idUsuario": 20
+  "noticia": {
+    "id": 8,
+    "titulo": "Victoria importante"
+  },
+  "usuario": {
+    "id": 20,
+    "nombre": "Ana"
+  }
 }
 ```
 
@@ -1412,8 +1807,12 @@ Crea una nueva puntuación.
 ```json
 {
   "puntuacion": 4,
-  "idNoticia": 8,
-  "idUsuario": 22
+  "noticia": {
+    "id": 8
+  },
+  "usuario": {
+    "id": 22
+  }
 }
 ```
 
@@ -1447,7 +1846,7 @@ Cuenta el total de puntuaciones.
 
 ---
 
-## 14. Artículos
+## 15. Artículos
 
 ### Modelo de Datos: ArticuloEntity
 
@@ -1458,7 +1857,10 @@ Cuenta el total de puntuaciones.
 | precio | BigDecimal | Not null | Precio del artículo |
 | descuento | BigDecimal | Nullable | Descuento aplicable |
 | imagen | byte[] | Nullable | Imagen del artículo (BLOB) |
-| idTipoarticulo | Long | Not null | FK: Tipo de artículo |
+| tipoarticulo | TipoarticuloEntity | Not null | Objeto del tipo de artículo |
+| comentarioarts | Integer | - | Cantidad de comentarios del artículo |
+| compras | Integer | - | Cantidad de compras del artículo |
+| carritos | Integer | - | Cantidad de items en carritos del artículo |
 
 ### Endpoints
 
@@ -1473,7 +1875,13 @@ Obtiene un artículo por su ID.
   "precio": 49.99,
   "descuento": 5.00,
   "imagen": [...],
-  "idTipoarticulo": 2
+  "tipoarticulo": {
+    "id": 2,
+    "descripcion": "Equipación"
+  },
+  "comentarioarts": 8,
+  "compras": 35,
+  "carritos": 4
 }
 ```
 
@@ -1497,7 +1905,13 @@ Obtiene una página de artículos con filtros opcionales.
       "precio": 49.99,
       "descuento": 5.00,
       "imagen": [...],
-      "idTipoarticulo": 2
+      "tipoarticulo": {
+        "id": 2,
+        "descripcion": "Equipación"
+      },
+      "comentarioarts": 8,
+      "compras": 35,
+      "carritos": 4
     }
   ],
   "totalElements": 1,
@@ -1517,7 +1931,9 @@ Crea un nuevo artículo.
   "precio": 29.99,
   "descuento": 0,
   "imagen": [...],
-  "idTipoarticulo": 2
+  "tipoarticulo": {
+    "id": 2
+  }
 }
 ```
 
@@ -1558,7 +1974,7 @@ Cuenta el total de artículos.
 
 ---
 
-## 15. Tipos de Artículo
+## 16. Tipos de Artículo
 
 ### Modelo de Datos: TipoarticuloEntity
 
@@ -1566,7 +1982,8 @@ Cuenta el total de artículos.
 |-------|------|---------------|-------------|
 | id | Long | Auto-generado | Identificador único |
 | descripcion | String | Not blank, Not null | Descripción del tipo |
-| idClub | Long | Not null | FK: Club asociado |
+| club | ClubEntity | Not null | Objeto del club asociado |
+| articulos | Integer | - | Cantidad de artículos de este tipo |
 
 ### Endpoints
 
@@ -1578,7 +1995,11 @@ Obtiene un tipo de artículo por su ID.
 {
   "id": 1,
   "descripcion": "Equipamiento",
-  "idClub": 1
+  "club": {
+    "id": 1,
+    "nombre": "Club Deportivo"
+  },
+  "articulos": 15
 }
 ```
 
@@ -1601,7 +2022,9 @@ Crea un nuevo tipo de artículo.
 ```json
 {
   "descripcion": "Merchandising",
-  "idClub": 1
+  "club": {
+    "id": 1
+  }
 }
 ```
 
@@ -1632,7 +2055,7 @@ Cuenta el total de tipos de artículo.
 
 ---
 
-## 16. Carrito
+## 17. Carrito
 
 ### Modelo de Datos: CarritoEntity
 
@@ -1640,8 +2063,8 @@ Cuenta el total de tipos de artículo.
 |-------|------|---------------|-------------|
 | id | Long | Auto-generado | Identificador único |
 | cantidad | Integer | Not null | Cantidad de artículos |
-| idArticulo | Long | Not null | FK: Artículo en el carrito |
-| idUsuario | Long | Not null | FK: Usuario propietario |
+| articulo | ArticuloEntity | Not null | Objeto del artículo en el carrito |
+| usuario | UsuarioEntity | Not null | Objeto del usuario propietario |
 
 ### Endpoints
 
@@ -1653,8 +2076,15 @@ Obtiene un item del carrito por su ID.
 {
   "id": 1,
   "cantidad": 2,
-  "idArticulo": 5,
-  "idUsuario": 10
+  "articulo": {
+    "id": 5,
+    "descripcion": "Camiseta oficial"
+  },
+  "usuario": {
+    "id": 10,
+    "nombre": "Pedro",
+    "username": "psanchez"
+  }
 }
 ```
 
@@ -1670,8 +2100,14 @@ Obtiene una página de items del carrito.
     {
       "id": 1,
       "cantidad": 2,
-      "idArticulo": 5,
-      "idUsuario": 10
+      "articulo": {
+        "id": 5,
+        "descripcion": "Camiseta"
+      },
+      "usuario": {
+        "id": 10,
+        "nombre": "Juan"
+      }
     }
   ],
   "totalElements": 1,
@@ -1688,8 +2124,12 @@ Añade un artículo al carrito.
 ```json
 {
   "cantidad": 1,
-  "idArticulo": 7,
-  "idUsuario": 10
+  "articulo": {
+    "id": 7
+  },
+  "usuario": {
+    "id": 10
+  }
 }
 ```
 
@@ -1720,7 +2160,7 @@ Cuenta el total de items en carritos.
 
 ---
 
-## 17. Facturas
+## 18. Facturas
 
 ### Modelo de Datos: FacturaEntity
 
@@ -1728,7 +2168,8 @@ Cuenta el total de items en carritos.
 |-------|------|---------------|-------------|
 | id | Long | Auto-generado | Identificador único |
 | fecha | LocalDateTime | Not null, Format: yyyy-MM-dd HH:mm:ss | Fecha de emisión |
-| idUsuario | Long | Not null | FK: Usuario que realiza la compra |
+| usuario | UsuarioEntity | Not null | Objeto del usuario que realiza la compra |
+| compras | Integer | - | Cantidad de compras en la factura |
 
 ### Endpoints
 
@@ -1740,7 +2181,11 @@ Obtiene una factura por su ID.
 {
   "id": 1,
   "fecha": "2024-01-15 16:30:00",
-  "idUsuario": 10
+  "usuario": {
+    "id": 10,
+    "nombre": "Juan"
+  },
+  "compras": 3
 }
 ```
 
@@ -1756,7 +2201,11 @@ Obtiene una página de facturas.
     {
       "id": 1,
       "fecha": "2024-01-15 16:30:00",
-      "idUsuario": 10
+      "usuario": {
+        "id": 10,
+        "nombre": "Juan"
+      },
+      "compras": 3
     }
   ],
   "totalElements": 1,
@@ -1773,7 +2222,9 @@ Crea una nueva factura.
 ```json
 {
   "fecha": "2024-01-20 12:00:00",
-  "idUsuario": 15
+  "usuario": {
+    "id": 15
+  }
 }
 ```
 
@@ -1804,7 +2255,7 @@ Cuenta el total de facturas.
 
 ---
 
-## 18. Compras
+## 19. Compras
 
 ### Modelo de Datos: CompraEntity
 
@@ -1813,8 +2264,8 @@ Cuenta el total de facturas.
 | id | Long | Auto-generado | Identificador único |
 | cantidad | Integer | Not null | Cantidad comprada |
 | precio | BigDecimal | Not null | Precio unitario en el momento de compra |
-| idArticulo | Long | Not null | FK: Artículo comprado |
-| idFactura | Long | Not null | FK: Factura asociada |
+| articulo | ArticuloEntity | Not null | Objeto del artículo comprado |
+| factura | FacturaEntity | Not null | Objeto de la factura asociada |
 
 ### Endpoints
 
@@ -1827,8 +2278,13 @@ Obtiene una compra por su ID.
   "id": 1,
   "cantidad": 2,
   "precio": 49.99,
-  "idArticulo": 3,
-  "idFactura": 5
+  "articulo": {
+    "id": 3,
+    "descripcion": "Camiseta oficial"
+  },
+  "factura": {
+    "id": 5
+  }
 }
 ```
 
@@ -1845,8 +2301,13 @@ Obtiene una página de compras.
       "id": 1,
       "cantidad": 2,
       "precio": 49.99,
-      "idArticulo": 3,
-      "idFactura": 5
+      "articulo": {
+        "id": 3,
+        "descripcion": "Camiseta oficial"
+      },
+      "factura": {
+        "id": 5
+      }
     }
   ],
   "totalElements": 1,
@@ -1864,8 +2325,12 @@ Crea una nueva compra (línea de factura).
 {
   "cantidad": 1,
   "precio": 29.99,
-  "idArticulo": 7,
-  "idFactura": 5
+  "articulo": {
+    "id": 7
+  },
+  "factura": {
+    "id": 5
+  }
 }
 ```
 
@@ -1896,7 +2361,7 @@ Cuenta el total de compras.
 
 ---
 
-## 19. Cuotas
+## 20. Cuotas
 
 ### Modelo de Datos: CuotaEntity
 
@@ -1906,7 +2371,8 @@ Cuenta el total de compras.
 | descripcion | String | Not null, Size(max=255) | Descripción de la cuota |
 | cantidad | BigDecimal | Not null | Importe de la cuota |
 | fecha | LocalDateTime | Not null, Format: yyyy-MM-dd HH:mm:ss | Fecha de vencimiento |
-| idEquipo | Long | Not null | FK: Equipo al que pertenece |
+| equipo | EquipoEntity | Not null | Objeto del equipo al que pertenece |
+| pagos | Integer | - | Cantidad de pagos realizados para esta cuota |
 
 ### Endpoints
 
@@ -1920,7 +2386,11 @@ Obtiene una cuota por su ID.
   "descripcion": "Cuota mensual Enero 2024",
   "cantidad": 30.00,
   "fecha": "2024-01-31 23:59:59",
-  "idEquipo": 5
+  "equipo": {
+    "id": 5,
+    "nombre": "Equipo Juvenil A"
+  },
+  "pagos": 15
 }
 ```
 
@@ -1938,7 +2408,11 @@ Obtiene una página de cuotas.
       "descripcion": "Cuota mensual Enero 2024",
       "cantidad": 30.00,
       "fecha": "2024-01-31 23:59:59",
-      "idEquipo": 5
+      "equipo": {
+        "id": 5,
+        "nombre": "Equipo Juvenil A"
+      },
+      "pagos": 15
     }
   ],
   "totalElements": 1,
@@ -1957,7 +2431,9 @@ Crea una nueva cuota.
   "descripcion": "Cuota mensual Febrero 2024",
   "cantidad": 30.00,
   "fecha": "2024-02-29 23:59:59",
-  "idEquipo": 5
+  "equipo": {
+    "id": 5
+  }
 }
 ```
 
@@ -1988,15 +2464,15 @@ Cuenta el total de cuotas.
 
 ---
 
-## 20. Pagos
+## 21. Pagos
 
 ### Modelo de Datos: PagoEntity
 
 | Campo | Tipo | Restricciones | Descripción |
 |-------|------|---------------|-------------|
 | id | Long | Auto-generado | Identificador único |
-| idCuota | Long | Not null | FK: Cuota pagada |
-| idJugador | Long | Not null | FK: Jugador que paga |
+| cuota | CuotaEntity | Not null | Objeto de la cuota pagada |
+| jugador | JugadorEntity | Not null | Objeto del jugador que paga |
 | abonado | Integer | Not null | Estado del pago (0: pendiente, 1: pagado) |
 | fecha | LocalDateTime | Not null, Format: yyyy-MM-dd HH:mm:ss | Fecha del pago |
 
@@ -2009,8 +2485,12 @@ Obtiene un pago por su ID.
 ```json
 {
   "id": 1,
-  "idCuota": 8,
-  "idJugador": 12,
+  "cuota": {
+    "id": 8
+  },
+  "jugador": {
+    "id": 12
+  },
   "abonado": 1,
   "fecha": "2024-01-10 10:30:00"
 }
@@ -2027,8 +2507,12 @@ Obtiene una página de pagos.
   "content": [
     {
       "id": 1,
-      "idCuota": 8,
-      "idJugador": 12,
+      "cuota": {
+        "id": 8
+      },
+      "jugador": {
+        "id": 12
+      },
       "abonado": 1,
       "fecha": "2024-01-10 10:30:00"
     }
@@ -2046,8 +2530,12 @@ Registra un nuevo pago.
 **Request Body:**
 ```json
 {
-  "idCuota": 9,
-  "idJugador": 15,
+  "cuota": {
+    "id": 9
+  },
+  "jugador": {
+    "id": 15
+  },
   "abonado": 1,
   "fecha": "2024-01-15 14:00:00"
 }
@@ -2084,19 +2572,20 @@ Cuenta el total de pagos.
 
 ```
 Club
-  ├── Usuario (presidente, vicepresidente)
   ├── Temporada
   ├── Tipoarticulo
-  ├── Articulo
+  ├── Usuario
   └── Noticia
 
 Usuario
   ├── Tipousuario
+  ├── Rolusuario
   ├── Club
   ├── Jugador
   ├── Carrito
   ├── Factura
   ├── Comentario
+  ├── Comentarioart
   └── Puntuacion
 
 Equipo
@@ -2133,9 +2622,13 @@ Noticia
 
 Articulo
   ├── Tipoarticulo
-  ├── Club
+  ├── Comentarioart
   ├── Carrito
   └── Compra
+
+Tipoarticulo
+  ├── Club
+  └── Articulo
 
 Factura
   ├── Usuario
@@ -2156,6 +2649,24 @@ Cuota
 Pago
   ├── Cuota
   └── Jugador
+
+Tipousuario
+  └── Usuario
+
+Rolusuario
+  └── Usuario
+
+Comentario
+  ├── Noticia
+  └── Usuario
+
+Comentarioart
+  ├── Articulo
+  └── Usuario
+
+Puntuacion
+  ├── Noticia
+  └── Usuario
 ```
 
 ---
@@ -2260,15 +2771,16 @@ curl -X POST http://localhost:8089/usuario \
     "password": "password123",
     "fechaAlta": "2024-01-20 10:00:00",
     "genero": 1,
-    "idTipousuario": 3,
-    "idClub": 1
+    "tipousuario": {"id": 3},
+    "rolusuario": {"id": 2},
+    "club": {"id": 1}
   }'
 ```
 
-### Filtrar Artículos por Club
+### Filtrar Artículos por Tipo
 
 ```bash
-curl -X GET "http://localhost:8089/articulo?idClub=1&page=0&size=10"
+curl -X GET "http://localhost:8089/articulo?tipoarticulo=1&page=0&size=10"
 ```
 
 ### Añadir Artículo al Carrito
@@ -2278,8 +2790,8 @@ curl -X POST http://localhost:8089/carrito \
   -H "Content-Type: application/json" \
   -d '{
     "cantidad": 2,
-    "idArticulo": 5,
-    "idUsuario": 10
+    "articulo": {"id": 5},
+    "usuario": {"id": 10}
   }'
 ```
 
@@ -2288,6 +2800,6 @@ curl -X POST http://localhost:8089/carrito \
 ## Versión
 
 **Versión de la API**: 1.0  
-**Última actualización**: Enero 2024  
+**Última actualización**: Enero 2026  
 **Framework**: Spring Boot  
 **Base de datos**: MySQL

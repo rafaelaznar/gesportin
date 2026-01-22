@@ -31,8 +31,8 @@ public class EquipoApi {
     }
 
     @GetMapping
-    public ResponseEntity<Page<EquipoEntity>> getPage(Pageable pageable) {
-        return ResponseEntity.ok(oEquipoService.getPage(pageable));
+    public ResponseEntity<Page<EquipoEntity>> getPage(Pageable pageable, String description, Long idCuota, Long idUsuario) {
+        return ResponseEntity.ok(oEquipoService.getPage(pageable, description, idCuota, idUsuario));
     }
 
     @PostMapping

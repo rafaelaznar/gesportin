@@ -38,8 +38,10 @@ public class UsuarioApi {
             @RequestParam(required = false) String nombre,
             @RequestParam(required = false) String username,
             @RequestParam(required = false) Long idTipousuario,
-            @RequestParam(required = false) Long idClub) {
-        return ResponseEntity.ok(oUsuarioService.getPage(pageable, nombre, username, idTipousuario, idClub));
+            @RequestParam(required = false) Long idClub,
+            @RequestParam(required = false) Long idRol)
+            {
+        return ResponseEntity.ok(oUsuarioService.getPage(pageable, nombre, username, idTipousuario, idClub, idRol));
     }
 
     @PostMapping

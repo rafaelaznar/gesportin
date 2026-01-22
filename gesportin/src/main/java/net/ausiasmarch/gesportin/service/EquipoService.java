@@ -25,8 +25,16 @@ public class EquipoService {
         return oEquipoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Equipo no encontrado con id: " + id));
     }
 
-    public Page<EquipoEntity> getPage(Pageable pageable) {
-        return oEquipoRepository.findAll(pageable);
+    public Page<EquipoEntity> getPage(Pageable pageable, String descripcion, Long id_categoria, Long id_usuario) {
+        if (descripcion != null && !descripcion.isEmpty()) {
+            return oEquipoRepository.findByNombreContainingIgnoreCase(descripcion, pageable);
+        } else if (id_categoria != null) {
+            return oEquipoRepository.findByCategoriaId(id_categoria, pageable);
+        } else if (id_usuario != null) {
+            return oEquipoRepository.findByEntrenadorId(id_usuario, pageable);
+        } else {
+            return oEquipoRepository.findAll(pageable);
+        }
     }
 
     public EquipoEntity create(EquipoEntity oEquipoEntity) {
