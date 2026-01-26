@@ -29,8 +29,14 @@ public class CarritoService {
                 .orElseThrow(() -> new ResourceNotFoundException("Carrito no encontrado con id: " + id));
     }
 
-    public Page<CarritoEntity> getPage(Pageable pageable) {
-        return oCarritoRepository.findAll(pageable);
+    public Page<CarritoEntity> getPage(Pageable oPageable, Long idUsuario, Long idArticulo) {
+        if (idUsuario != null) {
+            return oCarritoRepository.findUsuarioById(idUsuario, oPageable);
+        } else if (idArticulo != null ) {
+            return oCarritoRepository.findArticuloById(idArticulo, oPageable);
+        } else {
+            return oCarritoRepository.findAll(oPageable);
+        }
     }
 
     public CarritoEntity create(CarritoEntity oCarritoEntity) {

@@ -3,6 +3,7 @@ package net.ausiasmarch.gesportin.api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import net.ausiasmarch.gesportin.entity.CarritoEntity;
@@ -31,8 +33,11 @@ public class CarritoApi {
     }
 
     @GetMapping
-    public ResponseEntity<Page<CarritoEntity>> getPage(Pageable oPageable) {
-        return ResponseEntity.ok(oCarritoService.getPage(oPageable));
+    public ResponseEntity<Page<CarritoEntity>> getPage(
+        @PageableDefault(size = 1000) Pageable oPageable,
+        @RequestParam(required = false) Long idUsuario,
+        @RequestParam(required = false) Long idArticulo) {
+        return ResponseEntity.ok(oCarritoService.getPage(oPageable, idUsuario, idArticulo));
     }
 
     @PostMapping

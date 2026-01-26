@@ -34,10 +34,10 @@ public class TipoarticuloApi {
 
     @GetMapping
     public ResponseEntity<Page<TipoarticuloEntity>> getPage(
-            @PageableDefault(size = 1000) Pageable pageable,
+            @PageableDefault(size = 1000) Pageable oPageable,
             @RequestParam(required = false) String descripcion,
             @RequestParam(required = false) Long idClub) {
-        return ResponseEntity.ok(oTipoarticuloService.getPage(pageable, descripcion, idClub));
+        return ResponseEntity.ok(oTipoarticuloService.getPage(oPageable, descripcion, idClub));
     }
 
     @PostMapping

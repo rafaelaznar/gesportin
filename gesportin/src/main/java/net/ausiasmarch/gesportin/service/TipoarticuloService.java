@@ -38,13 +38,13 @@ public class TipoarticuloService {
                 .orElseThrow(() -> new ResourceNotFoundException("Tipoarticulo no encontrado con id: " + id));
     }
 
-    public Page<TipoarticuloEntity> getPage(Pageable pageable, String descripcion, Long idClub) {
+    public Page<TipoarticuloEntity> getPage(Pageable oPageable, String descripcion, Long idClub) {
         if (descripcion != null && !descripcion.isEmpty()) {
-            return oTipoarticuloRepository.findByDescripcionContainingIgnoreCase(descripcion, pageable);
+            return oTipoarticuloRepository.findByDescripcionContainingIgnoreCase(descripcion, oPageable);
         } else if (idClub != null) {
-            return oTipoarticuloRepository.findByClubId(idClub, pageable);
+            return oTipoarticuloRepository.findByClubId(idClub, oPageable);
         } else {
-            return oTipoarticuloRepository.findAll(pageable);
+            return oTipoarticuloRepository.findAll(oPageable);
         }
     }
 
