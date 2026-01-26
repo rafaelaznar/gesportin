@@ -9,6 +9,6 @@ import net.ausiasmarch.gesportin.entity.NoticiaEntity;
 
 public interface NoticiaRepository extends JpaRepository<NoticiaEntity, Long> {
 
-    Page<NoticiaEntity> findById(Long id, Pageable pageable);
+    Page<NoticiaEntity> findByClubId(Long idClub, Pageable pageable);
 
 }

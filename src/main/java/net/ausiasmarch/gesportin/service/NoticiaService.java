@@ -50,8 +50,12 @@ public class NoticiaService {
                 .orElseThrow(() -> new ResourceNotFoundException("Noticia no encontrado con id: " + id));
     }
 
-    public Page<NoticiaEntity> getPage(Pageable pageable) {
-        return oNoticiaRepository.findAll(pageable);
+    public Page<NoticiaEntity> getPage(Pageable oPageable, Long idClub) {
+        if(idClub != null){
+            return oNoticiaRepository.findByClubId(idClub, oPageable);
+        } else {
+            return oNoticiaRepository.findAll(oPageable);
+        }
     }
 
     public NoticiaEntity create(NoticiaEntity oNoticiaEntity) {
