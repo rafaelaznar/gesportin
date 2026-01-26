@@ -31,8 +31,12 @@ public class CompraApi {
     }
 
     @GetMapping
-    public ResponseEntity<Page<CompraEntity>> getPage(Pageable oPageable) {
-        return ResponseEntity.ok(oCompraService.getPage(oPageable));
+    public ResponseEntity<Page<CompraEntity>> getPage(
+            Pageable oPageable,
+            @PathVariable(required = false) Long id_articulo,
+            @PathVariable(required = false) Long id_factura
+        ) {
+        return ResponseEntity.ok(oCompraService.getPage(oPageable, id_articulo, id_factura));
     }
 
     @PostMapping

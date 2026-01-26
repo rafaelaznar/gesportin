@@ -10,6 +10,32 @@ Gesportin es una API REST desarrollada con Spring Boot para la gestión integral
 
 ---
 
+## Nota Importante sobre Relaciones OneToMany
+
+En esta API, las relaciones **OneToMany** en las entidades se serializan como **valores numéricos** (Integer) que representan el **tamaño/cantidad** de elementos en la colección, en lugar de devolver la lista completa de objetos relacionados.
+
+**Ejemplo:** 
+- En `UsuarioEntity`, el campo `comentarios` (que es una relación OneToMany con `ComentarioEntity`) aparece en el JSON como un número entero: `"comentarios": 5`
+- Esto indica que el usuario tiene 5 comentarios asociados, pero no devuelve el array de comentarios.
+
+**Motivo:** Esta implementación evita problemas de recursión infinita en la serialización JSON y mejora el rendimiento al no cargar colecciones completas innecesariamente.
+
+**Entidades afectadas:**
+- Usuario: comentarios, puntuaciones, comentarioarts, carritos, facturas
+- Club: temporadas, noticias, tipoarticulos, usuarios
+- Noticia: comentarios, puntuaciones
+- Articulo: comentarioarts, compras, carritos
+- Equipo: jugadores, cuotas, ligas
+- Categoria: equipos
+- Temporada: categorias
+- Liga: partidos
+- Tipoarticulo: articulos
+- Factura: compras
+- Cuota: pagos
+- Jugador: pagos
+
+---
+
 ## Índice de Recursos
 
 1. [Autenticación](#autenticación)
@@ -110,6 +136,11 @@ false
 | tipousuario | TipousuarioEntity | Not null | Objeto del tipo de usuario |
 | rolusuario | RolusuarioEntity | Not null | Objeto del rol de usuario |
 | club | ClubEntity | Not null | Objeto del club al que pertenece |
+| comentarios | Integer | - | Cantidad de comentarios del usuario |
+| puntuaciones | Integer | - | Cantidad de puntuaciones del usuario |
+| comentarioarts | Integer | - | Cantidad de comentarios en artículos del usuario |
+| carritos | Integer | - | Cantidad de items en el carrito del usuario |
+| facturas | Integer | - | Cantidad de facturas del usuario |
 
 ### Endpoints
 
@@ -144,7 +175,12 @@ Obtiene un usuario por su ID.
     "direccion": "Calle Mayor 123",
     "telefono": "963123456",
     "fechaAlta": "2020-01-01 10:00:00"
-  }
+  },
+  "comentarios": 5,
+  "puntuaciones": 12,
+  "comentarioarts": 3,
+  "carritos": 2,
+  "facturas": 8
 }
 ```
 
@@ -189,7 +225,12 @@ Obtiene una página de usuarios con filtros opcionales.
       "club": {
         "id": 1,
         "nombre": "CD Deportivo"
-      }
+      },
+      "comentarios": 5,
+      "puntuaciones": 12,
+      "comentarioarts": 3,
+      "carritos": 2,
+      "facturas": 8
     }
   ],
   "pageable": {
@@ -250,7 +291,12 @@ Crea un nuevo usuario.
   "club": {
     "id": 1,
     "nombre": "CD Deportivo"
-  }
+  },
+  "comentarios": 0,
+  "puntuaciones": 0,
+  "comentarioarts": 0,
+  "carritos": 0,
+  "facturas": 0
 }
 ```
 
@@ -308,7 +354,12 @@ Actualiza un usuario existente.
   "club": {
     "id": 1,
     "nombre": "CD Deportivo"
-  }
+  },
+  "comentarios": 0,
+  "puntuaciones": 0,
+  "comentarioarts": 0,
+  "carritos": 0,
+  "facturas": 0
 }
 ```
 
@@ -602,6 +653,10 @@ Cuenta el total de roles de usuario.
 | telefono | String | Not null | Teléfono de contacto |
 | fechaAlta | LocalDateTime | Not null | Fecha de alta del club |
 | imagen | byte[] | Not null | Logo del club (BLOB) |
+| temporadas | Integer | - | Cantidad de temporadas del club |
+| noticias | Integer | - | Cantidad de noticias del club |
+| tipoarticulos | Integer | - | Cantidad de tipos de artículos del club |
+| usuarios | Integer | - | Cantidad de usuarios del club |
 
 ### Endpoints
 
@@ -616,7 +671,11 @@ Obtiene un club por su ID.
   "direccion": "Calle Mayor 123",
   "telefono": "963123456",
   "fechaAlta": "2020-01-01 10:00:00",
-  "imagen": [...]
+  "imagen": [...],
+  "temporadas": 5,
+  "noticias": 23,
+  "tipoarticulos": 8,
+  "usuarios": 45
 }
 ```
 
@@ -640,7 +699,11 @@ Obtiene una página de clubes.
       "direccion": "Calle Mayor 123",
       "telefono": "963123456",
       "fechaAlta": "2020-01-01 10:00:00",
-      "imagen": [...]
+      "imagen": [...],
+      "temporadas": 5,
+      "noticias": 23,
+      "tipoarticulos": 8,
+      "usuarios": 45
     }
   ],
   "totalElements": 1,
@@ -672,7 +735,11 @@ Crea un nuevo club.
   "direccion": "Avenida del Deporte 45",
   "telefono": "961987654",
   "fechaAlta": "2024-01-20 12:00:00",
-  "imagen": [...]
+  "imagen": [...],
+  "temporadas": 0,
+  "noticias": 0,
+  "tipoarticulos": 0,
+  "usuarios": 0
 }
 ```
 
@@ -737,6 +804,9 @@ Cuenta el total de clubes.
 | nombre | String | Not null, Size(3-1024) | Nombre del equipo |
 | entrenador | UsuarioEntity | Not null | Objeto del usuario entrenador |
 | categoria | CategoriaEntity | Not null | Objeto de la categoría del equipo |
+| jugadores | Integer | - | Cantidad de jugadores del equipo |
+| cuotas | Integer | - | Cantidad de cuotas del equipo |
+| ligas | Integer | - | Cantidad de ligas en las que participa el equipo |
 
 ### Endpoints
 
@@ -755,7 +825,10 @@ Obtiene un equipo por su ID.
   "categoria": {
     "id": 3,
     "nombre": "Juvenil"
-  }
+  },
+  "jugadores": 18,
+  "cuotas": 12,
+  "ligas": 2
 }
 ```
 
@@ -778,7 +851,10 @@ Obtiene una página de equipos.
       "categoria": {
         "id": 3,
         "nombre": "Juvenil"
-      }
+      },
+      "jugadores": 18,
+      "cuotas": 12,
+      "ligas": 2
     }
   ],
   "totalElements": 1,
@@ -853,6 +929,7 @@ Cuenta el total de equipos.
 | imagen | String | Nullable, Size(3-255) | URL de la imagen del jugador |
 | usuario | UsuarioEntity | Not null | Objeto del usuario asociado |
 | equipo | EquipoEntity | Not null | Objeto del equipo al que pertenece |
+| pagos | Integer | - | Cantidad de pagos del jugador |
 
 ### Endpoints
 
@@ -874,7 +951,8 @@ Obtiene un jugador por su ID.
   "equipo": {
     "id": 5,
     "nombre": "Equipo Juvenil A"
-  }
+  },
+  "pagos": 10
 }
 ```
 
@@ -900,7 +978,8 @@ Obtiene una página de jugadores.
       "equipo": {
         "id": 5,
         "nombre": "Equipo Juvenil A"
-      }
+      },
+      "pagos": 10
     }
   ],
   "totalElements": 1,
@@ -967,6 +1046,7 @@ Cuenta el total de jugadores.
 | id | Long | Auto-generado | Identificador único |
 | nombre | String | Not null, Size(4-255) | Nombre de la categoría |
 | temporada | TemporadaEntity | Not null | Objeto de la temporada asociada |
+| equipos | Integer | - | Cantidad de equipos en la categoría |
 
 ### Endpoints
 
@@ -981,7 +1061,8 @@ Obtiene una categoría por su ID.
   "temporada": {
     "id": 2,
     "descripcion": "Temporada 2024/2025"
-  }
+  },
+  "equipos": 6
 }
 ```
 
@@ -1041,6 +1122,7 @@ Cuenta el total de categorías.
 | id | Long | Auto-generado | Identificador único |
 | descripcion | String | Not null, Size(1-256) | Descripción de la temporada |
 | club | ClubEntity | Not null | Objeto del club asociado |
+| categorias | Integer | - | Cantidad de categorías en la temporada |
 
 ### Endpoints
 
@@ -1055,7 +1137,8 @@ Obtiene una temporada por su ID.
   "club": {
     "id": 1,
     "nombre": "Club Deportivo"
-  }
+  },
+  "categorias": 8
 }
 ```
 
@@ -1115,6 +1198,7 @@ Cuenta el total de temporadas.
 | id | Long | Auto-generado | Identificador único |
 | nombre | String | Not blank, Not null | Nombre de la liga |
 | equipo | EquipoEntity | Not null | Objeto del equipo participante |
+| partidos | Integer | - | Cantidad de partidos de la liga |
 
 ### Endpoints
 
@@ -1129,7 +1213,8 @@ Obtiene una liga por su ID.
   "equipo": {
     "id": 5,
     "nombre": "Equipo Juvenil A"
-  }
+  },
+  "partidos": 22
 }
 ```
 
@@ -1153,7 +1238,8 @@ Obtiene una página de ligas con filtros opcionales.
       "equipo": {
         "id": 5,
         "nombre": "Equipo Juvenil A"
-      }
+      },
+      "partidos": 22
     }
   ],
   "totalElements": 1,
@@ -1315,6 +1401,8 @@ Cuenta el total de partidos.
 | fecha | LocalDateTime | Not null, Format: yyyy-MM-dd HH:mm:ss | Fecha de publicación |
 | imagen | byte[] | Nullable | Imagen de la noticia (BLOB) |
 | club | ClubEntity | Not null | Objeto del club que publica |
+| comentarios | Integer | - | Cantidad de comentarios de la noticia |
+| puntuaciones | Integer | - | Cantidad de puntuaciones de la noticia |
 
 ### Endpoints
 
@@ -1332,7 +1420,9 @@ Obtiene una noticia por su ID.
   "club": {
     "id": 1,
     "nombre": "CD Deportivo"
-  }
+  },
+  "comentarios": 15,
+  "puntuaciones": 42
 }
 ```
 
@@ -1354,7 +1444,9 @@ Obtiene una página de noticias.
       "club": {
         "id": 1,
         "nombre": "CD Deportivo"
-      }
+      },
+      "comentarios": 15,
+      "puntuaciones": 42
     }
   ],
   "totalElements": 1,
@@ -1766,6 +1858,9 @@ Cuenta el total de puntuaciones.
 | descuento | BigDecimal | Nullable | Descuento aplicable |
 | imagen | byte[] | Nullable | Imagen del artículo (BLOB) |
 | tipoarticulo | TipoarticuloEntity | Not null | Objeto del tipo de artículo |
+| comentarioarts | Integer | - | Cantidad de comentarios del artículo |
+| compras | Integer | - | Cantidad de compras del artículo |
+| carritos | Integer | - | Cantidad de items en carritos del artículo |
 
 ### Endpoints
 
@@ -1783,7 +1878,10 @@ Obtiene un artículo por su ID.
   "tipoarticulo": {
     "id": 2,
     "descripcion": "Equipación"
-  }
+  },
+  "comentarioarts": 8,
+  "compras": 35,
+  "carritos": 4
 }
 ```
 
@@ -1810,7 +1908,10 @@ Obtiene una página de artículos con filtros opcionales.
       "tipoarticulo": {
         "id": 2,
         "descripcion": "Equipación"
-      }
+      },
+      "comentarioarts": 8,
+      "compras": 35,
+      "carritos": 4
     }
   ],
   "totalElements": 1,
@@ -1882,6 +1983,7 @@ Cuenta el total de artículos.
 | id | Long | Auto-generado | Identificador único |
 | descripcion | String | Not blank, Not null | Descripción del tipo |
 | club | ClubEntity | Not null | Objeto del club asociado |
+| articulos | Integer | - | Cantidad de artículos de este tipo |
 
 ### Endpoints
 
@@ -1896,7 +1998,8 @@ Obtiene un tipo de artículo por su ID.
   "club": {
     "id": 1,
     "nombre": "Club Deportivo"
-  }
+  },
+  "articulos": 15
 }
 ```
 
@@ -2066,6 +2169,7 @@ Cuenta el total de items en carritos.
 | id | Long | Auto-generado | Identificador único |
 | fecha | LocalDateTime | Not null, Format: yyyy-MM-dd HH:mm:ss | Fecha de emisión |
 | usuario | UsuarioEntity | Not null | Objeto del usuario que realiza la compra |
+| compras | Integer | - | Cantidad de compras en la factura |
 
 ### Endpoints
 
@@ -2080,7 +2184,8 @@ Obtiene una factura por su ID.
   "usuario": {
     "id": 10,
     "nombre": "Juan"
-  }
+  },
+  "compras": 3
 }
 ```
 
@@ -2099,7 +2204,8 @@ Obtiene una página de facturas.
       "usuario": {
         "id": 10,
         "nombre": "Juan"
-      }
+      },
+      "compras": 3
     }
   ],
   "totalElements": 1,
@@ -2266,6 +2372,7 @@ Cuenta el total de compras.
 | cantidad | BigDecimal | Not null | Importe de la cuota |
 | fecha | LocalDateTime | Not null, Format: yyyy-MM-dd HH:mm:ss | Fecha de vencimiento |
 | equipo | EquipoEntity | Not null | Objeto del equipo al que pertenece |
+| pagos | Integer | - | Cantidad de pagos realizados para esta cuota |
 
 ### Endpoints
 
@@ -2282,7 +2389,8 @@ Obtiene una cuota por su ID.
   "equipo": {
     "id": 5,
     "nombre": "Equipo Juvenil A"
-  }
+  },
+  "pagos": 15
 }
 ```
 
@@ -2303,7 +2411,8 @@ Obtiene una página de cuotas.
       "equipo": {
         "id": 5,
         "nombre": "Equipo Juvenil A"
-      }
+      },
+      "pagos": 15
     }
   ],
   "totalElements": 1,

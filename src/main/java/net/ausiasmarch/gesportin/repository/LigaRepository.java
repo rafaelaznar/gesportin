@@ -8,5 +8,5 @@ import net.ausiasmarch.gesportin.entity.LigaEntity;
 
 public interface LigaRepository extends JpaRepository<LigaEntity, Long> {
     Page<LigaEntity> findByNombreContainingIgnoreCase(String nombre, Pageable pageable);
-    // Page<LigaEntity> findByIdEquipo(Long idEquipo, Pageable pageable);
+    Page<LigaEntity> findByIdEquipo(Long idEquipo, Pageable pageable);
 }

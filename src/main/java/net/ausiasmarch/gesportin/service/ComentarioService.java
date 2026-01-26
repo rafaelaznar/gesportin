@@ -51,7 +51,14 @@ public class ComentarioService {
                 .orElseThrow(() -> new ResourceNotFoundException("Comentario no encontrado con id: " + id));
     }
 
-    public Page<ComentarioEntity> getPage(Pageable oPageable) {
+    public Page<ComentarioEntity> getPage(Pageable oPageable, String contenido, Long id_usuario, Long id_noticia) {
+        if (contenido != null && !contenido.isEmpty()) {
+            return oComentariosRepository.findByContenidoContainingIgnoreCase(contenido, oPageable);
+        } else if (id_usuario != null) {
+            return oComentariosRepository.findByIdUsuario(id_usuario, oPageable);
+        } else if (id_noticia != null) {
+            return oComentariosRepository.findByIdNoticia(id_noticia, oPageable);
+        } else
         return oComentariosRepository.findAll(oPageable);
     }
 

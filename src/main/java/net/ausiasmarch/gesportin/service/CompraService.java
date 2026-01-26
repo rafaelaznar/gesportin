@@ -33,11 +33,19 @@ public class CompraService {
     private AleatorioService oAleatorioService;
 
     public CompraEntity get(Long id) {
-        return oCompraRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Compra no encontrada con id: " + id));
+        return oCompraRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Compra no encontrada con id: " + id));
     }
 
-    public Page<CompraEntity> getPage(Pageable pageable) {
-        return oCompraRepository.findAll(pageable);
+    public Page<CompraEntity> getPage(Pageable pageable, Long id_articulo, Long id_factura) {
+        if (id_articulo != null) {
+            return oCompraRepository.findByArticuloId(id_articulo, pageable);
+        } else if (id_factura != null) {
+            return oCompraRepository.findByFacturaId(id_factura, pageable);
+        } else {
+            return oCompraRepository.findAll(pageable);
+        }
+
     }
 
     public CompraEntity create(CompraEntity oCompraEntity) {
@@ -49,7 +57,8 @@ public class CompraService {
 
     public CompraEntity update(CompraEntity oCompraEntity) {
         CompraEntity oCompraExistente = oCompraRepository.findById(oCompraEntity.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Compra no encontrada con id: " + oCompraEntity.getId()));
+                .orElseThrow(
+                        () -> new ResourceNotFoundException("Compra no encontrada con id: " + oCompraEntity.getId()));
         oCompraExistente.setCantidad(oCompraEntity.getCantidad());
         oCompraExistente.setPrecio(oCompraEntity.getPrecio());
         oCompraExistente.setArticulo(oArticuloService.get(oCompraEntity.getArticulo().getId()));
@@ -80,15 +89,19 @@ public class CompraService {
             oCompra.setCantidad(oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 50));
             Long totalArticulos = oArticuloRepository.count();
             if (totalArticulos > 0) {
-                //List<ArticuloEntity> articulos = oArticuloRepository.findAll();
-                //ArticuloEntity articulo = articulos.get(oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, articulos.size() - 1));
+                // List<ArticuloEntity> articulos = oArticuloRepository.findAll();
+                // ArticuloEntity articulo =
+                // articulos.get(oAleatorioService.generarNumeroAleatorioEnteroEnRango(0,
+                // articulos.size() - 1));
                 oCompra.setArticulo(oArticuloService.getOneRandom());
-                //oCompra.setPrecio(articulo.getPrecio());
+                // oCompra.setPrecio(articulo.getPrecio());
             }
             Long totalFacturas = oFacturaRepository.count();
             if (totalFacturas > 0) {
-                //List<FacturaEntity> facturas = oFacturaRepository.findAll();
-                //FacturaEntity factura = facturas.get(oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, facturas.size() - 1));
+                // List<FacturaEntity> facturas = oFacturaRepository.findAll();
+                // FacturaEntity factura =
+                // facturas.get(oAleatorioService.generarNumeroAleatorioEnteroEnRango(0,
+                // facturas.size() - 1));
                 oCompra.setFactura(oFacturaService.getOneRandom());
             }
             oCompraRepository.save(oCompra);

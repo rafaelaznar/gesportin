@@ -42,11 +42,25 @@ public class JugadorService {
     }
 
     public JugadorEntity get(Long id) {
-        return oJugadorRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Jugador no encontrado con id: " + id));
+        return oJugadorRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Jugador no encontrado con id: " + id));
     }
 
-    public Page<JugadorEntity> getPage(Pageable pageable) {
-        return oJugadorRepository.findAll(pageable);
+    public Page<JugadorEntity> getPage(
+            Pageable pageable,
+            String posicion,
+            Long idUsuario,
+            Long idEquipo) {
+
+        if (posicion != null && !posicion.isEmpty()) {
+            return oJugadorRepository.findByPosicionContainingIgnoreCase(posicion, pageable);
+        } else if (idUsuario != null) {
+            return oJugadorRepository.findByUsuarioId(idUsuario, pageable);
+        } else if (idEquipo != null) {
+            return oJugadorRepository.findByEquipoId(idEquipo, pageable);
+        } else {
+            return oJugadorRepository.findAll(pageable);
+        }
     }
 
     public JugadorEntity create(JugadorEntity oJugadorEntity) {
@@ -59,7 +73,8 @@ public class JugadorService {
 
     public JugadorEntity update(JugadorEntity oJugadorEntity) {
         JugadorEntity oJugadorExistente = oJugadorRepository.findById(oJugadorEntity.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Jugador no encontrado con id: " + oJugadorEntity.getId()));
+                .orElseThrow(
+                        () -> new ResourceNotFoundException("Jugador no encontrado con id: " + oJugadorEntity.getId()));
         oJugadorExistente.setDorsal(oJugadorEntity.getDorsal());
         oJugadorExistente.setPosicion(oJugadorEntity.getPosicion());
         oJugadorExistente.setCapitan(oJugadorEntity.getCapitan());
@@ -90,7 +105,8 @@ public class JugadorService {
         for (long j = 0; j < cantidad; j++) {
             JugadorEntity oJugador = new JugadorEntity();
             oJugador.setDorsal(oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 99));
-            oJugador.setPosicion(posiciones.get(oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, posiciones.size() - 1)));
+            oJugador.setPosicion(
+                    posiciones.get(oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, posiciones.size() - 1)));
             oJugador.setCapitan(oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, 1) == 1);
             oJugador.setImagen(null);
             oJugador.setUsuario(oUsuarioService.getOneRandom());

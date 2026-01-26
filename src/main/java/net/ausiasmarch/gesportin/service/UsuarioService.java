@@ -50,20 +50,23 @@ public class UsuarioService {
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con id: " + id));
     }
 
-    public Page<UsuarioEntity> getPage(Pageable pageable, String nombre, String username, Long idTipousuario, Long idClub) {
+     public Page<UsuarioEntity> getPage(Pageable pageable, String nombre, String username, Long id_Tipousuario, Long id_Club, Long id_Rol) {
         if (nombre != null && !nombre.isEmpty()) {
             return oUsuarioRepository.findByNombreContainingIgnoreCase(nombre, pageable);
-        } else if (username != null && !username.isEmpty()) {
+        } else if (username != null) {
             return oUsuarioRepository.findByUsernameContainingIgnoreCase(username, pageable);
-        }//  else if (idTipousuario != null) {
-        //     return oUsuarioRepository.findByIdTipousuario(idTipousuario, pageable);
-        //  } // else if (idClub != null) {
-        //     // return oUsuarioRepository.findByIdClub(idClub, pageable);
-        //} else {
-        {
+        } else if (id_Tipousuario != null) {
+            return oUsuarioRepository.findByTipousuarioId(id_Tipousuario, pageable);
+        } else if (id_Club != null) {
+            return oUsuarioRepository.findByClubId(id_Club, pageable);
+        }
+        else if (id_Rol != null) {
+            return oUsuarioRepository.findByRolusuarioId(id_Rol, pageable);
+        }
+        else 
             return oUsuarioRepository.findAll(pageable);
         }
-    }
+    
 
     public UsuarioEntity create(UsuarioEntity oUsuarioEntity) {
         oUsuarioEntity.setId(null);

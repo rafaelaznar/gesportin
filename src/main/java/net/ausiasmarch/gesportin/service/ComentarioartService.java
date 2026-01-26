@@ -51,8 +51,14 @@ public class ComentarioartService {
                 .orElseThrow(() -> new ResourceNotFoundException("Comentarioart no encontrado con id: " + id));
     }
 
-    public Page<ComentarioartEntity> getPage(Pageable oPageable) {
-        return oComentarioartRepository.findAll(oPageable);
+    public Page<ComentarioartEntity> getPage(Pageable oPageable, Long id_articulo, Long id_usuario) {
+        if (id_articulo != null) {
+            return oComentarioartRepository.findByArticuloId(id_articulo, oPageable);
+        } else if (id_usuario != null) {
+            return oComentarioartRepository.findByUsuarioId(id_usuario, oPageable);
+        }else{
+            return oComentarioartRepository.findAll(oPageable);
+        }
     }
 
     public ComentarioartEntity create(ComentarioartEntity oComentarioartEntity) {

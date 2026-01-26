@@ -25,8 +25,12 @@ public class FacturaService {
                 .orElseThrow(() -> new ResourceNotFoundException("Factura no encontrado con id: " + id));
     }
 
-    public Page<FacturaEntity> getPage(Pageable pageable) {
-        return oFacturaRepository.findAll(pageable);
+    public Page<FacturaEntity> getPage(Pageable pageable, Long id_usuario) {
+        if (id_usuario != null) {
+            return oFacturaRepository.findByUsuarioId(id_usuario, pageable);
+        } else {
+            return oFacturaRepository.findAll(pageable);
+        }
     }
 
     public FacturaEntity create(FacturaEntity oFacturaEntity) {

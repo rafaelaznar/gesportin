@@ -28,8 +28,15 @@ public class CategoriaService {
                 .orElseThrow(() -> new ResourceNotFoundException("Categoria no encontrado con id: " + id));
     }
 
-    public Page<CategoriaEntity> getPage(Pageable pageable) {
-        return oCategoriaRepository.findAll(pageable);
+    public Page<CategoriaEntity> getPage(Pageable pageable, String nombre, Long id_temporada) {
+
+        if(nombre != null && !nombre.isEmpty()) {
+            return oCategoriaRepository.findByNombreContainingIgnoreCase(nombre, pageable);
+        } else if(id_temporada != null) {
+            return oCategoriaRepository.findByTemporadaId(id_temporada, pageable);
+        } else {
+            return oCategoriaRepository.findAll(pageable);
+        }
     }
 
     public CategoriaEntity create(CategoriaEntity oCategoriaEntity) {

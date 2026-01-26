@@ -14,4 +14,8 @@ public interface PagoRepository extends JpaRepository<PagoEntity, Long> {
     Page<PagoEntity> findByAbonadoFalse(Pageable oPageable);
 
     PagoEntity findByIdAndAbonadoTrue(Long id);
+
+    Page<PagoEntity> findByCuotaId(Long idCuota, Pageable oPageable);
+
+    Page<PagoEntity> findByJugadorId(Long idJugador, Pageable oPageable);
 }

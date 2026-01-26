@@ -31,8 +31,8 @@ public class CategoriaApi {
     }
 
     @GetMapping
-    public ResponseEntity<Page<CategoriaEntity>> getPage(Pageable pageable) {
-        return ResponseEntity.ok(oCategoriaService.getPage(pageable));
+    public ResponseEntity<Page<CategoriaEntity>> getPage(Pageable pageable, @PathVariable String nombre, @PathVariable Long id_temporada) {
+        return ResponseEntity.ok(oCategoriaService.getPage(pageable, nombre, id_temporada));
     }
 
     @PostMapping

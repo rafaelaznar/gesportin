@@ -36,9 +36,11 @@ public class LigaService {
                 .orElseThrow(() -> new ResourceNotFoundException("Liga no encontrado con id: " + id));
     }
 
-    public Page<LigaEntity> getPage(Pageable pageable, String nombre) {
+    public Page<LigaEntity> getPage(Pageable pageable, String nombre, Long id_equipo) {
         if (nombre != null && !nombre.isEmpty()) {
             return oLigaRepository.findByNombreContainingIgnoreCase(nombre, pageable);
+        } else if (id_equipo != null) {
+            return oLigaRepository.findByIdEquipo(id_equipo, pageable);
         } else {
             return oLigaRepository.findAll(pageable);
         }

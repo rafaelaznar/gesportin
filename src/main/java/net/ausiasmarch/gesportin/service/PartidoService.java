@@ -29,11 +29,16 @@ public class PartidoService {
             "Real Sociedad", "Granada", "Celta", "Getafe", "Espanyol", "Mallorca", "Osasuna", "Alavés");
 
     public PartidoEntity get(Long id) {
-        return oPartidoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Partido no encontrado con id: " + id));
+        return oPartidoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Partido no encontrado con id: " + id));
     }
 
-    public Page<PartidoEntity> getPage(Pageable pageable) {
-        return oPartidoRepository.findAll(pageable);
+    public Page<PartidoEntity> getPage(Pageable pageable, Long id_liga) {
+        if (id_liga != null) {
+            return oPartidoRepository.findByLigaId(id_liga, pageable);
+        } else {
+            return oPartidoRepository.findAll(pageable);
+        }
     }
 
     public PartidoEntity create(PartidoEntity oPartidoEntity) {
@@ -44,7 +49,8 @@ public class PartidoService {
 
     public PartidoEntity update(PartidoEntity oPartidoEntity) {
         PartidoEntity oPartidoExistente = oPartidoRepository.findById(oPartidoEntity.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Partido no encontrado con id: " + oPartidoEntity.getId()));
+                .orElseThrow(
+                        () -> new ResourceNotFoundException("Partido no encontrado con id: " + oPartidoEntity.getId()));
         oPartidoExistente.setRival(oPartidoEntity.getRival());
         oPartidoExistente.setLiga(oLigaService.get(oPartidoEntity.getLiga().getId()));
         oPartidoExistente.setLocal(oPartidoEntity.getLocal());
@@ -72,7 +78,8 @@ public class PartidoService {
     public Long fill(Long cantidad) {
         for (long j = 0; j < cantidad; j++) {
             PartidoEntity oPartido = new PartidoEntity();
-            String rival = alRivales.get(oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, alRivales.size() - 1));
+            String rival = alRivales
+                    .get(oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, alRivales.size() - 1));
             oPartido.setRival(rival);
             oPartido.setLiga(oLigaService.getOneRandom());
             oPartido.setLocal(oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, 1) == 1);
