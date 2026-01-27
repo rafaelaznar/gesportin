@@ -1,1 +1,52 @@
-<p>unrouted-noticia-view works!</p>
+<div class="container m-5 post-view">
+  <article class="post-card p-5 border rounded shadow-sm">
+
+    <!-- ID -->
+    <section>
+        <div>
+            <p style="font-weight: bold;">ID:</p>
+            <pre>{{ noticiaSeleccionada?.id }}</pre>
+        </div>
+    </section>
+
+    <!-- Título -->
+    <section>
+        <div>
+            <p style="font-weight: bold;">Título:</p>
+            <pre>{{ noticiaSeleccionada?.titulo }}</pre>
+        </div>
+    </section>
+    
+    <!-- Contenido -->
+    <section>
+        <div>
+            <p style="font-weight: bold;">Contenido:</p>
+            <pre>{{ noticiaSeleccionada?.contenido }}</pre>
+        </div>
+    </section>
+    
+    <!-- Fecha -->
+    <section>
+        <div>
+            <p style="font-weight: bold;">Fecha:</p>
+            <pre>{{ noticiaSeleccionada?.fecha }}</pre>
+        </div>
+    </section>
+    
+    <!-- Imagen -->
+    <section>
+        <div>
+            <p style="font-weight: bold;">Imagen:</p>
+            <pre>{{ noticiaSeleccionada?.imagen }}</pre>
+        </div>
+    </section>
+    
+    <!-- ID_Club-->
+    <section>
+        <div>
+            <p style="font-weight: bold;">ID_Club:</p>
+            <pre>{{ noticiaSeleccionada?.id_club }}</pre>
+        </div>
+    </section>
+  </article>
+</div>
