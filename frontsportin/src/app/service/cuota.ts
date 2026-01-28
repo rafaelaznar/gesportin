@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+mport { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { serverURL } from '../environment/environment';
 import { IPage } from '../model/plist';
@@ -22,8 +22,15 @@ export class CuotaService {
     return this.oHttp.get<IPage<ICuota>>(serverURL + `/cuota?page=${page}&size=${rpp}&sort=${order},${direction}`);
   }
 
-  rellenaCuota(numCuotas: number): Observable<number> {
-    return this.oHttp.get<number>(serverURL + '/cuota/rellena/' + numCuotas);
-  }
+  // pte: filtrado por equipo
+  // getPageByEquipo(page: number, rpp: number, order: string = '', direction: string = '', id_equipo: number): Observable<IPage<ICuota>> {
+  //   if (order === '') {
+  //     order = 'id';
+  //   }
+  //   if (direction === '') {
+  //     direction = 'asc';
+  //   }
+  //   return this.oHttp.get<IPage<ICuota>>(serverURL + `/cuota?page=${page}&size=${rpp}&sort=${order},${direction}&id_equipo=${id_equipo}`);
+  // }
 
 }

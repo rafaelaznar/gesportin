@@ -1,9 +1,8 @@
 <div class="container my-2">
   <div class="d-flex justify-content-center my-3">
-    <h1>Lista de Artículos</h1>
+    <h1>Listado de Cuotas</h1>
   </div>
 
-  <!-- Aviso (mensaje desde queryParams) -->
   @if (message()) {
   <div class="d-flex justify-content-center my-2">
     <div class="alert alert-success w-100 text-center" role="alert">
@@ -12,12 +11,10 @@
   </div>
   }
 
-  <!-- Total registros -->
   <div class="d-flex justify-content-center my-1">
     <small class="text-muted">Total registros: {{ totalRecords() || 0 }}</small>
   </div>
 
-  <!-- Ocultar paginación y RPP si no hay registros -->
   @if (totalRecords() > 0) {
   <div class="d-flex justify-content-between my-1">
     <app-paginacion [numPage]="numPage()" [numPages]="oPage()?.totalPages || 1" (pageChange)="goToPage($event)">
@@ -43,7 +40,7 @@
               }
             </span>
           </th>
-          <th scope="col" (click)="onOrder('descripcion')" style="cursor: pointer; width: 35%">
+          <th scope="col" (click)="onOrder('descripcion')" style="cursor: pointer; width: 25%">
             <span class="header-inline">Descripción
               @if (orderField() === 'descripcion') {
               @if (orderDirection() === 'asc') {
@@ -55,9 +52,9 @@
               }
             </span>
           </th>
-          <th scope="col" (click)="onOrder('precio')" style="cursor: pointer; width: 10%">
-            <span class="header-inline">Precio
-              @if (orderField() === 'precio') {
+          <th scope="col" (click)="onOrder('cantidad')" style="cursor: pointer; width: 10%">
+            <span class="header-inline">Cantidad
+              @if (orderField() === 'cantidad') {
               @if (orderDirection() === 'asc') {
               <i class="bi bi-caret-up-fill ms-1" aria-hidden="true"></i>
               }
@@ -67,21 +64,21 @@
               }
             </span>
           </th>
-          <th scope="col" (click)="onOrder('descuento')" style="cursor: pointer; width: 10%">
-            <span class="header-inline">Descuento
-              @if (orderField() === 'descuento') {
+          <th scope="col" (click)="onOrder('fecha')" style="cursor: pointer; width: 15%">
+            <span class="header-inline">Fecha
+              @if (orderField() === 'fecha') {
               @if (orderDirection() === 'asc') {
-              <i class="bi bi-caret-up-fill ms-1" aria-hidden="true"></i>
+              <i class="bi bi-caret-up-fill ms-1"></i>
               }
               @if (orderDirection() === 'desc') {
-              <i class="bi bi-caret-down-fill ms-1" aria-hidden="true"></i>
+              <i class="bi bi-caret-down-fill ms-1"></i>
               }
               }
             </span>
           </th>
-          <th scope="col" (click)="onOrder('tipoarticulo')" style="cursor: pointer; width: 20%">
-            <span class="header-inline">Tipo de Artículo
-              @if (orderField() === 'nombreTipoArticulo') {
+          <th scope="col" (click)="onOrder('equipo')" style="cursor: pointer; width: 20%">
+            <span class="header-inline">Equipo
+              @if (orderField() === 'equipo') {
               @if (orderDirection() === 'asc') {
               <i class="bi bi-caret-up-fill ms-1" aria-hidden="true"></i>
               }
@@ -92,13 +89,7 @@
             </span>
           </th>
           <th scope="col" style="width: 10%">
-            <span class="header-inline">Comentarios </span>
-          </th>
-          <th scope="col" style="width: 10%">
-            <span class="header-inline">Compras </span>
-          </th>
-          <th scope="col" style="width: 10%">
-            <span class="header-inline">Carritos </span>
+            <span class="header-inline">Pagos </span>
           </th>
           <th scope="col">
             <span class="header-inline">Acciones </span>
@@ -106,40 +97,22 @@
         </tr>
       </thead>
       <tbody>
-        @for (oArticulo of oPage()?.content; track oArticulo.id) {
+        @for (oCuota of oPage()?.content; track oCuota.id) {
         <tr>
-          <th scope="row" style="text-align: center">{{ oArticulo.id }}</th>
-          <td>{{ oArticulo.descripcion }}</td>
-          <td style="text-align: right">{{ oArticulo.precio }} €</td>
-          <td style="text-align: right">
-            @if (oArticulo.descuento == null) {
-            0 %
-            } @else {
-            {{ oArticulo.descuento }} %
-            }
-          </td>
-
-          <td>
-            {{ oArticulo.tipoarticulo.descripcion | trim: 20 }}
-
-
-            <a class="btn btn-warning btn-sm" [routerLink]="['/articulo/edit', oArticulo.id]" role="button"
-              title="Editar"><i class="bi bi-pencil" aria-hidden="true"></i> {{ ' (' + oArticulo.tipoarticulo.id + ')'
-              }}</a>
-
-
-          </td>
-          <td style="text-align: center">{{ oArticulo.comentarioarts }}</td>
-          <td style="text-align: center">{{ oArticulo.compras }}</td>
-          <td style="text-align: center">{{ oArticulo.carritos }}</td>
+          <th scope="row" style="text-align: center">{{ oCuota.id }}</th>
+          <td>{{ oCuota.descripcion }}</td>
+          <td style="text-align: right">{{ oCuota.cantidad }} €</td>
+          <td>{{ oCuota.fecha | datetime }}</td>
+          <td>{{ oCuota.equipo.nombre }}</td>
+          <td style="text-align: center">{{ oCuota.pagos }}</td>
           <td>
             <div class="d-flex justify-content-center">
               <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
-                <a class="btn btn-primary btn-sm" [routerLink]="['/articulo/view', oArticulo.id]" role="button"
-                  title="Ver"><i class="bi bi-eye" aria-hidden="true"></i></a>
-                <a class="btn btn-warning btn-sm" [routerLink]="['/articulo/edit', oArticulo.id]" role="button"
+                <a class="btn btn-primary btn-sm" [routerLink]="['/cuota/view', oCuota.id]" role="button" title="Ver"><i
+                    class="bi bi-eye" aria-hidden="true"></i></a>
+                <a class="btn btn-warning btn-sm" [routerLink]="['/cuota/edit', oCuota.id]" role="button"
                   title="Editar"><i class="bi bi-pencil" aria-hidden="true"></i></a>
-                <a class="btn btn-danger btn-sm" [routerLink]="['/articulo/delete', oArticulo.id]" role="button"
+                <a class="btn btn-danger btn-sm" [routerLink]="['/cuota/delete', oCuota.id]" role="button"
                   title="Eliminar"><i class="bi bi-trash" aria-hidden="true"></i></a>
               </div>
             </div>
