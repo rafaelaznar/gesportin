@@ -130,7 +130,17 @@
 
             <td>
               {{ oArticulo.tipoarticulo.descripcion | trim: 20 }}
-              {{ ' (' + oArticulo.tipoarticulo.id + ')' }}
+            
+
+                  <a
+                    class="btn btn-warning btn-sm"
+                    [routerLink]="['/articulo/edit', oArticulo.id]"
+                    role="button"
+                    title="Editar"
+                    ><i class="bi bi-pencil" aria-hidden="true"></i
+                  >  {{ ' (' + oArticulo.tipoarticulo.id + ')' }}</a>
+
+
             </td>
             <td style="text-align: center">{{ oArticulo.comentarioarts }}</td>
             <td style="text-align: center">{{ oArticulo.compras }}</td>

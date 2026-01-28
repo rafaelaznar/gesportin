@@ -14,7 +14,7 @@ import { TrimPipe } from '../../../pipe/trim-pipe';
   templateUrl: './articulo-plist.html',
   styleUrl: './articulo-plist.css',
 })
-export class AdminPlist {
+export class ArticuloPlistAdminRouted {
   oPage = signal<IPage<IArticulo> | null>(null);
   numPage = signal<number>(0);
   numRpp = signal<number>(5);
