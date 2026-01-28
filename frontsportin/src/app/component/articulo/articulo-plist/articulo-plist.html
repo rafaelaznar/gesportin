@@ -101,9 +101,9 @@
               }
             </span>
           </th>
-          <th scope="col" (click)="onOrder('tipoarticulonombre')" style="cursor:pointer; width:20%">
-            <span class="header-inline">Nombre Tipo Artículo
-              @if (orderField === 'nombreTipoArticulo') {
+          <th scope="col" (click)="onOrder('tipoarticulodescripcion')" style="cursor:pointer; width:20%">
+            <span class="header-inline">Descripción Tipo Artículo
+              @if (orderField === 'descTipoArticulo') {
                 @if (orderDirection === 'asc') {
                     <i class="bi bi-caret-up-fill ms-1" aria-hidden="true"></i>
                 } @if (orderDirection === 'desc') {
