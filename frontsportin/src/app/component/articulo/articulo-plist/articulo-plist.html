@@ -90,9 +90,20 @@
               }
             </span>
           </th>
-          <th scope="col" (click)="onOrder('tipoarticulo')" style="cursor:pointer; width:10%">
+          <th scope="col" (click)="onOrder('tipoarticuloid')" style="cursor:pointer; width:10%">
             <span class="header-inline">ID Tipo Artículo
               @if (orderField === 'idTipoArticulo') {
+                @if (orderDirection === 'asc') {
+                    <i class="bi bi-caret-up-fill ms-1" aria-hidden="true"></i>
+                } @if (orderDirection === 'desc') {
+                    <i class="bi bi-caret-down-fill ms-1" aria-hidden="true"></i>
+                }
+              }
+            </span>
+          </th>
+          <th scope="col" (click)="onOrder('tipoarticulonombre')" style="cursor:pointer; width:20%">
+            <span class="header-inline">Nombre Tipo Artículo
+              @if (orderField === 'nombreTipoArticulo') {
                 @if (orderDirection === 'asc') {
                     <i class="bi bi-caret-up-fill ms-1" aria-hidden="true"></i>
                 } @if (orderDirection === 'desc') {
@@ -112,6 +123,7 @@
           <td>{{ oArticulo.descuento }}</td>
           <td>{{ oArticulo.imagen }}</td>
           <td>{{ oArticulo.tipoarticulo.id }}</td>
+          <td>{{ oArticulo.tipoarticulo.descripcion }}</td>
         </tr>
         }
       </tbody>
