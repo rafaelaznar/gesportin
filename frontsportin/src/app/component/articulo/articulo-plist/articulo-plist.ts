@@ -1,40 +1,43 @@
-import { Component } from '@angular/core';
+import { Component, signal, computed, effect } from '@angular/core';
 import { IArticulo } from '../../../model/articulo';
 import { IPage } from '../../../model/plist';
 import { ArticuloService } from '../../../service/articulo';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Paginacion } from "../../shared/paginacion/paginacion";
-import { BotoneraRpp } from "../../shared/botonera-rpp/botonera-rpp";
+import { Paginacion } from '../../shared/paginacion/paginacion';
+import { BotoneraRpp } from '../../shared/botonera-rpp/botonera-rpp';
+import { TrimPipe } from '../../../pipe/trim-pipe';
 
 @Component({
   selector: 'app-articulo-plist',
-  imports: [Paginacion, BotoneraRpp],
+  imports: [Paginacion, BotoneraRpp, TrimPipe, RouterLink],
   templateUrl: './articulo-plist.html',
   styleUrl: './articulo-plist.css',
 })
 export class AdminPlist {
-
-  oPage: IPage<IArticulo> | null = null;
-  numPage: number = 0;
-  numRpp: number = 5;
-  rellenaCantidad: number = 10;
-  rellenando: boolean = false;
-  rellenaOk: number | null = null;
-  rellenaError: string | null = null;
-  publishingId: number | null = null;
-  publishingAction: 'publicar' | 'despublicar' | null = null;
+  oPage = signal<IPage<IArticulo> | null>(null);
+  numPage = signal<number>(0);
+  numRpp = signal<number>(5);
+  rellenaCantidad = signal<number>(10);
+  rellenando = signal<boolean>(false);
+  rellenaOk = signal<number | null>(null);
+  rellenaError = signal<string | null>(null);
+  publishingId = signal<number | null>(null);
+  publishingAction = signal<'publicar' | 'despublicar' | null>(null);
 
   // Mensajes y total
-  message: string | null = null;
-  totalRecords: number = 0;
+  message = signal<string | null>(null);
+  totalRecords = computed(() => this.oPage()?.totalElements ?? 0);
   private messageTimeout: any = null;
 
   // Variables de ordenamiento
-  orderField: string = 'id';
-  orderDirection: 'asc' | 'desc' = 'asc';
+  orderField = signal<string>('id');
+  orderDirection = signal<'asc' | 'desc'>('asc');
 
-  constructor(private oArticuloService: ArticuloService, private route: ActivatedRoute) { }
+  constructor(
+    private oArticuloService: ArticuloService,
+    private route: ActivatedRoute,
+  ) {}
 
   ngOnInit() {
     const msg = this.route.snapshot.queryParamMap.get('msg');
@@ -45,56 +48,56 @@ export class AdminPlist {
   }
 
   private showMessage(msg: string, duration: number = 4000) {
-    this.message = msg;
+    this.message.set(msg);
     if (this.messageTimeout) {
       clearTimeout(this.messageTimeout);
     }
     this.messageTimeout = setTimeout(() => {
-      this.message = null;
+      this.message.set(null);
       this.messageTimeout = null;
     }, duration);
   }
 
   getPage() {
-    this.oArticuloService.getPage(this.numPage, this.numRpp, this.orderField, this.orderDirection).subscribe({
-      next: (data: IPage<IArticulo>) => {
-        this.oPage = data;
-        this.totalRecords = data?.totalElements ?? 0;
-        if (this.numPage > 0 && this.numPage >= data.totalPages) {
-          this.numPage = data.totalPages - 1;
-          this.getPage();
-        }
-      },
-      error: (error: HttpErrorResponse) => {
-        console.error(error);
-      },
-    });
+    this.oArticuloService
+      .getPage(this.numPage(), this.numRpp(), this.orderField(), this.orderDirection())
+      .subscribe({
+        next: (data: IPage<IArticulo>) => {
+          this.oPage.set(data);
+          if (this.numPage() > 0 && this.numPage() >= data.totalPages) {
+            this.numPage.set(data.totalPages - 1);
+            this.getPage();
+          }
+        },
+        error: (error: HttpErrorResponse) => {
+          console.error(error);
+        },
+      });
   }
 
   onOrder(order: string) {
-    if (this.orderField === order) {
-      this.orderDirection = this.orderDirection === 'asc' ? 'desc' : 'asc';
+    if (this.orderField() === order) {
+      this.orderDirection.set(this.orderDirection() === 'asc' ? 'desc' : 'asc');
     } else {
-      this.orderField = order;
-      this.orderDirection = 'asc';
+      this.orderField.set(order);
+      this.orderDirection.set('asc');
     }
-    this.numPage = 0;
+    this.numPage.set(0);
     this.getPage();
   }
 
   goToPage(numPage: number) {
-    this.numPage = numPage;
+    this.numPage.set(numPage);
     this.getPage();
   }
 
   onRppChange(n: number) {
-    this.numRpp = n;
-    this.numPage = 0;
+    this.numRpp.set(n);
+    this.numPage.set(0);
     this.getPage();
   }
 
   onCantidadChange(value: string) {
-    this.rellenaCantidad = +value;
+    this.rellenaCantidad.set(+value);
   }
-
 }
