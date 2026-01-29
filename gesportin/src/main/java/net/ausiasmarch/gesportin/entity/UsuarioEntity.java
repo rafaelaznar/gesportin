@@ -122,4 +122,12 @@ public class UsuarioEntity {
     public int getFacturas() {
         return facturas.size();
     }
+
+    public int getEquiposentrenados() {
+        return equiposentrenados.size();
+    }
+
+    public int getJugadores() {
+        return jugadores.size(); // OJO siempre 1 porque es 1 a 1 
+    }
 }
