@@ -9,16 +9,30 @@ import { serverURL } from '../environment/environment';
   providedIn: 'root',
 })
 export class ArticuloService {
-  constructor(private oHttp: HttpClient) { }
+  constructor(private oHttp: HttpClient) {}
 
-  getPage(page: number, rpp: number, order: string = '', direction: string = ''): Observable<IPage<IArticulo>> {
+  getPage(
+    page: number,
+    rpp: number,
+    order: string = '',
+    direction: string = '',
+    tipoarticulo: number = 0,
+  ): Observable<IPage<IArticulo>> {
     if (order === '') {
       order = 'id';
     }
     if (direction === '') {
       direction = 'asc';
     }
-    return this.oHttp.get<IPage<IArticulo>>(serverURL + `/articulo?page=${page}&size=${rpp}&sort=${order},${direction}`);
+    if (tipoarticulo > 0) {
+      return this.oHttp.get<IPage<IArticulo>>(
+        serverURL +
+          `/articulo?page=${page}&size=${rpp}&sort=${order},${direction}&tipoarticulo=${tipoarticulo}`,
+      );
+    }
+    return this.oHttp.get<IPage<IArticulo>>(
+      serverURL + `/articulo?page=${page}&size=${rpp}&sort=${order},${direction}`,
+    );
   }
 
   // get(id: number): Observable<IArticulo> {
@@ -41,11 +55,11 @@ export class ArticuloService {
   //   return this.oHttp.delete<number>(serverURL + '/articulo/empty');
   // }
 
-//   publicar(id: number): Observable<number> {
-//     return this.oHttp.put<number>(serverURL + '/articulo/publicar/' + id, {});
-//   }
+  //   publicar(id: number): Observable<number> {
+  //     return this.oHttp.put<number>(serverURL + '/articulo/publicar/' + id, {});
+  //   }
 
-//   despublicar(id: number): Observable<number> {
-//     return this.oHttp.put<number>(serverURL + '/articulo/despublicar/' + id, {});
-//   }
+  //   despublicar(id: number): Observable<number> {
+  //     return this.oHttp.put<number>(serverURL + '/articulo/despublicar/' + id, {});
+  //   }
 }
