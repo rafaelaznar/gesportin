@@ -34,33 +34,25 @@ export class ArticuloPlistAdminRouted {
   orderField = signal<string>('id');
   orderDirection = signal<'asc' | 'desc'>('asc');
 
+  // Variables de filtro
+  tipoarticulo = signal<number>(0);
+
   constructor(
     private oArticuloService: ArticuloService,
     private route: ActivatedRoute,
   ) {}
 
-  ngOnInit() {
-    const msg = this.route.snapshot.queryParamMap.get('msg');
-    if (msg) {
-      this.showMessage(msg);
+  ngOnInit() {    
+    const id = this.route.snapshot.paramMap.get('tipoarticulo');      
+    if (id) {
+      this.tipoarticulo.set(+id); 
     }
     this.getPage();
   }
 
-  private showMessage(msg: string, duration: number = 4000) {
-    this.message.set(msg);
-    if (this.messageTimeout) {
-      clearTimeout(this.messageTimeout);
-    }
-    this.messageTimeout = setTimeout(() => {
-      this.message.set(null);
-      this.messageTimeout = null;
-    }, duration);
-  }
-
   getPage() {
     this.oArticuloService
-      .getPage(this.numPage(), this.numRpp(), this.orderField(), this.orderDirection())
+      .getPage(this.numPage(), this.numRpp(), this.orderField(), this.orderDirection(), this.tipoarticulo())
       .subscribe({
         next: (data: IPage<IArticulo>) => {
           this.oPage.set(data);

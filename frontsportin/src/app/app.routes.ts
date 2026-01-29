@@ -6,6 +6,5 @@ import { PlistEquipo } from './component/shared/equipo/equipo-plist';
 export const routes: Routes = [
     { path: '', component: Home },
     { path: 'articulo', component: ArticuloPlistAdminRouted},
-    { path: 'articulo?:id_tipoarticulo', component: ArticuloPlistAdminRouted}, //pte
-    { path: 'equipo', component: PlistEquipo },
+    { path: 'articulo/:tipoarticulo', component: ArticuloPlistAdminRouted}    
 ];
