@@ -2,11 +2,11 @@ import { Component, signal, computed, effect } from '@angular/core';
 import { ICuota } from '../../../model/cuota';
 import { IPage } from '../../../model/plist';
 import { CuotaService } from '../../../service/cuota';
+import { DatetimePipe } from '../../../pipe/datetime-pipe';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Paginacion } from '../../shared/paginacion/paginacion';
 import { BotoneraRpp } from '../../shared/botonera-rpp/botonera-rpp';
-import { DatetimePipe } from '../../../pipe/datetime-pipe';
 import { TrimPipe } from '../../../pipe/trim-pipe';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
@@ -42,7 +42,7 @@ export class CuotaPlistAdminRouted {
   //variables de búsqueda
   descripcion = signal<string>('');
   private searchSubject = new Subject<string>();
-  private searchSubcription?: Subscription;
+  private searchSubscription?: Subscription;
 
   constructor(
     private oCuotaService: CuotaService,
@@ -56,7 +56,7 @@ export class CuotaPlistAdminRouted {
     }
 
     //Configurar el debounce para la búsqueda
-    this.searchSubcription = this.searchSubject
+    this.searchSubscription = this.searchSubject
     .pipe(
       debounceTime(debounceTimeSearch),
       distinctUntilChanged(),
@@ -70,20 +70,23 @@ export class CuotaPlistAdminRouted {
     this.getPage();
   }
 
-  private showMessage(msg: string, duration: number = 4000) {
-    this.message.set(msg);
-    if (this.messageTimeout) {
-      clearTimeout(this.messageTimeout);
+  ngOnDestroy() {
+    // Limpiar la suscripción para evitar memory leaks
+    if (this.searchSubscription) {
+      this.searchSubscription.unsubscribe();
     }
-    this.messageTimeout = setTimeout(() => {
-      this.message.set(null);
-      this.messageTimeout = null;
-    }, duration);
   }
 
   getPage() {
     this.oCuotaService
-      .getPage(this.numPage(), this.numRpp(), this.orderField(), this.orderDirection())
+      .getPage(
+        this.numPage(),
+        this.numRpp(), 
+        this.orderField(), 
+        this.orderDirection(),
+      this.descripcion(),
+      this.equipo(),
+      )
       .subscribe({
         next: (data: IPage<ICuota>) => {
           this.oPage.set(data);
@@ -122,5 +125,9 @@ export class CuotaPlistAdminRouted {
 
   onCantidadChange(value: string) {
     this.rellenaCantidad.set(+value);
+  }
+
+  onSearchDescription(value: string) {
+    this.searchSubject.next(value);
   }
 }
