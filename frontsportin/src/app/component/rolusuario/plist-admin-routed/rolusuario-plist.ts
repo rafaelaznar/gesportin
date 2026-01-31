@@ -1,6 +1,6 @@
 import { Component, signal, computed } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { debounceTimeSearch } from '../../../environment/environment';
@@ -14,16 +14,20 @@ import { BotoneraRpp } from '../../shared/botonera-rpp/botonera-rpp';
 
 @Component({
   selector: 'app-rolusuario-plist',
-  standalone: true,
-  imports: [Paginacion, BotoneraRpp],
+  imports: [Paginacion, BotoneraRpp, RouterLink],
   templateUrl: './rolusuario-plist.html',
   styleUrl: './rolusuario-plist.css',
 })
 export class RolusuarioPlist {
-  // Página / paginación (signals)
   oPage = signal<IPage<IRolusuario> | null>(null);
   numPage = signal<number>(0);
   numRpp = signal<number>(5);
+  rellenaCantidad = signal<number>(10);
+  rellenando = signal<boolean>(false);
+  rellenaOk = signal<number | null>(null);
+  rellenaError = signal<string | null>(null);
+  publishingId = signal<number | null>(null);
+  publishingAction = signal<'publicar' | 'despublicar' | null>(null);
 
   // Mensajes y total
   message = signal<string | null>(null);
@@ -45,8 +49,6 @@ export class RolusuarioPlist {
   ) { }
 
   ngOnInit() {
-    const msg = this.route.snapshot.queryParamMap.get('msg');
-
     // Configurar el debounce para la búsqueda
     this.searchSubscription = this.searchSubject
       .pipe(
@@ -102,20 +104,21 @@ export class RolusuarioPlist {
     }
     this.numPage.set(0);
     this.getPage();
-    return false;
   }
 
   goToPage(numPage: number) {
     this.numPage.set(numPage);
     this.getPage();
-    return false;
   }
 
   onRppChange(n: number) {
     this.numRpp.set(n);
     this.numPage.set(0);
     this.getPage();
-    return false;
+  }
+
+    onCantidadChange(value: string) {
+    this.rellenaCantidad.set(+value);
   }
 
   onSearchDescription(value: string) {
