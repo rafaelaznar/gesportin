@@ -7,6 +7,9 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Paginacion } from '../../shared/paginacion/paginacion';
 import { BotoneraRpp } from '../../shared/botonera-rpp/botonera-rpp';
 import { TrimPipe } from '../../../pipe/trim-pipe';
+import { Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { debounceTimeSearch } from '../../../environment/environment';
 
 @Component({
   selector: 'app-temporada-plist',
@@ -34,17 +37,50 @@ export class TemporadaPlist {
   orderField = signal<string>('id');
   orderDirection = signal<'asc' | 'desc'>('asc');
 
+  // Variables de filtro
+  club = signal<number>(0);
+
+  // Variables de búsqueda
+  descripcion = signal<string>('');
+  private searchSubject = new Subject<string>();
+  private searchSubscription?: Subscription;
+
   constructor(
     private oTemporadaService: TemporadaService,
     private route: ActivatedRoute,
   ) {}
 
   ngOnInit() {
+    const id = this.route.snapshot.paramMap.get('club');
+    if (id) {
+      this.club.set(+id);
+    }
+
     const msg = this.route.snapshot.queryParamMap.get('msg');
     if (msg) {
       this.showMessage(msg);
     }
+
+    // Configurar el debounce para la búsqueda
+    this.searchSubscription = this.searchSubject
+      .pipe(
+        debounceTime(debounceTimeSearch), // Espera 800ms después de que el usuario deje de escribir
+        distinctUntilChanged(), // Solo emite si el valor cambió
+      )
+      .subscribe((searchTerm: string) => {
+        this.descripcion.set(searchTerm);
+        this.numPage.set(0);
+        this.getPage();
+      });
+
     this.getPage();
+  }
+
+  ngOnDestroy() {
+    // Limpiar la suscripción para evitar memory leaks
+    if (this.searchSubscription) {
+      this.searchSubscription.unsubscribe();
+    }
   }
 
   private showMessage(msg: string, duration: number = 4000) {
@@ -60,7 +96,14 @@ export class TemporadaPlist {
 
   getPage() {
     this.oTemporadaService
-      .getPage(this.numPage(), this.numRpp(), this.orderField(), this.orderDirection())
+      .getPage(
+        this.numPage(),
+        this.numRpp(),
+        this.orderField(),
+        this.orderDirection(),
+        this.descripcion(),
+        this.club(),
+      )
       .subscribe({
         next: (data: IPage<ITemporada>) => {
           this.oPage.set(data);
@@ -99,5 +142,10 @@ export class TemporadaPlist {
 
   onCantidadChange(value: string) {
     this.rellenaCantidad.set(+value);
+  }
+
+  onSearchDescription(value: string) {
+    // Emitir el valor al Subject para que sea procesado con debounce
+    this.searchSubject.next(value);
   }
 }

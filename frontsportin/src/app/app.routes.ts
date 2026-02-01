@@ -4,9 +4,9 @@ import { ArticuloPlistAdminRouted } from './component/articulo/plist-admin-route
 import { TemporadaPlist } from './component/temporada/temporada-plist/temporada-plist';
 
 export const routes: Routes = [
-    { path: '', component: Home },
-    { path: 'temporada', component: TemporadaPlist },
-    { path: 'temporada?:id_club', component: TemporadaPlist}, //pte
-    { path: 'articulo', component: ArticuloPlistAdminRouted},
-    { path: 'articulo/:tipoarticulo', component: ArticuloPlistAdminRouted}    
+  { path: '', component: Home },
+  { path: 'temporada', component: TemporadaPlist },
+  { path: 'temporada/:club', component: TemporadaPlist },
+  { path: 'articulo', component: ArticuloPlistAdminRouted },
+  { path: 'articulo/:tipoarticulo', component: ArticuloPlistAdminRouted },
 ];

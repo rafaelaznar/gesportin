@@ -12,9 +12,34 @@
     </div>
   }
 
+  <!-- Búsqueda por descripción usando debounce -->
+  @if (club() <= 0) {
+    <div class="d-flex justify-content-center my-2">
+      <input
+        class="form-control me-2"
+        type="search"
+        placeholder="Buscar por descripción"
+        aria-label="Search"
+        (input)="onSearchDescription($event.target.value)"
+        [value]="descripcion()"
+        name="searchDescription"
+      />
+    </div>
+  }
+
   <!-- Total registros -->
   <div class="d-flex justify-content-center my-1">
     <small class="text-muted">Total registros: {{ totalRecords() || 0 }}</small>
+    @if (club() > 0) {
+      <small class="text-muted ms-3">Filtro: id de club = {{ club() }}</small>
+      <!-- quitar el filtro -->
+      <a class="ms-2" [routerLink]="['/temporada']" role="button" title="Quitar filtro"
+        ><i class="bi bi-x-lg" aria-hidden="true"></i> Quitar filtro</a
+      >
+    }
+    @if (descripcion().length > 0) {
+      <small class="text-muted ms-3">Filtro: descripción contiene "{{ descripcion() }}"</small>
+    }
   </div>
 
   <!-- Ocultar paginación y RPP si no hay registros -->
@@ -98,16 +123,18 @@
             <th scope="row" style="text-align: center">{{ oTemporada.id }}</th>
             <td>{{ oTemporada.descripcion }}</td>
             <td>
-              {{ oTemporada.club.nombre | trim: 35 }}
-
+              <a [routerLink]="['/club', '/view', oTemporada.club.id]">
+                {{ oTemporada.club.nombre | trim: 20 }}
+                {{ ' (' + oTemporada.club.id + ')' }}
+              </a>
+              <!-- Botón alineado a la derecha para filtrar club -->
               <a
-                class="btn btn-warning btn-sm"
-                [routerLink]="['/temporada/edit', oTemporada.id]"
+                class="btn btn-warning btn-sm ms-2 float-end"
+                [routerLink]="['/temporada', oTemporada.club.id]"
                 role="button"
-                title="Editar"
-                ><i class="bi bi-pencil" aria-hidden="true"></i>
-                {{ ' (' + oTemporada.club.id + ')' }}</a
-              >
+                title="Filtrar por club"
+                ><i class="bi bi-funnel-fill" aria-hidden="true"></i
+              ></a>
             </td>
             <td style="text-align: center">{{ oTemporada.categorias }}</td>
             <td>
