@@ -70,10 +70,19 @@
                 <tr>
                     <th scope="row">{{ oLiga.id }}</th>
                     <td>{{ oLiga.nombre }}</td>
-                    <td>{{ oLiga.equipo?.nombre }} ({{ oLiga.equipo?.id }})
-                        <a class="btn btn-warning btn-sm ms-2 float-end"
-                            [routerLink]="['/liga/', oLiga.equipo.id]" role="button" title="Editar"><i
-                                class="bi bi-funnel-fill" aria-hidden="true"></i></a>
+                    <td>
+                      <a [routerLink]="['/liga/view', oLiga.id]">
+                        {{ oLiga.equipo.nombre }}
+                        {{ ' (' + oLiga.equipo.id + ')' }}
+                      </a>
+                      <!-- Botón alineado a la derecha para filtrar equipo -->
+                      <a
+                        class="btn btn-warning btn-sm ms-2 float-end"
+                        [routerLink]="['/liga/', oLiga.equipo.id]"
+                        role="button"
+                        title="Editar"
+                        ><i class="bi bi-funnel-fill" aria-hidden="true"></i
+                      ></a>
                     </td>
                     <td>{{ oLiga.partidos }}</td>
                     <td>
