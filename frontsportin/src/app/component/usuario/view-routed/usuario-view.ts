@@ -2,21 +2,21 @@ import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { UsuarioService } from '../../services/usuario.service';
-import { IUsuario } from '../..//usuario';
-import { DatetimePipe } from '../../pipe/datetime-pipe';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { DatetimePipe } from '../../../pipe/datetime-pipe';
+import { UsuarioService } from '../../../service/usuarioService';
+import { IUsuario } from '../../../model/usuario';
+
 
 @Component({
   selector: 'app-usuario-view',
-  imports: [CommonModule, RouterLink, DatetimePipe, MatSnackBarModule],
+  imports: [CommonModule, RouterLink, DatetimePipe],
   templateUrl: './usuario-view.html',
   styleUrl: './usuario-view.css',
 })
 export class UsuarioViewRouted implements OnInit {
   private route = inject(ActivatedRoute);
   private oUsuarioService = inject(UsuarioService);
-  private snackBar = inject(MatSnackBar);
+  //private snackBar = inject(MatSnackBar);
 
   oUsuario: IUsuario | null = null;
   loading = true;
@@ -42,7 +42,7 @@ export class UsuarioViewRouted implements OnInit {
       error: (err: HttpErrorResponse) => {
         this.error = 'Error cargando el usuario';
         this.loading = false;
-        this.snackBar.open('Error cargando el usuario', 'Cerrar', { duration: 4000 });
+        //this.snackBar.open('Error cargando el usuario', 'Cerrar', { duration: 4000 });
         console.error(err);
       },
     });

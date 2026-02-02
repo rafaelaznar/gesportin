@@ -16,7 +16,8 @@ import { ClubPlistAdminRouted } from './component/club/plist-admin-routed/club-p
 import { CuotaPlistAdminRouted } from './component/cuota/plist-admin-routed/cuota-plist';
 import { TipousuarioPlistAdminRouted } from './component/tipousario/plist-admin-routed/tipousuario-plist';
 import { TemporadaPlist } from './component/temporada/temporada-plist/temporada-plist';
-import { PlistEquipo } from './component/shared/equipo/equipo-plist';
+import { PlistEquipo } from './component/equipo/equipo-plist';
+
 
 export const routes: Routes = [
     
@@ -25,13 +26,13 @@ export const routes: Routes = [
     { path: 'usuario/tipousuario/:tipousuario', component: UsuarioPlist },
     { path: 'usuario/rol/:rol', component: UsuarioPlist },
     { path: 'usuario/club/:club', component: UsuarioPlist },
+    { path: 'usuario/view/:id', component: UsuarioViewRouted},
     { path: 'temporada', component: TemporadaPlist },
     { path: 'temporada/:club', component: TemporadaPlist },
     { path: 'liga', component: LigaPlistAdminRouted },
     { path: 'liga/:equipo', component: LigaPlistAdminRouted },
     { path: 'articulo', component: ArticuloPlistAdminRouted},
     { path: 'articulo/:tipoarticulo', component: ArticuloPlistAdminRouted},
-    { path: 'usuario/:id', component: UsuarioViewRouted}
     { path: 'categoria', component: CategoriaPlistAdminRouted},
     { path: 'categoria/:temporada', component: CategoriaPlistAdminRouted},
     { path: 'partido', component: PartidoPlistAdminRouted},
@@ -46,7 +47,7 @@ export const routes: Routes = [
     { path: 'jugador/equipo/:id', component: JugadorPlisComponent},
     { path: 'noticia', component: NoticiaPlistAdminRouted},
     { path: 'noticia/:club', component: NoticiaPlistAdminRouted},
-    { path: 'club/plist', component: ClubPlistAdminRouted},
+    { path: 'club', component: ClubPlistAdminRouted},
     { path: 'cuota', component: CuotaPlistAdminRouted},
     { path: 'cuota/:equipo', component: CuotaPlistAdminRouted},
     { path: 'tipousuario', component: TipousuarioPlistAdminRouted},

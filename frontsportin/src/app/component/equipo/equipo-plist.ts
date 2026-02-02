@@ -1,16 +1,17 @@
 import { Component, signal, computed } from '@angular/core';
-import { IEquipo } from '../../../model/equipo';
-import { IPage } from '../../../model/plist';
-import { EquipoService } from '../../../service/equipo';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Paginacion } from '../../shared/paginacion/paginacion';
-import { BotoneraRpp } from '../../shared/botonera-rpp/botonera-rpp';
-import { TrimPipe } from '../../../pipe/trim-pipe';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { debounceTimeSearch } from '../../../environment/environment';
 import { FormsModule } from '@angular/forms';
+import { Paginacion } from '../shared/paginacion/paginacion';
+import { BotoneraRpp } from '../shared/botonera-rpp/botonera-rpp';
+import { TrimPipe } from '../../pipe/trim-pipe';
+
+import { EquipoService } from '../../service/equipo';
+import { debounceTimeSearch } from '../../environment/environment';
+import { IPage } from '../../model/plist';
+import { IEquipo } from '../../model/equipo';
 
 @Component({
   selector: 'app-plist-equipo',

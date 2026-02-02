@@ -31,17 +31,17 @@ export class UsuarioService {
     let strUrl = `${serverURL}/usuario?page=${page}&size=${rpp}&sort=${order},${direction}`;
 
     if (id_tipousuario > 0) {
-      strUrl += `&idTipousuario=${id_tipousuario}`;
+      strUrl += `&id_tipousuario=${id_tipousuario}`;
       return this.oHttp.get<IPage<IUsuario>>(strUrl);
     }
 
     if (id_rol > 0) {
-      strUrl += `&idRol=${id_rol}`;
+      strUrl += `&id_rol=${id_rol}`;
       return this.oHttp.get<IPage<IUsuario>>(strUrl);
     }
 
     if (id_club > 0) {
-      strUrl += `&idClub=${id_club}`;
+      strUrl += `&id_club=${id_club}`;
       return this.oHttp.get<IPage<IUsuario>>(strUrl);
     }
 
@@ -55,5 +55,9 @@ export class UsuarioService {
 
   fill(amount: number): Observable<number> {
     return this.oHttp.post<number>(`${serverURL}/usuario/fill/${amount}`, null);
+  }
+
+  get(id: number): Observable<IUsuario> {
+    return this.oHttp.get<IUsuario>(`${serverURL}/usuario/${id}`);
   }
 }

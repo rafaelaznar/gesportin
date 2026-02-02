@@ -1,0 +1,205 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="">DAWsiàs frontUTIL</a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <!-- Home (icon) -->
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [class.active]="
+              activeRoute === '/' || activeRoute === '/home' || activeRoute.startsWith('/home')
+            "
+            aria-current="page"
+            [routerLink]="['/']"
+            title="Home"
+          >
+            <i class="bi bi-house"></i>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [class.active]="activeRoute === '/articulo' || activeRoute.startsWith('/articulo')"
+            [routerLink]="['/articulo']"
+            title="Artículos"
+          >
+            <i class="bi bi-journal-text"></i>
+          </a>
+        </li>
+
+        <!-- Categoría -->
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [class.active]="activeRoute === '/categoria' || activeRoute.startsWith('/categoria')"
+            [routerLink]="['/categoria']"
+            title="Categorías"
+          >
+            <i class="bi bi-tags"></i>
+          </a>
+        </li>
+
+        <!-- Club -->
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [class.active]="activeRoute === '/club' || activeRoute.startsWith('/club')"
+            [routerLink]="['/club']"
+            title="Clubs"
+          >
+            <i class="bi bi-people"></i>
+          </a>
+        </li>
+
+        <!-- Cuota -->
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [class.active]="activeRoute === '/cuota' || activeRoute.startsWith('/cuota')"
+            [routerLink]="['/cuota']"
+            title="Cuotas"
+          >
+            <i class="bi bi-cash-coin"></i>
+          </a>
+        </li>
+
+        <!-- Factura -->
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [class.active]="activeRoute === '/factura' || activeRoute.startsWith('/factura')"
+            [routerLink]="['/factura']"
+            title="Facturas"
+          >
+            <i class="bi bi-receipt"></i>
+          </a>
+        </li>
+
+        <!-- Jugador -->
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [class.active]="activeRoute === '/jugador' || activeRoute.startsWith('/jugador')"
+            [routerLink]="['/jugador']"
+            title="Jugadores"
+          >
+            <i class="bi bi-person-badge"></i>
+          </a>
+        </li>
+
+        <!-- Liga -->
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [class.active]="activeRoute === '/liga' || activeRoute.startsWith('/liga')"
+            [routerLink]="['/liga']"
+            title="Ligas"
+          >
+            <i class="bi bi-trophy"></i>
+          </a>
+        </li>
+
+        <!-- Noticia -->
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [class.active]="activeRoute === '/noticia' || activeRoute.startsWith('/noticia')"
+            [routerLink]="['/noticia']"
+            title="Noticias"
+          >
+            <i class="bi bi-newspaper"></i>
+          </a>
+        </li>
+
+        <!-- Partido -->
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [class.active]="activeRoute === '/partido' || activeRoute.startsWith('/partido')"
+            [routerLink]="['/partido']"
+            title="Partidos"
+          >
+            <i class="bi bi-calendar-event"></i>
+          </a>
+        </li>
+
+        <!-- Rol Usuario -->
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [class.active]="activeRoute === '/rolusuario' || activeRoute.startsWith('/rolusuario')"
+            [routerLink]="['/rolusuario']"
+            title="Roles de Usuario"
+          >
+            <i class="bi bi-person-lines-fill"></i>
+          </a>
+        </li>
+
+        <!-- Temporada -->
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [class.active]="activeRoute === '/temporada' || activeRoute.startsWith('/temporada')"
+            [routerLink]="['/temporada']"
+            title="Temporadas"
+          >
+            <i class="bi bi-calendar-range"></i>
+          </a>
+        </li>
+
+        <!-- Tipo Artículo -->
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [class.active]="
+              activeRoute === '/tipoarticulo' || activeRoute.startsWith('/tipoarticulo')
+            "
+            [routerLink]="['/tipoarticulo']"
+            title="Tipos de Artículo"
+          >
+            <i class="bi bi-bookmark-star"></i>
+          </a>
+        </li>
+
+        <!-- Tipo Usuario -->
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [class.active]="
+              activeRoute === '/tipousuario' || activeRoute.startsWith('/tipousuario')
+            "
+            [routerLink]="['/tipousuario']"
+            title="Tipos de Usuario"
+          >
+            <i class="bi bi-person-vcard"></i>
+          </a>
+        </li>
+
+        <!-- Usuario -->
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [class.active]="activeRoute === '/usuario' || activeRoute.startsWith('/usuario')"
+            [routerLink]="['/usuario']"
+            title="Usuarios"
+          >
+            <i class="bi bi-person-circle"></i>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
