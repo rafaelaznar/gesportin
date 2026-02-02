@@ -33,7 +33,10 @@ public class CategoriaApi {
     }
 
     @GetMapping
-    public ResponseEntity<Page<CategoriaEntity>> getPage(Pageable pageable, @PathVariable Optional<String> nombre, @PathVariable Optional<Long> id_temporada) {
+    public ResponseEntity<Page<CategoriaEntity>> getPage(
+            Pageable pageable,
+            @org.springframework.web.bind.annotation.RequestParam(required = false) Optional<String> nombre,
+            @org.springframework.web.bind.annotation.RequestParam(required = false) Optional<Long> id_temporada) {
         return ResponseEntity.ok(oCategoriaService.getPage(pageable, nombre, id_temporada));
     }
 
