@@ -28,20 +28,20 @@ export const routes: Routes = [
     { path: 'categoria', component: CategoriaPlistAdminRouted},
     { path: 'categoria/:temporada', component: CategoriaPlistAdminRouted},
     { path: 'partido', component: PartidoPlistAdminRouted},
-    { path: 'partido/:id_liga', component: PartidoPlistAdminRouted}
+    { path: 'partido/:id_liga', component: PartidoPlistAdminRouted},
     { path: 'factura', component: FacturaPlistAdminRouted },
-    { path: 'factura/:usuario', component: FacturaPlistAdminRouted }    
+    { path: 'factura/:usuario', component: FacturaPlistAdminRouted },    
     { path: 'rolusuario', component: RolusuarioPlist },  
     { path: 'tipoarticulo', component : TipoarticuloPlistAdminRouted}, 
-    { path: 'tipoarticulo/:club', component : TipoarticuloPlistAdminRouted}
+    { path: 'tipoarticulo/:club', component : TipoarticuloPlistAdminRouted},
     { path: 'jugador', component: JugadorPlisComponent},
     { path: 'jugador/usuario/:id', component: JugadorPlisComponent},
-    { path: 'jugador/equipo/:id', component: JugadorPlisComponent}
+    { path: 'jugador/equipo/:id', component: JugadorPlisComponent},
     { path: 'noticia', component: NoticiaPlistAdminRouted},
-    { path: 'noticia/:club', component: NoticiaPlistAdminRouted}
-    { path: 'club/plist', component: ClubPlistAdminRouted}    
+    { path: 'noticia/:club', component: NoticiaPlistAdminRouted},
+    { path: 'club/plist', component: ClubPlistAdminRouted},    
     { path: 'cuota', component: CuotaPlistAdminRouted},
-    { path: 'cuota/:equipo', component: CuotaPlistAdminRouted}
+    { path: 'cuota/:equipo', component: CuotaPlistAdminRouted},
     { path: 'tipousuario', component: TipousuarioPlistAdminRouted},
 
     { path: 'articulo/:tipoarticulo', component: ArticuloPlistAdminRouted},
