@@ -1,0 +1,87 @@
+.table-responsive {
+  overflow-x: auto;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.table {
+  margin-bottom: 0;
+}
+
+.table thead th {
+  vertical-align: middle;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.sortable {
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s;
+}
+
+.sortable:hover {
+  background-color: #495057 !important;
+}
+
+.sortable i {
+  margin-left: 5px;
+  font-size: 0.8rem;
+}
+
+.img-thumbnail {
+  object-fit: cover;
+  height: 50px;
+  width: 50px;
+  border-radius: 4px;
+}
+
+.badge {
+  font-size: 1rem;
+  padding: 0.5em 0.75em;
+  font-weight: 600;
+}
+
+.btn-group {
+  gap: 4px;
+}
+
+.btn-group .btn {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+}
+
+.btn-group .btn i {
+  font-size: 1rem;
+}
+
+tbody tr {
+  transition: background-color 0.15s ease-in-out;
+}
+
+tbody tr:hover {
+  background-color: rgba(0, 123, 255, 0.1) !important;
+}
+
+h1 {
+  color: #333;
+  font-weight: 600;
+}
+
+.text-muted {
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .table {
+    font-size: 0.875rem;
+  }
+  
+  .btn-group .btn {
+    padding: 0.2rem 0.4rem;
+    font-size: 0.75rem;
+  }
+  
+  .badge {
+    font-size: 0.875rem;
+  }
+}
