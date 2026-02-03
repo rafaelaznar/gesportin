@@ -37,4 +37,8 @@ getPage(
       serverURL + `/factura?page=${page}&size=${rpp}&sort=${order},${direction}`
     );
   }
+
+  get(id: number): Observable<IFactura> {
+      return this.oHttp.get<IFactura>(`${serverURL}/factura/${id}`);
+    }
 }
