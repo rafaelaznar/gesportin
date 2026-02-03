@@ -25,30 +25,7 @@
             [routerLink]="['/']"
             title="Home"
           >
-            <i class="bi bi-house"></i>
-          </a>
-        </li>
-
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            [class.active]="activeRoute === '/articulo' || activeRoute.startsWith('/articulo')"
-            [routerLink]="['/articulo']"
-            title="Artículos"
-          >
-            <i class="bi bi-journal-text"></i>
-          </a>
-        </li>
-
-        <!-- Categoría -->
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            [class.active]="activeRoute === '/categoria' || activeRoute.startsWith('/categoria')"
-            [routerLink]="['/categoria']"
-            title="Categorías"
-          >
-            <i class="bi bi-tags"></i>
+            <i class="bi bi-house-fill"></i>
           </a>
         </li>
 
@@ -58,57 +35,9 @@
             class="nav-link"
             [class.active]="activeRoute === '/club' || activeRoute.startsWith('/club')"
             [routerLink]="['/club']"
-            title="Clubs"
+            title="Clubes"
           >
-            <i class="bi bi-people"></i>
-          </a>
-        </li>
-
-        <!-- Cuota -->
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            [class.active]="activeRoute === '/cuota' || activeRoute.startsWith('/cuota')"
-            [routerLink]="['/cuota']"
-            title="Cuotas"
-          >
-            <i class="bi bi-cash-coin"></i>
-          </a>
-        </li>
-
-        <!-- Factura -->
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            [class.active]="activeRoute === '/factura' || activeRoute.startsWith('/factura')"
-            [routerLink]="['/factura']"
-            title="Facturas"
-          >
-            <i class="bi bi-receipt"></i>
-          </a>
-        </li>
-
-        <!-- Jugador -->
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            [class.active]="activeRoute === '/jugador' || activeRoute.startsWith('/jugador')"
-            [routerLink]="['/jugador']"
-            title="Jugadores"
-          >
-            <i class="bi bi-person-badge"></i>
-          </a>
-        </li>
-
-        <!-- Liga -->
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            [class.active]="activeRoute === '/liga' || activeRoute.startsWith('/liga')"
-            [routerLink]="['/liga']"
-            title="Ligas"
-          >
-            <i class="bi bi-trophy"></i>
+            <i class="bi bi-building"></i>
           </a>
         </li>
 
@@ -124,27 +53,27 @@
           </a>
         </li>
 
-        <!-- Partido -->
+        <!-- Comentario -->
         <li class="nav-item">
           <a
             class="nav-link"
-            [class.active]="activeRoute === '/partido' || activeRoute.startsWith('/partido')"
-            [routerLink]="['/partido']"
-            title="Partidos"
+            [class.active]="activeRoute === '/comentario' || activeRoute.startsWith('/comentario')"
+            [routerLink]="['/comentario']"
+            title="Comentarios"
           >
-            <i class="bi bi-calendar-event"></i>
+            <i class="bi bi-chat-left-text"></i>
           </a>
         </li>
 
-        <!-- Rol Usuario -->
+        <!-- Puntuación -->
         <li class="nav-item">
           <a
             class="nav-link"
-            [class.active]="activeRoute === '/rolusuario' || activeRoute.startsWith('/rolusuario')"
-            [routerLink]="['/rolusuario']"
-            title="Roles de Usuario"
+            [class.active]="activeRoute === '/puntuacion' || activeRoute.startsWith('/puntuacion')"
+            [routerLink]="['/puntuacion']"
+            title="Puntuaciones"
           >
-            <i class="bi bi-person-lines-fill"></i>
+            <i class="bi bi-star-fill"></i>
           </a>
         </li>
 
@@ -156,7 +85,102 @@
             [routerLink]="['/temporada']"
             title="Temporadas"
           >
-            <i class="bi bi-calendar-range"></i>
+            <i class="bi bi-calendar"></i>
+          </a>
+        </li>
+
+        <!-- Categoría -->
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [class.active]="activeRoute === '/categoria' || activeRoute.startsWith('/categoria')"
+            [routerLink]="['/categoria']"
+            title="Categorías"
+          >
+            <i class="bi bi-tags"></i>
+          </a>
+        </li>
+
+        <!-- Equipo -->
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [class.active]="activeRoute === '/equipo' || activeRoute.startsWith('/equipo')"
+            [routerLink]="['/equipo']"
+            title="Equipos"
+          >
+            <i class="bi bi-people-fill"></i>
+          </a>
+        </li>
+
+        <!-- Liga -->
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [class.active]="activeRoute === '/liga' || activeRoute.startsWith('/liga')"
+            [routerLink]="['/liga']"
+            title="Ligas"
+          >
+            <i class="bi bi-trophy"></i>
+          </a>
+        </li>
+
+        <!-- Partido -->
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [class.active]="activeRoute === '/partido' || activeRoute.startsWith('/partido')"
+            [routerLink]="['/partido']"
+            title="Partidos"
+          >
+            <i class="bi bi-play-fill"></i>
+          </a>
+        </li>
+
+        <!-- Jugador -->
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [class.active]="activeRoute === '/jugador' || activeRoute.startsWith('/jugador')"
+            [routerLink]="['/jugador']"
+            title="Jugadores"
+          >
+            <i class="bi bi-person-fill"></i>
+          </a>
+        </li>
+
+        <!-- Cuota -->
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [class.active]="activeRoute === '/cuota' || activeRoute.startsWith('/cuota')"
+            [routerLink]="['/cuota']"
+            title="Cuotas"
+          >
+            <i class="bi bi-credit-card"></i>
+          </a>
+        </li>
+
+        <!-- Pago -->
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [class.active]="activeRoute === '/pago' || activeRoute.startsWith('/pago')"
+            [routerLink]="['/pago']"
+            title="Pagos"
+          >
+            <i class="bi bi-cash-coin"></i>
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [class.active]="activeRoute === '/articulo' || activeRoute.startsWith('/articulo')"
+            [routerLink]="['/articulo']"
+            title="Artículos"
+          >
+            <i class="bi bi-bag-fill"></i>
           </a>
         </li>
 
@@ -170,7 +194,67 @@
             [routerLink]="['/tipoarticulo']"
             title="Tipos de Artículo"
           >
-            <i class="bi bi-bookmark-star"></i>
+            <i class="bi bi-bookmark-fill"></i>
+          </a>
+        </li>
+
+        <!-- Compra -->
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [class.active]="activeRoute === '/compra' || activeRoute.startsWith('/compra')"
+            [routerLink]="['/compra']"
+            title="Compras"
+          >
+            <i class="bi bi-cart-fill"></i>
+          </a>
+        </li>
+
+        <!-- Factura -->
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [class.active]="activeRoute === '/factura' || activeRoute.startsWith('/factura')"
+            [routerLink]="['/factura']"
+            title="Facturas"
+          >
+            <i class="bi bi-receipt"></i>
+          </a>
+        </li>
+
+        <!-- Carrito -->
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [class.active]="activeRoute === '/carrito' || activeRoute.startsWith('/carrito')"
+            [routerLink]="['/carrito']"
+            title="Carritos"
+          >
+            <i class="bi bi-bag-check"></i>
+          </a>
+        </li>
+
+        <!-- Comentario Artículo -->
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [class.active]="activeRoute === '/comentarioart' || activeRoute.startsWith('/comentarioart')"
+            [routerLink]="['/comentarioart']"
+            title="Comentarios Artículos"
+          >
+            <i class="bi bi-chat-dots"></i>
+          </a>
+        </li>
+
+        <!-- Usuario -->
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            [class.active]="activeRoute === '/usuario' || activeRoute.startsWith('/usuario')"
+            [routerLink]="['/usuario']"
+            title="Usuarios"
+          >
+            <i class="bi bi-people"></i>
           </a>
         </li>
 
@@ -184,19 +268,19 @@
             [routerLink]="['/tipousuario']"
             title="Tipos de Usuario"
           >
-            <i class="bi bi-person-vcard"></i>
+            <i class="bi bi-tags-fill"></i>
           </a>
         </li>
 
-        <!-- Usuario -->
+        <!-- Rol Usuario -->
         <li class="nav-item">
           <a
             class="nav-link"
-            [class.active]="activeRoute === '/usuario' || activeRoute.startsWith('/usuario')"
-            [routerLink]="['/usuario']"
-            title="Usuarios"
+            [class.active]="activeRoute === '/rolusuario' || activeRoute.startsWith('/rolusuario')"
+            [routerLink]="['/rolusuario']"
+            title="Roles de Usuario"
           >
-            <i class="bi bi-person-circle"></i>
+            <i class="bi bi-shield-check"></i>
           </a>
         </li>
       </ul>

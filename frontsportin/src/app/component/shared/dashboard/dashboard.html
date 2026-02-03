@@ -1,0 +1,46 @@
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <h1 class="mb-4">
+      <i class="bi bi-speedometer2"></i>
+      Dashboard
+    </h1>
+    <p class="text-muted">Bienvenido a Frontsportin - Sistema de Gestión Deportiva</p>
+  </div>
+
+  <div class="row g-4">
+    @for (card of cards; track card.title) {
+      <div class="col-md-6 col-lg-4 col-xl-3">
+        <a [routerLink]="card.route" class="card-link">
+          <div class="dashboard-card" [class]="'card-' + card.color">
+            <div class="card-icon">
+              <i [class]="'bi bi-' + card.icon"></i>
+            </div>
+            <div class="card-content">
+              <h5>{{ card.title }}</h5>
+              <p class="card-count">{{ card.count }}</p>
+            </div>
+          </div>
+        </a>
+      </div>
+    }
+  </div>
+
+  <div class="row mt-5">
+    <div class="col-12">
+      <div class="info-section">
+        <h3>
+          <i class="bi bi-info-circle"></i>
+          Acerca de Frontsportin
+        </h3>
+        <p>
+          Frontsportin es un sistema integral de gestión deportiva que permite administrar clubes, usuarios,
+          equipos, partidos, noticias, artículos y más. Diseñado para facilitar la administración de todas
+          las operaciones de un club deportivo.
+        </p>
+        <p class="text-muted mb-0">
+          <small>Versión 2026 - Desarrollado por Rafael Aznar & DAW students</small>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

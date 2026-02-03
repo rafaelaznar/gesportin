@@ -1,0 +1,254 @@
+.sidebar {
+  width: 280px;
+  height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+  color: #2c3e50;
+  position: fixed;
+  left: 0;
+  top: 0;
+  overflow-y: auto;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.sidebar-header {
+  padding: 20px;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+  font-weight: bold;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #2c3e50;
+}
+
+.sidebar-header i {
+  font-size: 1.5rem;
+}
+
+.sidebar-menu {
+  padding: 10px 0;
+}
+
+.menu-item {
+  padding: 0 8px;
+  margin-bottom: 4px;
+}
+
+.menu-button,
+.submenu-button {
+  width: 100%;
+  padding: 12px 12px;
+  background: none;
+  border: none;
+  color: #2c3e50;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.menu-button:hover,
+.submenu-button:hover {
+  background: rgba(102, 126, 234, 0.15);
+  color: #2c3e50;
+}
+
+.menu-button.expanded,
+.submenu-button.expanded {
+  background: rgba(102, 126, 234, 0.2);
+  color: #2c3e50;
+}
+
+.menu-button i:first-child,
+.submenu-button i:first-child {
+  min-width: 20px;
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+.menu-toggle {
+  font-size: 0.8rem !important;
+  transition: transform 0.3s ease;
+}
+
+.menu-button.expanded .menu-toggle {
+  transform: rotate(90deg);
+}
+
+.submenu-button.expanded .menu-toggle {
+  transform: rotate(90deg);
+}
+
+.menu-label {
+  flex: 1;
+  text-align: left;
+}
+
+.submenu {
+  padding-left: 10px;
+  border-left: 2px solid rgba(102, 126, 234, 0.3);
+  margin-left: 10px;
+  animation: slideDown 0.3s ease;
+}
+
+.submenu-item {
+  padding: 0;
+  margin-bottom: 2px;
+}
+
+.submenu-link,
+.submenu-button {
+  padding: 10px 12px;
+  font-size: 0.9rem;
+  color: #34495e;
+}
+
+.submenu-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.submenu-link:hover {
+  background: rgba(102, 126, 234, 0.1);
+  color: #2c3e50;
+  padding-left: 16px;
+}
+
+.submenu-link i {
+  min-width: 18px;
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+.submenu-link.active {
+  background: rgba(102, 126, 234, 0.25);
+  color: #667eea;
+  font-weight: 600;
+  border-left: 3px solid #667eea;
+  padding-left: 12px;
+}
+
+.subsubmenu {
+  padding-left: 10px;
+  border-left: 2px solid rgba(102, 126, 234, 0.2);
+  margin-left: 10px;
+  animation: slideDown 0.3s ease;
+}
+
+.subsubmenu-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  color: #555;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  font-size: 0.85rem;
+  margin-bottom: 2px;
+}
+
+.subsubmenu-link:hover {
+  background: rgba(102, 126, 234, 0.12);
+  color: #2c3e50;
+  padding-left: 16px;
+}
+
+.subsubmenu-link i {
+  min-width: 16px;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.subsubmenu-link.active {
+  background: rgba(102, 126, 234, 0.2);
+  color: #667eea;
+  font-weight: 600;
+  border-left: 3px solid #667eea;
+  padding-left: 12px;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 1000px;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 250px;
+  }
+
+  .menu-button,
+  .submenu-button,
+  .submenu-link,
+  .subsubmenu-link {
+    font-size: 0.85rem;
+  }
+
+  .sidebar-header {
+    padding: 15px;
+  }
+
+  .sidebar-header span {
+    display: none;
+  }
+}
+
+@media (max-width: 576px) {
+  .sidebar {
+    width: 220px;
+    position: relative;
+  }
+
+  .menu-label {
+    display: none;
+  }
+
+  .menu-button,
+  .submenu-button {
+    justify-content: center;
+    padding: 10px;
+  }
+
+  .menu-toggle {
+    display: none;
+  }
+
+  .submenu,
+  .subsubmenu {
+    display: none;
+  }
+}
