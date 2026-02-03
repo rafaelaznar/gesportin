@@ -67,6 +67,7 @@
           <a
             [routerLink]="item.route"
             routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: item.route === '/' }"
             class="menu-button"
           >
             <i [class]="'bi bi-' + item.icon"></i>

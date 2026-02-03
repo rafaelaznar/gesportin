@@ -1,6 +1,7 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterLink, RouterLinkActive, Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 interface MenuItem {
   label: string;
@@ -17,7 +18,7 @@ interface MenuItem {
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.css'
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit {
   menuItems = signal<MenuItem[]>([
     {
       label: 'Home',
@@ -77,15 +78,47 @@ export class SidebarComponent {
     }
   ]);
 
+  constructor(private router: Router) {}
+
+  ngOnInit() {
+    // Expandir menús al cargar la página
+    this.expandActiveMenus(this.router.url);
+
+    // Escuchar cambios de ruta y expandir menús correspondientes
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        this.expandActiveMenus(event.urlAfterRedirects);
+      });
+  }
+
+  expandActiveMenus(url: string) {
+    const items = this.menuItems();
+    this.checkAndExpandItem(items, url);
+  }
+
+  checkAndExpandItem(items: MenuItem[], url: string): boolean {
+    for (const item of items) {
+      if (item.route && url.startsWith(item.route) && item.route !== '/') {
+        if (item.children) {
+          item.expanded = true;
+        }
+        return true;
+      }
+      if (item.children) {
+        const found = this.checkAndExpandItem(item.children, url);
+        if (found) {
+          item.expanded = true;
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
   toggleMenu(item: MenuItem) {
     if (item.children) {
       item.expanded = !item.expanded;
     }
-  }
-
-  isMenuItemActive(route?: string): boolean {
-    if (!route) return false;
-    // Esta lógica se mejorará con ActivatedRoute si es necesario
-    return false;
   }
 }
