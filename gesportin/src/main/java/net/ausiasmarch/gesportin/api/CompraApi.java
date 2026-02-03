@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import net.ausiasmarch.gesportin.entity.CompraEntity;
@@ -33,8 +34,8 @@ public class CompraApi {
     @GetMapping
     public ResponseEntity<Page<CompraEntity>> getPage(
             Pageable oPageable,
-            @PathVariable(required = false) Long id_articulo,
-            @PathVariable(required = false) Long id_factura
+            @RequestParam(required = false) Long id_articulo,
+            @RequestParam(required = false) Long id_factura
         ) {
         return ResponseEntity.ok(oCompraService.getPage(oPageable, id_articulo, id_factura));
     }
