@@ -7,6 +7,7 @@ import { ArticuloViewAdminRouted } from './component/articulo/view-admin-routed/
 import { UsuarioViewRouted } from './component/usuario/view-routed/usuario-view';
 import { CategoriaPlistAdminRouted } from './component/categoria/plist-admin-routed/categoria-plist';
 import { PartidoPlistAdminRouted } from './component/partido/plist-admin-routed/partido-plist';
+import { PartidoViewAdminRouted } from './component/partido/view-admin-routed/partido-view';
 import { FacturaPlistAdminRouted } from './component/factura/plist-admin-routed/factura-plist';
 import { CompraPlistAdminRouted } from './component/compra/plist-admin-routed/compra-plist';
 import { RolusuarioPlist } from './component/rolusuario/plist-admin-routed/rolusuario-plist';
@@ -34,10 +35,10 @@ import { ClubViewAdminRouted } from './component/club/view-admin-routed/club-vie
 import { CuotaViewAdminRouted } from './component/cuota/view-admin-routed/cuota-view';
 import { TipousuarioViewAdminRouted } from './component/tipousario/view-admin-routed/tipousuario-view';
 import { CarritoViewAdminRouted } from './component/carrito/view-admin-routed/view-admin-routed';
+import { RolusuarioViewAdminRouted } from './component/rolusuario/view-routed/rolusuario-view';
 import { CategoriaViewAdminRouted } from './component/categoria/view-admin-routed/categoria-view';
 import { LigaViewRouted } from './component/liga/view-routed/liga-view';
 import { ComentarioartViewRouted } from './component/comentarioart/view-routed/comentarioart-view';
-import { PartidoViewAdminRouted } from './component/partido/view-admin-routed/partido-view';
 
 
 export const routes: Routes = [
@@ -72,6 +73,7 @@ export const routes: Routes = [
     { path: 'compra/articulo/:id_articulo', component: CompraPlistAdminRouted },
     { path: 'compra/factura/:id_factura', component: CompraPlistAdminRouted },
     { path: 'rolusuario', component: RolusuarioPlist },
+    { path: 'rolusuario/view/:id', component: RolusuarioViewAdminRouted},
     { path: 'tipoarticulo', component : TipoarticuloPlistAdminRouted},
     { path: 'tipoarticulo/club/:id_club', component : TipoarticuloPlistAdminRouted},
     { path: 'tipoarticulo/view/:id', component : TipoarticuloViewAdminRouted},
