@@ -5,16 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import net.ausiasmarch.gesportin.entity.CarritoEntity;
 import net.ausiasmarch.gesportin.service.CarritoService;
@@ -26,7 +17,7 @@ public class CarritoApi {
 
     @Autowired
     private CarritoService oCarritoService;
-    
+
     @GetMapping("/{id}")
     public ResponseEntity<CarritoEntity> get(@PathVariable Long id) {
         return ResponseEntity.ok(oCarritoService.get(id));
@@ -34,20 +25,20 @@ public class CarritoApi {
 
     @GetMapping
     public ResponseEntity<Page<CarritoEntity>> getPage(
-        @PageableDefault(size = 1000) Pageable oPageable,
-        @RequestParam(required = false) Long id_usuario,
-        @RequestParam(required = false) Long id_articulo) {
-        return ResponseEntity.ok(oCarritoService.getPage(oPageable, id_usuario, id_articulo));
+            @PageableDefault(size = 1000) Pageable pageable,
+            @RequestParam(required = false) Long id_usuario,
+            @RequestParam(required = false) Long id_articulo) {
+        return ResponseEntity.ok(oCarritoService.getPage(pageable, id_usuario, id_articulo));
     }
 
     @PostMapping
-    public ResponseEntity<CarritoEntity> create(@RequestBody CarritoEntity oCarritoEntity) {
-        return ResponseEntity.ok(oCarritoService.create(oCarritoEntity));
+    public ResponseEntity<CarritoEntity> create(@RequestBody CarritoEntity carrito) {
+        return ResponseEntity.ok(oCarritoService.create(carrito));
     }
 
     @PutMapping
-    public ResponseEntity<CarritoEntity> update(@RequestBody CarritoEntity oCarritoEntity) {
-        return ResponseEntity.ok(oCarritoService.update(oCarritoEntity));
+    public ResponseEntity<CarritoEntity> update(@RequestBody CarritoEntity carrito) {
+        return ResponseEntity.ok(oCarritoService.update(carrito));
     }
 
     @DeleteMapping("/{id}")

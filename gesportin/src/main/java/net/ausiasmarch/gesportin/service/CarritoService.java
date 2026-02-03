@@ -29,30 +29,30 @@ public class CarritoService {
                 .orElseThrow(() -> new ResourceNotFoundException("Carrito no encontrado con id: " + id));
     }
 
-    public Page<CarritoEntity> getPage(Pageable oPageable, Long idUsuario, Long idArticulo) {
-        if (idUsuario != null) {
-            return oCarritoRepository.findUsuarioById(idUsuario, oPageable);
-        } else if (idArticulo != null ) {
-            return oCarritoRepository.findArticuloById(idArticulo, oPageable);
+    public Page<CarritoEntity> getPage(Pageable pageable, Long id_usuario, Long id_articulo) {
+        if (id_usuario != null) {
+            return oCarritoRepository.findByUsuarioId(id_usuario, pageable);
+        } else if (id_articulo != null) {
+            return oCarritoRepository.findByArticuloId(id_articulo, pageable);
         } else {
-            return oCarritoRepository.findAll(oPageable);
+            return oCarritoRepository.findAll(pageable);
         }
     }
 
-    public CarritoEntity create(CarritoEntity oCarritoEntity) {
-        oCarritoEntity.setId(null);
-        oCarritoEntity.setArticulo(oArticuloService.get(oCarritoEntity.getArticulo().getId()));
-        oCarritoEntity.setUsuario(oUsuarioService.get(oCarritoEntity.getUsuario().getId()));
-        return oCarritoRepository.save(oCarritoEntity);
+    public CarritoEntity create(CarritoEntity carrito) {
+        carrito.setId(null);
+        carrito.setArticulo(oArticuloService.get(carrito.getArticulo().getId()));
+        carrito.setUsuario(oUsuarioService.get(carrito.getUsuario().getId()));
+        return oCarritoRepository.save(carrito);
     }
 
-    public CarritoEntity update(CarritoEntity oCarritoEntity) {
-        CarritoEntity oCarritoExistente = oCarritoRepository.findById(oCarritoEntity.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Carrito no encontrado con id: " + oCarritoEntity.getId()));
-        oCarritoExistente.setCantidad(oCarritoEntity.getCantidad());
-        oCarritoExistente.setArticulo(oArticuloService.get(oCarritoEntity.getArticulo().getId()));
-        oCarritoExistente.setUsuario(oUsuarioService.get(oCarritoEntity.getUsuario().getId()));
-        return oCarritoRepository.save(oCarritoExistente);
+    public CarritoEntity update(CarritoEntity carrito) {
+        CarritoEntity existente = oCarritoRepository.findById(carrito.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Carrito no encontrado con id: " + carrito.getId()));
+        existente.setCantidad(carrito.getCantidad());
+        existente.setArticulo(oArticuloService.get(carrito.getArticulo().getId()));
+        existente.setUsuario(oUsuarioService.get(carrito.getUsuario().getId()));
+        return oCarritoRepository.save(existente);
     }
 
     public Long delete(Long id) {
@@ -75,10 +75,11 @@ public class CarritoService {
     public Long fill(Long cantidad) {
         for (long i = 0L; i < cantidad; i++) {
             CarritoEntity carrito = new CarritoEntity();
-            carrito.setCantidad(oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 50));            
+            carrito.setCantidad(oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 50));
             carrito.setArticulo(oArticuloService.getOneRandom());
             carrito.setUsuario(oUsuarioService.getOneRandom());
             oCarritoRepository.save(carrito);
         }
         return cantidad;
-    }}
+    }
+}

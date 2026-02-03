@@ -7,8 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import net.ausiasmarch.gesportin.entity.CarritoEntity;
 
 public interface CarritoRepository extends JpaRepository<CarritoEntity, Long> {
-    
-    Page<CarritoEntity> findUsuarioById(Long idUsuario, Pageable oPageable);
 
-    Page<CarritoEntity> findArticuloById(Long idArticulo, Pageable oPageable);
+    Page<CarritoEntity> findByUsuarioId(Long idUsuario, Pageable pageable);
+
+    Page<CarritoEntity> findByArticuloId(Long idArticulo, Pageable pageable);
 }
