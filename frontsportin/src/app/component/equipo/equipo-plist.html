@@ -43,7 +43,13 @@
     }
     @if (filtroId() > 0) {
       <small class="text-muted ms-3">Filtro: ID = {{ filtroId() }}</small>
-      <a class="ms-2" (click)="clearIdFilter()" role="button" title="Quitar filtro" style="cursor: pointer;">
+      <a
+        class="ms-2"
+        (click)="clearIdFilter()"
+        role="button"
+        title="Quitar filtro"
+        style="cursor: pointer"
+      >
         <i class="bi bi-x-lg" aria-hidden="true"></i> Quitar filtro
       </a>
     }
@@ -135,7 +141,7 @@
             <td>
               @if (oEquipo.categoria) {
                 <a [routerLink]="['/categoria', '/view', oEquipo.categoria.id]">
-                  {{ (oEquipo.categoria.nombre ?? '') | trim: 20 }}
+                  {{ oEquipo.categoria.nombre | trim: 20 }}
                   {{ ' (' + oEquipo.categoria.id + ')' }}
                 </a>
                 <!-- Botón alineado a la derecha para filtrar categoria -->
@@ -200,4 +206,3 @@
     </table>
   </div>
 </div>
-            

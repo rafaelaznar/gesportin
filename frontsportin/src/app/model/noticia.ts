@@ -1,4 +1,5 @@
-import { IClub } from "./factura";
+import { IClub } from "./club";
+
 
 export interface INoticia{
   id: number;

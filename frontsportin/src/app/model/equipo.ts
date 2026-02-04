@@ -1,4 +1,5 @@
-import { ICategoria } from "./cuota";
+
+import { ICategoria } from "./categoria";
 import { IUsuario } from "./usuario";
 
 export interface IEquipo {

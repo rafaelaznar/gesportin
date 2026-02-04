@@ -1,3 +1,4 @@
+
 import { IEquipo } from "./equipo";
 import { IUsuario } from "./usuario";
 
