@@ -62,7 +62,9 @@
                             <div class="col-5 text-muted small text-uppercase">Artículo</div>
                             <div class="col-7 fw-semibold small">
                                 @if (carrito()?.articulo?.descripcion) {
-                                    {{ carrito()?.articulo?.descripcion }} ({{ carrito()?.articulo?.id }})
+                                    <a [routerLink]="['/articulo/view', carrito()?.articulo?.id]">
+                                        {{ carrito()?.articulo?.descripcion }} ({{ carrito()?.articulo?.id }})
+                                    </a>
                                 } @else {
                                     Sin artículo
                                 }
@@ -70,7 +72,9 @@
                             <div class="col-5 text-muted small text-uppercase">Usuario</div>
                             <div class="col-7 fw-semibold small">
                                 @if (carrito()?.usuario?.nombre) {
-                                    {{ carrito()?.usuario?.nombre }} ({{ carrito()?.usuario?.id }})
+                                    <a [routerLink]="['/usuario/view', carrito()?.usuario?.id]">
+                                        {{ carrito()?.usuario?.nombre }} ({{ carrito()?.usuario?.id }})
+                                    </a>
                                 } @else {
                                     Sin usuario
                                 }
