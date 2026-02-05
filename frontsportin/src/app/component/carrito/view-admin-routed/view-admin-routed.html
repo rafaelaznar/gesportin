@@ -199,41 +199,23 @@
                                 <div class="col-sm-6 col-lg-3">
                                     <div class="border rounded p-2 bg-white">
                                         <div class="text-muted small text-uppercase">Apellido 1</div>
-                                        <a
-                                            [routerLink]="['/usuario/view', carrito()?.usuario?.id]"
-                                            class="fw-semibold text-decoration-underline d-inline-block"
-                                            title="Ver usuario"
-                                        >
-                                            {{ carrito()?.usuario?.apellido1 }}
-                                        </a>
+                                        {{ carrito()?.usuario?.apellido1 }}
                                     </div>
                                 </div>
                                 <div class="col-sm-6 col-lg-3">
                                     <div class="border rounded p-2 bg-white">
                                         <div class="text-muted small text-uppercase">Apellido 2</div>
-                                        <a
-                                            [routerLink]="['/usuario/view', carrito()?.usuario?.id]"
-                                            class="fw-semibold text-decoration-underline d-inline-block"
-                                            title="Ver usuario"
-                                        >
-                                            {{ carrito()?.usuario?.apellido2 }}
-                                        </a>
+                                        {{ carrito()?.usuario?.apellido2 }}
                                     </div>
                                 </div>
                                 <div class="col-sm-6 col-lg-3">
                                     <div class="border rounded p-2 bg-white">
                                         <div class="text-muted small text-uppercase">Género</div>
-                                        <a
-                                            [routerLink]="['/usuario/view', carrito()?.usuario?.id]"
-                                            class="fw-semibold text-decoration-underline d-inline-block"
-                                            title="Ver usuario"
-                                        >
                                             @if (carrito()?.usuario?.genero === 0) {
                                                 Hombre
                                             } @else {
                                                 Mujer
                                             }
-                                        </a>
                                     </div>
                                 </div>
                                 <div class="col-sm-6 col-lg-3">

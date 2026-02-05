@@ -152,25 +152,13 @@
                                 <div class="col-sm-6 col-lg-3">
                                     <div class="border rounded p-2 bg-white">
                                         <div class="text-muted small text-uppercase">Dirección</div>
-                                        <a
-                                            [routerLink]="['/club/view', noticia()?.club?.id]"
-                                            class="fw-semibold text-decoration-underline d-inline-block"
-                                            title="Ver club"
-                                        >
-                                            {{ noticia()?.club?.direccion }}
-                                        </a>
+                                        {{ noticia()?.club?.direccion }}
                                     </div>
                                 </div>
                                 <div class="col-sm-6 col-lg-3">
                                     <div class="border rounded p-2 bg-white">
                                         <div class="text-muted small text-uppercase">Teléfono</div>
-                                        <a
-                                            [routerLink]="['/club/view', noticia()?.club?.id]"
-                                            class="fw-semibold text-decoration-underline d-inline-block"
-                                            title="Ver club"
-                                        >
-                                            {{ noticia()?.club?.telefono }}
-                                        </a>
+                                        {{ noticia()?.club?.telefono }}
                                     </div>
                                 </div>
                                 <div class="col-sm-6 col-lg-3">
