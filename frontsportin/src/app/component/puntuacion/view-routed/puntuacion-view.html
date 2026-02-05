@@ -164,7 +164,15 @@
                 <div class="col-sm-6 col-lg-3">
                   <div class="border rounded p-2 bg-white">
                     <div class="text-muted small text-uppercase">Puntuaciones</div>
-                    <div class="fw-semibold">{{ oPuntuacion()?.noticia?.puntuaciones }}</div>
+                    <div class="fw-semibold">
+                      @if (oPuntuacion()?.noticia?.id) {
+                        <a class="text-decoration-none" [routerLink]="['/puntuacion/plist', oPuntuacion()?.noticia?.id]">
+                          {{ oPuntuacion()?.noticia?.puntuaciones }}
+                        </a>
+                      } @else {
+                        {{ oPuntuacion()?.noticia?.puntuaciones }}
+                      }
+                    </div>
                   </div>
                 </div>
                 <div class="col-12">
