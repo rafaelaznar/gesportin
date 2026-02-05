@@ -10,6 +10,7 @@ import { PartidoPlistAdminRouted } from './component/partido/plist-admin-routed/
 import { PartidoViewAdminRouted } from './component/partido/view-admin-routed/partido-view';
 import { FacturaPlistAdminRouted } from './component/factura/plist-admin-routed/factura-plist';
 import { CompraPlistAdminRouted } from './component/compra/plist-admin-routed/compra-plist';
+import { CompraViewRouted } from './component/compra/view-routed/compra-view';
 import { RolusuarioPlist } from './component/rolusuario/plist-admin-routed/rolusuario-plist';
 import { TipoarticuloPlistAdminRouted } from './component/tipoarticulo/plist-admin-routed/tipoarticulo-plist';
 import { TipoarticuloViewAdminRouted } from './component/tipoarticulo/view-admin-routed/tipoarticulo-view';
@@ -72,7 +73,8 @@ export const routes: Routes = [
     { path: 'compra', component: CompraPlistAdminRouted },
     { path: 'compra/articulo/:id_articulo', component: CompraPlistAdminRouted },
     { path: 'compra/factura/:id_factura', component: CompraPlistAdminRouted },
-    { path: 'rolusuario', component: RolusuarioPlist },
+    { path: 'compra/view/:id', component: CompraViewRouted },
+    { path: 'rolusuario', component: RolusuarioPlist },  
     { path: 'rolusuario/view/:id', component: RolusuarioViewAdminRouted},
     { path: 'tipoarticulo', component : TipoarticuloPlistAdminRouted},
     { path: 'tipoarticulo/club/:id_club', component : TipoarticuloPlistAdminRouted},
