@@ -33,7 +33,14 @@ export class CarritoService {
       url += `&filter=${encodeURIComponent(filter)}`;
     }
 
-    // Nota: el backend no filtra por idArticulo/idUsuario; filtramos en cliente.
+    if (_idArticulo > 0) {
+      url += `&id_articulo=${_idArticulo}`;
+    }
+
+    if (_idUsuario > 0) {
+      url += `&id_usuario=${_idUsuario}`;
+    }
+
     return this.oHttp.get<IPage<ICarrito>>(url);
   }
   
