@@ -59,7 +59,7 @@ public class ArticuloEntity {
 
     @Getter(AccessLevel.NONE)
     @OneToMany(mappedBy = "articulo", fetch = FetchType.LAZY)
-    private java.util.List<CompraEntity> carritos;
+    private java.util.List<CarritoEntity> carritos;
 
     
     public int getComentarioarts() {
