@@ -1,8 +1,9 @@
 import { Component, inject, signal } from '@angular/core';
 import { FacturaDetailAdminUnrouted } from '../detail-admin-unrouted/factura-detail';
 import { ActivatedRoute, Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { FacturaService } from '../../../service/factura-service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-delete-admin-routed',
@@ -11,39 +12,41 @@ import { FacturaService } from '../../../service/factura-service';
   styleUrl: './factura-delete.css',
 })
 export class DeleteAdminRouted {
- private route = inject(ActivatedRoute);
+  private route = inject(ActivatedRoute);
   private router = inject(Router);
   private oFacturaService = inject(FacturaService)
+  private snackBar = inject(MatSnackBar);
 
-  id = signal<number>(0);
+  id_factura = signal<number>(0);
   deleting = signal<boolean>(false);
   error = signal<string | null>(null);
+  
+
 
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
     const idValue = idParam ? Number(idParam) : NaN;
     if (!isNaN(idValue)) {
-      this.id.set(idValue);
+      this.id_factura.set(idValue);
     }
   }
 
-   delete(): void {
-    if (this.id() <= 0) {
-      this.error.set('ID de factura inválido');
-      return;
-    }
-    this.deleting.set(true);
-    this.error.set(null);
-    this.oFacturaService.delete(this.id()).subscribe({
-      next: () => {
-        this.deleting.set(false);
-        this.router.navigate(['/factura']);
+   doDelete() {
+    this.oFacturaService.delete(this.id_factura()).subscribe({
+      next: (data: any) => {
+        this.snackBar.open('Factura eliminada', 'Cerrar', { duration: 4000 });
+        console.log('Factura eliminada');
+        window.history.back();
       },
-      error: (err) => {
-        this.deleting.set(false);
-        // err may be HttpErrorResponse
-        this.error.set(err?.message ?? 'Error desconocido al eliminar');
+      error: (err: HttpErrorResponse) => {
+        this.error.set('Error eliminando el factura');
+        this.snackBar.open('Error eliminando el factura', 'Cerrar', { duration: 4000 });
+        console.error(err);
       },
     });
+  }
+  
+  doCancel() {    
+    window.history.back();
   }
 }
