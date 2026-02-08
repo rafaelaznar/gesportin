@@ -69,7 +69,12 @@ public class CompraService {
     public Long delete(Long id) {
         CompraEntity oCompra = oCompraRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Compra no encontrada con id: " + id));
+        Long idFactura = oCompra.getFactura().getId();
         oCompraRepository.delete(oCompra);
+        long comprasRestantes = oCompraRepository.findByFacturaId(idFactura, Pageable.unpaged()).getTotalElements();
+        if (comprasRestantes == 0) {
+            oFacturaService.delete(idFactura);
+        }
         return id;
     }
 
