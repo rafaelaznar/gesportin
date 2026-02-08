@@ -44,6 +44,7 @@ import { CategoriaViewAdminRouted } from './component/categoria/view-admin-route
 import { LigaViewRouted } from './component/liga/view-routed/liga-view';
 import { ComentarioartViewRouted } from './component/comentarioart/view-routed/comentarioart-view';
 import { PagoDeleteAdminRouted } from './component/pago/delete-admin-routed/pago-delete';
+import { ComentarioartDeleteAdminRouted } from './component/comentarioart/delete-admin-routed/delete-admin-routed';
 
 
 export const routes: Routes = [
@@ -124,5 +125,6 @@ export const routes: Routes = [
     { path: 'comentarioart/articulo/:id_articulo', component: ComentarioartPlistAdminRouted},
     { path: 'comentarioart/usuario/:id_usuario', component: ComentarioartPlistAdminRouted},
     { path: 'comentarioart/view/:id', component: ComentarioartViewRouted},
+    { path: 'comentarioart/delete/:id', component: ComentarioartDeleteAdminRouted },
 
 ];
