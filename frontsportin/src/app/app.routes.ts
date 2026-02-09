@@ -58,6 +58,7 @@ import { ClubEditAdminRouted } from './component/club/edit-admin-routed/club-edi
 import { CarritoDeleteAdminRouted } from './component/carrito/delete-admin-routed/carrito-delete';
 import { ComentarioartDeleteAdminRouted } from './component/comentarioart/delete-admin-routed/delete-admin-routed';
 import { FacturaDeleteAdminRouted } from './component/factura/delete-admin-routed/factura-delete';
+import { FacturaEditAdminRouted } from './component/factura/edit-admin-routed/factura-edit';
 
 
 export const routes: Routes = [
@@ -95,6 +96,7 @@ export const routes: Routes = [
     { path: 'factura/view/:id', component: FacturaViewAdminRouted },
     { path: 'factura/usuario/:id_usuario', component: FacturaPlistAdminRouted },
     { path: 'factura/delete/:id', component: FacturaDeleteAdminRouted},
+    { path: 'factura/edit/:id', component: FacturaEditAdminRouted},
     { path: 'compra', component: CompraPlistAdminRouted },
     { path: 'compra/articulo/:id_articulo', component: CompraPlistAdminRouted },
     { path: 'compra/factura/:id_factura', component: CompraPlistAdminRouted },
