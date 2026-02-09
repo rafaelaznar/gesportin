@@ -1,63 +1,115 @@
-<div class="container py-3">
-  <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 border rounded bg-light p-2 mb-3">
-    <div>
-      <div class="text-uppercase small text-muted fw-semibold">Ligas</div>
-      <div class="fw-bold">Editar liga</div>
-      <div class="text-muted small">Panel administrativo</div>
-    </div>
-    <a class="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2" routerLink="/liga">
-      <i class="bi bi-arrow-left"></i>
-      Volver
-    </a>
-  </div>
+<div class="container my-4 edit-form">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-8">
+      <div class="form-card">
+        <header class="mb-4">
+          <h1 class="h3 mb-0">Editar Liga</h1>
+        </header>
 
-  @if (loadingLiga()) {
-    <div class="text-center py-4">
-      <div class="spinner-border text-secondary" role="status">
-        <span class="visually-hidden">Cargando...</span>
-      </div>
-      <p class="text-muted mt-2 mb-0">Cargando liga...</p>
-    </div>
-  }
+        @if (loadingLiga()) {
+        <div class="d-flex justify-content-center my-5">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Cargando...</span>
+          </div>
+        </div>
+        }
 
-  @if (error()) {
-    <div class="alert alert-danger d-flex align-items-center gap-2" role="alert">
-      <i class="bi bi-exclamation-triangle-fill"></i>
-      <span>{{ error() }}</span>
-    </div>
-  }
+        @if (error()) {
+        <div class="alert alert-danger" role="alert">
+          <i class="bi bi-exclamation-triangle me-2"></i>{{ error() }}
+        </div>
+        }
 
-  @if (!loadingLiga()) {
-    <form class="row g-3" (ngSubmit)="doSave()">
-      <div class="col-md-6">
-        <label class="form-label">Nombre</label>
-        <input
-          class="form-control"
-          type="text"
-          name="nombre"
-          [(ngModel)]="nombre"
-          placeholder="Nombre de la liga"
-          required
-        />
-      </div>
+        @if (!loadingLiga() && !error()) {
+        <form [formGroup]="ligaForm" (ngSubmit)="onSubmit()" novalidate>
+          <!-- ID (solo lectura) -->
+          <div class="mb-4">
+            <label for="id" class="form-label">ID de la liga</label>
+            <input
+              type="text"
+              class="form-control"
+              id="id"
+              formControlName="id"
+              readonly
+            />
+          </div>
 
-      <div class="col-md-6">
-        <label class="form-label">Equipo</label>
-        <select class="form-select" name="equipoId" [(ngModel)]="equipoId" required>
-          <option [ngValue]="null">-- Selecciona un equipo --</option>
-          @for (equipo of oEquipos(); track equipo.id) {
-            <option [ngValue]="equipo.id">{{ equipo.nombre }} ({{ equipo.id }})</option>
-          }
-        </select>
-        @if (loadingEquipos()) {
-          <div class="form-text text-muted">Cargando equipos...</div>
+          <!-- Nombre -->
+          <div class="mb-4">
+            <label for="nombre" class="form-label">Nombre <span class="text-danger">*</span></label>
+            <input
+              type="text"
+              class="form-control"
+              [class.is-invalid]="nombre?.invalid && nombre?.touched"
+              [class.is-valid]="nombre?.valid && nombre?.touched"
+              id="nombre"
+              formControlName="nombre"
+              placeholder="Introduce el nombre de la liga"
+            />
+            @if (nombre?.invalid && nombre?.touched) {
+            <div class="invalid-feedback">
+              @if (nombre?.errors?.['required']) {
+                <span>El nombre es obligatorio.</span>
+              }
+              @if (nombre?.errors?.['minlength']) {
+                <span>El nombre debe tener al menos 3 caracteres.</span>
+              }
+              @if (nombre?.errors?.['maxlength']) {
+                <span>El nombre no puede superar 255 caracteres.</span>
+              }
+            </div>
+            }
+          </div>
+
+          <!-- Equipo -->
+          <div class="mb-4">
+            <label for="equipo" class="form-label">Equipo <span class="text-danger">*</span></label>
+            <select
+              id="equipo"
+              style="cursor: pointer;"
+              class="form-select"
+              [class.is-invalid]="id_equipo?.invalid && id_equipo?.touched"
+              [class.is-valid]="id_equipo?.valid && id_equipo?.touched"
+              formControlName="id_equipo"
+            >
+              <option [value]="null" disabled>Selecciona un equipo</option>
+              @for (equipo of equipos(); track equipo.id) {
+                <option [value]="equipo.id">{{ equipo.nombre }} (ID: {{ equipo.id }})</option>
+              }
+            </select>
+            @if (id_equipo?.invalid && id_equipo?.touched) {
+            <div class="invalid-feedback">
+              <span>Debe seleccionar un equipo.</span>
+            </div>
+            }
+            @if (loadingEquipos()) {
+              <div class="form-text text-muted">Cargando equipos...</div>
+            }
+          </div>
+
+          <!-- Botones -->
+          <div class="d-flex justify-content-between align-items-center mt-4">
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              (click)="doCancel()"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              class="btn btn-primary"
+              [disabled]="submitting() || ligaForm.invalid"
+            >
+              @if (submitting()) {
+                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+              }
+              Guardar Cambios
+            </button>
+          </div>
+        </form>
         }
       </div>
-
-      <div class="col-12 d-flex justify-content-end gap-2">
-        <button class="btn btn-secondary" type="button" (click)="doCancel()">Cancelar</button>
-        <button class="btn btn-primary" type="submit" [disabled]="saving()">Guardar</button>
-      </div>
-    </form>
-  }
+    </div>
+  </div>
 </div>
