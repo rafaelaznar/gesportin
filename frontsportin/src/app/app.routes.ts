@@ -17,8 +17,8 @@ import { CompraDeleteAdminRouted } from './component/compra/delete-admin-routed/
 import { RolusuarioPlist } from './component/rolusuario/plist-admin-routed/rolusuario-plist';
 import { TipoarticuloPlistAdminRouted } from './component/tipoarticulo/plist-admin-routed/tipoarticulo-plist';
 import { TipoarticuloViewAdminRouted } from './component/tipoarticulo/view-admin-routed/tipoarticulo-view';
-import { JugadorPlisComponent } from './component/jugador/jugadorPlist/jugador-plist';
-import { JugadorViewRouted } from './component/jugador/view-routed/jugador-view';
+import { JugadorPlist } from './component/jugador/plist-admin-routed/jugador-plist';
+import { JugadorViewRouted } from './component/jugador/view-admin-routed/jugador-view';
 import { LigaPlistAdminRouted } from './component/liga/plist-admin-routed/liga-plist';
 import { NoticiaPlistAdminRouted } from './component/noticia/plist-admin-routed/noticia-plist';
 import { ClubPlistAdminRouted } from './component/club/plist-admin-routed/club-plist';
@@ -59,6 +59,8 @@ import { CarritoDeleteAdminRouted } from './component/carrito/delete-admin-route
 import { ComentarioartDeleteAdminRouted } from './component/comentarioart/delete-admin-routed/delete-admin-routed';
 import { FacturaDeleteAdminRouted } from './component/factura/delete-admin-routed/factura-delete';
 import { CuotaEditAdminRouted } from './component/cuota/edit-admin-routed/cuota-edit';
+import { JugadorDeleteAdminRouted } from './component/jugador/delete-admin-routed/jugador-delete';
+
 
 
 export const routes: Routes = [
@@ -107,10 +109,11 @@ export const routes: Routes = [
     { path: 'tipoarticulo', component : TipoarticuloPlistAdminRouted},
     { path: 'tipoarticulo/club/:id_club', component : TipoarticuloPlistAdminRouted},
     { path: 'tipoarticulo/view/:id', component : TipoarticuloViewAdminRouted},
-    { path: 'jugador', component: JugadorPlisComponent},
-    { path: 'jugador/usuario/:id_usuario', component: JugadorPlisComponent},
-    { path: 'jugador/equipo/:id_equipo', component: JugadorPlisComponent},
-    { path: 'jugador/view/:id', component: JugadorViewRouted },
+    { path: 'jugador', component: JugadorPlist},
+    { path: 'jugador/usuario/:id_usuario', component: JugadorPlist},
+    { path: 'jugador/equipo/:id_equipo', component: JugadorPlist},
+    { path: 'jugador/view/:id', component: JugadorViewRouted},
+    { path: 'jugador/delete/:id', component: JugadorDeleteAdminRouted},    
     { path: 'noticia', component: NoticiaPlistAdminRouted},
     { path: 'noticia/club/:id_club', component: NoticiaPlistAdminRouted},
     { path: 'noticia/view/:id', component: NoticiaViewAdminRouted },
