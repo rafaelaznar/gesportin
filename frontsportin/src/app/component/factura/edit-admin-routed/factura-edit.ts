@@ -8,6 +8,7 @@ import { IFactura } from '../../../model/factura';
 import { IUsuario } from '../../../model/usuario';
 import { MatDialog } from '@angular/material/dialog';
 import { UsuarioPlist } from '../../usuario/usuario-plist/usuario-plist';
+import { UsuarioService } from '../../../service/usuarioService';
 
 @Component({
   selector: 'app-factura-edit',
@@ -20,6 +21,7 @@ export class FacturaEditAdminRouted {
   private router = inject(Router);
   private fb = inject(NonNullableFormBuilder);
   private oFacturaService = inject(FacturaService);
+  private oUsuarioService = inject(UsuarioService);
   private snackBar = inject(MatSnackBar);
   private dialog = inject(MatDialog);
 
@@ -27,7 +29,7 @@ export class FacturaEditAdminRouted {
   loading = signal(true);
   error = signal<string | null>(null);
   submitting = signal(false);
-  usuario = signal<IUsuario[]>([]);
+  usuarios = signal<IUsuario[]>([]);
   selectedUsuario = signal<IUsuario | null>(null);
   
   facturaForm = this.fb.group({
@@ -46,6 +48,7 @@ export class FacturaEditAdminRouted {
     }
 
     this.idFactura.set(idParam);
+    this.loadUsuarios();
     this.loadFactura();
   }
 
@@ -64,6 +67,18 @@ export class FacturaEditAdminRouted {
         this.error.set('Error cargando la factura');
         this.snackBar.open('Error cargando la factura', 'Cerrar', { duration: 4000 });
         this.loading.set(false);
+      },
+    });
+  }
+
+  private loadUsuarios(): void {
+    this.oUsuarioService.getPage(0, 1000, 'nombre', 'asc').subscribe({
+      next: (page) => {
+        this.usuarios.set(page.content);
+      },
+      error: (err: HttpErrorResponse) => {
+        console.error(err);
+        this.snackBar.open('Error cargando usuarios', 'Cerrar', { duration: 4000 });
       },
     });
   }

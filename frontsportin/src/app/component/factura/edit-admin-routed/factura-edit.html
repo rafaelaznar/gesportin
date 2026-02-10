@@ -47,16 +47,21 @@
 
             <div class="mb-4">
               <label for="usuario" class="form-label">Usuario <span class="text-danger">*</span></label>
-              <input
-                type="number"
-                class="form-control"
+              <select
+                id="usuario"
+                style="cursor: pointer"
+                class="form-select"
                 [class.is-invalid]="facturaForm.get('usuario')?.invalid && facturaForm.get('usuario')?.touched"
                 [class.is-valid]="facturaForm.get('usuario')?.valid && facturaForm.get('usuario')?.touched"
-                id="usuario"
                 formControlName="usuario"
-                min="1"
-                placeholder="ID de usuario"
-              />
+              >
+                <option [value]="0" disabled>Selecciona un usuario</option>
+                @for (usuario of usuarios(); track usuario.id) {
+                  <option [value]="usuario.id">
+                    {{ usuario.nombre }} {{ usuario.apellido1 }} {{ usuario.apellido2 }} (@{{ usuario.username }})
+                  </option>
+                }
+              </select>
               <button type="button" class="btn btn-info mt-2 mb-4" (click)="openUsuarioFinderModal()">
                 <i class="bi bi-search me-2"></i>Buscar usuario
               </button>
