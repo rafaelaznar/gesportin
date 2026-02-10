@@ -25,6 +25,9 @@ export class EquipoEditAdminRouted implements OnInit {
   loading = signal(true);
   error = signal<string | null>(null);
   submitting = signal(false);
+  // Guardar ids de claves ajenas para reenviarlos en el update
+  currentCategoriaId = signal<number | null>(null);
+  currentEntrenadorId = signal<number | null>(null);
 
   constructor() {}
 
@@ -64,6 +67,9 @@ export class EquipoEditAdminRouted implements OnInit {
           id: equipo.id,
           nombre: equipo.nombre,
         });
+        // Guardar ids de categoria y entrenador para incluirlos en el update
+        this.currentCategoriaId.set(equipo.categoria?.id ?? null);
+        this.currentEntrenadorId.set(equipo.entrenador?.id ?? null);
         this.loading.set(false);
       },
       error: (err: HttpErrorResponse) => {
@@ -93,6 +99,14 @@ export class EquipoEditAdminRouted implements OnInit {
       id: this.id_equipo(),
       nombre: this.equipoForm.value.nombre,
     } as Partial<IEquipo>;
+
+    // Incluir referencias a claves ajenas si existen para evitar errores en el backend
+    if (this.currentCategoriaId()) {
+      equipoData.categoria = { id: this.currentCategoriaId() };
+    }
+    if (this.currentEntrenadorId()) {
+      equipoData.entrenador = { id: this.currentEntrenadorId() };
+    }
 
     this.oEquipoService.update(equipoData).subscribe({
       next: (id: number) => {

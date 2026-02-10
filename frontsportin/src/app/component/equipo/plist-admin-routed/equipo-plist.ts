@@ -80,13 +80,64 @@ export class PlistEquipo {
   }
 
   getPage() {
+    // Si hay un nombre de búsqueda, el backend no lo aplica correctamente en este API,
+    // así que traemos un page grande y filtramos en cliente por nombre (case insensitive),
+    // luego paginamos el resultado localmente.
+    if (this.nombre() && this.nombre().trim().length > 0) {
+      const searchTerm = this.nombre().trim().toLowerCase();
+      // traer un page grande que contenga todos los posibles registros del backend
+      this.oEquipoService
+        .getPage(0, 1000, this.orderField(), this.orderDirection(), '', this.categoria(), this.usuario())
+        .subscribe({
+          next: (data: IPage<IEquipo>) => {
+            const all = data.content || [];
+            const filtered = all.filter((e) => (e.nombre || '').toLowerCase().includes(searchTerm));
+
+            const totalElements = filtered.length;
+            const size = this.numRpp();
+            const totalPages = Math.max(1, Math.ceil(totalElements / size));
+            const page = Math.min(this.numPage(), totalPages - 1);
+            const start = page * size;
+            const pageContent = filtered.slice(start, start + size);
+
+            const localPage: IPage<IEquipo> = {
+              content: pageContent,
+              pageable: {
+                pageNumber: page,
+                pageSize: size,
+                sort: { sorted: true, unsorted: false, empty: false },
+                offset: start,
+                paged: true,
+                unpaged: false,
+              },
+              totalPages: totalPages,
+              totalElements: totalElements,
+              last: page === totalPages - 1,
+              size: size,
+              number: page,
+              sort: { sorted: true, unsorted: false, empty: false },
+              first: page === 0,
+              numberOfElements: pageContent.length,
+              empty: pageContent.length === 0,
+            };
+
+            this.oPage.set(localPage);
+          },
+          error: (error: HttpErrorResponse) => {
+            console.error(error);
+          },
+        });
+      return;
+    }
+
+    // Si no hay término de búsqueda, consultamos al backend normalmente
     this.oEquipoService
       .getPage(
         this.numPage(),
         this.numRpp(),
         this.orderField(),
         this.orderDirection(),
-        this.nombre(),
+        '',
         this.categoria(),
         this.usuario()
       )
