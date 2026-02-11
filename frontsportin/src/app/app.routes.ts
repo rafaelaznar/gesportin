@@ -33,6 +33,7 @@ import { ComentarioViewRouted } from './component/comentario/view-routed/comenta
 import { PagoPlistComponent } from './component/pago/plist-admin-routed/pago-plist';
 import { PuntuacionPlistAdminRouted } from './component/puntuacion/plist-admin-routed/puntuacion-plist';
 import { PuntuacionViewRouted } from './component/puntuacion/view-routed/puntuacion-view';
+import { PuntuacionEditAdminRouted } from './component/puntuacion/edit-admin-routed/puntuacion-edit';
 import { NoticiaViewAdminRouted } from './component/noticia/view-admin-routed/view-admin-routed';
 import { FacturaViewAdminRouted } from './component/factura/view-admin-routed/factura-view';
 import { ComentarioartPlistAdminRouted } from './component/comentarioart/comentarioart-plist';
@@ -167,6 +168,7 @@ export const routes: Routes = [
     { path: 'puntuacion/noticia/:id_noticia', component: PuntuacionPlistAdminRouted},
     { path: 'puntuacion/usuario/:id_usuario', component: PuntuacionPlistAdminRouted},
     { path: 'puntuacion/view/:id', component: PuntuacionViewRouted},
+    { path: 'puntuacion/edit/:id', component: PuntuacionEditAdminRouted},
     { path: 'puntuacion/delete/:id', component: PuntuacionDeleteAdminRouted},
     { path: 'comentarioart', component: ComentarioartPlistAdminRouted},
     { path: 'comentarioart/articulo/:id_articulo', component: ComentarioartPlistAdminRouted},
