@@ -78,7 +78,7 @@
               >
                 <!-- Se elimina opción 'Sin asignar' para que el select muestre por defecto el entrenador existente -->
                 @for (u of entrenadores(); track u.id) {
-                  <option [value]="u.id">{{ u.nombre }} {{ u.apellido1 ?? '' }} ({{ u.id }})</option>
+                  <option [value]="u.id">{{ u.nombre }} {{ u.apellido1 }} ({{ u.id }})</option>
                 }
               </select>
             </div>
