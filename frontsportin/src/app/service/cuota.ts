@@ -54,9 +54,9 @@ export class CuotaService {
     return this.oHttp.put<number>(serverURL + '/cuota', cuota);
   }
 
-  // delete(id: number): Observable<number> {
-  //   return this.oHttp.delete<number>(serverURL + '/cuota/' + id);
-  // }
+  delete(id: number): Observable<number> {
+    return this.oHttp.delete<number>(serverURL + '/cuota/' + id);
+  }
 
   // empty(): Observable<number> {
   //   return this.oHttp.delete<number>(serverURL + '/cuota/empty');

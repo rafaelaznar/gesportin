@@ -26,27 +26,24 @@ export class EquipoService {
     if (direction === '') {
       direction = 'asc';
     }
-    if (id_categoria > 0) {
-      return this.oHttp.get<IPage<IEquipo>>(
-        serverURL +
-        `/equipo?page=${page}&size=${rpp}&sort=${order},${direction}&id_categoria=${id_categoria}`,
-      );
-    }
+
+    // Construir la URL incluyendo solo los parámetros esperados por la API
+    // Búsqueda por nombre (parametro 'nombre') y filtros por id_categoria e id_usuario
+    let url = serverURL + `/equipo?page=${page}&size=${rpp}&sort=${order},${direction}`;
+
     if (nombre && nombre.length > 0) {
-      return this.oHttp.get<IPage<IEquipo>>(
-        serverURL +
-        `/equipo?page=${page}&size=${rpp}&sort=${order},${direction}&nombre=${nombre}`,
-      );
+      url += `&nombre=${encodeURIComponent(nombre)}`;
     }
-    if (id_usuario > 0) {
-      return this.oHttp.get<IPage<IEquipo>>(
-        serverURL +
-        `/equipo?page=${page}&size=${rpp}&sort=${order},${direction}&id_usuario=${id_usuario}`,
-      );
+
+    if (id_categoria && id_categoria > 0) {
+      url += `&id_categoria=${id_categoria}`;
     }
-    return this.oHttp.get<IPage<IEquipo>>(
-      serverURL + `/equipo?page=${page}&size=${rpp}&sort=${order},${direction}`,
-    );
+
+    if (id_usuario && id_usuario > 0) {
+      url += `&id_usuario=${id_usuario}`;
+    }
+
+    return this.oHttp.get<IPage<IEquipo>>(url);
   }
 
   get(id: number): Observable<IEquipo> {
@@ -60,6 +57,10 @@ export class EquipoService {
   // update(equipo: Partial<IEquipo>): Observable<number> {
   //   return this.oHttp.put<number>(serverURL + '/equipo', equipo);
   // }
+
+  update(equipo: Partial<IEquipo>): Observable<number> {
+    return this.oHttp.put<number>(`${serverURL}/equipo`, equipo);
+  }
 
   delete(id: number): Observable<number> {
     return this.oHttp.delete<number>(serverURL + '/equipo/' + id);

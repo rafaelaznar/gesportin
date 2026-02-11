@@ -5,11 +5,12 @@ import { CommonModule } from '@angular/common';
 import { DatetimePipe } from '../../../pipe/datetime-pipe';
 import { CuotaService } from '../../../service/cuota';
 import { ICuota } from '../../../model/cuota';
+import { CuotaDetailAdminUnrouted } from "../../cuota/detail-admin-unrouted/cuota-detail";
 
 
 @Component({
   selector: 'app-usuario-view',
-  imports: [CommonModule, RouterLink, DatetimePipe],
+  imports: [CommonModule, CuotaDetailAdminUnrouted],
   templateUrl: './cuota-view.html',
   styleUrl: './cuota-view.css',
 })
@@ -21,30 +22,15 @@ export class CuotaViewAdminRouted implements OnInit {
   oCuota = signal<ICuota | null>(null);
   loading = signal(true);
   error = signal<string | null>(null);
+  id_cuota = signal<number>(0);
 
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
-    const id = idParam ? Number(idParam) : NaN;
-    if (isNaN(id)) {
+    this.id_cuota.set(idParam ? Number(idParam) : NaN);
+    if (isNaN(this.id_cuota())) {
       this.error.set('ID no válido');
       this.loading.set(false);
       return;
-    }
-    this.load(id);
-  }
-
-  load(id: number) {
-    this.oCuotaService.get(id).subscribe({
-      next: (data: ICuota) => {
-        this.oCuota.set(data);
-        this.loading.set(false);
-      },
-      error: (err: HttpErrorResponse) => {
-        this.error.set('Error cargando el usuario');
-        this.loading.set(false);
-        //this.snackBar.open('Error cargando el usuario', 'Cerrar', { duration: 4000 });
-        console.error(err);
-      },
-    });
+    }    
   }
 }

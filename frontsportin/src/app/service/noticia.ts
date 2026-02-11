@@ -8,10 +8,13 @@ import { INoticia } from '../model/noticia';
 @Injectable({
   providedIn: 'root',
 })
-
 export class NoticiaService {
+  constructor(private oHttp: HttpClient) {}
 
-  constructor(private oHttp: HttpClient) { }
+
+  update(noticia: any): Observable<number> {
+    return this.oHttp.put<number>(serverURL + '/noticia', noticia);
+  }
 
   getPage(
     page: number,
@@ -27,7 +30,7 @@ export class NoticiaService {
     if (direction === '') {
       direction = 'asc';
     }
-    
+
     // Filtro por club.id
     if (id_club > 0) {
       return this.oHttp.get<IPage<INoticia>>(
@@ -35,7 +38,7 @@ export class NoticiaService {
           `/noticia?page=${page}&size=${rpp}&sort=${order},${direction}&id_club=${id_club}`,
       );
     }
-    
+
     // Búsqueda por título o contenido (usa el mismo valor para ambos campos)
     if (titulo && titulo.length > 0) {
       return this.oHttp.get<IPage<INoticia>>(
@@ -43,7 +46,7 @@ export class NoticiaService {
           `/noticia?page=${page}&size=${rpp}&sort=${order},${direction}&titulo=${titulo}&contenido=${titulo}`,
       );
     }
-    
+
     // Sin filtros
     return this.oHttp.get<IPage<INoticia>>(
       serverURL + `/noticia?page=${page}&size=${rpp}&sort=${order},${direction}`,
@@ -51,9 +54,7 @@ export class NoticiaService {
   }
 
   getById(id: number): Observable<INoticia> {
-    return this.oHttp.get<INoticia>(
-      serverURL + `/noticia/${id}`
-    );
+    return this.oHttp.get<INoticia>(serverURL + `/noticia/${id}`);
   }
 
   count(): Observable<number> {
