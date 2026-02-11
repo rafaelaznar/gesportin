@@ -54,4 +54,8 @@ export class ComentarioService {
     get(id: number): Observable<IComentario> {
         return this.oHttp.get<IComentario>(`${this.URL}/${id}`);
     }
+
+    update(comentario: Partial<IComentario>): Observable<number> {
+        return this.oHttp.put<number>(serverURL + '/comentario', comentario);
+    }
 }

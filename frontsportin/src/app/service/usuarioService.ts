@@ -61,6 +61,10 @@ export class UsuarioService {
     return this.oHttp.get<IUsuario>(`${serverURL}/usuario/${id}`);
   }
 
+  update(usuario: Partial<IUsuario>): Observable<IUsuario> {
+    return this.oHttp.put<IUsuario>(`${serverURL}/usuario`, usuario);
+  }
+
   count(): Observable<number> {
     return this.oHttp.get<number>(`${serverURL}/usuario/count`);
   }

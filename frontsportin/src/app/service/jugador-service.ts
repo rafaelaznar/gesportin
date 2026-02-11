@@ -58,9 +58,9 @@ export class JugadorService {
   //   return this.http.post<number>(serverURL + '/jugador', jugador);
   // }
 
-  // update(jugador: Partial<IJugador>): Observable<number> {
-  //   return this.http.put<number>(serverURL + '/jugador', jugador);
-  // }
+  update(jugador: Partial<IJugador>): Observable<number> {
+    return this.http.put<number>(serverURL + '/jugador', jugador);
+  }
 
   delete(id: number): Observable<number> {
     return this.http.delete<number>(serverURL + '/jugador/' + id);

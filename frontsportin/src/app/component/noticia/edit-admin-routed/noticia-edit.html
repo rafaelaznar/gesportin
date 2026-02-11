@@ -1,0 +1,152 @@
+<div class="container my-4 edit-form">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-8">
+      <div class="form-card">
+        <header class="mb-4">
+          <h1 class="h3 mb-0">Editar noticia</h1>
+        </header>
+
+        @if (loading()) {
+          <div class="d-flex justify-content-center my-5">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Cargando...</span>
+            </div>
+          </div>
+        }
+
+        @if (error()) {
+          <div class="alert alert-danger" role="alert">
+            <i class="bi bi-exclamation-triangle me-2"></i>{{ error() }}
+          </div>
+        }
+
+        @if (!loading() && !error()) {
+          <form [formGroup]="noticiaForm" (ngSubmit)="onSubmit()" novalidate>
+            <!-- ID (solo lectura) -->
+            <div class="mb-4">
+              <label for="id" class="form-label">ID de la noticia</label>
+              <input type="text" class="form-control" id="id" formControlName="id" readonly />
+            </div>
+
+            <!-- Título -->
+            <div class="mb-4">
+              <label for="titulo" class="form-label"
+                >Título <span class="text-danger">*</span></label
+              >
+              <input
+                type="text"
+                class="form-control"
+                [class.is-invalid]="titulo?.invalid && titulo?.touched"
+                [class.is-valid]="titulo?.valid && titulo?.touched"
+                id="titulo"
+                formControlName="titulo"
+                placeholder="Introduce el título de la noticia"
+              />
+              @if (titulo?.invalid && titulo?.touched) {
+                <div class="invalid-feedback">
+                  @if (titulo?.errors?.['required']) {
+                    <span>El título es obligatorio.</span>
+                  }
+                  @if (titulo?.errors?.['minlength']) {
+                    <span>El título debe tener al menos 3 caracteres.</span>
+                  }
+                  @if (titulo?.errors?.['maxlength']) {
+                    <span>El título no puede superar 255 caracteres.</span>
+                  }
+                </div>
+              }
+            </div>
+
+            <!-- Contenido -->
+            <div class="mb-4">
+              <label for="contenido" class="form-label"
+                >Contenido <span class="text-danger">*</span></label
+              >
+              <textarea
+                class="form-control"
+                id="contenido"
+                rows="6"
+                [class.is-invalid]="contenido?.invalid && contenido?.touched"
+                [class.is-valid]="contenido?.valid && contenido?.touched"
+                formControlName="contenido"
+                placeholder="Escribe el contenido de la noticia"
+              ></textarea>
+              @if (contenido?.invalid && contenido?.touched) {
+                <div class="invalid-feedback">
+                  @if (contenido?.errors?.['required']) {
+                    <span>El contenido es obligatorio.</span>
+                  }
+                  @if (contenido?.errors?.['minlength']) {
+                    <span>El contenido debe tener al menos 3 caracteres.</span>
+                  }
+                </div>
+              }
+            </div>
+
+            <!-- Fecha -->
+            <div class="mb-4">
+              <label for="fecha" class="form-label">Fecha <span class="text-danger">*</span></label>
+              <input type="date" class="form-control" id="fecha" formControlName="fecha" />
+            </div>
+
+            <!-- Imagen -->
+            <div class="mb-4">
+              <label for="imagen" class="form-label">Imagen</label>
+              <input
+                type="text"
+                class="form-control"
+                id="imagen"
+                formControlName="imagen"
+                placeholder="URL o identificador de imagen"
+              />
+            </div>
+
+            <!-- Club (desplegable) -->
+            <div class="mb-4">
+              <label for="id_club" class="form-label"
+                >Club <span class="text-danger">*</span></label
+              >
+              <select
+                id="id_club"
+                style="cursor: pointer"
+                class="form-select"
+                [class.is-invalid]="id_club?.invalid && id_club?.touched"
+                [class.is-valid]="id_club?.valid && id_club?.touched"
+                formControlName="id_club"
+              >
+                <option [value]="null" disabled>Selecciona un club</option>
+                @for (c of clubes(); track c.id) {
+                  <option [value]="c.id">{{ c.nombre }}</option>
+                }
+              </select>
+              @if (id_club?.invalid && id_club?.touched) {
+                <div class="invalid-feedback">
+                  <span>Debe seleccionar un club.</span>
+                </div>
+              }
+            </div>
+
+            <!-- Botones -->
+            <div class="d-flex justify-content-between align-items-center mt-4">
+              <a [routerLink]="['/noticia']" class="btn btn-outline-secondary"> Cancelar </a>
+              <button
+                type="submit"
+                class="btn btn-primary"
+                [disabled]="submitting() || noticiaForm.invalid"
+              >
+                @if (submitting()) {
+                  <span
+                    class="spinner-border spinner-border-sm me-2"
+                    role="status"
+                    aria-hidden="true"
+                  ></span>
+                }
+                Guardar Cambios
+              </button>
+            </div>
+          </form>
+        }
+      </div>
+    </div>
+  </div>
+</div>

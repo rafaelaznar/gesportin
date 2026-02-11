@@ -43,4 +43,9 @@ export class CompraService {
   delete(id: number): Observable<number> {
     return this.oHttp.delete<number>(serverURL + '/compra/' + id);
   }
+
+  update(compra: Partial<ICompra>): Observable<number> {
+    return this.oHttp.put<number>(serverURL + '/compra', compra);
+  }
+
 }

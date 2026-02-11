@@ -1,0 +1,104 @@
+<div class="container my-4 edit-form">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-8">
+      <div class="form-card">
+        <header class="mb-4">
+          <h1 class="h3 mb-0">Editar equipo</h1>
+        </header>
+
+        @if (loading()) {
+          <div class="d-flex justify-content-center my-5">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Cargando...</span>
+            </div>
+          </div>
+        }
+
+        @if (error()) {
+          <div class="alert alert-danger" role="alert">
+            <i class="bi bi-exclamation-triangle me-2"></i>{{ error() }}
+          </div>
+        }
+
+        @if (!loading() && !error()) {
+          <form [formGroup]="equipoForm" (ngSubmit)="onSubmit()" novalidate>
+            <div class="mb-4">
+              <label for="id" class="form-label">ID del equipo</label>
+              <input type="text" class="form-control" id="id" formControlName="id" readonly />
+            </div>
+
+            <div class="mb-4">
+              <label for="nombre" class="form-label">Nombre <span class="text-danger">*</span></label>
+              <input
+                type="text"
+                class="form-control"
+                [class.is-invalid]="nombre?.invalid && nombre?.touched"
+                [class.is-valid]="nombre?.valid && nombre?.touched"
+                id="nombre"
+                formControlName="nombre"
+                placeholder="Introduce el nombre del equipo"
+              />
+              @if (nombre?.invalid && nombre?.touched) {
+                <div class="invalid-feedback">
+                  @if (nombre?.errors?.['required']) {
+                    <span>El nombre es obligatorio.</span>
+                  }
+                  @if (nombre?.errors?.['minlength']) {
+                    <span>El nombre debe tener al menos 2 caracteres.</span>
+                  }
+                  @if (nombre?.errors?.['maxlength']) {
+                    <span>El nombre no puede superar 255 caracteres.</span>
+                  }
+                </div>
+              }
+            </div>
+
+            <div class="mb-4">
+              <label for="categoria" class="form-label">Categoría</label>
+              <select
+                id="categoria"
+                style="cursor: pointer;"
+                class="form-select"
+                [class.is-invalid]="id_categoria?.invalid && id_categoria?.touched"
+                [class.is-valid]="id_categoria?.valid && id_categoria?.touched"
+                formControlName="id_categoria"
+              >
+                <!-- Se elimina opción 'Sin asignar' para que el select muestre por defecto la categoría existente -->
+                @for (cat of categorias(); track cat.id) {
+                  <option [value]="cat.id">{{ cat.nombre }} ({{ cat.id }})</option>
+                }
+              </select>
+            </div>
+
+            <div class="mb-4">
+              <label for="entrenador" class="form-label">Entrenador</label>
+              <select
+                id="entrenador"
+                style="cursor: pointer;"
+                class="form-select"
+                [class.is-invalid]="id_entrenador?.invalid && id_entrenador?.touched"
+                [class.is-valid]="id_entrenador?.valid && id_entrenador?.touched"
+                formControlName="id_entrenador"
+              >
+                <!-- Se elimina opción 'Sin asignar' para que el select muestre por defecto el entrenador existente -->
+                @for (u of entrenadores(); track u.id) {
+                  <option [value]="u.id">{{ u.nombre }} {{ u.apellido1 }} ({{ u.id }})</option>
+                }
+              </select>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mt-4">
+              <a [routerLink]="['/equipo']" class="btn btn-outline-secondary"> Cancelar </a>
+              <button type="submit" class="btn btn-primary" [disabled]="submitting() || equipoForm.invalid">
+                @if (submitting()) {
+                  <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                }
+                Guardar Cambios
+              </button>
+            </div>
+          </form>
+        }
+      </div>
+    </div>
+  </div>
+</div>
