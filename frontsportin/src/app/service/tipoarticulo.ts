@@ -49,4 +49,8 @@ export class TipoarticuloService {
   count(): Observable<number> {
     return this.oHttp.get<number>(serverURL + '/tipoarticulo/count');
   }
+
+  delete(id: number): Observable<ITipoarticulo> {
+    return this.oHttp.delete<ITipoarticulo>(serverURL + '/tipoarticulo/' + id);
+  }
 }

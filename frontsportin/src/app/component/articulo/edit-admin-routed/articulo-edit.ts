@@ -33,6 +33,7 @@ export class ArticuloEditAdminRouted implements OnInit {
   submitting = signal(false);
   tiposarticulo = signal<ITipoarticulo[]>([]);
   selectedTipoarticulo = signal<ITipoarticulo | null>(null);
+  displayIdTipo = signal<number | null>(null);
 
   constructor(private dialog: MatDialog) {}
 
@@ -59,6 +60,25 @@ export class ArticuloEditAdminRouted implements OnInit {
     this.loadArticulo();
   }
 
+  private loadTipoarticulo(): void {
+    const idTipo = this.articuloForm.get('id_tipoarticulo')?.value;
+    if (idTipo) {
+      this.oTipoarticuloService.get(idTipo).subscribe({
+        next: (tipo) => {
+          this.selectedTipoarticulo.set(tipo);
+          this.displayIdTipo.set(tipo.id);
+        },
+        error: (err: HttpErrorResponse) => {
+          this.snackBar.open('Error cargando el tipo de artículo', 'Cerrar', { duration: 4000 });
+          console.error(err);
+        },
+      });
+    } else {
+      this.selectedTipoarticulo.set(null);
+      this.displayIdTipo.set(null);
+    }
+  }
+
   private initForm(): void {
     this.articuloForm = this.fb.group({
       id: [{ value: 0, disabled: true }],
@@ -66,6 +86,13 @@ export class ArticuloEditAdminRouted implements OnInit {
       precio: [0, [Validators.required, Validators.min(0)]],
       descuento: [0, [Validators.min(0), Validators.max(100)]],
       id_tipoarticulo: [null, Validators.required],
+    });
+
+    // Cargar el tipo de artículo cuando cambia el desplegable
+    this.articuloForm.get('id_tipoarticulo')?.valueChanges.subscribe((id) => {
+      if (id) {
+        this.loadTipoarticulo();
+      }
     });
   }
 
@@ -79,6 +106,10 @@ export class ArticuloEditAdminRouted implements OnInit {
           descuento: articulo.descuento,
           id_tipoarticulo: articulo.tipoarticulo?.id,
         });
+        if (articulo.tipoarticulo) {
+          // Sincronizar explícitamente después de patchValue
+          this.syncTipoarticulo(articulo.tipoarticulo.id);
+        }
         this.loading.set(false);
       },
       error: (err: HttpErrorResponse) => {
@@ -95,12 +126,27 @@ export class ArticuloEditAdminRouted implements OnInit {
       next: (page) => {
         // Mostrar todos los tipos de artículo con el nombre del club
         this.tiposarticulo.set(page.content);
+        // Sincronizar con el tipo actual si está cargado
+        const idActual = this.articuloForm.get('id_tipoarticulo')?.value;
+        if (idActual) {
+          this.syncTipoarticulo(idActual);
+        }
       },
       error: (err: HttpErrorResponse) => {
         this.snackBar.open('Error cargando tipos de artículo', 'Cerrar', { duration: 4000 });
         console.error(err);
       },
     });
+  }
+
+  private syncTipoarticulo(idTipo: number): void {
+    this.displayIdTipo.set(idTipo);
+    const tipoSeleccionado = this.tiposarticulo().find((t) => t.id === idTipo);
+    if (tipoSeleccionado) {
+      this.selectedTipoarticulo.set(tipoSeleccionado);
+    } else {
+      this.selectedTipoarticulo.set(null);
+    }
   }
 
   get descripcion() {
@@ -182,15 +228,14 @@ export class ArticuloEditAdminRouted implements OnInit {
 
     dialogRef.afterClosed().subscribe((tipoarticulo: ITipoarticulo | null) => {
       if (tipoarticulo) {
-        this.selectedTipoarticulo.set(tipoarticulo);
         this.articuloForm.patchValue({
           id_tipoarticulo: tipoarticulo.id,
         });
-        this.snackBar.open(
-          `Tipo de artículo seleccionado: ${tipoarticulo.descripcion}`,
-          'Cerrar',
-          { duration: 3000 }
-        );
+        // Sincronizar explícitamente después de seleccionar desde el modal
+        this.syncTipoarticulo(tipoarticulo.id);
+        this.snackBar.open(`Tipo de artículo seleccionado: ${tipoarticulo.descripcion}`, 'Cerrar', {
+          duration: 3000,
+        });
       }
     });
   }

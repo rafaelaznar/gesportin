@@ -3,10 +3,10 @@
     <div class="col-12 col-lg-8">
       <div class="form-card">
         <header class="mb-4">
-          <h1 class="h3 mb-0">Editar categoría</h1>
+          <h1 class="h3 mb-0">Editar Liga</h1>
         </header>
 
-        @if (loading()) {
+        @if (loadingLiga()) {
         <div class="d-flex justify-content-center my-5">
           <div class="spinner-border text-primary" role="status">
             <span class="visually-hidden">Cargando...</span>
@@ -20,11 +20,11 @@
         </div>
         }
 
-        @if (!loading() && !error()) {
-        <form [formGroup]="categoriaForm" (ngSubmit)="onSubmit()" novalidate>
+        @if (!loadingLiga() && !error()) {
+        <form [formGroup]="ligaForm" (ngSubmit)="onSubmit()" novalidate>
           <!-- ID (solo lectura) -->
           <div class="mb-4">
-            <label for="id" class="form-label">ID de la categoría</label>
+            <label for="id" class="form-label">ID de la liga</label>
             <input
               type="text"
               class="form-control"
@@ -44,7 +44,7 @@
               [class.is-valid]="nombre?.valid && nombre?.touched"
               id="nombre"
               formControlName="nombre"
-              placeholder="Introduce el nombre de la categoría"
+              placeholder="Introduce el nombre de la liga"
             />
             @if (nombre?.invalid && nombre?.touched) {
             <div class="invalid-feedback">
@@ -52,7 +52,7 @@
                 <span>El nombre es obligatorio.</span>
               }
               @if (nombre?.errors?.['minlength']) {
-                <span>El nombre debe tener al menos 4 caracteres.</span>
+                <span>El nombre debe tener al menos 3 caracteres.</span>
               }
               @if (nombre?.errors?.['maxlength']) {
                 <span>El nombre no puede superar 255 caracteres.</span>
@@ -61,38 +61,45 @@
             }
           </div>
 
-          <!-- Temporada -->
+          <!-- Equipo -->
           <div class="mb-4">
-            <label for="temporada" class="form-label">Temporada <span class="text-danger">*</span></label>
+            <label for="equipo" class="form-label">Equipo <span class="text-danger">*</span></label>
             <select
-              id="temporada"
+              id="equipo"
               style="cursor: pointer;"
               class="form-select"
-              [class.is-invalid]="id_temporada?.invalid && id_temporada?.touched"
-              [class.is-valid]="id_temporada?.valid && id_temporada?.touched"
-              formControlName="id_temporada"
+              [class.is-invalid]="id_equipo?.invalid && id_equipo?.touched"
+              [class.is-valid]="id_equipo?.valid && id_equipo?.touched"
+              formControlName="id_equipo"
             >
-              <option [value]="null" disabled>Selecciona una temporada</option>
-              @for (temporada of temporadas(); track temporada.id) {
-                <option [value]="temporada.id">{{ temporada.descripcion }}</option>
+              <option [value]="null" disabled>Selecciona un equipo</option>
+              @for (equipo of equipos(); track equipo.id) {
+                <option [value]="equipo.id">{{ equipo.nombre }} (ID: {{ equipo.id }})</option>
               }
             </select>
-            @if (id_temporada?.invalid && id_temporada?.touched) {
+            @if (id_equipo?.invalid && id_equipo?.touched) {
             <div class="invalid-feedback">
-              <span>Debe seleccionar una temporada.</span>
+              <span>Debe seleccionar un equipo.</span>
             </div>
+            }
+            @if (loadingEquipos()) {
+              <div class="form-text text-muted">Cargando equipos...</div>
             }
           </div>
 
           <!-- Botones -->
           <div class="d-flex justify-content-between align-items-center mt-4">
-            <a [routerLink]="['/categoria']" class="btn btn-outline-secondary">
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              (click)="doCancel()"
+            >
               Cancelar
-            </a>
+            </button>
             <button
               type="submit"
               class="btn btn-primary"
-              [disabled]="submitting() || categoriaForm.invalid"
+              [disabled]="submitting() || ligaForm.invalid"
             >
               @if (submitting()) {
                 <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
