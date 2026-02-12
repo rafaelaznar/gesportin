@@ -63,7 +63,7 @@ export class PagoEditAdminRouted implements OnInit {
   private initForm(): void {
     this.pagoForm = this.fb.group({
       id: [{ value: 0, disabled: true }],
-      abonado: [0, [Validators.required, Validators.min(0)]],
+      abonado: [false],
       fecha: ['', [Validators.required]],
       id_cuota: [null, [Validators.required]],
       id_jugador: [null, [Validators.required]],
@@ -81,13 +81,11 @@ export class PagoEditAdminRouted implements OnInit {
   private loadPago(): void {
     this.oPagoService.get(this.id_pago()).subscribe({
       next: (pago: IPago) => {
-        // Convertir "2026-01-27 10:30:00" a "2026-01-27T10:30" para datetime-local
-        const fechaFormatted = pago.fecha.replace(' ', 'T').substring(0, 16);
-
         this.pagoForm.patchValue({
           id: pago.id,
-          abonado: Number.isInteger(pago.abonado) ? pago.abonado : Math.round(pago.abonado),
-          fecha: fechaFormatted,
+          abonado: !!pago.abonado,
+          // si viene con ISO completo, nos quedamos con YYYY-MM-DD para <input type="date">
+          fecha: pago.fecha ? pago.fecha.substring(0, 10) : '',
           id_cuota: pago.cuota?.id,
           id_jugador: pago.jugador?.id,
         });
@@ -148,13 +146,20 @@ export class PagoEditAdminRouted implements OnInit {
 
     this.submitting.set(true);
 
-    // Convertir "2026-01-27T10:30" a "2026-01-27 10:30:00" para el backend
-    const fechaBackend = this.pagoForm.value.fecha.replace('T', ' ') + ':00';
+    /* El backend espera `java.time.LocalDateTime`.
+    Desde el input type="date" recibimos YYYY-MM-DD.
+    Por el log del backend, el formato esperado es: "YYYY-MM-DD HH:mm:ss" (con espacio, no con 'T'). */
+    const fechaForm: string = this.pagoForm.value.fecha;
+    const fechaLocalDateTime = fechaForm
+      ? (fechaForm.length > 10
+          ? fechaForm.replace('T', ' ')
+          : `${fechaForm} 00:00:00`)
+      : null;
 
     const pagoData: any = {
       id: this.id_pago(),
-      abonado: parseInt(this.pagoForm.value.abonado, 10),
-      fecha: fechaBackend,
+      abonado: this.pagoForm.value.abonado ? 1 : 0,
+      fecha: fechaLocalDateTime,
       cuota: { id: this.pagoForm.value.id_cuota },
       jugador: { id: this.pagoForm.value.id_jugador },
     };
