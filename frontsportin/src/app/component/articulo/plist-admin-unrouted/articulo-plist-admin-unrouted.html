@@ -199,29 +199,7 @@
             </td>
             <td>
               <div class="d-flex justify-content-center">
-                <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
-                  <a
-                    class="btn btn-primary btn-sm"
-                    [routerLink]="['/articulo/view', oArticulo.id]"
-                    role="button"
-                    title="Ver"
-                    ><i class="bi bi-eye" aria-hidden="true"></i
-                  ></a>
-                  <a
-                    class="btn btn-warning btn-sm"
-                    [routerLink]="['/articulo/edit', oArticulo.id]"
-                    role="button"
-                    title="Editar"
-                    ><i class="bi bi-pencil" aria-hidden="true"></i
-                  ></a>
-                  <a
-                    class="btn btn-danger btn-sm"
-                    [routerLink]="['/articulo/delete', oArticulo.id]"
-                    role="button"
-                    title="Eliminar"
-                    ><i class="bi bi-trash" aria-hidden="true"></i
-                  ></a>
-                </div>
+                <app-botonera-actions-plist [id]="oArticulo.id" strEntity="articulo"></app-botonera-actions-plist>
               </div>
             </td>
           </tr>

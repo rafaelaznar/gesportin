@@ -11,10 +11,11 @@ import { EquipoService } from '../../../service/equipo';
 import { debounceTimeSearch } from '../../../environment/environment';
 import { IPage } from '../../../model/plist';
 import { IEquipo } from '../../../model/equipo';
+import { BotoneraActionsPlist } from '../../shared/botonera-actions-plist/botonera-actions-plist';
 
 @Component({
   selector: 'app-plist-equipo',
-  imports: [Paginacion, BotoneraRpp, TrimPipe, RouterLink],
+  imports: [Paginacion, BotoneraRpp, TrimPipe, RouterLink, BotoneraActionsPlist],
   templateUrl: './equipo-plist.html',
   styleUrl: './equipo-plist.css',
 })

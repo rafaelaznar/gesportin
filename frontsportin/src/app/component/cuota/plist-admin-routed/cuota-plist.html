@@ -141,15 +141,7 @@
         </td>
         <td>
           <div class="d-flex justify-content-center">
-            <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
-              <a class="btn btn-primary btn-sm" [routerLink]="['/cuota/view', oCuota.id]" role="button" title="Ver"><i
-                  class="bi bi-eye" aria-hidden="true"></i></a>
-              <a class="btn btn-warning btn-sm" [routerLink]="['/cuota/edit', oCuota.id]" role="button"
-                title="Editar"><i class="bi bi-pencil" aria-hidden="true"></i>
-              </a>
-              <a class="btn btn-danger btn-sm" [routerLink]="['/cuota/delete', oCuota.id]" role="button"
-                title="Eliminar"><i class="bi bi-trash" aria-hidden="true"></i></a>
-            </div>
+            <app-botonera-actions-plist [id]="oCuota.id" strEntity="cuota"></app-botonera-actions-plist>
           </div>
         </td>
       </tr>

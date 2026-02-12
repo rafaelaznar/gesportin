@@ -9,10 +9,11 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { debounceTimeSearch } from '../../../environment/environment';
+import { BotoneraActionsPlist } from '../../shared/botonera-actions-plist/botonera-actions-plist';
 
 @Component({
   selector: 'app-liga-plist',
-  imports: [Paginacion, BotoneraRpp, RouterLink],
+  imports: [Paginacion, BotoneraRpp, RouterLink, BotoneraActionsPlist],
   templateUrl: './liga-plist.html',
   styleUrl: './liga-plist.css',
 })

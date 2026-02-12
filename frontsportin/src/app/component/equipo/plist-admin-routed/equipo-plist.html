@@ -167,14 +167,7 @@
         </td>
         <td>
           <div class="d-flex justify-content-center">
-            <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
-              <a class="btn btn-primary btn-sm" [routerLink]="['/equipo/view', oEquipo.id]" role="button" title="Ver"><i
-                  class="bi bi-eye" aria-hidden="true"></i></a>
-              <a class="btn btn-warning btn-sm" [routerLink]="['/equipo/edit', oEquipo.id]" role="button"
-                title="Editar"><i class="bi bi-pencil" aria-hidden="true"></i></a>
-              <a class="btn btn-danger btn-sm" [routerLink]="['/equipo/delete', oEquipo.id]" role="button"
-                title="Eliminar"><i class="bi bi-trash" aria-hidden="true"></i></a>
-            </div>
+            <app-botonera-actions-plist [id]="oEquipo.id!" strEntity="equipo"></app-botonera-actions-plist>
           </div>
         </td>
       </tr>

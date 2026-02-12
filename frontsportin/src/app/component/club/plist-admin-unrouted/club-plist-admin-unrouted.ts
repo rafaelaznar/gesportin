@@ -8,10 +8,11 @@ import { Paginacion } from '../../shared/paginacion/paginacion';
 import { BotoneraRpp } from '../../shared/botonera-rpp/botonera-rpp';
 import { DatetimePipe } from '../../../pipe/datetime-pipe';
 import { MatDialogRef } from '@angular/material/dialog';
+import { BotoneraActionsPlist } from '../../shared/botonera-actions-plist/botonera-actions-plist';
 
 @Component({
   selector: 'app-club-plist-admin-unrouted',
-  imports: [Paginacion, BotoneraRpp, DatetimePipe, RouterLink],
+  imports: [Paginacion, BotoneraRpp, DatetimePipe, RouterLink, BotoneraActionsPlist],
   templateUrl: './club-plist-admin-unrouted.html',
   styleUrl: './club-plist-admin-unrouted.css',
 })

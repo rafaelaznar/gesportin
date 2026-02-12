@@ -10,11 +10,12 @@ import { CarritoService } from '../../../service/carrito';
 import { Paginacion } from '../../shared/paginacion/paginacion';
 import { BotoneraRpp } from '../../shared/botonera-rpp/botonera-rpp';
 import { debounceTimeSearch } from '../../../environment/environment';
+import { BotoneraActionsPlist } from '../../shared/botonera-actions-plist/botonera-actions-plist';
 
 @Component({
   selector: 'app-carrito-plist',
   standalone: true,
-  imports: [CommonModule, RouterLink, Paginacion, BotoneraRpp],
+  imports: [CommonModule, RouterLink, Paginacion, BotoneraRpp, BotoneraActionsPlist],
   templateUrl: './carrito-plist.html',
   styleUrl: './carrito-plist.css',
 })

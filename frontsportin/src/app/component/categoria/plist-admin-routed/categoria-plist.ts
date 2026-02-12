@@ -10,10 +10,11 @@ import { TrimPipe } from '../../../pipe/trim-pipe';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { debounceTimeSearch } from '../../../environment/environment';
+import { BotoneraActionsPlist } from '../../shared/botonera-actions-plist/botonera-actions-plist';
 
 @Component({
   selector: 'app-categoria-plist',
-  imports: [Paginacion, BotoneraRpp, RouterLink],
+  imports: [Paginacion, BotoneraRpp, RouterLink, BotoneraActionsPlist],
   templateUrl: './categoria-plist.html',
   styleUrl: './categoria-plist.css',
 })

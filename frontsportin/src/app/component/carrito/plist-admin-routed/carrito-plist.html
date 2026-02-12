@@ -119,31 +119,8 @@
               </a>
             </td>
             <td class="text-center">
-              <div class="btn-group btn-group-sm" role="group" aria-label="Acciones carrito">
-                <a
-                  class="btn btn-primary btn-sm"
-                  [routerLink]="['/carrito/view', carrito.id]"
-                  role="button"
-                  title="Ver carrito"
-                >
-                  <i class="bi bi-eye" aria-hidden="true"></i>
-                </a>
-                <a
-                  class="btn btn-warning btn-sm"
-                  [routerLink]="['/carrito/edit', carrito.id]"
-                  role="button"
-                  title="Editar carrito"
-                >
-                  <i class="bi bi-pencil" aria-hidden="true"></i>
-                </a>
-                <a
-                  class="btn btn-danger btn-sm"
-                  [routerLink]="['/carrito/delete', carrito.id]"
-                  role="button"
-                  title="Eliminar carrito"
-                >
-                  <i class="bi bi-trash" aria-hidden="true"></i>
-                </a>
+              <div class="d-flex justify-content-center">
+                <app-botonera-actions-plist [id]="carrito.id" strEntity="carrito"></app-botonera-actions-plist>
               </div>
             </td>
           </tr>

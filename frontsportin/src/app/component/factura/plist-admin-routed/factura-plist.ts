@@ -10,11 +10,12 @@ import { FacturaService } from '../../../service/factura-service';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TrimPipe } from '../../../pipe/trim-pipe';
 import { IFactura } from '../../../model/factura';
+import { BotoneraActionsPlist } from '../../shared/botonera-actions-plist/botonera-actions-plist';
 
 
 @Component({
   selector: 'app-factura-plist',
-  imports: [Paginacion, BotoneraRpp, DatetimePipe, RouterLink, TrimPipe],
+  imports: [Paginacion, BotoneraRpp, DatetimePipe, RouterLink, TrimPipe, BotoneraActionsPlist],
   templateUrl: './factura-plist.html',
   styleUrl: './factura-plist.css',
 })

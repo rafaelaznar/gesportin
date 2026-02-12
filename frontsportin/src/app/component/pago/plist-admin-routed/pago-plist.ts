@@ -9,6 +9,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TrimPipe } from '../../../pipe/trim-pipe';
 import { DatetimePipe } from '../../../pipe/datetime-pipe';
+import { BotoneraActionsPlist } from '../../shared/botonera-actions-plist/botonera-actions-plist';
 
 @Component({
   standalone: true,
@@ -21,7 +22,8 @@ import { DatetimePipe } from '../../../pipe/datetime-pipe';
     BotoneraRpp,
     RouterLink,
     TrimPipe,
-    DatetimePipe
+    DatetimePipe,
+    BotoneraActionsPlist
   ]
 })
 export class PagoPlistComponent {

@@ -10,11 +10,12 @@ import { BotoneraRpp } from '../../shared/botonera-rpp/botonera-rpp';
 import { Paginacion } from '../../shared/paginacion/paginacion';
 import { TrimPipe } from '../../../pipe/trim-pipe';
 import { MatDialogRef } from '@angular/material/dialog';
+import { BotoneraActionsPlist } from '../../shared/botonera-actions-plist/botonera-actions-plist';
 
 @Component({
   selector: 'app-partido-plist-admin-unrouted',
   standalone: true,
-  imports: [RouterLink, BotoneraRpp, Paginacion, TrimPipe],
+  imports: [RouterLink, BotoneraRpp, Paginacion, TrimPipe, BotoneraActionsPlist],
   templateUrl: './partido-plist-admin-unrouted.html',
   styleUrl: './partido-plist-admin-unrouted.css',
 })

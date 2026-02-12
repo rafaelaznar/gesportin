@@ -7,10 +7,11 @@ import { BotoneraRpp } from '../../shared/botonera-rpp/botonera-rpp';
 import { TrimPipe } from '../../../pipe/trim-pipe';
 import { IPuntuacion } from '../../../model/puntuacion';
 import { PuntuacionService } from '../../../service/puntuacion';
+import { BotoneraActionsPlist } from '../../shared/botonera-actions-plist/botonera-actions-plist';
 
 @Component({
   selector: 'app-puntuacion-plist',
-  imports: [Paginacion, BotoneraRpp, TrimPipe, RouterLink],
+  imports: [Paginacion, BotoneraRpp, TrimPipe, RouterLink, BotoneraActionsPlist],
   templateUrl: './puntuacion-plist.html',
   styleUrl: './puntuacion-plist.css',
 })

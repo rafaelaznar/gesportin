@@ -10,10 +10,11 @@ import { Paginacion } from '../../shared/paginacion/paginacion';
 import { RouterLink } from '@angular/router';
 import { TrimPipe } from '../../../pipe/trim-pipe';
 import { MatDialogRef } from '@angular/material/dialog';
+import { BotoneraActionsPlist } from '../../shared/botonera-actions-plist/botonera-actions-plist';
 
 @Component({
   selector: 'app-temporada-plist-admin-unrouted',
-  imports: [BotoneraRpp, Paginacion, RouterLink, TrimPipe],
+  imports: [BotoneraRpp, Paginacion, RouterLink, TrimPipe, BotoneraActionsPlist],
   templateUrl: './temporada-plist-admin-unrouted.html',
   styleUrl: './temporada-plist-admin-unrouted.css',
   standalone: true,

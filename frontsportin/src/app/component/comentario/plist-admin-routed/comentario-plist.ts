@@ -11,6 +11,7 @@ import { TrimPipe } from '../../../pipe/trim-pipe';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { debounceTimeSearch, serverURL } from '../../../environment/environment';
+import { BotoneraActionsPlist } from '../../shared/botonera-actions-plist/botonera-actions-plist';
 
 @Component({
   standalone: true,
@@ -22,7 +23,8 @@ import { debounceTimeSearch, serverURL } from '../../../environment/environment'
     Paginacion,
     BotoneraRpp,
     RouterLink,
-    TrimPipe
+    TrimPipe,
+    BotoneraActionsPlist
   ]
 })
 export class ComentarioPlistAdminRouted {

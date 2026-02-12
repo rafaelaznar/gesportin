@@ -11,10 +11,11 @@ import { RolusuarioService } from '../../../service/rolusuario';
 
 import { Paginacion } from '../../shared/paginacion/paginacion';
 import { BotoneraRpp } from '../../shared/botonera-rpp/botonera-rpp';
+import { BotoneraActionsPlist } from '../../shared/botonera-actions-plist/botonera-actions-plist';
 
 @Component({
   selector: 'app-rolusuario-plist-unrouted',
-  imports: [Paginacion, BotoneraRpp, RouterLink],
+  imports: [Paginacion, BotoneraRpp, RouterLink, BotoneraActionsPlist],
   templateUrl: './rolusuario-plist-admin-unrouted.html',
   styleUrl: './rolusuario-plist-admin-unrouted.css',
 })
