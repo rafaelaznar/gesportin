@@ -3,6 +3,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { IArticulo } from '../../../model/articulo';
 import { IComentarioart } from '../../../model/comentarioart';
@@ -10,6 +11,8 @@ import { IUsuario } from '../../../model/usuario';
 import { ArticuloService } from '../../../service/articulo';
 import { ComentarioartService } from '../../../service/comentarioart';
 import { UsuarioService } from '../../../service/usuarioService';
+import { ArticuloPlistAdminUnrouted } from '../../articulo/plist-admin-unrouted/articulo-plist-admin-unrouted';
+import { UsuarioPlistAdminUnrouted } from '../../usuario/plist-admin-unrouted/usuario-plist-admin-unrouted';
 
 @Component({
   selector: 'app-comentarioart-edit-admin-routed',
@@ -33,6 +36,12 @@ export class ComentarioartEditAdminRouted implements OnInit {
   submitting = signal(false);
   articulos = signal<IArticulo[]>([]);
   usuarios = signal<IUsuario[]>([]);
+  selectedArticulo = signal<IArticulo | null>(null);
+  displayIdArticulo = signal<number | null>(null);
+  selectedUsuario = signal<IUsuario | null>(null);
+  displayIdUsuario = signal<number | null>(null);
+
+  constructor(private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.initForm();
@@ -65,17 +74,43 @@ export class ComentarioartEditAdminRouted implements OnInit {
       id_articulo: [null, Validators.required],
       id_usuario: [null, Validators.required],
     });
+
+    this.comentarioartForm.get('id_articulo')?.valueChanges.subscribe((id) => {
+      if (id) {
+        this.syncArticulo(Number(id));
+      } else {
+        this.selectedArticulo.set(null);
+        this.displayIdArticulo.set(null);
+      }
+    });
+
+    this.comentarioartForm.get('id_usuario')?.valueChanges.subscribe((id) => {
+      if (id) {
+        this.syncUsuario(Number(id));
+      } else {
+        this.selectedUsuario.set(null);
+        this.displayIdUsuario.set(null);
+      }
+    });
   }
 
   private loadComentarioart(): void {
     this.oComentarioartService.get(this.id_comentarioart()).subscribe({
       next: (comentarioart: IComentarioart) => {
+        const idArticulo = comentarioart.articulo?.id ?? comentarioart.idArticulo ?? null;
+        const idUsuario = comentarioart.usuario?.id ?? comentarioart.idUsuario ?? null;
         this.comentarioartForm.patchValue({
           id: comentarioart.id,
           contenido: comentarioart.contenido,
-          id_articulo: comentarioart.articulo?.id ?? comentarioart.idArticulo,
-          id_usuario: comentarioart.usuario?.id ?? comentarioart.idUsuario,
+          id_articulo: idArticulo,
+          id_usuario: idUsuario,
         });
+        if (idArticulo) {
+          this.syncArticulo(idArticulo);
+        }
+        if (idUsuario) {
+          this.syncUsuario(idUsuario);
+        }
         this.loading.set(false);
       },
       error: (err: HttpErrorResponse) => {
@@ -91,6 +126,10 @@ export class ComentarioartEditAdminRouted implements OnInit {
     this.oArticuloService.getPage(0, 1000, 'descripcion', 'asc').subscribe({
       next: (page) => {
         this.articulos.set(page.content);
+        const idActual = this.comentarioartForm.get('id_articulo')?.value;
+        if (idActual) {
+          this.syncArticulo(Number(idActual));
+        }
       },
       error: (err: HttpErrorResponse) => {
         this.snackBar.open('Error cargando articulos', 'Cerrar', { duration: 4000 });
@@ -103,6 +142,10 @@ export class ComentarioartEditAdminRouted implements OnInit {
     this.oUsuarioService.getPage(0, 1000, 'nombre', 'asc').subscribe({
       next: (page) => {
         this.usuarios.set(page.content);
+        const idActual = this.comentarioartForm.get('id_usuario')?.value;
+        if (idActual) {
+          this.syncUsuario(Number(idActual));
+        }
       },
       error: (err: HttpErrorResponse) => {
         this.snackBar.open('Error cargando usuarios', 'Cerrar', { duration: 4000 });
@@ -121,6 +164,18 @@ export class ComentarioartEditAdminRouted implements OnInit {
 
   get id_usuario() {
     return this.comentarioartForm.get('id_usuario');
+  }
+
+  private syncArticulo(idArticulo: number): void {
+    this.displayIdArticulo.set(idArticulo);
+    const articulo = this.articulos().find((item) => item.id === idArticulo) ?? null;
+    this.selectedArticulo.set(articulo);
+  }
+
+  private syncUsuario(idUsuario: number): void {
+    this.displayIdUsuario.set(idUsuario);
+    const usuario = this.usuarios().find((item) => item.id === idUsuario) ?? null;
+    this.selectedUsuario.set(usuario);
   }
 
   onSubmit(): void {
@@ -157,6 +212,62 @@ export class ComentarioartEditAdminRouted implements OnInit {
         console.error(err);
         this.submitting.set(false);
       },
+    });
+  }
+
+  openArticuloFinderModal(): void {
+    const dialogRef = this.dialog.open(ArticuloPlistAdminUnrouted, {
+      height: '800px',
+      width: '1100px',
+      maxWidth: '95vw',
+      panelClass: 'articulo-dialog',
+      data: {
+        title: 'Aqui elegir articulo',
+        message: 'Plist finder para encontrar el articulo y asignarlo al comentario',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((articulo: IArticulo | null) => {
+      if (articulo) {
+        this.comentarioartForm.patchValue({
+          id_articulo: articulo.id,
+        });
+        this.syncArticulo(articulo.id);
+        this.snackBar.open(`Articulo seleccionado: ${articulo.descripcion}`, 'Cerrar', {
+          duration: 3000,
+        });
+      }
+    });
+  }
+
+  openUsuarioFinderModal(): void {
+    const dialogRef = this.dialog.open(UsuarioPlistAdminUnrouted, {
+      height: '800px',
+      width: '1100px',
+      maxWidth: '95vw',
+      panelClass: 'usuario-dialog',
+      data: {
+        title: 'Aqui elegir usuario',
+        message: 'Plist finder para encontrar el usuario y asignarlo al comentario',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((usuario: IUsuario | null) => {
+      if (usuario) {
+        this.comentarioartForm.patchValue({
+          id_usuario: usuario.id,
+        });
+        this.syncUsuario(usuario.id);
+        this.snackBar.open(
+          `Usuario seleccionado: ${usuario.nombre} ${usuario.apellido1 ?? ''} ${
+            usuario.apellido2 ?? ''
+          }`,
+          'Cerrar',
+          {
+            duration: 3000,
+          },
+        );
+      }
     });
   }
 }
