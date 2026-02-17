@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -50,11 +51,12 @@ public class CuotaEntity {
     @JoinColumn(name = "id_equipo")
     private EquipoEntity equipo;
 
+    @JsonIgnore
     @Getter(AccessLevel.NONE)
     @OneToMany(mappedBy = "cuota", fetch = FetchType.LAZY)
     private List<PagoEntity> pagos;
 
     public int getPagos() {
-        return pagos.size();
+        return pagos != null ? pagos.size() : 0;
     }
 }

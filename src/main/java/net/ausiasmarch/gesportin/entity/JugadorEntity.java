@@ -2,6 +2,8 @@ package net.ausiasmarch.gesportin.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -33,7 +35,7 @@ public class JugadorEntity {
     private Long id;
 
     @NotNull
-    private int dorsal;
+    private Integer dorsal;  // ← CAMBIO: int → Integer
 
     @NotNull
     @Size(min = 3, max = 255)
@@ -57,11 +59,12 @@ public class JugadorEntity {
     @JoinColumn(name = "id_equipo")
     private EquipoEntity equipo;
 
+    @JsonIgnore
     @Getter(AccessLevel.NONE)
     @OneToMany(mappedBy = "jugador", fetch = FetchType.LAZY)
     private List<PagoEntity> pagos;
 
     public int getPagos() {
-        return pagos.size();
+        return pagos != null ? pagos.size() : 0;
     }
 }
