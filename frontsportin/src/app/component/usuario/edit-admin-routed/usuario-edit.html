@@ -214,9 +214,9 @@
                 [class.is-valid]="id_club?.valid && id_club?.touched"
                 formControlName="id_club"
               >
-                <option [value]="null" disabled>Selecciona un club</option>
+                <option [ngValue]="null" disabled>Selecciona un club</option>
                 @for (club of clubs(); track club.id) {
-                  <option [value]="club.id">{{ club.nombre }}</option>
+                  <option [ngValue]="club.id">{{ club.nombre }}</option>
                 }
               </select>
               @if (id_club?.invalid && id_club?.touched) {
@@ -263,9 +263,9 @@
                 [class.is-valid]="id_tipousuario?.valid && id_tipousuario?.touched"
                 formControlName="id_tipousuario"
               >
-                <option [value]="null" disabled>Selecciona un tipo de usuario</option>
+                <option [ngValue]="null" disabled>Selecciona un tipo de usuario</option>
                 @for (tipousuario of tipousuarios(); track tipousuario.id) {
-                  <option [value]="tipousuario.id">{{ tipousuario.descripcion }}</option>
+                  <option [ngValue]="tipousuario.id">{{ tipousuario.descripcion }}</option>
                 }
               </select>
               @if (id_tipousuario?.invalid && id_tipousuario?.touched) {
@@ -312,9 +312,9 @@
                 [class.is-valid]="id_rolusuario?.valid && id_rolusuario?.touched"
                 formControlName="id_rolusuario"
               >
-                <option [value]="null" disabled>Selecciona un rol de usuario</option>
+                <option [ngValue]="null" disabled>Selecciona un rol de usuario</option>
                 @for (rolusuario of rolusuarios(); track rolusuario.id) {
-                  <option [value]="rolusuario.id">{{ rolusuario.descripcion }}</option>
+                  <option [ngValue]="rolusuario.id">{{ rolusuario.descripcion }}</option>
                 }
               </select>
               @if (id_rolusuario?.invalid && id_rolusuario?.touched) {

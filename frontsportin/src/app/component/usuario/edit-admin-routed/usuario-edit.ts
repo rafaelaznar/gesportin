@@ -169,7 +169,7 @@ export class UsuarioEditAdminRouted implements OnInit {
   }
 
   cargarClubs(): void {
-    this.oClubService.getPage(0, 100, 'nombre', 'asc').subscribe({
+    this.oClubService.getPage(0, 1000, 'nombre', 'asc').subscribe({
       next: (page) => {
         this.clubs.set(page.content);
         const idActual = this.usuarioForm.get('id_club')?.value;
