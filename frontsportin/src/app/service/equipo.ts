@@ -50,13 +50,9 @@ export class EquipoService {
     return this.oHttp.get<IEquipo>(serverURL + '/equipo/' + id);
   }
 
-  // create(equipo: Partial<IEquipo>): Observable<number> {
-  //   return this.oHttp.post<number>(serverURL + '/equipo', equipo);
-  // }
-
-  // update(equipo: Partial<IEquipo>): Observable<number> {
-  //   return this.oHttp.put<number>(serverURL + '/equipo', equipo);
-  // }
+  create(equipo: Partial<IEquipo>): Observable<number> {
+    return this.oHttp.post<number>(serverURL + '/equipo', equipo);
+  }
 
   update(equipo: Partial<IEquipo>): Observable<number> {
     return this.oHttp.put<number>(`${serverURL}/equipo`, equipo);

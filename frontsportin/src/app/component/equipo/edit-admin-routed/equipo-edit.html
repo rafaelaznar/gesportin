@@ -20,123 +20,13 @@
           </div>
         }
 
-        @if (!loading() && !error()) {
-          <form [formGroup]="equipoForm" (ngSubmit)="onSubmit()" novalidate>
-            <div class="mb-4">
-              <label for="id" class="form-label">ID del equipo</label>
-              <input type="text" class="form-control" id="id" formControlName="id" readonly />
-            </div>
-
-            <div class="mb-4">
-              <label for="nombre" class="form-label">Nombre <span class="text-danger">*</span></label>
-              <input
-                type="text"
-                class="form-control"
-                [class.is-invalid]="nombre?.invalid && nombre?.touched"
-                [class.is-valid]="nombre?.valid && nombre?.touched"
-                id="nombre"
-                formControlName="nombre"
-                placeholder="Introduce el nombre del equipo"
-              />
-              @if (nombre?.invalid && nombre?.touched) {
-                <div class="invalid-feedback">
-                  @if (nombre?.errors?.['required']) {
-                    <span>El nombre es obligatorio.</span>
-                  }
-                  @if (nombre?.errors?.['minlength']) {
-                    <span>El nombre debe tener al menos 2 caracteres.</span>
-                  }
-                  @if (nombre?.errors?.['maxlength']) {
-                    <span>El nombre no puede superar 255 caracteres.</span>
-                  }
-                </div>
-              }
-            </div>
-
-            <div class="p-4 rounded mb-4" style="background-color: #e4e4e4; border-left: 4px solid #0d6efd;">
-              <div class="mb-4">
-                <label for="categoria" class="form-label">Categoría</label>
-                <input
-                  id="categoria"
-                  type="text"
-                  class="form-control"
-                  [value]="selectedCategoria()?.nombre || ''"
-                  readonly
-                />
-              </div>
-
-              <div class="d-flex gap-3 align-items-end">
-                <button type="button" class="btn btn-info" (click)="openCategoriaFinderModal()">
-                  <i class="bi bi-search me-2"></i>Buscar
-                </button>
-                <div>
-                  <label for="display_id_categoria" class="form-label">ID Categoría</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="display_id_categoria"
-                    formControlName="id_categoria"
-                    readonly
-                  />
-                </div>
-                @if (selectedCategoria()?.temporada) {
-                  <div class="grow">
-                    <label class="form-label">Temporada</label>
-                    <p class="form-control-plaintext fw-semibold mb-0">
-                      {{ selectedCategoria()?.temporada?.descripcion }}
-                    </p>
-                  </div>
-                }
-              </div>
-            </div>
-
-            <div class="p-4 rounded mb-4" style="background-color: #e4e4e4; border-left: 4px solid #198754;">
-              <div class="mb-4">
-                <label for="entrenador" class="form-label">Entrenador</label>
-                <input
-                  id="entrenador"
-                  type="text"
-                  class="form-control"
-                  [value]="entrenadorNombreSeleccionado"
-                  readonly
-                />
-              </div>
-
-              <div class="d-flex gap-3 align-items-end">
-                <button type="button" class="btn btn-info" (click)="openEntrenadorFinderModal()">
-                  <i class="bi bi-search me-2"></i>Buscar
-                </button>
-                <div>
-                  <label for="display_id_entrenador" class="form-label">ID Entrenador</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="display_id_entrenador"
-                    formControlName="id_entrenador"
-                    readonly
-                  />
-                </div>
-                @if (selectedEntrenador()?.username) {
-                  <div class="grow">
-                    <label class="form-label">Username</label>
-                    <p class="form-control-plaintext fw-semibold mb-0">
-                      {{ selectedEntrenador()?.username }}
-                    </p>
-                  </div>
-                }
-              </div>
-            </div>
-
-            <div class="d-flex justify-content-between align-items-center mt-4">
-              <a [routerLink]="['/equipo']" class="btn btn-outline-secondary"> Cancelar </a>
-              <button type="submit" class="btn btn-primary" [disabled]="submitting() || equipoForm.invalid">
-                @if (submitting()) {
-                  <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                }
-                Guardar Cambios
-              </button>
-            </div>
-          </form>
+        @if (!loading() && !error() && equipo()) {
+          <app-equipo-form-unrouted 
+            [equipo]="equipo()" 
+            [mode]="'edit'"
+            (formSubmit)="onFormSubmit($event)"
+            (formCancel)="onFormCancel()">
+          </app-equipo-form-unrouted>
         }
       </div>
     </div>

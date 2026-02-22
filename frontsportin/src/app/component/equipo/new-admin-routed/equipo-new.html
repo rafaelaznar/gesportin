@@ -1,0 +1,18 @@
+<div class="container my-4 edit-form">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-8">
+      <div class="form-card">
+        <header class="mb-4">
+          <h1 class="h3 mb-0">Crear equipo</h1>
+        </header>
+
+        <app-equipo-form-unrouted 
+          [equipo]="null" 
+          [mode]="'create'"
+          (formSubmit)="onFormSubmit($event)"
+          (formCancel)="onFormCancel()">
+        </app-equipo-form-unrouted>
+      </div>
+    </div>
+  </div>
+</div>

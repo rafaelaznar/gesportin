@@ -1,10 +1,10 @@
 import { Component, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { EquipoPlistAdminUnrouted } from '../plist-admin-unrouted/equipo-plist-admin-unrouted';
 
 @Component({
   selector: 'app-equipo-plist',
-  imports: [EquipoPlistAdminUnrouted],
+  imports: [EquipoPlistAdminUnrouted, RouterLink],
   templateUrl: './equipo-plist.html',
   styleUrl: './equipo-plist.css',
 })
