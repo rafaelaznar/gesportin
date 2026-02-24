@@ -23,6 +23,15 @@
     </div>
   }
 
+  <!-- Botón para crear nueva noticia -->
+  @if (!isDialogMode()) {
+    <div class="d-flex justify-content-center my-2">
+      <a class="btn btn-primary" [routerLink]="['/noticia/new']" role="button">
+        <i class="bi bi-plus-circle" aria-hidden="true"></i> Nueva noticia
+      </a>
+    </div>
+  }
+
   <!-- Total registros -->
   <div class="d-flex justify-content-center my-1">
     <small class="text-muted">Total registros: {{ totalRecords() || 0 }}</small>

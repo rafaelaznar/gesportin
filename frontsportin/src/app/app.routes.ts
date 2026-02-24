@@ -76,6 +76,7 @@ import { TipoarticuloDeleteAdminRouted } from './component/tipoarticulo/delete-a
 import { TemporadaPlist } from './component/temporada/plist-admin-routed/temporada-plist';
 import { ComentarioEditAdminRouted } from './component/comentario/edit-admin-routed/comentario-edit';
 import { NoticiaEditAdminRouted } from './component/noticia/edit-admin-routed/noticia-edit';
+import { NoticiaNewAdminRouted } from './component/noticia/new-admin-routed/noticia-new';
 import { CuotaDeleteAdminRouted } from './component/cuota/delete-admin-routed/cuota-delete';
 import { UsuarioEditAdminRouted } from './component/usuario/edit-admin-routed/usuario-edit';
 import { JugadorEditAdminRouted } from './component/jugador/edit-admin-routed/jugador-edit';
@@ -151,6 +152,7 @@ export const routes: Routes = [
     { path: 'noticia/club/:id_club', component: NoticiaPlistAdminRouted},
     { path: 'noticia/view/:id', component: NoticiaViewAdminRouted },
     { path: 'noticia/edit/:id', component: NoticiaEditAdminRouted },
+    { path: 'noticia/new', component: NoticiaNewAdminRouted },
     { path: 'club/plist', component: ClubPlistAdminRouted},
     { path: 'club', component: ClubPlistAdminRouted},
     { path: 'club/view/:id', component: ClubViewAdminRouted},

@@ -57,6 +57,11 @@ export class NoticiaService {
     return this.oHttp.get<INoticia>(serverURL + `/noticia/${id}`);
   }
 
+  //create
+  create(noticia: INoticia): Observable<number> {
+    return this.oHttp.post<number>(serverURL + '/noticia', noticia);
+  }
+
   count(): Observable<number> {
     return this.oHttp.get<number>(serverURL + '/noticia/count');
   }

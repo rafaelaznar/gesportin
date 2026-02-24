@@ -1,0 +1,24 @@
+<div class="container my-4 new-form">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-8">
+      <div class="form-card">
+        <header class="mb-4">
+          <h1 class="h3 mb-0">Nueva noticia</h1>
+        </header>
+
+        @if (error()) {
+          <div class="alert alert-danger" role="alert">
+            <i class="bi bi-exclamation-triangle me-2"></i>{{ error() }}
+          </div>
+        }
+
+        <app-noticia-form-unrouted
+          [noticia]="null"
+          [isEditMode]="false"
+          (formSubmit)="onFormSubmit($event)"
+          (formCancel)="onFormCancel()"
+        ></app-noticia-form-unrouted>
+      </div>
+    </div>
+  </div>
+</div>

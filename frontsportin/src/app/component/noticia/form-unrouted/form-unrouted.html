@@ -1,0 +1,147 @@
+<form [formGroup]="noticiaForm" (ngSubmit)="onSubmit()" novalidate>
+  @if (isEditMode) {
+    <div class="mb-4">
+      <label for="id" class="form-label">ID de la noticia</label>
+      <input type="text" class="form-control" id="id" formControlName="id" readonly />
+    </div>
+  }
+
+  <div class="mb-4">
+    <label for="titulo" class="form-label"
+      >Título <span class="text-danger">*</span></label
+    >
+    <input
+      type="text"
+      class="form-control"
+      [class.is-invalid]="titulo?.invalid && titulo?.touched"
+      [class.is-valid]="titulo?.valid && titulo?.touched"
+      id="titulo"
+      formControlName="titulo"
+      placeholder="Introduce el título de la noticia"
+    />
+    @if (titulo?.invalid && titulo?.touched) {
+      <div class="invalid-feedback">
+        @if (titulo?.errors?.['required']) {
+          <span>El título es obligatorio.</span>
+        }
+        @if (titulo?.errors?.['minlength']) {
+          <span>El título debe tener al menos 3 caracteres.</span>
+        }
+        @if (titulo?.errors?.['maxlength']) {
+          <span>El título no puede superar 255 caracteres.</span>
+        }
+      </div>
+    }
+  </div>
+
+  <div class="mb-4">
+    <label for="contenido" class="form-label"
+      >Contenido <span class="text-danger">*</span></label
+    >
+    <textarea
+      class="form-control"
+      id="contenido"
+      rows="6"
+      [class.is-invalid]="contenido?.invalid && contenido?.touched"
+      [class.is-valid]="contenido?.valid && contenido?.touched"
+      formControlName="contenido"
+      placeholder="Escribe el contenido de la noticia"
+    ></textarea>
+    @if (contenido?.invalid && contenido?.touched) {
+      <div class="invalid-feedback">
+        @if (contenido?.errors?.['required']) {
+          <span>El contenido es obligatorio.</span>
+        }
+        @if (contenido?.errors?.['minlength']) {
+          <span>El contenido debe tener al menos 3 caracteres.</span>
+        }
+      </div>
+    }
+  </div>
+
+  <div class="mb-4">
+    <label for="fecha" class="form-label">Fecha <span class="text-danger">*</span></label>
+    <input type="date" class="form-control" id="fecha" formControlName="fecha" />
+  </div>
+
+  <div class="mb-4">
+    <label for="imagen" class="form-label">Imagen</label>
+    <input
+      type="text"
+      class="form-control"
+      id="imagen"
+      formControlName="imagen"
+      placeholder="URL o identificador de imagen"
+    />
+  </div>
+
+  <div class="p-4 rounded mb-4" style="background-color: #e4e4e4; border-left: 4px solid #0d6efd;">
+    <div class="mb-4">
+      <label for="id_club" class="form-label"
+        >Club <span class="text-danger">*</span></label
+      >
+      <select
+        id="id_club"
+        style="cursor: pointer"
+        class="form-select"
+        [class.is-invalid]="id_club?.invalid && id_club?.touched"
+        [class.is-valid]="id_club?.valid && id_club?.touched"
+        formControlName="id_club"
+      >
+        <option [value]="null" disabled>Selecciona un club</option>
+        @for (c of clubes(); track c.id) {
+          <option [value]="c.id">{{ c.nombre }}</option>
+        }
+      </select>
+      @if (id_club?.invalid && id_club?.touched) {
+        <div class="invalid-feedback">
+          <span>Debe seleccionar un club.</span>
+        </div>
+      }
+    </div>
+
+    <div class="d-flex gap-3 align-items-end">
+      <button type="button" class="btn btn-info" (click)="openClubFinderModal()">
+        <i class="bi bi-search me-2"></i>Buscar
+      </button>
+      <div>
+        <label for="display_id_club" class="form-label">ID Club</label>
+        <input
+          type="text"
+          class="form-control"
+          id="display_id_club"
+          [value]="displayIdClub() || ''"
+          readonly
+        />
+      </div>
+      @if (selectedClub()) {
+        <div class="flex-grow-1">
+          <label class="form-label">Nombre</label>
+          <p class="form-control-plaintext fw-semibold mb-0">
+            {{ selectedClub()?.nombre }}
+          </p>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-between align-items-center mt-4">
+    <button type="button" class="btn btn-outline-secondary" (click)="onCancel()">
+      Cancelar
+    </button>
+    <button
+      type="submit"
+      class="btn btn-primary"
+      [disabled]="noticiaForm.invalid || loading()"
+    >
+      @if (loading()) {
+        <span
+          class="spinner-border spinner-border-sm me-2"
+          role="status"
+          aria-hidden="true"
+        ></span>
+      }
+      {{ isEditMode ? 'Guardar Cambios' : 'Crear Noticia' }}
+    </button>
+  </div>
+</form>
