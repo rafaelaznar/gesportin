@@ -33,27 +33,27 @@ public class UsuarioService {
     private final Random random = new Random();
 
     private final String[] nombresVaron = {
-            "Juan", "Carlos", "Luis", "Pedro", "José",
-            "Francisco", "Antonio", "Manuel", "David", "Javier",
-            "Miguel", "Alejandro", "Rafael", "Daniel", "Fernando",
-            "Sergio", "Jorge", "Alberto", "Raúl", "Pablo",
-            "Rubén", "Adrián", "Diego", "Iván", "Óscar"
+        "Juan", "Carlos", "Luis", "Pedro", "José",
+        "Francisco", "Antonio", "Manuel", "David", "Javier",
+        "Miguel", "Alejandro", "Rafael", "Daniel", "Fernando",
+        "Sergio", "Jorge", "Alberto", "Raúl", "Pablo",
+        "Rubén", "Adrián", "Diego", "Iván", "Óscar"
     };
 
     private final String[] nombresMujer = {
-            "María", "Carmen", "Ana", "Laura", "Isabel",
-            "Patricia", "Sofía", "Lucía", "Marta", "Elena",
-            "Sara", "Cristina", "Raquel", "Beatriz", "Julia",
-            "Victoria", "Claudia", "Andrea", "Alba", "Noelia",
-            "Silvia", "Natalia", "Irene", "Carla", "Lorena"
+        "María", "Carmen", "Ana", "Laura", "Isabel",
+        "Patricia", "Sofía", "Lucía", "Marta", "Elena",
+        "Sara", "Cristina", "Raquel", "Beatriz", "Julia",
+        "Victoria", "Claudia", "Andrea", "Alba", "Noelia",
+        "Silvia", "Natalia", "Irene", "Carla", "Lorena"
     };
 
     private final String[] apellidos = {
-            "García", "Rodríguez", "González", "Fernández", "López", "Martínez", "Sánchez", "Pérez", "Gómez", "Martín",
-            "Jiménez", "Ruiz", "Hernández", "Díaz", "Moreno", "Muñoz", "Álvarez", "Romero", "Alonso", "Gutiérrez",
-            "Navarro", "Torres", "Domínguez", "Vázquez", "Ramos", "Gil", "Ramírez", "Serrano", "Blanco", "Suárez",
-            "Molina", "Castro", "Ortega", "Rubio", "Morales", "Delgado", "Ortiz", "Marín", "Iglesias", "Santos",
-            "Castillo", "Garrido", "Calvo", "Peña", "Cruz", "Cano", "Núñez", "Prieto", "Díez", "Lozano"
+        "García", "Rodríguez", "González", "Fernández", "López", "Martínez", "Sánchez", "Pérez", "Gómez", "Martín",
+        "Jiménez", "Ruiz", "Hernández", "Díaz", "Moreno", "Muñoz", "Álvarez", "Romero", "Alonso", "Gutiérrez",
+        "Navarro", "Torres", "Domínguez", "Vázquez", "Ramos", "Gil", "Ramírez", "Serrano", "Blanco", "Suárez",
+        "Molina", "Castro", "Ortega", "Rubio", "Morales", "Delgado", "Ortiz", "Marín", "Iglesias", "Santos",
+        "Castillo", "Garrido", "Calvo", "Peña", "Cruz", "Cano", "Núñez", "Prieto", "Díez", "Lozano"
     };
 
     public UsuarioEntity get(Long id) {
@@ -73,12 +73,15 @@ public class UsuarioService {
             return oUsuarioRepository.findByClubId(id_Club, pageable);
         } else if (id_Rol != null) {
             return oUsuarioRepository.findByRolusuarioId(id_Rol, pageable);
-        } else
+        } else {
             return oUsuarioRepository.findAll(pageable);
+        }
     }
 
     public UsuarioEntity create(UsuarioEntity oUsuarioEntity) {
         oUsuarioEntity.setId(null);
+        // Establecer la fecha de alta al momento de la creación
+        oUsuarioEntity.setFechaAlta(LocalDateTime.now());
         oUsuarioEntity.setTipousuario(oTipousuarioService.get(oUsuarioEntity.getTipousuario().getId()));
         oUsuarioEntity.setClub(oClubService.get(oUsuarioEntity.getClub().getId()));
         oUsuarioEntity.setRolusuario(oRolusuarioService.get(oUsuarioEntity.getRolusuario().getId()));
@@ -130,10 +133,10 @@ public class UsuarioService {
             oUsuario.setApellido1(apellidos[random.nextInt(apellidos.length)]);
             oUsuario.setApellido2(apellidos[random.nextInt(apellidos.length)]);
             // sin acentos y minúsculas
-            String username = oAleatorioService.eliminarAcentos(oUsuario.getNombre().substring(0, 3).toLowerCase() +
-                    oUsuario.getApellido1().substring(0, 2).toLowerCase() +
-                    oUsuario.getApellido2().substring(0, 2).toLowerCase()) +
-                    random.nextInt(10);
+            String username = oAleatorioService.eliminarAcentos(oUsuario.getNombre().substring(0, 3).toLowerCase()
+                    + oUsuario.getApellido1().substring(0, 2).toLowerCase()
+                    + oUsuario.getApellido2().substring(0, 2).toLowerCase())
+                    + random.nextInt(10);
             oUsuario.setUsername(username);
             oUsuario.setPassword("password" + (i + 1));
             oUsuario.setFechaAlta(LocalDateTime.now().minusDays(random.nextInt(365)));
