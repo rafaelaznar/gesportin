@@ -1,0 +1,19 @@
+<div class="container my-4 edit-form">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-8">
+      <div class="form-card">
+        <header class="mb-4">
+          <h1 class="h3 mb-0">Crear liga</h1>
+        </header>
+
+        <app-liga-form-unrouted
+          [liga]="null"
+          [mode]="'create'"
+          (formSuccess)="onFormSuccess()"
+          (formCancel)="onFormCancel()"
+        >
+        </app-liga-form-unrouted>
+      </div>
+    </div>
+  </div>
+</div>

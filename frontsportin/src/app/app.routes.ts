@@ -59,6 +59,7 @@ import { CategoriaEditAdminRouted } from './component/categoria/edit-admin-route
 import { CategoriaNewAdminRouted } from './component/categoria/new-admin-routed/categoria-new';
 import { LigaViewRouted } from './component/liga/view-routed/liga-view';
 import { LigaDeleteAdminRouted } from './component/liga/delete-admin-routed/liga-delete';
+import { LigaNewAdminRouted } from './component/liga/new-admin-routed/liga-new';
 import { ComentarioartViewRouted } from './component/comentarioart/view-routed/comentarioart-view';
 import { ComentarioartEditAdminRouted } from './component/comentarioart/edit-admin-routed/comentarioart-edit';
 import { ComentarioDeleteAdminRouted } from './component/comentario/delete-admin-routed/comentario-delete';
@@ -109,6 +110,7 @@ export const routes: Routes = [
   { path: 'temporada/delete/:id', component: TemporadaDeleteAdminRouted },
   { path: 'temporada/new', component: TemporadaNewAdminRouted },
   { path: 'liga', component: LigaPlistAdminRouted },
+  { path: 'liga/new', component: LigaNewAdminRouted },
   { path: 'liga/view/:id', component: LigaViewRouted },
   { path: 'liga/delete/:id', component: LigaDeleteAdminRouted },
   { path: 'liga/edit/:id', component: LigaEditAdminRouted },

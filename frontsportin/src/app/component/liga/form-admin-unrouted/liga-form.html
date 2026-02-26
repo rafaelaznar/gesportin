@@ -1,0 +1,108 @@
+<div>
+  @if (loading()) {
+    <div class="d-flex justify-content-center my-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando...</span>
+      </div>
+    </div>
+  }
+
+  @if (error()) {
+    <div class="alert alert-danger" role="alert">
+      <i class="bi bi-exclamation-triangle me-2"></i>{{ error() }}
+    </div>
+  }
+
+  @if (!loading() && !error()) {
+    <form [formGroup]="ligaForm" (ngSubmit)="onSubmit()" novalidate>
+      @if (mode === 'edit') {
+        <div class="mb-4">
+          <label for="id" class="form-label">ID de la liga</label>
+          <input type="text" class="form-control" id="id" formControlName="id" readonly />
+        </div>
+      }
+
+      <div class="mb-4">
+        <label for="nombre" class="form-label">Nombre <span class="text-danger">*</span></label>
+        <input
+          type="text"
+          class="form-control"
+          [class.is-invalid]="nombre?.invalid && nombre?.touched"
+          [class.is-valid]="nombre?.valid && nombre?.touched"
+          id="nombre"
+          formControlName="nombre"
+          placeholder="Introduce el nombre de la liga"
+        />
+        @if (nombre?.invalid && nombre?.touched) {
+          <div class="invalid-feedback">
+            @if (nombre?.errors?.['required']) {
+              <span>El nombre es obligatorio.</span>
+            }
+            @if (nombre?.errors?.['minlength']) {
+              <span>El nombre debe tener al menos 3 caracteres.</span>
+            }
+            @if (nombre?.errors?.['maxlength']) {
+              <span>El nombre no puede superar 255 caracteres.</span>
+            }
+          </div>
+        }
+      </div>
+
+      <div
+        class="p-4 rounded mb-4"
+        style="background-color: #e4e4e4; border-left: 4px solid #0d6efd"
+      >
+        <div class="mb-4">
+          <label for="equipo" class="form-label">Equipo <span class="text-danger">*</span></label>
+          <input
+            id="equipo"
+            type="text"
+            class="form-control"
+            [value]="selectedEquipo()?.nombre || ''"
+            readonly
+          />
+        </div>
+
+        <div class="d-flex gap-3 align-items-end">
+          <button type="button" class="btn btn-info" (click)="openEquipoFinderModal()">
+            <i class="bi bi-search me-2"></i>Buscar
+          </button>
+          <div>
+            <label for="display_id_equipo" class="form-label">ID Equipo</label>
+            <input
+              type="text"
+              class="form-control"
+              id="display_id_equipo"
+              formControlName="id_equipo"
+              readonly
+            />
+          </div>
+          @if (selectedEquipo()?.categoria) {
+            <div class="grow">
+              <label class="form-label">Categoría</label>
+              <p class="form-control-plaintext fw-semibold mb-0">
+                {{ selectedEquipo()?.categoria?.nombre }}
+              </p>
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center mt-4">
+        <button type="button" (click)="onCancel()" class="btn btn-outline-secondary">
+          Cancelar
+        </button>
+        <button type="submit" class="btn btn-primary" [disabled]="submitting() || ligaForm.invalid">
+          @if (submitting()) {
+            <span
+              class="spinner-border spinner-border-sm me-2"
+              role="status"
+              aria-hidden="true"
+            ></span>
+          }
+          {{ mode === 'create' ? 'Crear Liga' : 'Guardar Cambios' }}
+        </button>
+      </div>
+    </form>
+  }
+</div>

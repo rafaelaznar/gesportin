@@ -1,10 +1,10 @@
 import { Component, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { LigaPlistAdminUnrouted } from '../plist-admin-unrouted/liga-plist-admin-unrouted';
 
 @Component({
   selector: 'app-liga-plist',
-  imports: [LigaPlistAdminUnrouted],
+  imports: [LigaPlistAdminUnrouted, RouterLink],
   templateUrl: './liga-plist.html',
   styleUrls: ['./liga-plist.css'],
   standalone: true,
