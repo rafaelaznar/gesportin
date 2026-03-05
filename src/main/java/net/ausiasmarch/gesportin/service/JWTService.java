@@ -59,7 +59,7 @@ public class JWTService {
                 .setSubject(SUBJECT)
                 .claim("username", username)
                 .claim("usertype", usertype)
-                .claim("id_club", id_club)
+                .claim("club", id_club)
                 .setIssuedAt(new java.util.Date())
                 .setExpiration(new java.util.Date(System.currentTimeMillis() + 10800000)) // 3 horas
                 .signWith(Keys.hmacShaKeyFor(SECRET_KEY.getBytes()))
