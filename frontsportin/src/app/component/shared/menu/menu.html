@@ -1,9 +1,5 @@
 <div class="ms-auto d-flex align-items-center pe-3 top-actions">
   <div class="d-flex align-items-center ms-3">
-    @if (isSessionActive) {
-      <!-- mostrar el nombre del usuario en sesión username -->
-      <span class="navbar-text" style="color: rgb(206, 206, 206);">{{ userName }}</span>
-    }
     @if (!isSessionActive) {
       <a
         [routerLink]="['/login']"
@@ -15,9 +11,10 @@
         <span class="d-none d-lg-inline">Iniciar sesión</span>
       </a>
     } @else {
-      <a>
-        <i class="bi bi-person-circle me-2"></i>
-        <span class="d-none d-lg-inline">{{ oTokenJWT?.username }}</span>
+      <a class="user-info d-inline-flex align-items-center">
+        <span class="d-none d-lg-inline text-light"
+          ><i class="bi bi-person-circle me-2"></i> {{ oTokenJWT?.username }}</span
+        >
       </a>
       <a
         [routerLink]="['/logout']"
