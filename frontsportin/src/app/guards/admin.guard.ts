@@ -13,13 +13,13 @@ export class AdminGuard implements CanActivate {
         private oRouter: Router) { }
 
     canActivate(): Observable<boolean> {
-        if (this.oSessionService.isSessionActive()) {
+        if (this.oSessionService.isSessionActive() && this.oSessionService.isAdmin()) {
             return new Observable<boolean>(observer => {
                 observer.next(true);
                 observer.complete();
             });
-
         } else {
+            // if not logged in or not an admin, redirect to login
             this.oRouter.navigate(['/login']);
             return new Observable<boolean>(observer => {
                 observer.next(false);

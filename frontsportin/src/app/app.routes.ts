@@ -101,11 +101,15 @@ import { CompraEditAdminRouted } from './component/compra/edit-admin-routed/comp
 import { CompraNewAdminRouted } from './component/compra/new-admin-routed/compra-new';
 import { PartidoEditAdminRouted } from './component/partido/edit-admin-routed/partido-edit';
 import { TemporadaNewAdminRouted } from './component/temporada/new-admin-routed/temporada-new';
+import { AdminGuard } from './guards/admin.guard';
 
-export const routes: Routes = [
-  { path: '', component: Home },
+export const publicRoutes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'logout', component: Logout },
+];
+
+const protectedRoutes: Routes = [
+  { path: '', component: Home },
   { path: 'usuario', component: UsuarioPlist },
   { path: 'usuario/tipousuario/:id_tipousuario', component: UsuarioPlist },
   { path: 'usuario/rol/:id_rol', component: UsuarioPlist },
@@ -238,4 +242,9 @@ export const routes: Routes = [
   { path: 'comentarioart/edit/:id', component: ComentarioartEditAdminRouted },
   { path: 'carrito/delete/:id', component: CarritoDeleteAdminRouted },
   { path: 'comentarioart/delete/:id', component: ComentarioartDeleteAdminRouted },
+];
+
+export const routes: Routes = [
+  ...publicRoutes,
+  ...protectedRoutes.map(r => ({ ...r, canActivate: [AdminGuard] }))
 ];

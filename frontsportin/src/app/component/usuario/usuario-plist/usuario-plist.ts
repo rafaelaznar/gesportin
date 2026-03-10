@@ -1,12 +1,12 @@
 import { Component, signal } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UsuarioPlistAdminUnrouted } from '../plist-admin-unrouted/usuario-plist-admin-unrouted';
 
 @Component({
   selector: 'app-usuario-plist',
   standalone: true,
-  imports: [UsuarioPlistAdminUnrouted, RouterLink],
+  imports: [UsuarioPlistAdminUnrouted],
   templateUrl: './usuario-plist.html',
   styleUrl: './usuario-plist.css',
 })
