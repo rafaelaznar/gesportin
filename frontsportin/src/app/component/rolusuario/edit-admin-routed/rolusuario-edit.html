@@ -1,38 +1,28 @@
-<div class="container py-3">
-  <div class="row justify-content-center">
-    <div class="col-12 col-lg-8">
-      <div class="card border shadow-sm">
-        <div class="card-header bg-warning text-dark py-3">
-          <div class="d-flex justify-content-between align-items-center">
-            <div>
-              <h1 class="h4 mb-1">
-                <i class="bi bi-pencil-square me-2"></i>Editar Rol de Usuario
-              </h1>
-              <p class="small mb-0">Modifica los datos del rol de usuario</p>
-            </div>
-            <a [routerLink]="['/rolusuario']" class="btn btn-outline-dark btn-sm">
-              <i class="bi bi-arrow-left"></i> Volver
-            </a>
-          </div>
-        </div>
-        <div class="card-body p-4">
-          @if (loading()) {
-            <div class="d-flex justify-content-center my-5">
-              <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Cargando...</span>
-              </div>
-            </div>
-          }
-          @if (error() && !loading()) {
-            <div class="alert alert-danger" role="alert">
-              <i class="bi bi-exclamation-triangle me-2"></i>{{ error() }}
-            </div>
-          }
-          @if (!loading() && !error()) {
-            <app-rolusuario-form-unrouted [rolusuario]="rolusuario()" mode="edit" (formSuccess)="onFormSuccess()" (formCancel)="onFormCancel()"></app-rolusuario-form-unrouted>
-          }
+<div class="container my-4 edit-form">
+  @if (loading()) {
+    <div class="d-flex justify-content-center my-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando...</span>
+      </div>
+    </div>
+  }
+
+  @if (error() && !loading()) {
+    <div class="alert alert-danger" role="alert">
+      <i class="bi bi-exclamation-triangle me-2"></i>{{ error() }}
+    </div>
+  }
+
+  @if (!loading() && !error()) {
+    <div class="row justify-content-center">
+      <div class="col-12 col-lg-8">
+        <div class="form-card">
+          <header class="mb-4">
+            <h1 class="h3 mb-0"><i class="bi bi-pencil-square me-2"></i>Editar Rol de Usuario</h1>
+          </header>
+          <app-rolusuario-form-unrouted [rolusuario]="rolusuario()" mode="edit" (formSuccess)="onFormSuccess()" (formCancel)="onFormCancel()"></app-rolusuario-form-unrouted>
         </div>
       </div>
     </div>
-  </div>
+  }
 </div>

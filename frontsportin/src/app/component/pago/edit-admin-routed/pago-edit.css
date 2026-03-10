@@ -1,3 +1,4 @@
+/* Dialog tweak rules unaffected by form-card styling */
 .cuota-dialog .mat-mdc-dialog-container,
 .jugador-dialog .mat-mdc-dialog-container {
   padding: 16px;
@@ -10,9 +11,4 @@
   margin: 50px;
 }
 
-.edit-form .form-card {
-  background: #fff;
-  border-radius: 8px;
-  padding: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
+/* form-card styling now globally enforced; no need for local override */

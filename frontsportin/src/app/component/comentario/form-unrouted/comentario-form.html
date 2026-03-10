@@ -1,41 +1,39 @@
-<div class="comentario-form">
-  <form [formGroup]="comentarioForm" (ngSubmit)="onSubmit()">
-    <div class="row mb-3">
-      <label class="col-form-label col-2">Contenido</label>
-      <div class="col-10">
-        <textarea formControlName="contenido" class="form-control" rows="4"></textarea>
-        <div *ngIf="contenido?.invalid && (contenido?.dirty || contenido?.touched)" class="text-danger small">
-          <div *ngIf="contenido?.errors?.['required']">El contenido es obligatorio.</div>
-          <div *ngIf="contenido?.errors?.['minlength']">El contenido es demasiado corto.</div>
-        </div>
+<form [formGroup]="comentarioForm" (ngSubmit)="onSubmit()">
+  <div class="row mb-3">
+    <label class="col-form-label col-2">Contenido</label>
+    <div class="col-10">
+      <textarea formControlName="contenido" class="form-control" rows="4"></textarea>
+      <div *ngIf="contenido?.invalid && (contenido?.dirty || contenido?.touched)" class="text-danger small">
+        <div *ngIf="contenido?.errors?.['required']">El contenido es obligatorio.</div>
+        <div *ngIf="contenido?.errors?.['minlength']">El contenido es demasiado corto.</div>
       </div>
     </div>
+  </div>
 
-    <div class="row mb-3">
-      <label class="col-form-label col-2">Usuario</label>
-      <div class="col-8">
-        <input class="form-control" [value]="selectedUsuario()?.nombre || ''" readonly />
-      </div>
-      <div class="col-2">
-        <button type="button" class="btn btn-outline-primary" (click)="openUsuarioFinderModal()">Seleccionar</button>
-      </div>
+  <div class="row mb-3">
+    <label class="col-form-label col-2">Usuario</label>
+    <div class="col-8">
+      <input class="form-control" [value]="selectedUsuario()?.nombre || ''" readonly />
     </div>
+    <div class="col-2">
+      <button type="button" class="btn btn-outline-primary" (click)="openUsuarioFinderModal()">Seleccionar</button>
+    </div>
+  </div>
 
-    <div class="row mb-3">
-      <label class="col-form-label col-2">Noticia</label>
-      <div class="col-8">
-        <input class="form-control" [value]="selectedNoticia()?.titulo || ''" readonly />
-      </div>
-      <div class="col-2">
-        <button type="button" class="btn btn-outline-primary" (click)="openNoticiaFinderModal()">Seleccionar</button>
-      </div>
+  <div class="row mb-3">
+    <label class="col-form-label col-2">Noticia</label>
+    <div class="col-8">
+      <input class="form-control" [value]="selectedNoticia()?.titulo || ''" readonly />
     </div>
+    <div class="col-2">
+      <button type="button" class="btn btn-outline-primary" (click)="openNoticiaFinderModal()">Seleccionar</button>
+    </div>
+  </div>
 
-    <div class="row">
-      <div class="col-12 d-flex justify-content-end gap-2">
-        <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancelar</button>
-        <button type="submit" class="btn btn-primary" [disabled]="submitting()">Guardar</button>
-      </div>
+  <div class="row">
+    <div class="col-12 d-flex justify-content-end gap-2">
+      <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancelar</button>
+      <button type="submit" class="btn btn-primary" [disabled]="submitting()">Guardar</button>
     </div>
-  </form>
-</div>
+  </div>
+</form>

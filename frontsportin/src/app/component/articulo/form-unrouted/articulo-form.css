@@ -1,8 +1,3 @@
-.form-card {
-  padding: 1.5rem;
-}
-
-.edit-form .form-card {
-  background: #fff;
-  border-radius: 8px;
-}
+/* The global stylesheet defines the padding, background, border-radius
+   and box-shadow for .form-card inside form containers.  Individual component
+   rules are no longer necessary and have been removed to avoid divergence. */

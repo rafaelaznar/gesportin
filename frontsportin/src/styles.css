@@ -6,6 +6,27 @@
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
+/* -------------------------------------------------------------------------
+   Global form card styles
+   All create/edit forms use the same container/row/col markup, but a handful
+   of components added their own padding/shadow/radius that made the app
+   look inconsistent.  The temporada form already had the desired look, so
+   we replicate it here and make the rule more specific so it overrides any
+   component-level rules.  Using `!important` guarantees uniformity without
+   having to touch every single CSS file.
+   ------------------------------------------------------------------------- */
+
+/* apply to any form-card inside a normal add/edit container */
+.container.my-4.edit-form .form-card,
+.container.my-4.new-form .form-card,
+.container.my-4 .form-card {
+  padding: 24px !important;
+  background: #fff !important;
+  border-radius: 8px !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06) !important;
+}
+
+
 /* Ensure Angular Material overlays (dialogs, menus, tooltips) render above Bootstrap sidebar */
 .cdk-overlay-container,
 .cdk-global-overlay-wrapper,
