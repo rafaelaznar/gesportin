@@ -1,12 +1,13 @@
 import { I } from '@angular/cdk/keycodes';
 import { Component, Input, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { SessionService } from '../../../service/session';
 import { SecurityService } from '../../../service/security.service';
 
 @Component({
   selector: 'app-botonera-actions-plist',
-  imports: [RouterLink],
+  imports: [RouterLink, CommonModule],
   templateUrl: './botonera-actions-plist.html',
   styleUrl: './botonera-actions-plist.css',
 })

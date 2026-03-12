@@ -34,6 +34,16 @@
     }
   </div>
 
+  <div class="d-flex my-1">
+    <div class="w-100 d-flex justify-content-center">
+      @if (!isDialogMode()) {
+        <a class="btn btn-primary new-btn" [routerLink]="['/jugador/new']" role="button">
+          <i class="bi bi-plus-circle" aria-hidden="true"></i> <span class="d-none d-sm-inline">Crear Jugador</span>
+        </a>
+      }
+    </div>
+  </div>
+
   <div class="container-fluid p-0 my-1" [hidden]="totalRecords() === 0">
     <div class="controls-row mb-2">
       <div class="col-control left">
@@ -45,15 +55,6 @@
       </div>
       <div class="col-control right">
         <app-botonera-rpp [numRpp]="numRpp()" (rppChange)="onRppChange($event)"></app-botonera-rpp>
-      </div>
-    </div>
-    <div class="d-flex">
-      <div class="w-100 d-flex justify-content-center">
-        @if (!isDialogMode()) {
-          <a class="btn btn-primary new-btn" [routerLink]="['/jugador/new']" role="button">
-            <i class="bi bi-plus-circle" aria-hidden="true"></i> <span class="d-none d-sm-inline">Crear Jugador</span>
-          </a>
-        }
       </div>
     </div>
   </div>

@@ -1,4 +1,5 @@
-import { Component, signal, computed, Input } from '@angular/core';
+import { Component, signal, computed, Input, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Subject, Subscription } from 'rxjs';
@@ -7,6 +8,7 @@ import { debounceTimeSearch } from '../../../environment/environment';
 
 import { IPage } from '../../../model/plist';
 import { IRolusuario } from '../../../model/rolusuario';
+import { SessionService } from '../../../service/session';
 import { RolusuarioService } from '../../../service/rolusuario';
 
 import { Paginacion } from '../../shared/paginacion/paginacion';
@@ -15,7 +17,7 @@ import { BotoneraActionsPlist } from '../../shared/botonera-actions-plist/botone
 
 @Component({
   selector: 'app-rolusuario-plist-unrouted',
-  imports: [Paginacion, BotoneraRpp, RouterLink, BotoneraActionsPlist],
+  imports: [CommonModule, Paginacion, BotoneraRpp, RouterLink, BotoneraActionsPlist],
   templateUrl: './rolusuario-plist-admin-unrouted.html',
   styleUrl: './rolusuario-plist-admin-unrouted.css',
 })
@@ -44,6 +46,8 @@ export class RolusuarioPlistUnrouted {
   descripcion = signal<string>('');
   private searchSubject = new Subject<string>();
   private searchSubscription?: Subscription;
+
+  public session: SessionService = inject(SessionService);
 
   constructor(
     private oRolusuarioService: RolusuarioService,

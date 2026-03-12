@@ -34,9 +34,11 @@
               }
             </span>
           </th>
+          @if (!session.isClubAdmin()) {
           <th scope="col" style="text-align: center; width: 15%">
             <span class="header-inline">Usuarios </span>
           </th>
+          }
           <th scope="col" style="text-align: center;">
             <span class="header-inline">Acciones </span>
           </th>
@@ -47,6 +49,7 @@
           <tr>
             <th scope="row" style="text-align: center">{{ oTipousuarios.id }}</th>
             <td class="text-truncate-col">{{ oTipousuarios.descripcion }}</td>
+            @if (!session.isClubAdmin()) {
             <td style="text-align: center">
               @if (oTipousuarios.usuarios === 0) {
                 <i class="bi bi-ban" aria-hidden="true"></i> 
@@ -60,6 +63,7 @@
             }
               }
             </td>
+            }
             <td>
               <div class="d-flex justify-content-center">
                 <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">

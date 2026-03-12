@@ -4,6 +4,7 @@ import { ITipousuario } from '../../../model/tipousuario';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TipousuarioService } from '../../../service/tipousuario';
 import { MatDialogRef } from '@angular/material/dialog';
+import { SessionService } from '../../../service/session';
 
 @Component({
   selector: 'app-plist-admin-unrouted',
@@ -17,6 +18,7 @@ export class TipoUsuarioPlistAdminUnrouted {
   orderField = signal<string>('id');
   orderDirection = signal<'asc' | 'desc'>('asc');
   oTipousuarioService = inject(TipousuarioService);
+  public session: SessionService = inject(SessionService);
   private dialogRef = inject(MatDialogRef<TipoUsuarioPlistAdminUnrouted>, { optional: true });
 
   ngOnInit() {
