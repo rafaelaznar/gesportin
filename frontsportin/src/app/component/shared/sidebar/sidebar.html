@@ -1,5 +1,5 @@
 <ul class="nav flex-column sidebar-nav px-2">
-  @for (item of menuItems(); track item.route) {
+  @for (item of menuItems(); track (item.route || item.label)) {
     @if (!item.children || item.children.length === 0) {
       <li class="nav-item">
         <a
@@ -19,7 +19,7 @@
         <h6 class="sidebar-heading px-2">{{ item.label }}</h6>
       </li>
 
-      @for (child of item.children; track child.route) {
+      @for (child of item.children; track (child.route || child.label)) {
         @if (!child.children || child.children.length === 0) {
           <li class="nav-item">
             <a class="nav-link" [routerLink]="[child.route]" routerLinkActive="active">
@@ -33,7 +33,7 @@
           <li class="nav-item px-2">
             <h6 class="sidebar-subheading">{{ child.label }}</h6>
           </li>
-          @for (sub of child.children; track sub.route) {
+          @for (sub of child.children; track (sub.route || sub.label)) {
             <li class="nav-item">
               <a class="nav-link" [routerLink]="[sub.route]" routerLinkActive="active">
                 <i class="bi" [ngClass]="'bi-' + sub.icon"></i>

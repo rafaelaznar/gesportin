@@ -67,8 +67,12 @@ export class LoginComponent implements OnInit {
 
         this.loginService.create(payload).subscribe({
           next: (data: IToken) => {
-            // guardar el token
+            // guardar el token y notificar a quien esté suscrito
             this.oSessionService.setToken(data.token);
+            // en caso de que se quiera disparar el evento manualmente también es posible,
+            // setToken ya ejecuta subjectLogin.next(), pero no está de más recordar:
+            // this.oSessionService.subjectLogin.next();
+
             // detener spinner antes de navegar (zoneless via signals)
             this.submitting.set(false);
             if (this.debug()) {
