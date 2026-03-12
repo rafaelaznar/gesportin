@@ -30,6 +30,7 @@ En gesportin, los perfiles y permisos se gestionan a través de roles. Cada rol 
   * Las cuotas que pagan los jugadores de su club (crud completo pero sólo de cuotas de su club)
   * Los pagos de los jugadores de su club (crud completo pero sólo de pagos de su club)
 * Puede ver:
+  * Puede ver los datos de los usuarios de su club pero no puede modificarlos ni borrarlos. No puede ver los datos de los usuarios de otros clubes.
   * Puede ver los datos de su club pero no puede modificarlos ni borrarlos.
   * Sólo puede ver las facturas y las compras de su club, no puede crearlas ni modificarlas ni borrarlas.  
   * No puede gestionar el carrito de la compra de los usuarios de su club.

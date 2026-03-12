@@ -7,9 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import java.util.stream.Collectors;
 
 import net.ausiasmarch.gesportin.entity.UsuarioEntity;
 import net.ausiasmarch.gesportin.exception.ResourceNotFoundException;
+import net.ausiasmarch.gesportin.exception.UnauthorizedException;
 import net.ausiasmarch.gesportin.repository.UsuarioRepository;
 
 @Service
@@ -29,6 +31,9 @@ public class UsuarioService {
 
     @Autowired
     private AleatorioService oAleatorioService;
+
+    @Autowired
+    private SessionService oSessionService;
 
     private final Random random = new Random();
 
@@ -57,28 +62,64 @@ public class UsuarioService {
     };
 
     public UsuarioEntity get(Long id) {
-        return oUsuarioRepository.findById(id)
+        UsuarioEntity e = oUsuarioRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con id: " + id));
+        if (oSessionService.isEquipoAdmin()) {
+            Long clubId = (e.getClub()!=null) ? e.getClub().getId() : null;
+            oSessionService.checkSameClub(clubId);
+        }
+        return e;
     }
 
     public Page<UsuarioEntity> getPage(Pageable pageable, String nombre, String username, Long id_Tipousuario,
             Long id_Club, Long id_Rol) {
-        if (nombre != null && !nombre.isEmpty()) {
-            return oUsuarioRepository.findByNombreContainingIgnoreCase(nombre, pageable);
-        } else if (username != null) {
-            return oUsuarioRepository.findByUsernameContainingIgnoreCase(username, pageable);
-        } else if (id_Tipousuario != null) {
-            return oUsuarioRepository.findByTipousuarioId(id_Tipousuario, pageable);
-        } else if (id_Club != null) {
-            return oUsuarioRepository.findByClubId(id_Club, pageable);
-        } else if (id_Rol != null) {
-            return oUsuarioRepository.findByRolusuarioId(id_Rol, pageable);
-        } else {
-            return oUsuarioRepository.findAll(pageable);
+        // equipo admins can only see users from their own club
+        if (oSessionService.isEquipoAdmin()) {
+            Long myClub = oSessionService.getIdClub();
+            if (id_Club != null) {
+                // requested club filter must match own club
+                if (myClub == null || !myClub.equals(id_Club)) {
+                    throw new UnauthorizedException("Acceso denegado: solo usuarios de su club");
+                }
+            }
+            // if no filtering at all, return club-specific page directly
+            if ((nombre == null || nombre.isEmpty()) && username == null && id_Tipousuario == null && id_Club == null
+                    && id_Rol == null) {
+                return oUsuarioRepository.findByClubId(myClub, pageable);
+            }
         }
+
+        Page<UsuarioEntity> result;
+        if (nombre != null && !nombre.isEmpty()) {
+            result = oUsuarioRepository.findByNombreContainingIgnoreCase(nombre, pageable);
+        } else if (username != null) {
+            result = oUsuarioRepository.findByUsernameContainingIgnoreCase(username, pageable);
+        } else if (id_Tipousuario != null) {
+            result = oUsuarioRepository.findByTipousuarioId(id_Tipousuario, pageable);
+        } else if (id_Club != null) {
+            result = oUsuarioRepository.findByClubId(id_Club, pageable);
+        } else if (id_Rol != null) {
+            result = oUsuarioRepository.findByRolusuarioId(id_Rol, pageable);
+        } else {
+            result = oUsuarioRepository.findAll(pageable);
+        }
+
+        // if equipo admin, filter out any user not belonging to club
+        if (oSessionService.isEquipoAdmin()) {
+            Long myClub = oSessionService.getIdClub();
+            if (myClub != null && result != null) {
+                java.util.List<UsuarioEntity> filtered = result.getContent().stream()
+                        .filter(u -> u.getClub() != null && myClub.equals(u.getClub().getId()))
+                        .collect(Collectors.toList());
+                return new org.springframework.data.domain.PageImpl<>(filtered, pageable, filtered.size());
+            }
+        }
+        return result;
     }
 
     public UsuarioEntity create(UsuarioEntity oUsuarioEntity) {
+        // equipo admins are not allowed to create users
+        oSessionService.denyEquipoAdmin();
         oUsuarioEntity.setId(null);
         // Establecer la fecha de alta al momento de la creación
         oUsuarioEntity.setFechaAlta(LocalDateTime.now());
@@ -89,6 +130,8 @@ public class UsuarioService {
     }
 
     public UsuarioEntity update(UsuarioEntity oUsuarioEntity) {
+        // equipo admins are not allowed to modify users
+        oSessionService.denyEquipoAdmin();
         UsuarioEntity oUsuarioExistente = oUsuarioRepository.findById(oUsuarioEntity.getId())
                 .orElseThrow(
                         () -> new ResourceNotFoundException("Usuario no encontrado con id: " + oUsuarioEntity.getId()));
@@ -107,6 +150,8 @@ public class UsuarioService {
     }
 
     public Long delete(Long id) {
+        // equipo admins are not allowed to delete users
+        oSessionService.denyEquipoAdmin();
         UsuarioEntity oUsuario = oUsuarioRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con id: " + id));
         oUsuarioRepository.delete(oUsuario);
@@ -114,6 +159,13 @@ public class UsuarioService {
     }
 
     public Long count() {
+        if (oSessionService.isEquipoAdmin()) {
+            Long myClub = oSessionService.getIdClub();
+            if (myClub == null) {
+                return 0L;
+            }
+            return oUsuarioRepository.findByClubId(myClub, Pageable.ofSize(1)).getTotalElements();
+        }
         return oUsuarioRepository.count();
     }
 
