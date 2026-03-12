@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, inject, signal, effect } from '@angular/core';
+import { SessionService } from '../../../service/session';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
@@ -28,6 +29,7 @@ export class ArticuloFormAdminUnrouted implements OnInit {
   private oArticuloService = inject(ArticuloService);
   private oTipoarticuloService = inject(TipoarticuloService);
   private dialog = inject(MatDialog);
+  private session = inject(SessionService);
 
   articuloForm!: FormGroup;
   loading = signal(false);
@@ -107,19 +109,22 @@ export class ArticuloFormAdminUnrouted implements OnInit {
   }
 
   private loadTiposArticulo(): void {
-    this.oTipoarticuloService.getPage(0, 1000, 'descripcion', 'asc').subscribe({
-      next: (page) => {
-        this.tiposarticulo.set(page.content);
-        const idActual = this.articuloForm.get('id_tipoarticulo')?.value;
-        if (idActual) {
-          this.syncTipoarticulo(idActual);
-        }
-      },
-      error: (err: HttpErrorResponse) => {
-        this.snackBar.open('Error cargando tipos de artículo', 'Cerrar', { duration: 4000 });
-        console.error(err);
-      },
-    });
+    const clubId = this.session.isClubAdmin() ? this.session.getClubId() ?? 0 : 0;
+    this.oTipoarticuloService
+      .getPage(0, 1000, 'descripcion', 'asc', '', clubId)
+      .subscribe({
+        next: (page) => {
+          this.tiposarticulo.set(page.content);
+          const idActual = this.articuloForm.get('id_tipoarticulo')?.value;
+          if (idActual) {
+            this.syncTipoarticulo(idActual);
+          }
+        },
+        error: (err: HttpErrorResponse) => {
+          this.snackBar.open('Error cargando tipos de artículo', 'Cerrar', { duration: 4000 });
+          console.error(err);
+        },
+      });
   }
 
   private syncTipoarticulo(idTipo: number): void {

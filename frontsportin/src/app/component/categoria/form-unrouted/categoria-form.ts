@@ -6,6 +6,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { CategoriaService } from '../../../service/categoria';
 import { TemporadaService } from '../../../service/temporada';
+import { SessionService } from '../../../service/session';
 import { ICategoria } from '../../../model/categoria';
 import { ITemporada } from '../../../model/temporada';
 import { TemporadaPlistAdminUnrouted } from '../../temporada/plist-admin-unrouted/temporada-plist-admin-unrouted';
@@ -28,6 +29,7 @@ export class CategoriaFormAdminUnrouted implements OnInit {
   private oCategoriaService = inject(CategoriaService);
   private oTemporadaService = inject(TemporadaService);
   private dialog = inject(MatDialog);
+  private session = inject(SessionService);
 
   categoriaForm!: FormGroup;
   loading = signal(false);
@@ -108,13 +110,16 @@ export class CategoriaFormAdminUnrouted implements OnInit {
   }
 
   private loadTemporadas(): void {
-    this.oTemporadaService.getPage(0, 1000, 'descripcion', 'asc', '', 0).subscribe({
-      next: (page) => this.temporadas.set(page.content),
-      error: (err: HttpErrorResponse) => {
-        console.error(err);
-        this.snackBar.open('Error cargando temporadas', 'Cerrar', { duration: 3000 });
-      }
-    });
+    const clubId = this.session?.isClubAdmin() ? this.session.getClubId() ?? 0 : 0;
+    this.oTemporadaService
+      .getPage(0, 1000, 'descripcion', 'asc', '', clubId)
+      .subscribe({
+        next: (page) => this.temporadas.set(page.content),
+        error: (err: HttpErrorResponse) => {
+          console.error(err);
+          this.snackBar.open('Error cargando temporadas', 'Cerrar', { duration: 3000 });
+        }
+      });
   }
 
   get nombre() { return this.categoriaForm.get('nombre'); }

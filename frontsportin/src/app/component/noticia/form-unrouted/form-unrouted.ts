@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, inject, signal } from '@angular/core';
+import { SessionService } from '../../../service/session';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
@@ -24,6 +25,7 @@ export class NoticiaFormUnrouted implements OnInit {
   private fb = inject(FormBuilder);
   private oClubService = inject(ClubService);
   private snackBar = inject(MatSnackBar);
+  session: SessionService = inject(SessionService);
 
   noticiaForm!: FormGroup;
   loading = signal(false);
@@ -51,6 +53,16 @@ export class NoticiaFormUnrouted implements OnInit {
       imagen: [null],
       id_club: [null, Validators.required],
     });
+
+    // if user is club admin, bind club automatically and disable field
+    if (this.session.isClubAdmin()) {
+      const clubId = this.session.getClubId();
+      if (clubId != null) {
+        this.noticiaForm.patchValue({ id_club: clubId });
+        this.noticiaForm.get('id_club')?.disable();
+        this.loadClub(clubId);
+      }
+    }
 
     this.noticiaForm.get('id_club')?.valueChanges.subscribe((id) => {
       if (id) {
@@ -93,6 +105,12 @@ export class NoticiaFormUnrouted implements OnInit {
   }
 
   private loadClubs(): void {
+    // club admin doesn't need full list
+    if (this.session.isClubAdmin()) {
+      this.loading.set(false);
+      return;
+    }
+
     this.loading.set(true);
     this.oClubService.getPage(0, 1000, 'nombre', 'asc').subscribe({
       next: (page) => {
@@ -146,7 +164,7 @@ export class NoticiaFormUnrouted implements OnInit {
       contenido: this.noticiaForm.value.contenido,
       fecha: fechaConHora,
       imagen: this.noticiaForm.value.imagen || null,
-      club: { id: this.noticiaForm.value.id_club },
+      club: { id: this.session.isClubAdmin() ? this.session.getClubId() : this.noticiaForm.value.id_club },
       comentarios: [],
       puntuaciones: [],
     };

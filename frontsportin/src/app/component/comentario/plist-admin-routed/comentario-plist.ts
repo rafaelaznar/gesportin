@@ -1,4 +1,4 @@
-import { Component, signal, computed } from '@angular/core';
+import { Component, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Paginacion } from '../../shared/paginacion/paginacion';
 import { BotoneraRpp } from '../../shared/botonera-rpp/botonera-rpp';
@@ -12,6 +12,7 @@ import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { debounceTimeSearch, serverURL } from '../../../environment/environment';
 import { BotoneraActionsPlist } from '../../shared/botonera-actions-plist/botonera-actions-plist';
+import { SessionService } from '../../../service/session';
 
 @Component({
   standalone: true,
@@ -28,6 +29,7 @@ import { BotoneraActionsPlist } from '../../shared/botonera-actions-plist/botone
   ]
 })
 export class ComentarioPlistAdminRouted {
+  session: SessionService = inject(SessionService);
 
   oPage = signal<IPage<IComentario> | null>(null);
   numPage = signal<number>(0);

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, signal, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
@@ -11,6 +11,7 @@ import { Paginacion } from '../../shared/paginacion/paginacion';
 import { BotoneraRpp } from '../../shared/botonera-rpp/botonera-rpp';
 import { debounceTimeSearch } from '../../../environment/environment';
 import { BotoneraActionsPlist } from '../../shared/botonera-actions-plist/botonera-actions-plist';
+import { SessionService } from '../../../service/session';
 
 @Component({
   selector: 'app-carrito-plist',
@@ -20,6 +21,7 @@ import { BotoneraActionsPlist } from '../../shared/botonera-actions-plist/botone
   styleUrl: './carrito-plist.css',
 })
 export class CarritoPlistAdminRouted {
+  session: SessionService = inject(SessionService);
   oPage = signal<IPage<ICarrito> | null>(null);
   numPage = signal<number>(0);
   numRpp = signal<number>(10);

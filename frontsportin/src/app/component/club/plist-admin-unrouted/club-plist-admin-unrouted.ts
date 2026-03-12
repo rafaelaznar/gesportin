@@ -1,4 +1,5 @@
 import { Component, signal, computed, inject } from '@angular/core';
+import { SessionService } from '../../../service/session';
 import { IClub } from '../../../model/club';
 import { IPage } from '../../../model/plist';
 import { ClubService } from '../../../service/club';
@@ -32,6 +33,7 @@ export class ClubPlistAdminUnrouted {
   private oClubService = inject(ClubService);
   private route = inject(ActivatedRoute);
   private dialogRef = inject(MatDialogRef<ClubPlistAdminUnrouted>, { optional: true });
+  session: SessionService = inject(SessionService);
 
   ngOnInit() {
     const msg = this.route.snapshot.queryParamMap.get('msg');

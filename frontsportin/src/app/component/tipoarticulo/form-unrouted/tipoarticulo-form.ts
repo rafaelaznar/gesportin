@@ -1,4 +1,5 @@
 import { Component, Input, Output, EventEmitter, inject, signal, OnInit } from '@angular/core';
+import { SessionService } from '../../../service/session';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -27,6 +28,7 @@ export class TipoarticuloFormAdminUnrouted implements OnInit {
   private dialog = inject(MatDialog);
   private oTipoarticuloService = inject(TipoarticuloService);
   private oClubService = inject(ClubService);
+  session: SessionService = inject(SessionService);
 
   tipoarticuloForm!: FormGroup;
   submitting = signal(false);
@@ -45,6 +47,15 @@ export class TipoarticuloFormAdminUnrouted implements OnInit {
       descripcion: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(255)]],
       id_club: [null, Validators.required],
     });
+
+    if (this.session.isClubAdmin()) {
+      const cid = this.session.getClubId();
+      if (cid != null) {
+        this.tipoarticuloForm.patchValue({ id_club: cid });
+        this.syncClub(cid);
+        // no need to change required because value present
+      }
+    }
 
     this.tipoarticuloForm.get('id_club')?.valueChanges.subscribe((id) => {
       if (id) {
@@ -82,6 +93,9 @@ export class TipoarticuloFormAdminUnrouted implements OnInit {
   }
 
   openClubFinderModal(): void {
+    if (this.session.isClubAdmin()) {
+      return; // club is fixed
+    }
     const dialogRef = this.dialog.open(ClubPlistAdminUnrouted, {
       height: '800px',
       width: '1100px',
@@ -109,7 +123,7 @@ export class TipoarticuloFormAdminUnrouted implements OnInit {
 
     const payload: any = {
       descripcion: this.tipoarticuloForm.value.descripcion,
-      club: { id: this.tipoarticuloForm.value.id_club },
+      club: { id: this.session.isClubAdmin() ? this.session.getClubId() : this.tipoarticuloForm.value.id_club },
     };
 
     if (this.mode === 'edit' && this.tipoarticulo?.id) {

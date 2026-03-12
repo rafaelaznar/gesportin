@@ -78,9 +78,11 @@
 
             <!-- Buscador, ID y Descripción en una línea -->
             <div class="d-flex gap-3 align-items-end">
+              @if (!session.isClubAdmin()) {
               <button type="button" class="btn btn-info" (click)="openClubFinderModal()">
                 <i class="bi bi-search me-2"></i>Buscar
               </button>
+              }
               <div>
                 <label for="display_id_club" class="form-label">ID Club</label>
                 <input

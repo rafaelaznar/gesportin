@@ -9,7 +9,7 @@
       <label class="form-label">Club <span class="text-danger">*</span></label>
       <div class="d-flex gap-2 align-items-end">
         <input type="text" class="form-control" [value]="selectedClub()?.nombre" readonly />
-        <button type="button" class="btn btn-info" (click)="openClubFinderModal()"><i class="bi bi-search"></i> Buscar</button>
+        <button *ngIf="!session.isClubAdmin()" type="button" class="btn btn-info" (click)="openClubFinderModal()"><i class="bi bi-search"></i> Buscar</button>
         <input type="text" class="form-control" [value]="tipoarticuloForm.get('id_club')?.value" readonly />
       </div>
     </div>

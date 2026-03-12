@@ -50,7 +50,7 @@
       <!-- Segunda fila: botón Crear puntuación centrado -->
       <div class="d-flex">
         <div class="w-100 d-flex justify-content-center">
-          @if (!isDialogMode()) {
+          @if (!isDialogMode() && !session.isClubAdmin()) {
             <a class="btn btn-primary new-btn" [routerLink]="['/puntuacion/new']" role="button">
               <i class="bi bi-plus-circle" aria-hidden="true"></i>
               <span class="d-none d-sm-inline">Crear Puntuación</span>

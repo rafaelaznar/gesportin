@@ -1,4 +1,5 @@
 import { Component, computed, inject, Input, signal } from '@angular/core';
+import { SessionService } from '../../../service/session';
 import { IPage } from '../../../model/plist';
 import { ITipoarticulo } from '../../../model/tipoarticulo';
 import { debounceTime, distinctUntilChanged, Subject, Subscription } from 'rxjs';
@@ -50,6 +51,7 @@ export class UsuarioPlistAdminUnrouted {
 
 
   oUsuarioService = inject(UsuarioService);
+  session: SessionService = inject(SessionService);
   private dialogRef = inject(MatDialogRef<UsuarioPlistAdminUnrouted>, { optional: true });
 
   ngOnInit() {

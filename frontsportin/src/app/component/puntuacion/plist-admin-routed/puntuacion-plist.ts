@@ -1,6 +1,7 @@
 import { Component, signal, computed, inject } from '@angular/core';
 import { IPage } from '../../../model/plist';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { SessionService } from '../../../service/session';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Paginacion } from '../../shared/paginacion/paginacion';
 import { BotoneraRpp } from '../../shared/botonera-rpp/botonera-rpp';
@@ -17,6 +18,7 @@ import { MatDialogRef } from '@angular/material/dialog';
   styleUrl: './puntuacion-plist.css',
 })
 export class PuntuacionPlistAdminRouted {
+  session: SessionService = inject(SessionService);
   oPage = signal<IPage<IPuntuacion> | null>(null);
   numPage = signal<number>(0);
   numRpp = signal<number>(5);

@@ -1,4 +1,5 @@
-import { Component, signal, computed, OnInit } from '@angular/core';
+import { Component, signal, computed, OnInit, inject } from '@angular/core';
+import { SessionService } from '../../../service/session';
 import { ICompra } from '../../../model/compra';
 import { IPage } from '../../../model/plist';
 import { CompraService } from '../../../service/compra';
@@ -16,6 +17,7 @@ import { BotoneraActionsPlist } from '../../shared/botonera-actions-plist/botone
   styleUrl: './compra-plist.css',
 })
 export class CompraPlistAdminRouted implements OnInit {
+  session: SessionService = inject(SessionService);
   oPage = signal<IPage<ICompra> | null>(null);
   numPage = signal<number>(0);
   numRpp = signal<number>(5);

@@ -2,6 +2,7 @@ import { Component, signal, computed, inject } from '@angular/core';
 import { IPage } from '../../../model/plist';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
+import { SessionService } from '../../../service/session';
 import { Paginacion } from '../../shared/paginacion/paginacion';
 import { BotoneraRpp } from '../../shared/botonera-rpp/botonera-rpp';
 import { TrimPipe } from '../../../pipe/trim-pipe';
@@ -20,6 +21,7 @@ import { MatDialogRef } from '@angular/material/dialog';
   styleUrl: './comentarioart-plist.css',
 })
 export class ComentarioartPlistAdminRouted {
+  session: SessionService = inject(SessionService);
   oPage = signal<IPage<IComentarioart> | null>(null);
   numPage = signal<number>(0);
   numRpp = signal<number>(5);

@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Subject, Subscription, debounceTime, distinctUntilChanged } from 'rxjs';
 import { MatDialogRef } from '@angular/material/dialog';
+import { SecurityService } from '../../../service/security.service';
 
 import { debounceTimeSearch } from '../../../environment/environment';
 import { ICategoria } from '../../../model/categoria';
@@ -46,8 +47,9 @@ export class CategoriaPlistAdminUnrouted {
 
 	private oCategoriaService = inject(CategoriaService);
 	private dialogRef = inject(MatDialogRef<CategoriaPlistAdminUnrouted>, { optional: true });
+				private security = inject(SecurityService);
 
-	ngOnInit(): void {
+            ngOnInit(): void {
 		this.searchSubscription = this.searchSubject
 			.pipe(debounceTime(debounceTimeSearch), distinctUntilChanged())
 			.subscribe((searchTerm) => {
@@ -75,24 +77,19 @@ export class CategoriaPlistAdminUnrouted {
 					// (o por seguridad) aplicamos filtros en cliente.
 					let filtered = data.content;
 
-					if (this.temporada() > 0) {
-						filtered = filtered.filter((cat) => cat.temporada?.id === this.temporada());
-					}
-					if (this.nombre().length > 0) {
-						const term = this.nombre().toLowerCase();
-						filtered = filtered.filter((cat) => (cat.nombre ?? '').toLowerCase().includes(term));
-					}
-
-					this.oPage.set({ ...data, content: filtered });
-
-					if (this.numPage() > 0 && this.numPage() >= data.totalPages) {
-						this.numPage.set(data.totalPages - 1);
-						this.getPage();
-					}
+						if (this.security.isClubAdmin()) {
+							const clubId = this.security.getClubId();
+							if (clubId != null) {
+								filtered = filtered.filter(
+									(cat) => cat.temporada?.club?.id === clubId,
+								);
+							}
+							}
+							this.oPage.set({ ...data, content: filtered });
 				},
-				error: (error: HttpErrorResponse) => {
-					console.error(error);
-				},
+                          error: (error: HttpErrorResponse) => {
+                                  console.error(error);
+                          },
 			});
 	}
 

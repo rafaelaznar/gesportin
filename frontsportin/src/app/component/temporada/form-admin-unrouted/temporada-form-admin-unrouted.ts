@@ -1,4 +1,5 @@
 import { Component, OnInit, inject, signal, input } from '@angular/core';
+import { SessionService } from '../../../service/session';
 import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TemporadaService } from '../../../service/temporada';
@@ -25,6 +26,7 @@ export class TemporadaFormAdminUnrouted implements OnInit {
   private oClubService = inject(ClubService);
   private snackBar = inject(MatSnackBar);
   private dialog = inject(MatDialog);
+  session: SessionService = inject(SessionService);
 
   temporadaForm!: FormGroup;
   loading = signal<boolean>(true);
@@ -48,6 +50,14 @@ export class TemporadaFormAdminUnrouted implements OnInit {
       descripcion: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(255)]],
       id_club: [null, [Validators.required]],
     });
+
+    if (this.session.isClubAdmin()) {
+      const cid = this.session.getClubId();
+      if (cid != null) {
+        this.temporadaForm.patchValue({ id_club: cid });
+        // optionally disable? we'll hide selection in template
+      }
+    }
   }
 
   getTemporada(id: number): void {
