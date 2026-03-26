@@ -10,7 +10,7 @@ import { UsuarioService } from '../../../service/usuarioService';
 import { ICategoria } from '../../../model/categoria';
 import { IUsuario } from '../../../model/usuario';
 import { IEquipo } from '../../../model/equipo';
-import { CategoriaPlistAdminUnrouted } from '../../categoria/plist-admin-unrouted/categoria-plist-admin-unrouted';
+import { CategoriaAdminPlist } from '../../categoria/admin/plist/plist';
 import { UsuarioPlistAdminUnrouted } from '../../usuario/plist-admin-unrouted/usuario-plist-admin-unrouted';
 
 @Component({
@@ -123,7 +123,7 @@ export class EquipoFormAdminUnrouted implements OnInit {
   }
 
   openCategoriaFinderModal(): void {
-    const dialogRef = this.dialog.open(CategoriaPlistAdminUnrouted, {
+    const dialogRef = this.dialog.open(CategoriaAdminPlist, {
       height: '800px',
       width: '1000px',
       maxWidth: '95vw',
