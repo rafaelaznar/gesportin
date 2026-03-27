@@ -1,0 +1,48 @@
+<div>
+  <form [formGroup]="facturaForm" (ngSubmit)="onSubmit()" novalidate>
+    <div class="mb-3">
+      <label for="id" class="form-label">ID</label>
+      <input id="id" type="text" class="form-control" formControlName="id" readonly />
+    </div>
+
+    <div class="mb-3">
+      <label for="fecha" class="form-label">Fecha <span class="text-danger">*</span></label>
+      <input
+        id="fecha"
+        type="date"
+        class="form-control"
+        formControlName="fecha"
+        [class.is-invalid]="fecha?.invalid && fecha?.touched"
+      />
+      @if (fecha?.invalid && fecha?.touched) {
+        <div class="invalid-feedback">La fecha es obligatoria.</div>
+      }
+    </div>
+
+    <div class="mb-3">
+      <label for="id_usuario" class="form-label">Usuario <span class="text-danger">*</span></label>
+      <select
+        id="id_usuario"
+        class="form-select"
+        formControlName="id_usuario"
+        [class.is-invalid]="id_usuario?.invalid && id_usuario?.touched"
+      >
+        <option [ngValue]="null">Selecciona usuario</option>
+        @for (usuario of usuarios(); track usuario.id) {
+          <option [value]="usuario.id">{{ usuario.nombre }} ({{ usuario.id }})</option>
+        }
+      </select>
+      @if (id_usuario?.invalid && id_usuario?.touched) {
+        <div class="invalid-feedback">El usuario es obligatorio.</div>
+      }
+    </div>
+
+    <div class="d-flex justify-content-between">
+      <button type="button" class="btn btn-outline-secondary" (click)="onCancel()">Cancelar</button>
+      <button type="submit" class="btn btn-primary" [disabled]="submitting() || facturaForm.invalid">
+        @if (submitting()) { <span class="spinner-border spinner-border-sm me-2"></span> }
+        {{ isEditMode ? 'Guardar' : 'Crear' }}
+      </button>
+    </div>
+  </form>
+</div>

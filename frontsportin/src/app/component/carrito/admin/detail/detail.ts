@@ -1,0 +1,47 @@
+import { Component, signal, OnInit, inject, Input, Signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
+import { CarritoService } from '../../../../service/carrito';
+import { ICarrito } from '../../../../model/carrito';
+
+@Component({
+  standalone: true,
+  selector: 'app-carrito-admin-detail',
+  imports: [CommonModule, RouterLink],
+  templateUrl: './detail.html',
+  styleUrl: './detail.css',
+})
+export class CarritoAdminDetail implements OnInit {
+  @Input() id: Signal<number> = signal(0);
+
+  private carritoService = inject(CarritoService);
+
+  oCarrito = signal<ICarrito | null>(null);
+  loading = signal(true);
+  error = signal<string | null>(null);
+
+  ngOnInit(): void {
+    const idCarrito = this.id();
+    if (!idCarrito || isNaN(idCarrito)) {
+      this.error.set('ID de carrito no válido');
+      this.loading.set(false);
+      return;
+    }
+    this.load(idCarrito);
+  }
+
+  private load(id: number): void {
+    this.carritoService.get(id).subscribe({
+      next: (data) => {
+        this.oCarrito.set(data);
+        this.loading.set(false);
+      },
+      error: (err: HttpErrorResponse) => {
+        this.error.set('Error cargando el carrito');
+        console.error(err);
+        this.loading.set(false);
+      },
+    });
+  }
+}

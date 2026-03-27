@@ -1,0 +1,32 @@
+<div class="container py-3">
+  <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 border rounded bg-light p-2 mb-3">
+    <div>
+      <div class="text-uppercase small text-muted fw-semibold">Cuotas</div>
+      <div class="fw-bold">Detalle de cuota</div>
+      <div class="text-muted small">Panel administrativo</div>
+    </div>
+    <a class="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2" routerLink="/cuota">
+      <i class="bi bi-arrow-left"></i>Volver
+    </a>
+  </div>
+
+  @if (loading()) {
+    <div class="row justify-content-center"><div class="col-lg-8 text-center py-3"><div class="spinner-border text-secondary" role="status"><span class="visually-hidden">Cargando...</span></div></div></div>
+  }
+
+  @if (error()) {
+    <div class="alert alert-danger">{{ error() }}</div>
+  }
+
+  @if (!loading() && !error() && oCuota()) {
+    <div class="card border">
+      <div class="card-body">
+        <div><strong>ID:</strong> {{ oCuota()?.id }}</div>
+        <div><strong>Descripción:</strong> {{ oCuota()?.descripcion }}</div>
+        <div><strong>Cantidad:</strong> {{ oCuota()?.cantidad }}</div>
+        <div><strong>Fecha:</strong> {{ oCuota()?.fecha }}</div>
+        <div><strong>Equipo:</strong> <a [routerLink]="['/equipo/view', oCuota()?.equipo?.id]">{{ oCuota()?.equipo?.nombre }}</a></div>
+      </div>
+    </div>
+  }
+</div>

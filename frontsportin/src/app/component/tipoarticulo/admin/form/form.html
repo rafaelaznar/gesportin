@@ -1,0 +1,52 @@
+<div>
+  <form [formGroup]="tipoarticuloForm" (ngSubmit)="onSubmit()" novalidate>
+    <div class="mb-3">
+      <label for="id" class="form-label">ID</label>
+      <input id="id" type="text" class="form-control" formControlName="id" readonly />
+    </div>
+
+    <div class="mb-3">
+      <label for="descripcion" class="form-label">Descripción <span class="text-danger">*</span></label>
+      <input
+        id="descripcion"
+        type="text"
+        class="form-control"
+        formControlName="descripcion"
+        [class.is-invalid]="descripcion?.invalid && descripcion?.touched"
+      />
+      @if (descripcion?.invalid && descripcion?.touched) {
+        <div class="invalid-feedback">
+          @if (descripcion?.errors?.['required']) { <span>Descripción es obligatoria.</span> }
+          @if (descripcion?.errors?.['minlength']) { <span>Debe tener al menos 3 caracteres.</span> }
+          @if (descripcion?.errors?.['maxlength']) { <span>Máx 255 caracteres.</span> }
+        </div>
+      }
+    </div>
+
+    <div class="mb-3">
+      <label for="id_club" class="form-label">Club <span class="text-danger">*</span></label>
+      <select
+        id="id_club"
+        class="form-select"
+        formControlName="id_club"
+        [class.is-invalid]="id_club?.invalid && id_club?.touched"
+      >
+        <option [ngValue]="null">Selecciona club</option>
+        @for (club of clubs(); track club.id) {
+          <option [value]="club.id">{{ club.nombre }} ({{ club.id }})</option>
+        }
+      </select>
+      @if (id_club?.invalid && id_club?.touched) {
+        <div class="invalid-feedback">El club es obligatorio.</div>
+      }
+    </div>
+
+    <div class="d-flex justify-content-between">
+      <button type="button" class="btn btn-outline-secondary" (click)="onCancel()">Cancelar</button>
+      <button type="submit" class="btn btn-primary" [disabled]="submitting() || tipoarticuloForm.invalid">
+        @if (submitting()) { <span class="spinner-border spinner-border-sm me-2"></span> }
+        {{ isEditMode ? 'Guardar' : 'Crear' }}
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,103 @@
+<div>
+  <form [formGroup]="jugadorForm" (ngSubmit)="onSubmit()" novalidate>
+    <div class="mb-3">
+      <label for="id" class="form-label">ID</label>
+      <input id="id" type="text" class="form-control" formControlName="id" readonly />
+    </div>
+
+    <div class="mb-3">
+      <label for="dorsal" class="form-label">Dorsal <span class="text-danger">*</span></label>
+      <input
+        id="dorsal"
+        type="number"
+        class="form-control"
+        formControlName="dorsal"
+        [class.is-invalid]="dorsal?.invalid && dorsal?.touched"
+      />
+      @if (dorsal?.invalid && dorsal?.touched) {
+        <div class="invalid-feedback">
+          @if (dorsal?.errors?.['required']) { <span>Dorsal es obligatorio.</span> }
+          @if (dorsal?.errors?.['min']) { <span>Dorsal debe ser mayor a 0.</span> }
+        </div>
+      }
+    </div>
+
+    <div class="mb-3">
+      <label for="posicion" class="form-label">Posición <span class="text-danger">*</span></label>
+      <input
+        id="posicion"
+        type="text"
+        class="form-control"
+        formControlName="posicion"
+        [class.is-invalid]="posicion?.invalid && posicion?.touched"
+      />
+      @if (posicion?.invalid && posicion?.touched) {
+        <div class="invalid-feedback">
+          @if (posicion?.errors?.['required']) { <span>Posición es obligatoria.</span> }
+          @if (posicion?.errors?.['minlength']) { <span>Debe tener al menos 2 caracteres.</span> }
+          @if (posicion?.errors?.['maxlength']) { <span>Máx 50 caracteres.</span> }
+        </div>
+      }
+    </div>
+
+    <div class="mb-3">
+      <label for="capitan" class="form-label">Capitán <span class="text-danger">*</span></label>
+      <select
+        id="capitan"
+        class="form-select"
+        formControlName="capitan"
+        [class.is-invalid]="capitan?.invalid && capitan?.touched"
+      >
+        <option [ngValue]="false">No</option>
+        <option [ngValue]="true">Sí</option>
+      </select>
+      @if (capitan?.invalid && capitan?.touched) {
+        <div class="invalid-feedback">Campo obligatorio.</div>
+      }
+    </div>
+
+    <div class="mb-3">
+      <label for="id_equipo" class="form-label">Equipo <span class="text-danger">*</span></label>
+      <select
+        id="id_equipo"
+        class="form-select"
+        formControlName="id_equipo"
+        [class.is-invalid]="id_equipo?.invalid && id_equipo?.touched"
+      >
+        <option [ngValue]="null">Selecciona equipo</option>
+        @for (equipo of equipos(); track equipo.id) {
+          <option [value]="equipo.id">{{ equipo.nombre }} ({{ equipo.id }})</option>
+        }
+      </select>
+      @if (id_equipo?.invalid && id_equipo?.touched) {
+        <div class="invalid-feedback">El equipo es obligatorio.</div>
+      }
+    </div>
+
+    <div class="mb-3">
+      <label for="id_usuario" class="form-label">Usuario <span class="text-danger">*</span></label>
+      <select
+        id="id_usuario"
+        class="form-select"
+        formControlName="id_usuario"
+        [class.is-invalid]="id_usuario?.invalid && id_usuario?.touched"
+      >
+        <option [ngValue]="null">Selecciona usuario</option>
+        @for (usuario of usuarios(); track usuario.id) {
+          <option [value]="usuario.id">{{ usuario.nombre }} ({{ usuario.id }})</option>
+        }
+      </select>
+      @if (id_usuario?.invalid && id_usuario?.touched) {
+        <div class="invalid-feedback">El usuario es obligatorio.</div>
+      }
+    </div>
+
+    <div class="d-flex justify-content-between">
+      <button type="button" class="btn btn-outline-secondary" (click)="onCancel()">Cancelar</button>
+      <button type="submit" class="btn btn-primary" [disabled]="submitting() || jugadorForm.invalid">
+        @if (submitting()) { <span class="spinner-border spinner-border-sm me-2"></span> }
+        {{ isEditMode ? 'Guardar' : 'Crear' }}
+      </button>
+    </div>
+  </form>
+</div>

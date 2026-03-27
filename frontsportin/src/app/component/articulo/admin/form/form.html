@@ -1,0 +1,88 @@
+<div>
+  <form [formGroup]="articuloForm" (ngSubmit)="onSubmit()" novalidate>
+    <div class="mb-3">
+      <label for="id" class="form-label">ID</label>
+      <input id="id" type="text" class="form-control" formControlName="id" readonly />
+    </div>
+
+    <div class="mb-3">
+      <label for="descripcion" class="form-label">Descripción <span class="text-danger">*</span></label>
+      <input
+        id="descripcion"
+        type="text"
+        class="form-control"
+        formControlName="descripcion"
+        [class.is-invalid]="descripcion?.invalid && descripcion?.touched"
+      />
+      @if (descripcion?.invalid && descripcion?.touched) {
+        <div class="invalid-feedback">
+          @if (descripcion?.errors?.['required']) { <span>Descripción es obligatoria.</span> }
+          @if (descripcion?.errors?.['minlength']) { <span>Debe tener al menos 3 caracteres.</span> }
+          @if (descripcion?.errors?.['maxlength']) { <span>Máx 255 caracteres.</span> }
+        </div>
+      }
+    </div>
+
+    <div class="mb-3">
+      <label for="precio" class="form-label">Precio <span class="text-danger">*</span></label>
+      <input
+        id="precio"
+        type="number"
+        step="0.01"
+        class="form-control"
+        formControlName="precio"
+        [class.is-invalid]="precio?.invalid && precio?.touched"
+      />
+      @if (precio?.invalid && precio?.touched) {
+        <div class="invalid-feedback">
+          @if (precio?.errors?.['required']) { <span>Precio es obligatorio.</span> }
+          @if (precio?.errors?.['min']) { <span>Precio debe ser mayor a 0.</span> }
+        </div>
+      }
+    </div>
+
+    <div class="mb-3">
+      <label for="descuento" class="form-label">Descuento (%)</label>
+      <input
+        id="descuento"
+        type="number"
+        step="0.01"
+        class="form-control"
+        formControlName="descuento"
+        [class.is-invalid]="descuento?.invalid && descuento?.touched"
+      />
+      @if (descuento?.invalid && descuento?.touched) {
+        <div class="invalid-feedback">
+          @if (descuento?.errors?.['min']) { <span>Descuento debe ser mayor a 0.</span> }
+          @if (descuento?.errors?.['max']) { <span>Descuento no puede ser mayor a 100.</span> }
+        </div>
+      }
+    </div>
+
+    <div class="mb-3">
+      <label for="id_tipoarticulo" class="form-label">Tipo de Artículo <span class="text-danger">*</span></label>
+      <select
+        id="id_tipoarticulo"
+        class="form-select"
+        formControlName="id_tipoarticulo"
+        [class.is-invalid]="id_tipoarticulo?.invalid && id_tipoarticulo?.touched"
+      >
+        <option [ngValue]="null">Selecciona tipo de artículo</option>
+        @for (tipoarticulo of tipoarticulos(); track tipoarticulo.id) {
+          <option [value]="tipoarticulo.id">{{ tipoarticulo.descripcion }} ({{ tipoarticulo.id }})</option>
+        }
+      </select>
+      @if (id_tipoarticulo?.invalid && id_tipoarticulo?.touched) {
+        <div class="invalid-feedback">El tipo de artículo es obligatorio.</div>
+      }
+    </div>
+
+    <div class="d-flex justify-content-between">
+      <button type="button" class="btn btn-outline-secondary" (click)="onCancel()">Cancelar</button>
+      <button type="submit" class="btn btn-primary" [disabled]="submitting() || articuloForm.invalid">
+        @if (submitting()) { <span class="spinner-border spinner-border-sm me-2"></span> }
+        {{ isEditMode ? 'Guardar' : 'Crear' }}
+      </button>
+    </div>
+  </form>
+</div>

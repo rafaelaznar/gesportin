@@ -1,0 +1,70 @@
+<div>
+  <form [formGroup]="comentarioartForm" (ngSubmit)="onSubmit()" novalidate>
+    <div class="mb-3">
+      <label for="id" class="form-label">ID</label>
+      <input id="id" type="text" class="form-control" formControlName="id" readonly />
+    </div>
+
+    <div class="mb-3">
+      <label for="contenido" class="form-label">Contenido <span class="text-danger">*</span></label>
+      <textarea
+        id="contenido"
+        class="form-control"
+        formControlName="contenido"
+        rows="5"
+        [class.is-invalid]="contenido?.invalid && contenido?.touched"
+      ></textarea>
+      @if (contenido?.invalid && contenido?.touched) {
+        <div class="invalid-feedback">
+          @if (contenido?.errors?.['required']) { <span>Contenido es obligatorio.</span> }
+          @if (contenido?.errors?.['minlength']) { <span>Debe tener al menos 3 caracteres.</span> }
+          @if (contenido?.errors?.['maxlength']) { <span>Máx 500 caracteres.</span> }
+        </div>
+      }
+    </div>
+
+    <div class="mb-3">
+      <label for="id_articulo" class="form-label">Artículo <span class="text-danger">*</span></label>
+      <select
+        id="id_articulo"
+        class="form-select"
+        formControlName="id_articulo"
+        [class.is-invalid]="id_articulo?.invalid && id_articulo?.touched"
+      >
+        <option [ngValue]="null">Selecciona artículo</option>
+        @for (articulo of articulos(); track articulo.id) {
+          <option [value]="articulo.id">{{ articulo.descripcion }} ({{ articulo.id }})</option>
+        }
+      </select>
+      @if (id_articulo?.invalid && id_articulo?.touched) {
+        <div class="invalid-feedback">El artículo es obligatorio.</div>
+      }
+    </div>
+
+    <div class="mb-3">
+      <label for="id_usuario" class="form-label">Usuario <span class="text-danger">*</span></label>
+      <select
+        id="id_usuario"
+        class="form-select"
+        formControlName="id_usuario"
+        [class.is-invalid]="id_usuario?.invalid && id_usuario?.touched"
+      >
+        <option [ngValue]="null">Selecciona usuario</option>
+        @for (usuario of usuarios(); track usuario.id) {
+          <option [value]="usuario.id">{{ usuario.nombre }} ({{ usuario.id }})</option>
+        }
+      </select>
+      @if (id_usuario?.invalid && id_usuario?.touched) {
+        <div class="invalid-feedback">El usuario es obligatorio.</div>
+      }
+    </div>
+
+    <div class="d-flex justify-content-between">
+      <button type="button" class="btn btn-outline-secondary" (click)="onCancel()">Cancelar</button>
+      <button type="submit" class="btn btn-primary" [disabled]="submitting() || comentarioartForm.invalid">
+        @if (submitting()) { <span class="spinner-border spinner-border-sm me-2"></span> }
+        {{ isEditMode ? 'Guardar' : 'Crear' }}
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,20 @@
+<div class="container my-4">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-8">
+      <div class="form-card">
+        <header class="mb-4"><h1 class="h3 mb-0">Eliminar artículo</h1></header>
+
+        @if (error()) {
+          <div class="alert alert-danger" role="alert">{{ error() }}</div>
+        }
+
+        <app-articulo-admin-detail [id]="id_articulo"></app-articulo-admin-detail>
+
+        <div class="mt-3 d-flex gap-2">
+          <button class="btn btn-danger" (click)="doDelete()">Confirmar eliminación</button>
+          <button class="btn btn-secondary" (click)="doCancel()">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

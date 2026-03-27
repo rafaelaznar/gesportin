@@ -1,0 +1,84 @@
+<div>
+  <form [formGroup]="pagoForm" (ngSubmit)="onSubmit()" novalidate>
+    <div class="mb-3">
+      <label for="id" class="form-label">ID</label>
+      <input id="id" type="text" class="form-control" formControlName="id" readonly />
+    </div>
+
+    <div class="mb-3">
+      <label for="id_cuota" class="form-label">Cuota <span class="text-danger">*</span></label>
+      <select
+        id="id_cuota"
+        class="form-select"
+        formControlName="id_cuota"
+        [class.is-invalid]="id_cuota?.invalid && id_cuota?.touched"
+      >
+        <option [ngValue]="null">Selecciona cuota</option>
+        @for (cuota of cuotas(); track cuota.id) {
+          <option [value]="cuota.id">{{ cuota.descripcion }} ({{ cuota.id }})</option>
+        }
+      </select>
+      @if (id_cuota?.invalid && id_cuota?.touched) {
+        <div class="invalid-feedback">La cuota es obligatoria.</div>
+      }
+    </div>
+
+    <div class="mb-3">
+      <label for="id_jugador" class="form-label">Jugador <span class="text-danger">*</span></label>
+      <select
+        id="id_jugador"
+        class="form-select"
+        formControlName="id_jugador"
+        [class.is-invalid]="id_jugador?.invalid && id_jugador?.touched"
+      >
+        <option [ngValue]="null">Selecciona jugador</option>
+        @for (jugador of jugadores(); track jugador.id) {
+          <option [value]="jugador.id">{{ jugador.usuario?.nombre }} ({{ jugador.id }})</option>
+        }
+      </select>
+      @if (id_jugador?.invalid && id_jugador?.touched) {
+        <div class="invalid-feedback">El jugador es obligatorio.</div>
+      }
+    </div>
+
+    <div class="mb-3">
+      <label for="abonado" class="form-label">Abonado <span class="text-danger">*</span></label>
+      <input
+        id="abonado"
+        type="number"
+        step="0.01"
+        class="form-control"
+        formControlName="abonado"
+        [class.is-invalid]="abonado?.invalid && abonado?.touched"
+      />
+      @if (abonado?.invalid && abonado?.touched) {
+        <div class="invalid-feedback">
+          @if (abonado?.errors?.['required']) { <span>Abonado es obligatorio.</span> }
+          @if (abonado?.errors?.['min']) { <span>Abonado debe ser mayor a 0.</span> }
+        </div>
+      }
+    </div>
+
+    <div class="mb-3">
+      <label for="fecha" class="form-label">Fecha <span class="text-danger">*</span></label>
+      <input
+        id="fecha"
+        type="date"
+        class="form-control"
+        formControlName="fecha"
+        [class.is-invalid]="fecha?.invalid && fecha?.touched"
+      />
+      @if (fecha?.invalid && fecha?.touched) {
+        <div class="invalid-feedback">La fecha es obligatoria.</div>
+      }
+    </div>
+
+    <div class="d-flex justify-content-between">
+      <button type="button" class="btn btn-outline-secondary" (click)="onCancel()">Cancelar</button>
+      <button type="submit" class="btn btn-primary" [disabled]="submitting() || pagoForm.invalid">
+        @if (submitting()) { <span class="spinner-border spinner-border-sm me-2"></span> }
+        {{ isEditMode ? 'Guardar' : 'Crear' }}
+      </button>
+    </div>
+  </form>
+</div>

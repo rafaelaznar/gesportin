@@ -1,0 +1,72 @@
+<div class="container my-2">
+  <div class="d-flex justify-content-center my-3">
+    <h1 class="mb-0"><i class="bi bi-cash-coin me-2" aria-hidden="true"></i>Cuotas</h1>
+  </div>
+
+  <div class="d-flex justify-content-between align-items-center gap-2 mb-3 flex-wrap">
+    <small class="text-muted">Total registros: {{ totalRecords() || 0 }}</small>
+    <a
+      *ngIf="!session.isClubAdmin()"
+      class="btn btn-primary"
+      [routerLink]="['/cuota/new']"
+      role="button"
+      >
+      <i class="bi bi-plus-circle"></i>
+      <span class="d-none d-sm-inline">Crear cuota</span>
+    </a>
+  </div>
+
+  <div class="mb-3">
+    <input
+      type="text"
+      class="form-control"
+      placeholder="Buscar por descripción..."
+      (input)="onSearchDescripcion($any($event.target).value)"
+    />
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-striped table-bordered table-sm w-100">
+      <thead>
+        <tr>
+          <th scope="col" (click)="onOrder('id')" style="cursor: pointer; width: 8%">ID</th>
+          <th scope="col" (click)="onOrder('descripcion')" style="cursor: pointer; width: 25%">Descripción</th>
+          <th scope="col" (click)="onOrder('cantidad')" style="cursor: pointer; width: 15%">Cantidad</th>
+          <th scope="col" (click)="onOrder('fecha')" style="cursor: pointer; width: 15%">Fecha</th>
+          <th scope="col" (click)="onOrder('id_equipo')" style="cursor: pointer; width: 20%">Equipo</th>
+          <th scope="col" class="text-center" style="width: 15%">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (oCuota of oPage()?.content; track oCuota.id) {
+          <tr>
+            <th scope="row" class="text-center">{{ oCuota.id }}</th>
+            <td>{{ oCuota.descripcion }}</td>
+            <td class="text-end">{{ oCuota.cantidad }}</td>
+            <td>{{ oCuota.fecha }}</td>
+            <td>
+              <a [routerLink]="['/equipo/view', oCuota.equipo?.id]">{{ oCuota.equipo?.nombre || 'N/A' }}</a>
+            </td>
+            <td class="text-center">
+              <app-botonera-actions-plist [id]="oCuota.id" strEntity="cuota"></app-botonera-actions-plist>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  @if (totalRecords() > 0) {
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <app-paginacion
+        [numPage]="numPage()"
+        [numPages]="oPage()?.totalPages || 1"
+        (pageChange)="goToPage($event)"
+      ></app-paginacion>
+      <app-botonera-rpp
+        [numRpp]="numRpp()"
+        (rppChange)="onRppChange($event)"
+      ></app-botonera-rpp>
+    </div>
+  }
+</div>

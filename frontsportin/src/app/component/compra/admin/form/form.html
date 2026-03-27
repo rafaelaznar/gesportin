@@ -1,0 +1,87 @@
+<div>
+  <form [formGroup]="compraForm" (ngSubmit)="onSubmit()" novalidate>
+    <div class="mb-3">
+      <label for="id" class="form-label">ID</label>
+      <input id="id" type="text" class="form-control" formControlName="id" readonly />
+    </div>
+
+    <div class="mb-3">
+      <label for="cantidad" class="form-label">Cantidad <span class="text-danger">*</span></label>
+      <input
+        id="cantidad"
+        type="number"
+        class="form-control"
+        formControlName="cantidad"
+        [class.is-invalid]="cantidad?.invalid && cantidad?.touched"
+      />
+      @if (cantidad?.invalid && cantidad?.touched) {
+        <div class="invalid-feedback">
+          @if (cantidad?.errors?.['required']) { <span>Cantidad es obligatoria.</span> }
+          @if (cantidad?.errors?.['min']) { <span>Cantidad debe ser mayor a 0.</span> }
+        </div>
+      }
+    </div>
+
+    <div class="mb-3">
+      <label for="precio" class="form-label">Precio <span class="text-danger">*</span></label>
+      <input
+        id="precio"
+        type="number"
+        step="0.01"
+        class="form-control"
+        formControlName="precio"
+        [class.is-invalid]="precio?.invalid && precio?.touched"
+      />
+      @if (precio?.invalid && precio?.touched) {
+        <div class="invalid-feedback">
+          @if (precio?.errors?.['required']) { <span>Precio es obligatorio.</span> }
+          @if (precio?.errors?.['min']) { <span>Precio debe ser mayor a 0.</span> }
+        </div>
+      }
+    </div>
+
+    <div class="mb-3">
+      <label for="id_articulo" class="form-label">Artículo <span class="text-danger">*</span></label>
+      <select
+        id="id_articulo"
+        class="form-select"
+        formControlName="id_articulo"
+        [class.is-invalid]="id_articulo?.invalid && id_articulo?.touched"
+      >
+        <option [ngValue]="null">Selecciona artículo</option>
+        @for (articulo of articulos(); track articulo.id) {
+          <option [value]="articulo.id">{{ articulo.descripcion }} ({{ articulo.id }})</option>
+        }
+      </select>
+      @if (id_articulo?.invalid && id_articulo?.touched) {
+        <div class="invalid-feedback">El artículo es obligatorio.</div>
+      }
+    </div>
+
+    <div class="mb-3">
+      <label for="id_factura" class="form-label">Factura <span class="text-danger">*</span></label>
+      <select
+        id="id_factura"
+        class="form-select"
+        formControlName="id_factura"
+        [class.is-invalid]="id_factura?.invalid && id_factura?.touched"
+      >
+        <option [ngValue]="null">Selecciona factura</option>
+        @for (factura of facturas(); track factura.id) {
+          <option [value]="factura.id">Factura {{ factura.id }} ({{ factura.id }})</option>
+        }
+      </select>
+      @if (id_factura?.invalid && id_factura?.touched) {
+        <div class="invalid-feedback">La factura es obligatoria.</div>
+      }
+    </div>
+
+    <div class="d-flex justify-content-between">
+      <button type="button" class="btn btn-outline-secondary" (click)="onCancel()">Cancelar</button>
+      <button type="submit" class="btn btn-primary" [disabled]="submitting() || compraForm.invalid">
+        @if (submitting()) { <span class="spinner-border spinner-border-sm me-2"></span> }
+        {{ isEditMode ? 'Guardar' : 'Crear' }}
+      </button>
+    </div>
+  </form>
+</div>

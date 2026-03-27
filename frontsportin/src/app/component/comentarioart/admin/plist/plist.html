@@ -1,0 +1,68 @@
+<div class="container my-2">
+  <div class="d-flex justify-content-center my-3">
+    <h1 class="mb-0"><i class="bi bi-chat-left me-2" aria-hidden="true"></i>Comentarios de Artículos</h1>
+  </div>
+
+  <div class="d-flex justify-content-between align-items-center gap-2 mb-3 flex-wrap">
+    <small class="text-muted">Total registros: {{ totalRecords() || 0 }}</small>
+    <a
+      *ngIf="!session.isClubAdmin()"
+      class="btn btn-primary"
+      [routerLink]="['/comentarioart/new']"
+      role="button"
+      >
+      <i class="bi bi-plus-circle"></i>
+      <span class="d-none d-sm-inline">Crear comentario</span>
+    </a>
+  </div>
+
+  <div class="mb-3">
+    <input
+      type="text"
+      class="form-control"
+      placeholder="Buscar por contenido..."
+      (input)="onSearchDescripcion($any($event.target).value)"
+    />
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-striped table-bordered table-sm w-100">
+      <thead>
+        <tr>
+          <th scope="col" (click)="onOrder('id')" style="cursor: pointer; width: 8%">ID</th>
+          <th scope="col" (click)="onOrder('contenido')" style="cursor: pointer; width: 30%">Contenido</th>
+          <th scope="col" (click)="onOrder('articulo')" style="cursor: pointer; width: 20%">Artículo</th>
+          <th scope="col" (click)="onOrder('usuario')" style="cursor: pointer; width: 20%">Usuario</th>
+          <th scope="col" class="text-center" style="width: 15%">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (oComentarioart of oPage()?.content; track oComentarioart.id) {
+          <tr>
+            <th scope="row" class="text-center">{{ oComentarioart.id }}</th>
+            <td>{{ oComentarioart.contenido }}</td>
+            <td>{{ oComentarioart.articulo?.descripcion || 'N/A' }}</td>
+            <td>{{ oComentarioart.usuario?.nombre || 'N/A' }}</td>
+            <td class="text-center">
+              <app-botonera-actions-plist [id]="oComentarioart.id" strEntity="comentarioart"></app-botonera-actions-plist>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  @if (totalRecords() > 0) {
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <app-paginacion
+        [numPage]="numPage()"
+        [numPages]="oPage()?.totalPages || 1"
+        (pageChange)="goToPage($event)"
+      ></app-paginacion>
+      <app-botonera-rpp
+        [numRpp]="numRpp()"
+        (rppChange)="onRppChange($event)"
+      ></app-botonera-rpp>
+    </div>
+  }
+</div>

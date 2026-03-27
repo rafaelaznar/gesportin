@@ -3,12 +3,12 @@ import { Home } from './component/shared/home/home';
 import { Logout } from './component/shared/logout/logout';
 import { LoginComponent } from './component/shared/login/login.component';
 import { UsuarioPlist } from './component/usuario/usuario-plist/usuario-plist';
-import { ArticuloPlistAdminRouted } from './component/articulo/plist-admin-routed/articulo-plist';
-import { ArticuloPlistTeamAdminRouted } from './component/articulo/plist-teamadmin-routed/articulo-plist-teamadmin-routed';
-import { ArticuloViewAdminRouted } from './component/articulo/view-admin-routed/articulo-view';
-import { ArticuloDeleteAdminRouted } from './component/articulo/delete-admin-routed/articulo-delete';
-import { ArticuloEditAdminRouted } from './component/articulo/edit-admin-routed/articulo-edit';
-import { ArticuloNewAdminRouted } from './component/articulo/new-admin-routed/articulo-new';
+import { ArticuloAdminPlistPage } from './page/articulo/admin/plist/plist';
+import { ArticuloAdminViewPage } from './page/articulo/admin/view/view';
+import { ArticuloAdminNewPage } from './page/articulo/admin/new/new';
+import { ArticuloAdminEditPage } from './page/articulo/admin/edit/edit';
+import { ArticuloAdminDeletePage } from './page/articulo/admin/delete/delete';
+import { ArticuloTeamadminPlistPage } from './page/articulo/teamadmin/plist/plist';
 import { UsuarioViewRouted } from './component/usuario/view-routed/usuario-view';
 import { CategoriaAdminPlistPage } from './page/categoria/admin/plist/plist';
 import { PartidoAdminPlistPage } from './page/partido/admin/plist/plist';
@@ -17,23 +17,23 @@ import { PartidoAdminNewPage } from './page/partido/admin/new/new';
 import { PartidoAdminViewPage } from './page/partido/admin/view/view';
 import { PartidoAdminEditPage } from './page/partido/admin/edit/edit';
 import { PartidoAdminDeletePage } from './page/partido/admin/delete/delete';
-import { FacturaPlistAdminRouted } from './component/factura/plist-admin-routed/factura-plist';
-import { FacturaPlistTeamAdminRouted } from './component/factura/plist-teamadmin-routed/factura-plist-teamadmin-routed';
-import { CompraPlistAdminRouted } from './component/compra/plist-admin-routed/compra-plist';
-import { CompraPlistTeamAdminRouted } from './component/compra/plist-teamadmin-routed/compra-plist-teamadmin-routed';
-import { CompraViewRouted } from './component/compra/view-routed/compra-view';
-import { CompraDeleteAdminRouted } from './component/compra/delete-admin-routed/compra-delete';
-import { CarritoPlistTeamAdminRouted } from './component/carrito/plist-teamadmin-routed/carrito-plist-teamadmin-routed';
+import { FacturaAdminPlistPage } from './page/factura/admin/plist/plist';
+import { FacturaTeamadminPlistPage } from './page/factura/teamadmin/plist/plist';
+import { CompraAdminPlistPage } from './page/compra/admin/plist/plist';
+import { CompraTeamadminPlistPage } from './page/compra/teamadmin/plist/plist';
+import { CompraAdminViewPage } from './page/compra/admin/view/view';
+import { CompraAdminDeletePage } from './page/compra/admin/delete/delete';
+import { CarritoTeamadminPlistPage } from './page/carrito/teamadmin/plist/plist';
 import { RolusuarioPlist } from './component/rolusuario/plist-admin-routed/rolusuario-plist';
-import { TipoarticuloPlistAdminRouted } from './component/tipoarticulo/plist-admin-routed/tipoarticulo-plist';
-import { TipoarticuloPlistTeamAdminRouted } from './component/tipoarticulo/plist-teamadmin-routed/tipoarticulo-plist-teamadmin-routed';
-import { TipoarticuloViewAdminRouted } from './component/tipoarticulo/view-admin-routed/tipoarticulo-view';
-import { TipoarticuloEditAdminRouted } from './component/tipoarticulo/edit-admin-routed/tipoarticulo-edit';
-import { TipoarticuloNewAdminRouted } from './component/tipoarticulo/new-admin-routed/tipoarticulo-new';
-import { JugadorPlist } from './component/jugador/plist-admin-routed/jugador-plist';
-import { JugadorPlistTeamAdminRouted } from './component/jugador/plist-teamadmin-routed/jugador-plist-teamadmin-routed';
-import { JugadorViewRouted } from './component/jugador/view-admin-routed/jugador-view';
-import { JugadorNewAdminRouted } from './component/jugador/new-admin-routed/jugador-new';
+import { TipoarticuloAdminPlistPage } from './page/tipoarticulo/admin/plist/plist';
+import { TipoarticuloTeamadminPlistPage } from './page/tipoarticulo/teamadmin/plist/plist';
+import { TipoarticuloAdminViewPage } from './page/tipoarticulo/admin/view/view';
+import { TipoarticuloAdminEditPage } from './page/tipoarticulo/admin/edit/edit';
+import { TipoarticuloAdminNewPage } from './page/tipoarticulo/admin/new/new';
+import { JugadorAdminPlistPage } from './page/jugador/admin/plist/plist';
+import { JugadorTeamadminPlistPage } from './page/jugador/teamadmin/plist/plist';
+import { JugadorAdminViewPage } from './page/jugador/admin/view/view';
+import { JugadorAdminNewPage } from './page/jugador/admin/new/new';
 import { LigaAdminPlistPage } from './page/liga/admin/plist/plist';
 import { LigaAdminViewPage } from './page/liga/admin/view/view';
 import { LigaAdminNewPage } from './page/liga/admin/new/new';
@@ -43,9 +43,9 @@ import { LigaTeamadminPlistPage } from './page/liga/teamadmin/plist/plist';
 import { NoticiaAdminPlistPage } from './page/noticia/admin/plist/plist';
 import { NoticiaPlistTeamadminPage } from './page/noticia/teamadmin/plist/plist';
 import { ClubAdminPlistPage } from './page/club/admin/plist/plist';
-import { CuotaPlistTeamAdminRouted } from './component/cuota/plist-teamadmin-routed/cuota-plist-teamadmin-routed';
-import { CuotaPlistAdminRouted } from './component/cuota/plist-admin-routed/cuota-plist';
-import { CuotaNewAdminRouted } from './component/cuota/new-admin-routed/cuota-new';
+import { CuotaTeamadminPlistPage } from './page/cuota/teamadmin/plist/plist';
+import { CuotaAdminPlistPage } from './page/cuota/admin/plist/plist';
+import { CuotaAdminNewPage } from './page/cuota/admin/new/new';
 import { TipousuarioPlistAdminRouted } from './component/tipousario/plist-admin-routed/tipousuario-plist';
 import { EquipoAdminPlistPage } from './page/equipo/admin/plist/plist';
 import { EquipoAdminViewPage } from './page/equipo/admin/view/view';
@@ -53,14 +53,14 @@ import { EquipoAdminEditPage } from './page/equipo/admin/edit/edit';
 import { EquipoAdminNewPage } from './page/equipo/admin/new/new';
 import { EquipoAdminDeletePage } from './page/equipo/admin/delete/delete';
 import { EquipoTeamadminPlistPage } from './page/equipo/teamadmin/plist/plist';
-import { CarritoNewAdminRouted } from './component/carrito/new-admin-routed/carrito-new';
-import { CarritoPlistAdminRouted } from './component/carrito/plist-admin-routed/carrito-plist';
+import { CarritoAdminNewPage } from './page/carrito/admin/new/new';
+import { CarritoAdminPlistPage } from './page/carrito/admin/plist/plist';
 import { ComentarioAdminPlistPage } from './page/comentario/admin/plist/plist';
 import { ComentarioTeamadminPlistPage } from './page/comentario/teamadmin/plist/plist';
 import { ComentarioAdminViewPage } from './page/comentario/admin/view/view';
 import { ComentarioAdminNewPage } from './page/comentario/admin/new/new';
-import { PagoPlistComponent } from './component/pago/plist-admin-routed/pago-plist';
-import { PagoPlistTeamAdminRouted } from './component/pago/plist-teamadmin-routed/pago-plist-teamadmin-routed';
+import { PagoAdminPlistPage } from './page/pago/admin/plist/plist';
+import { PagoTeamadminPlistPage } from './page/pago/teamadmin/plist/plist';
 import { PuntuacionAdminPlistPage } from './page/puntuacion/admin/plist/plist';
 import { PuntuacionAdminViewPage } from './page/puntuacion/admin/view/view';
 import { PuntuacionAdminEditPage } from './page/puntuacion/admin/edit/edit';
@@ -68,57 +68,57 @@ import { PuntuacionAdminNewPage } from './page/puntuacion/admin/new/new';
 import { PuntuacionAdminDeletePage } from './page/puntuacion/admin/delete/delete';
 import { PuntuacionTeamadminPlistPage } from './page/puntuacion/teamadmin/plist/plist';
 import { NoticiaAdminViewPage } from './page/noticia/admin/view/view';
-import { FacturaViewAdminRouted } from './component/factura/view-admin-routed/factura-view';
-import { ComentarioartPlistAdminRouted } from './component/comentarioart/plist-admin-routed/comentarioart-plist';
-import { ComentarioartNewAdminRouted } from './component/comentarioart/new-admin-routed/comentarioart-new';
+import { FacturaAdminViewPage } from './page/factura/admin/view/view';
+import { ComentarioartAdminPlistPage } from './page/comentarioart/admin/plist/plist';
+import { ComentarioartAdminNewPage } from './page/comentarioart/admin/new/new';
 import { TemporadaAdminViewPage } from './page/temporada/admin/view/view';
 import { TemporadaAdminDeletePage } from './page/temporada/admin/delete/delete';
 import { TemporadaTeamadminPlistPage } from './page/temporada/teamadmin/plist/plist';
-import { PagoViewAdminRouted } from './component/pago/view-admin-routed/pago-view';
-import { PagoEditAdminRouted } from './component/pago/edit-admin-routed/pago-edit';
-import { PagoNewAdminRouted } from './component/pago/new-admin-routed/pago-new';
+import { PagoAdminViewPage } from './page/pago/admin/view/view';
+import { PagoAdminEditPage } from './page/pago/admin/edit/edit';
+import { PagoAdminNewPage } from './page/pago/admin/new/new';
 import { ClubAdminViewPage } from './page/club/admin/view/view';
-import { CuotaViewAdminRouted } from './component/cuota/view-admin-routed/cuota-view';
+import { CuotaAdminViewPage } from './page/cuota/admin/view/view';
+import { CarritoAdminViewPage } from './page/carrito/admin/view/view';
 import { TipousuarioViewAdminRouted } from './component/tipousario/view-admin-routed/tipousuario-view';
-import { CarritoViewAdminRouted } from './component/carrito/view-admin-routed/view-admin-routed';
 import { RolusuarioViewAdminRouted } from './component/rolusuario/view-admin-routed/rolusuario-view';
 import { RolusuarioNewAdminRouted } from './component/rolusuario/new-admin-routed/rolusuario-new';
 import { CategoriaAdminViewPage } from './page/categoria/admin/view/view';
 import { CategoriaAdminEditPage } from './page/categoria/admin/edit/edit';
 import { CategoriaAdminNewPage } from './page/categoria/admin/new/new';
 import { CategoriaTeamadminPlistPage } from './page/categoria/teamadmin/plist/plist';
-import { ComentarioartViewRouted } from './component/comentarioart/view-routed/comentarioart-view';
-import { ComentarioartEditAdminRouted } from './component/comentarioart/edit-admin-routed/comentarioart-edit';
+import { ComentarioartAdminViewPage } from './page/comentarioart/admin/view/view';
+import { ComentarioartAdminEditPage } from './page/comentarioart/admin/edit/edit';
 import { ComentarioAdminEditPage } from './page/comentario/admin/edit/edit';
 import { ComentarioAdminDeletePage } from './page/comentario/admin/delete/delete';
-import { PagoDeleteAdminRouted } from './component/pago/delete-admin-routed/pago-delete';
+import { PagoAdminDeletePage } from './page/pago/admin/delete/delete';
 import { RolusuarioDeleteAdminRouted } from './component/rolusuario/delete-admin-routed/rolusuario-delete';
 import { TemporadaAdminEditPage } from './page/temporada/admin/edit/edit';
 import { ClubAdminDeletePage } from './page/club/admin/delete/delete';
 import { RolusuarioEditAdminRouted } from './component/rolusuario/edit-admin-routed/rolusuario-edit';
 import { CategoriaAdminDeletePage } from './page/categoria/admin/delete/delete';
 import { ClubAdminEditPage } from './page/club/admin/edit/edit';
-import { CarritoDeleteAdminRouted } from './component/carrito/delete-admin-routed/carrito-delete';
-import { ComentarioartDeleteAdminRouted } from './component/comentarioart/delete-admin-routed/delete-admin-routed';
-import { FacturaDeleteAdminRouted } from './component/factura/delete-admin-routed/factura-delete';
-import { FacturaEditAdminRouted } from './component/factura/edit-admin-routed/factura-edit';
-import { CarritoEditAdminRouted } from './component/carrito/edit-admin-routed/carrito-edit';
-import { CuotaEditAdminRouted } from './component/cuota/edit-admin-routed/cuota-edit';
-import { JugadorDeleteAdminRouted } from './component/jugador/delete-admin-routed/jugador-delete';
-import { TipoarticuloDeleteAdminRouted } from './component/tipoarticulo/delete-admin-routed/delete-admin-routed';
+import { CarritoAdminDeletePage } from './page/carrito/admin/delete/delete';
+import { ComentarioartAdminDeletePage } from './page/comentarioart/admin/delete/delete';
+import { FacturaAdminDeletePage } from './page/factura/admin/delete/delete';
+import { FacturaAdminEditPage } from './page/factura/admin/edit/edit';
+import { CarritoAdminEditPage } from './page/carrito/admin/edit/edit';
+import { CuotaAdminEditPage } from './page/cuota/admin/edit/edit';
+import { JugadorAdminDeletePage } from './page/jugador/admin/delete/delete';
+import { TipoarticuloAdminDeletePage } from './page/tipoarticulo/admin/delete/delete';
 import { TemporadaAdminPlistPage } from './page/temporada/admin/plist/plist';
 import { NoticiaAdminEditPage } from './page/noticia/admin/edit/edit';
 import { NoticiaAdminNewPage } from './page/noticia/admin/new/new';
 import { NoticiaAdminDeletePage } from './page/noticia/admin/delete/delete';
 import { ClubAdminNewPage } from './page/club/admin/new/new';
 import { ClubPlistTeamadminPage } from './page/club/teamadmin/plist/plist';
-import { CuotaDeleteAdminRouted } from './component/cuota/delete-admin-routed/cuota-delete';
+import { CuotaAdminDeletePage } from './page/cuota/admin/delete/delete';
 import { UsuarioEditAdminRouted } from './component/usuario/edit-admin-routed/usuario-edit';
 import { UsuarioNewAdminRouted } from './component/usuario/new-admin-routed/usuario-new';
 import { UsuarioDeleteAdminRouted } from './component/usuario/delete-admin-routed/usuario-delete';
-import { JugadorEditAdminRouted } from './component/jugador/edit-admin-routed/jugador-edit';
-import { CompraEditAdminRouted } from './component/compra/edit-admin-routed/compra-edit';
-import { CompraNewAdminRouted } from './component/compra/new-admin-routed/compra-new';
+import { JugadorAdminEditPage } from './page/jugador/admin/edit/edit';
+import { CompraAdminEditPage } from './page/compra/admin/edit/edit';
+import { CompraAdminNewPage } from './page/compra/admin/new/new';
 import { TemporadaAdminNewPage } from './page/temporada/admin/new/new';
 import { AdminGuard } from './guards/admin.guard';
 import { ClubAdminGuard } from './guards/club-admin.guard';
@@ -156,17 +156,16 @@ const protectedRoutes: Routes = [
   { path: 'liga/delete/:id', component: LigaAdminDeletePage, data: { allowClubAdmin: true } },
 
   { path: 'liga/edit/:id', component: LigaAdminEditPage, data: { allowClubAdmin: true } },
-  { path: 'articulo', component: ArticuloPlistAdminRouted, data: { allowClubAdmin: true } },
-  { path: 'articulo/teamadmin', component: ArticuloPlistTeamAdminRouted, canActivate: [ClubAdminGuard] },
-  { path: 'articulo/tipoarticulo/:id_tipoarticulo', component: ArticuloPlistAdminRouted, data: { allowClubAdmin: true } },
+  { path: 'articulo', component: ArticuloAdminPlistPage, data: { allowClubAdmin: true } },
+  { path: 'articulo/tipoarticulo/:id_tipoarticulo', component: ArticuloAdminPlistPage, data: { allowClubAdmin: true } },
   { path: 'usuario/:id', component: UsuarioViewRouted },
-  { path: 'articulo/new', component: ArticuloNewAdminRouted, data: { allowClubAdmin: true } },
+  { path: 'articulo/new', component: ArticuloAdminNewPage, data: { allowClubAdmin: true } },
 
-  { path: 'articulo/:tipoarticulo', component: ArticuloPlistAdminRouted, data: { allowClubAdmin: true } },
-  { path: 'articulo/view/:id', component: ArticuloViewAdminRouted, data: { allowClubAdmin: true } },
-  { path: 'articulo/delete/:id', component: ArticuloDeleteAdminRouted, data: { allowClubAdmin: true } },
+  { path: 'articulo/:tipoarticulo', component: ArticuloAdminPlistPage, data: { allowClubAdmin: true } },
+  { path: 'articulo/view/:id', component: ArticuloAdminViewPage, data: { allowClubAdmin: true } },
+  { path: 'articulo/delete/:id', component: ArticuloAdminDeletePage, data: { allowClubAdmin: true } },
 
-  { path: 'articulo/edit/:id', component: ArticuloEditAdminRouted, data: { allowClubAdmin: true } },
+  { path: 'articulo/edit/:id', component: ArticuloAdminEditPage, data: { allowClubAdmin: true } },
 
   { path: 'categoria', component: CategoriaAdminPlistPage },
   { path: 'categoria/temporada/:id_temporada', component: CategoriaAdminPlistPage, data: { allowClubAdmin: true } },
@@ -185,46 +184,42 @@ const protectedRoutes: Routes = [
 
   { path: 'partido/delete/:id', component: PartidoAdminDeletePage, data: { allowClubAdmin: true } },
 
-  { path: 'factura', component: FacturaPlistAdminRouted, data: { allowClubAdmin: true } },
-  { path: 'factura/teamadmin', component: FacturaPlistTeamAdminRouted, canActivate: [ClubAdminGuard] },
-  { path: 'factura/:usuario', component: FacturaPlistAdminRouted, data: { allowClubAdmin: true } },
-  { path: 'factura/view/:id', component: FacturaViewAdminRouted, data: { allowClubAdmin: true } },
-  { path: 'factura/usuario/:id_usuario', component: FacturaPlistAdminRouted, data: { allowClubAdmin: true } },
-  { path: 'factura/delete/:id', component: FacturaDeleteAdminRouted },
-  { path: 'factura/edit/:id', component: FacturaEditAdminRouted },
+  { path: 'factura', component: FacturaAdminPlistPage, data: { allowClubAdmin: true } },
+  { path: 'factura/:usuario', component: FacturaAdminPlistPage, data: { allowClubAdmin: true } },
+  { path: 'factura/view/:id', component: FacturaAdminViewPage, data: { allowClubAdmin: true } },
+  { path: 'factura/usuario/:id_usuario', component: FacturaAdminPlistPage, data: { allowClubAdmin: true } },
+  { path: 'factura/delete/:id', component: FacturaAdminDeletePage },
+  { path: 'factura/edit/:id', component: FacturaAdminEditPage },
 
-  { path: 'compra', component: CompraPlistAdminRouted, data: { allowClubAdmin: true } },
-  { path: 'compra/teamadmin', component: CompraPlistTeamAdminRouted, canActivate: [ClubAdminGuard] },
-  { path: 'compra/articulo/:id_articulo', component: CompraPlistAdminRouted, data: { allowClubAdmin: true } },
-  { path: 'compra/factura/:id_factura', component: CompraPlistAdminRouted, data: { allowClubAdmin: true } },
-  { path: 'compra/view/:id', component: CompraViewRouted, data: { allowClubAdmin: true } },
-  { path: 'compra/delete/:id', component: CompraDeleteAdminRouted },
-  { path: 'compra/edit/:id', component: CompraEditAdminRouted },
-  { path: 'compra/new', component: CompraNewAdminRouted },
+  { path: 'compra', component: CompraAdminPlistPage, data: { allowClubAdmin: true } },
+  { path: 'compra/articulo/:id_articulo', component: CompraAdminPlistPage, data: { allowClubAdmin: true } },
+  { path: 'compra/factura/:id_factura', component: CompraAdminPlistPage, data: { allowClubAdmin: true } },
+  { path: 'compra/view/:id', component: CompraAdminViewPage, data: { allowClubAdmin: true } },
+  { path: 'compra/delete/:id', component: CompraAdminDeletePage },
+  { path: 'compra/edit/:id', component: CompraAdminEditPage },
+  { path: 'compra/new', component: CompraAdminNewPage },
 
   { path: 'rolusuario', component: RolusuarioPlist },
   { path: 'rolusuario/new', component: RolusuarioNewAdminRouted },
   { path: 'rolusuario/view/:id', component: RolusuarioViewAdminRouted },
   { path: 'rolusuario/delete/:id', component: RolusuarioDeleteAdminRouted },
   { path: 'rolusuario/edit/:id', component: RolusuarioEditAdminRouted },
-  { path: 'tipoarticulo', component: TipoarticuloPlistAdminRouted },
-  { path: 'tipoarticulo/teamadmin', component: TipoarticuloPlistTeamAdminRouted, canActivate: [ClubAdminGuard] },
+  { path: 'tipoarticulo', component: TipoarticuloAdminPlistPage },
 
-  { path: 'tipoarticulo/club/:id_club', component: TipoarticuloPlistAdminRouted, data: { allowClubAdmin: true } },
-  { path: 'tipoarticulo/view/:id', component: TipoarticuloViewAdminRouted, data: { allowClubAdmin: true } },
-  { path: 'tipoarticulo/edit/:id', component: TipoarticuloEditAdminRouted, data: { allowClubAdmin: true } },
+  { path: 'tipoarticulo/club/:id_club', component: TipoarticuloAdminPlistPage, data: { allowClubAdmin: true } },
+  { path: 'tipoarticulo/view/:id', component: TipoarticuloAdminViewPage, data: { allowClubAdmin: true } },
+  { path: 'tipoarticulo/edit/:id', component: TipoarticuloAdminEditPage, data: { allowClubAdmin: true } },
 
-  { path: 'tipoarticulo/new', component: TipoarticuloNewAdminRouted, data: { allowClubAdmin: true } },
+  { path: 'tipoarticulo/new', component: TipoarticuloAdminNewPage, data: { allowClubAdmin: true } },
 
-  { path: 'jugador', component: JugadorPlist, data: { allowClubAdmin: true } },
-  { path: 'jugador/teamadmin', component: JugadorPlistTeamAdminRouted, canActivate: [ClubAdminGuard] },
-  { path: 'jugador/new', component: JugadorNewAdminRouted, data: { allowClubAdmin: true } },
-  { path: 'jugador/usuario/:id_usuario', component: JugadorPlist, data: { allowClubAdmin: true } },
-  { path: 'jugador/equipo/:id_equipo', component: JugadorPlist, data: { allowClubAdmin: true } },
-  { path: 'jugador/view/:id', component: JugadorViewRouted, data: { allowClubAdmin: true } },
-  { path: 'jugador/edit/:id', component: JugadorEditAdminRouted, data: { allowClubAdmin: true } },
-  { path: 'jugador/delete/:id', component: JugadorDeleteAdminRouted, data: { allowClubAdmin: true } },
-  { path: 'tipoarticulo/delete/:id', component: TipoarticuloDeleteAdminRouted, data: { allowClubAdmin: true } },
+  { path: 'jugador', component: JugadorAdminPlistPage, data: { allowClubAdmin: true } },
+  { path: 'jugador/new', component: JugadorAdminNewPage, data: { allowClubAdmin: true } },
+  { path: 'jugador/usuario/:id_usuario', component: JugadorAdminPlistPage, data: { allowClubAdmin: true } },
+  { path: 'jugador/equipo/:id_equipo', component: JugadorAdminPlistPage, data: { allowClubAdmin: true } },
+  { path: 'jugador/view/:id', component: JugadorAdminViewPage, data: { allowClubAdmin: true } },
+  { path: 'jugador/edit/:id', component: JugadorAdminEditPage, data: { allowClubAdmin: true } },
+  { path: 'jugador/delete/:id', component: JugadorAdminDeletePage, data: { allowClubAdmin: true } },
+  { path: 'tipoarticulo/delete/:id', component: TipoarticuloAdminDeletePage, data: { allowClubAdmin: true } },
   { path: 'noticia', component: NoticiaAdminPlistPage, pathMatch: 'full' },
   { path: 'noticia/teamadmin', component: NoticiaPlistTeamadminPage, canActivate: [ClubAdminGuard] },
   { path: 'noticia/club/:id_club', component: NoticiaAdminPlistPage, data: { allowClubAdmin: true } },
@@ -239,14 +234,14 @@ const protectedRoutes: Routes = [
   { path: 'club/view/:id', component: ClubAdminViewPage, data: { allowClubAdmin: true } },
   { path: 'club/delete/:id', component: ClubAdminDeletePage },
   { path: 'club/edit/:id', component: ClubAdminEditPage },
-  { path: 'cuota', component: CuotaPlistAdminRouted, data: { allowClubAdmin: true } },
-  { path: 'cuota/new', component: CuotaNewAdminRouted, data: { allowClubAdmin: true } },
+  { path: 'cuota', component: CuotaAdminPlistPage, data: { allowClubAdmin: true } },
+  { path: 'cuota/new', component: CuotaAdminNewPage, data: { allowClubAdmin: true } },
 
-  { path: 'cuota/equipo/:id_equipo', component: CuotaPlistAdminRouted, data: { allowClubAdmin: true } },
-  { path: 'cuota/view/:id', component: CuotaViewAdminRouted, data: { allowClubAdmin: true } },
-  { path: 'cuota/edit/:id', component: CuotaEditAdminRouted, data: { allowClubAdmin: true } },
+  { path: 'cuota/equipo/:id_equipo', component: CuotaAdminPlistPage, data: { allowClubAdmin: true } },
+  { path: 'cuota/view/:id', component: CuotaAdminViewPage, data: { allowClubAdmin: true } },
+  { path: 'cuota/edit/:id', component: CuotaAdminEditPage, data: { allowClubAdmin: true } },
 
-  { path: 'cuota/delete/:id', component: CuotaDeleteAdminRouted, data: { allowClubAdmin: true } },
+  { path: 'cuota/delete/:id', component: CuotaAdminDeletePage, data: { allowClubAdmin: true } },
 
   { path: 'tipousuario', component: TipousuarioPlistAdminRouted },
   { path: 'tipousuario/view/:id', component: TipousuarioViewAdminRouted },
@@ -262,14 +257,13 @@ const protectedRoutes: Routes = [
   { path: 'equipo/delete/:id', component: EquipoAdminDeletePage, data: { allowClubAdmin: true } },
 
   { path: 'equipo/usuario/:id_usuario', component: EquipoAdminPlistPage },
-  { path: 'carrito/new', component: CarritoNewAdminRouted },
-  { path: 'carrito', component: CarritoPlistAdminRouted },
-  { path: 'carrito/teamadmin', component: CarritoPlistTeamAdminRouted, canActivate: [ClubAdminGuard] },
-  { path: 'carrito/usuario/:id_usuario', component: CarritoPlistAdminRouted },
-  { path: 'carrito/articulo/:id_articulo', component: CarritoPlistAdminRouted },
-  { path: 'carrito/view/:id', component: CarritoViewAdminRouted },
-  { path: 'carrito/delete/:id', component: CarritoDeleteAdminRouted },
-  { path: 'carrito/edit/:id', component: CarritoEditAdminRouted },
+  { path: 'carrito/new', component: CarritoAdminNewPage },
+  { path: 'carrito', component: CarritoAdminPlistPage },
+  { path: 'carrito/usuario/:id_usuario', component: CarritoAdminPlistPage },
+  { path: 'carrito/articulo/:id_articulo', component: CarritoAdminPlistPage },
+  { path: 'carrito/view/:id', component: CarritoAdminViewPage },
+  { path: 'carrito/delete/:id', component: CarritoAdminDeletePage },
+  { path: 'carrito/edit/:id', component: CarritoAdminEditPage },
   { path: 'comentario', component: ComentarioAdminPlistPage, pathMatch: 'full' },
   { path: 'comentario/new', component: ComentarioAdminNewPage },
   { path: 'comentario/usuario/:id_usuario', component: ComentarioAdminPlistPage, data: { allowClubAdmin: true } },
@@ -277,15 +271,15 @@ const protectedRoutes: Routes = [
   { path: 'comentario/view/:id', component: ComentarioAdminViewPage, data: { allowClubAdmin: true } },
   { path: 'comentario/edit/:id', component: ComentarioAdminEditPage },
   { path: 'comentario/delete/:id', component: ComentarioAdminDeletePage },
-  { path: 'pago', component: PagoPlistComponent, data: { allowClubAdmin: true } },
-  { path: 'pago/new', component: PagoNewAdminRouted, data: { allowClubAdmin: true } },
+  { path: 'pago', component: PagoAdminPlistPage, data: { allowClubAdmin: true } },
+  { path: 'pago/new', component: PagoAdminNewPage, data: { allowClubAdmin: true } },
 
-  { path: 'pago/cuota/:id_cuota', component: PagoPlistComponent, data: { allowClubAdmin: true } },
-  { path: 'pago/jugador/:id_jugador', component: PagoPlistComponent, data: { allowClubAdmin: true } },
-  { path: 'pago/view/:id', component: PagoViewAdminRouted, data: { allowClubAdmin: true } },
-  { path: 'pago/edit/:id', component: PagoEditAdminRouted, data: { allowClubAdmin: true } },
+  { path: 'pago/cuota/:id_cuota', component: PagoAdminPlistPage, data: { allowClubAdmin: true } },
+  { path: 'pago/jugador/:id_jugador', component: PagoAdminPlistPage, data: { allowClubAdmin: true } },
+  { path: 'pago/view/:id', component: PagoAdminViewPage, data: { allowClubAdmin: true } },
+  { path: 'pago/edit/:id', component: PagoAdminEditPage, data: { allowClubAdmin: true } },
 
-  { path: 'pago/delete/:id', component: PagoDeleteAdminRouted, data: { allowClubAdmin: true } },
+  { path: 'pago/delete/:id', component: PagoAdminDeletePage, data: { allowClubAdmin: true } },
 
   { path: 'categoria/delete/:id', component: CategoriaAdminDeletePage, data: { allowClubAdmin: true } },
   { path: 'puntuacion', component: PuntuacionAdminPlistPage, data: { allowClubAdmin: true } },
@@ -295,14 +289,13 @@ const protectedRoutes: Routes = [
   { path: 'puntuacion/view/:id', component: PuntuacionAdminViewPage, data: { allowClubAdmin: true } },
   { path: 'puntuacion/edit/:id', component: PuntuacionAdminEditPage },
   { path: 'puntuacion/delete/:id', component: PuntuacionAdminDeletePage },
-  { path: 'comentarioart', component: ComentarioartPlistAdminRouted, data: { allowClubAdmin: true } },
-  { path: 'comentarioart/new', component: ComentarioartNewAdminRouted },
-  { path: 'comentarioart/articulo/:id_articulo', component: ComentarioartPlistAdminRouted, data: { allowClubAdmin: true } },
-  { path: 'comentarioart/usuario/:id_usuario', component: ComentarioartPlistAdminRouted, data: { allowClubAdmin: true } },
-  { path: 'comentarioart/view/:id', component: ComentarioartViewRouted, data: { allowClubAdmin: true } },
-  { path: 'comentarioart/edit/:id', component: ComentarioartEditAdminRouted },
-  { path: 'carrito/delete/:id', component: CarritoDeleteAdminRouted },
-  { path: 'comentarioart/delete/:id', component: ComentarioartDeleteAdminRouted },
+  { path: 'comentarioart', component: ComentarioartAdminPlistPage, data: { allowClubAdmin: true } },
+  { path: 'comentarioart/new', component: ComentarioartAdminNewPage },
+  { path: 'comentarioart/articulo/:id_articulo', component: ComentarioartAdminPlistPage, data: { allowClubAdmin: true } },
+  { path: 'comentarioart/usuario/:id_usuario', component: ComentarioartAdminPlistPage, data: { allowClubAdmin: true } },
+  { path: 'comentarioart/view/:id', component: ComentarioartAdminViewPage, data: { allowClubAdmin: true } },
+  { path: 'comentarioart/edit/:id', component: ComentarioartAdminEditPage },
+  { path: 'comentarioart/delete/:id', component: ComentarioartAdminDeletePage },
 ];
 
 export const routes: Routes = [
@@ -314,15 +307,15 @@ export const routes: Routes = [
   { path: 'liga/teamadmin', component: LigaTeamadminPlistPage, canActivate: [ClubAdminGuard] },
   { path: 'partido/teamadmin', component: PartidoTeamadminPlistPage, canActivate: [ClubAdminGuard] },
   { path: 'noticia/teamadmin', component: NoticiaPlistTeamadminPage, canActivate: [ClubAdminGuard] },
-  { path: 'articulo/teamadmin', component: ArticuloPlistTeamAdminRouted, canActivate: [ClubAdminGuard] },
-  { path: 'factura/teamadmin', component: FacturaPlistTeamAdminRouted, canActivate: [ClubAdminGuard] },
-  { path: 'cuota/teamadmin', component: CuotaPlistTeamAdminRouted, canActivate: [ClubAdminGuard] },
-  { path: 'jugador/teamadmin', component: JugadorPlistTeamAdminRouted, canActivate: [ClubAdminGuard] },
-  { path: 'pago/teamadmin', component: PagoPlistTeamAdminRouted, canActivate: [ClubAdminGuard] },
+  { path: 'articulo/teamadmin', component: ArticuloTeamadminPlistPage, canActivate: [ClubAdminGuard] },
+  { path: 'factura/teamadmin', component: FacturaTeamadminPlistPage, canActivate: [ClubAdminGuard] },
+  { path: 'cuota/teamadmin', component: CuotaTeamadminPlistPage, canActivate: [ClubAdminGuard] },
+  { path: 'jugador/teamadmin', component: JugadorTeamadminPlistPage, canActivate: [ClubAdminGuard] },
+  { path: 'pago/teamadmin', component: PagoTeamadminPlistPage, canActivate: [ClubAdminGuard] },
   { path: 'puntuacion/teamadmin', component: PuntuacionTeamadminPlistPage, canActivate: [ClubAdminGuard] },
-  { path: 'compra/teamadmin', component: CompraPlistTeamAdminRouted, canActivate: [ClubAdminGuard] },
-  { path: 'carrito/teamadmin', component: CarritoPlistTeamAdminRouted, canActivate: [ClubAdminGuard] },
+  { path: 'compra/teamadmin', component: CompraTeamadminPlistPage, canActivate: [ClubAdminGuard] },
+  { path: 'carrito/teamadmin', component: CarritoTeamadminPlistPage, canActivate: [ClubAdminGuard] },
   { path: 'comentario/teamadmin', component: ComentarioTeamadminPlistPage, canActivate: [ClubAdminGuard] },
-  { path: 'tipoarticulo/teamadmin', component: TipoarticuloPlistTeamAdminRouted, canActivate: [ClubAdminGuard] },
+  { path: 'tipoarticulo/teamadmin', component: TipoarticuloTeamadminPlistPage, canActivate: [ClubAdminGuard] },
   ...protectedRoutes.map((r) => ({ ...r, canActivate: [AdminGuard] })), 
 ];

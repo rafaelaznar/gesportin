@@ -1,6 +1,0 @@
-@import '../../shared/plist-styles.css';
-
-/* estilos mínimos adicionales */
-.table td, .table th {
-  vertical-align: middle;
-}

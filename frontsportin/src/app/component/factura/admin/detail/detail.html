@@ -1,0 +1,31 @@
+<div class="container py-3">
+  <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 border rounded bg-light p-2 mb-3">
+    <div>
+      <div class="text-uppercase small text-muted fw-semibold">Facturas</div>
+      <div class="fw-bold">Detalle de factura</div>
+      <div class="text-muted small">Panel administrativo</div>
+    </div>
+    <a class="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2" routerLink="/factura">
+      <i class="bi bi-arrow-left"></i>Volver
+    </a>
+  </div>
+
+  @if (loading()) {
+    <div class="row justify-content-center"><div class="col-lg-8 text-center py-3"><div class="spinner-border text-secondary" role="status"><span class="visually-hidden">Cargando...</span></div></div></div>
+  }
+
+  @if (error()) {
+    <div class="alert alert-danger">{{ error() }}</div>
+  }
+
+  @if (!loading() && !error() && oFactura()) {
+    <div class="card border">
+      <div class="card-body">
+        <div><strong>ID:</strong> {{ oFactura()?.id }}</div>
+        <div><strong>Fecha:</strong> {{ oFactura()?.fecha }}</div>
+        <div><strong>Usuario:</strong> <a [routerLink]="['/usuario/view', oFactura()?.usuario?.id]">{{ oFactura()?.usuario?.nombre }}</a></div>
+        <div><strong>Compras:</strong> {{ oFactura()?.compras }}</div>
+      </div>
+    </div>
+  }
+</div>
