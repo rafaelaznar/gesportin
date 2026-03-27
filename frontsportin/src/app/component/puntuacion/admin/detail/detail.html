@@ -1,0 +1,74 @@
+<div class="container py-3">
+  <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 border rounded bg-light p-2 mb-3">
+    <div>
+      <div class="text-uppercase small text-muted fw-semibold">Puntuaciones</div>
+      <div class="fw-bold">Detalle de puntuación</div>
+      <div class="text-muted small">Panel administrativo</div>
+    </div>
+    <a class="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2" routerLink="/puntuacion">
+      <i class="bi bi-arrow-left"></i>
+      Volver
+    </a>
+  </div>
+
+  @if (loading()) {
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="text-center py-3">
+          <div class="spinner-border text-secondary" role="status">
+            <span class="visually-hidden">Cargando...</span>
+          </div>
+          <p class="text-muted mt-2 mb-0">Cargando detalle...</p>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (error()) {
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="alert alert-danger d-flex align-items-center gap-2" role="alert">
+          <i class="bi bi-exclamation-triangle-fill"></i>
+          <span>{{ error() }}</span>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (!loading() && !error() && oPuntuacion()) {
+    <div class="row g-3">
+      <div class="col-lg-4">
+        <div class="card border">
+          <div class="card-header bg-light small text-uppercase fw-semibold">Información</div>
+          <div class="card-body p-2">
+            <div class="row g-1">
+              <div class="col-5 text-muted small text-uppercase">ID</div>
+              <div class="col-7 fw-semibold small">{{ oPuntuacion()?.id }}</div>
+              <div class="col-5 text-muted small text-uppercase">Puntuación</div>
+              <div class="col-7 fw-semibold small">{{ oPuntuacion()?.puntuacion }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-8">
+        <div class="card border">
+          <div class="card-header bg-light small text-uppercase fw-semibold">Relaciones</div>
+          <div class="card-body p-2">
+            <div class="row g-1">
+              <div class="col-5 text-muted small text-uppercase">Usuario</div>
+              <div class="col-7 fw-semibold small">
+                <a [routerLink]="['/usuario/view', oPuntuacion()?.usuario?.id]">{{ oPuntuacion()?.usuario?.nombre }}</a>
+              </div>
+            </div>
+            <div class="row g-1">
+              <div class="col-5 text-muted small text-uppercase">Noticia</div>
+              <div class="col-7 fw-semibold small">
+                <a [routerLink]="['/noticia/view', oPuntuacion()?.noticia?.id]">{{ oPuntuacion()?.noticia?.titulo }}</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>

@@ -1,0 +1,78 @@
+<div class="container my-2">
+  <div class="d-flex justify-content-center my-3">
+    <h1 class="mb-0"><i class="bi bi-play-fill me-2" aria-hidden="true"></i>Partidos</h1>
+  </div>
+
+  <div class="d-flex justify-content-between align-items-center gap-2 mb-3 flex-wrap">
+    <small class="text-muted">Total registros: {{ totalRecords() || 0 }}</small>
+    <a
+      *ngIf="!session.isClubAdmin()"
+      class="btn btn-primary"
+      [routerLink]="['/partido/new']"
+      role="button"
+      >
+      <i class="bi bi-plus-circle"></i>
+      <span class="d-none d-sm-inline">Crear partido</span>
+    </a>
+  </div>
+
+  <div class="mb-3">
+    <input
+      type="text"
+      class="form-control"
+      placeholder="Buscar por rival..."
+      (input)="onSearchDescripcion($any($event.target).value)"
+    />
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-striped table-bordered table-sm w-100">
+      <thead>
+        <tr>
+          <th scope="col" (click)="onOrder('id')" style="cursor: pointer; width: 8%">ID</th>
+          <th scope="col" (click)="onOrder('rival')" style="cursor: pointer; width: 25%">Rival</th>
+          <th scope="col" (click)="onOrder('local')" style="cursor: pointer; width: 12%">Local/Visitante</th>
+          <th scope="col" (click)="onOrder('resultado')" style="cursor: pointer; width: 20%">Resultado</th>
+          <th scope="col" (click)="onOrder('id_liga')" style="cursor: pointer; width: 20%">Liga</th>
+          <th scope="col" class="text-center" style="width: 15%">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (oPartido of oPage()?.content; track oPartido.id) {
+          <tr>
+            <th scope="row" class="text-center">{{ oPartido.id }}</th>
+            <td>{{ oPartido.rival }}</td>
+            <td>
+              @if (oPartido.local) {
+                <span class="badge bg-success">Local</span>
+              } @else {
+                <span class="badge bg-warning text-dark">Visitante</span>
+              }
+            </td>
+            <td>{{ oPartido.resultado }}</td>
+            <td>
+              <a [routerLink]="['/liga/view', oPartido.liga.id]">{{ oPartido.liga.nombre || 'N/A' }}</a>
+            </td>
+            <td class="text-center">
+              <app-botonera-actions-plist [id]="oPartido.id" strEntity="partido"></app-botonera-actions-plist>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  @if (totalRecords() > 0) {
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <app-paginacion
+        [numPage]="numPage()"
+        [numPages]="oPage()?.totalPages || 1"
+        (pageChange)="goToPage($event)"
+      ></app-paginacion>
+      <app-botonera-rpp
+        [numRpp]="numRpp()"
+        (rppChange)="onRppChange($event)"
+      ></app-botonera-rpp>
+    </div>
+  }
+</div>

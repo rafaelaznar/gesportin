@@ -1,0 +1,17 @@
+<div class="container my-4 edit-form">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-8">
+      <div class="form-card">
+        <header class="mb-4">
+          <h1 class="h3 mb-0">Nuevo comentario</h1>
+        </header>
+
+        <app-comentario-admin-form
+          [isEditMode]="false"
+          (formSuccess)="onFormSuccess()"
+          (formCancel)="onFormCancel()"
+        ></app-comentario-admin-form>
+      </div>
+    </div>
+  </div>
+</div>

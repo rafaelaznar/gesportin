@@ -1,0 +1,40 @@
+<form [formGroup]="puntuacionForm" (ngSubmit)="onSubmit()">
+  <div class="row mb-3">
+    <label class="col-form-label col-2">Valor (0-5)</label>
+    <div class="col-10">
+      <input type="number" formControlName="puntuacion" class="form-control" min="0" max="5" />
+      <div *ngIf="puntuacionControl?.invalid && (puntuacionControl?.dirty || puntuacionControl?.touched)" class="text-danger small">
+        <div *ngIf="puntuacionControl?.errors?.['required']">La puntuación es obligatoria.</div>
+        <div *ngIf="puntuacionControl?.errors?.['min']">La puntuación mínima es 0.</div>
+        <div *ngIf="puntuacionControl?.errors?.['max']">La puntuación máxima es 5.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <label class="col-form-label col-2">Usuario</label>
+    <div class="col-8">
+      <input class="form-control" [value]="selectedUsuario()?.nombre || ''" readonly />
+    </div>
+    <div class="col-2">
+      <button type="button" class="btn btn-outline-primary" (click)="openUsuarioFinderModal()">Seleccionar</button>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <label class="col-form-label col-2">Noticia</label>
+    <div class="col-8">
+      <input class="form-control" [value]="selectedNoticia()?.titulo || ''" readonly />
+    </div>
+    <div class="col-2">
+      <button type="button" class="btn btn-outline-primary" (click)="openNoticiaFinderModal()">Seleccionar</button>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12 d-flex justify-content-end gap-2">
+      <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancelar</button>
+      <button type="submit" class="btn btn-primary" [disabled]="submitting()">Guardar</button>
+    </div>
+  </div>
+</form>

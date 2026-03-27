@@ -1,0 +1,84 @@
+<div>
+  <form [formGroup]="partidoForm" (ngSubmit)="onSubmit()" novalidate>
+    <div class="mb-3">
+      <label for="id" class="form-label">ID</label>
+      <input id="id" type="text" class="form-control" formControlName="id" readonly />
+    </div>
+
+    <div class="mb-3">
+      <label for="rival" class="form-label">Rival <span class="text-danger">*</span></label>
+      <input
+        id="rival"
+        type="text"
+        class="form-control"
+        formControlName="rival"
+        [class.is-invalid]="rival?.invalid && rival?.touched"
+      />
+      @if (rival?.invalid && rival?.touched) {
+        <div class="invalid-feedback">
+          @if (rival?.errors?.['required']) { <span>Rival es obligatorio.</span> }
+          @if (rival?.errors?.['minlength']) { <span>Debe tener al menos 3 caracteres.</span> }
+          @if (rival?.errors?.['maxlength']) { <span>Máx 255 caracteres.</span> }
+        </div>
+      }
+    </div>
+
+    <div class="mb-3">
+      <label for="id_liga" class="form-label">Liga <span class="text-danger">*</span></label>
+      <select
+        id="id_liga"
+        class="form-select"
+        formControlName="id_liga"
+        [class.is-invalid]="id_liga?.invalid && id_liga?.touched"
+      >
+        <option [ngValue]="null">Selecciona liga</option>
+        @for (liga of ligas(); track liga.id) {
+          <option [value]="liga.id">{{ liga.nombre }} ({{ liga.id }})</option>
+        }
+      </select>
+      @if (id_liga?.invalid && id_liga?.touched) {
+        <div class="invalid-feedback">La liga es obligatoria.</div>
+      }
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Local/Visitante <span class="text-danger">*</span></label>
+      <select
+        class="form-select"
+        formControlName="local"
+        [class.is-invalid]="local?.invalid && local?.touched"
+      >
+        <option [value]="null">Selecciona condición</option>
+        <option [value]="1">Local</option>
+        <option [value]="0">Visitante</option>
+      </select>
+      @if (local?.invalid && local?.touched) {
+        <div class="invalid-feedback">Campo obligatorio.</div>
+      }
+    </div>
+
+    <div class="mb-3">
+      <label for="resultado" class="form-label">Resultado <span class="text-danger">*</span></label>
+      <input
+        id="resultado"
+        type="text"
+        class="form-control"
+        formControlName="resultado"
+        [class.is-invalid]="resultado?.invalid && resultado?.touched"
+      />
+      @if (resultado?.invalid && resultado?.touched) {
+        <div class="invalid-feedback">
+          @if (resultado?.errors?.['required']) { <span>El resultado es obligatorio.</span> }
+        </div>
+      }
+    </div>
+
+    <div class="d-flex justify-content-between">
+      <button type="button" class="btn btn-outline-secondary" (click)="onCancel()">Cancelar</button>
+      <button type="submit" class="btn btn-primary" [disabled]="submitting() || partidoForm.invalid">
+        @if (submitting()) { <span class="spinner-border spinner-border-sm me-2"></span> }
+        {{ isEditMode ? 'Guardar' : 'Crear' }}
+      </button>
+    </div>
+  </form>
+</div>
