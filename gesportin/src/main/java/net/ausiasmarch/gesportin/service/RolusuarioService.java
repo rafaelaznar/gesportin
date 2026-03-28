@@ -59,11 +59,13 @@ public class RolusuarioService {
     }
 
     public RolusuarioEntity create(RolusuarioEntity oRolusuarioEntity) {
+        oSessionService.requireAdmin();
         oRolusuarioEntity.setId(null);
         return oRolusuarioRepository.save(oRolusuarioEntity);
     }
 
     public RolusuarioEntity update(RolusuarioEntity oRolusuarioEntity) {
+        oSessionService.requireAdmin();
         RolusuarioEntity oRolusuarioExistente = oRolusuarioRepository.findById(oRolusuarioEntity.getId())
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Rol de usuario no encontrado con id: " + oRolusuarioEntity.getId()));
@@ -72,6 +74,7 @@ public class RolusuarioService {
     }
 
     public Long delete(Long id) {
+        oSessionService.requireAdmin();
         RolusuarioEntity oRolusuario = oRolusuarioRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Rolusuario no encontrado con id: " + id));
         oRolusuarioRepository.delete(oRolusuario);

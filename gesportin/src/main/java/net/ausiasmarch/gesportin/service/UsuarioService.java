@@ -64,7 +64,7 @@ public class UsuarioService {
     public UsuarioEntity get(Long id) {
         UsuarioEntity e = oUsuarioRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con id: " + id));
-        if (oSessionService.isEquipoAdmin()) {
+        if (oSessionService.isEquipoAdmin() || oSessionService.isUsuario()) {
             Long clubId = (e.getClub()!=null) ? e.getClub().getId() : null;
             oSessionService.checkSameClub(clubId);
         }
@@ -73,8 +73,8 @@ public class UsuarioService {
 
     public Page<UsuarioEntity> getPage(Pageable pageable, String nombre, String username, Long id_Tipousuario,
             Long id_Club, Long id_Rol) {
-        // equipo admins can only see users from their own club
-        if (oSessionService.isEquipoAdmin()) {
+        // equipo admins and regular users can only see users from their own club
+        if (oSessionService.isEquipoAdmin() || oSessionService.isUsuario()) {
             Long myClub = oSessionService.getIdClub();
             if (id_Club != null) {
                 // requested club filter must match own club
@@ -104,8 +104,8 @@ public class UsuarioService {
             result = oUsuarioRepository.findAll(pageable);
         }
 
-        // if equipo admin, filter out any user not belonging to club
-        if (oSessionService.isEquipoAdmin()) {
+        // if equipo admin or usuario, filter out any user not belonging to club
+        if (oSessionService.isEquipoAdmin() || oSessionService.isUsuario()) {
             Long myClub = oSessionService.getIdClub();
             if (myClub != null && result != null) {
                 java.util.List<UsuarioEntity> filtered = result.getContent().stream()
@@ -118,6 +118,7 @@ public class UsuarioService {
     }
 
     public UsuarioEntity create(UsuarioEntity oUsuarioEntity) {
+        oSessionService.denyUsuario();
         // equipo admins can create users of type "usuario" (tipousuario=3) but only in their own club
         if (oSessionService.isEquipoAdmin()) {
             Long myClub = oSessionService.getIdClub();
@@ -149,6 +150,7 @@ public class UsuarioService {
     }
 
     public UsuarioEntity update(UsuarioEntity oUsuarioEntity) {
+        oSessionService.denyUsuario();
         UsuarioEntity oUsuarioExistente = oUsuarioRepository.findById(oUsuarioEntity.getId())
                 .orElseThrow(
                         () -> new ResourceNotFoundException("Usuario no encontrado con id: " + oUsuarioEntity.getId()));
@@ -193,6 +195,7 @@ public class UsuarioService {
     }
 
     public Long delete(Long id) {
+        oSessionService.denyUsuario();
         UsuarioEntity oUsuario = oUsuarioRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con id: " + id));
 

@@ -75,15 +75,9 @@ public class FacturaService {
             throw new UnauthorizedException("Acceso denegado: equipo‑admin no puede crear facturas");
         }
         if (oSessionService.isUsuario()) {
-            Long currentUserId = oSessionService.getIdUsuario();
-            if (oFacturaEntity.getUsuario() != null && oFacturaEntity.getUsuario().getId() != null
-                    && !oFacturaEntity.getUsuario().getId().equals(currentUserId)) {
-                throw new UnauthorizedException("Acceso denegado: solo puede crear facturas para su usuario");
-            }
-            oFacturaEntity.setUsuario(oUsuarioService.get(currentUserId));
-        } else {
-            oFacturaEntity.setUsuario(oUsuarioService.get(oFacturaEntity.getUsuario().getId()));
+            throw new UnauthorizedException("Acceso denegado: utilice el proceso de compra para generar facturas");
         }
+        oFacturaEntity.setUsuario(oUsuarioService.get(oFacturaEntity.getUsuario().getId()));
         oFacturaEntity.setId(null);
         oFacturaEntity.setFecha(LocalDateTime.now());
         return oFacturaRepository.save(oFacturaEntity);
@@ -93,18 +87,13 @@ public class FacturaService {
         if (oSessionService.isEquipoAdmin()) {
             throw new UnauthorizedException("Acceso denegado: equipo‑admin no puede modificar facturas");
         }
+        if (oSessionService.isUsuario()) {
+            throw new UnauthorizedException("Acceso denegado: no puede modificar facturas");
+        }
         FacturaEntity oFacturaExistente = oFacturaRepository.findById(oFacturaEntity.getId())
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Factura no encontrado con id: " + oFacturaEntity.getId()));
-        if (oSessionService.isUsuario()) {
-            Long currentUserId = oSessionService.getIdUsuario();
-            if (!currentUserId.equals(oFacturaExistente.getUsuario().getId())) {
-                throw new UnauthorizedException("Acceso denegado: solo puede modificar sus propias facturas");
-            }
-            oFacturaExistente.setUsuario(oUsuarioService.get(currentUserId));
-        } else {
-            oFacturaExistente.setUsuario(oUsuarioService.get(oFacturaEntity.getUsuario().getId()));
-        }
+        oFacturaExistente.setUsuario(oUsuarioService.get(oFacturaEntity.getUsuario().getId()));
         oFacturaExistente.setFecha(oFacturaEntity.getFecha());
         return oFacturaRepository.save(oFacturaExistente);
     }
@@ -113,14 +102,11 @@ public class FacturaService {
         if (oSessionService.isEquipoAdmin()) {
             throw new UnauthorizedException("Acceso denegado: equipo‑admin no puede borrar facturas");
         }
+        if (oSessionService.isUsuario()) {
+            throw new UnauthorizedException("Acceso denegado: no puede borrar facturas");
+        }
         FacturaEntity oFactura = oFacturaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Factura no encontrado con id: " + id));
-        if (oSessionService.isUsuario()) {
-            Long currentUserId = oSessionService.getIdUsuario();
-            if (!currentUserId.equals(oFactura.getUsuario().getId())) {
-                throw new UnauthorizedException("Acceso denegado: solo puede borrar sus propias facturas");
-            }
-        }
         oFacturaRepository.delete(oFactura);
         return id;
     }

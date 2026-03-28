@@ -44,21 +44,34 @@ En gesportin, los perfiles y permisos se gestionan a través de roles. Cada rol 
   * No tiene permisos de ningún tipo para gestionar nada de otros clubes.
 
 ### 3. **Usuario**
-* (tabla: tipousuario, id:3) 
+* (tabla: tipousuario, id:3 Perfil "Usuario") 
 * Puede ver:
+  * Roles de usuario
+  * Tipos de usuario
   * Los datos de su club.
   * Las temporadas de su club,
   * Las categorías de cada temporada de su club,
   * Los equipos de cada categoría de su club,
   * Las ligas en las que participan los equipos de su club,
   * Los partidos que se juegan dentro de las ligas de su club,
-  * Las cuotas que pagan los jugadores de su club,
+  * Las cuotas que pagan los jugadores de equipo en su club,
   * Las noticias de su club,
+  * La media de las puntuaciones de las noticias de su club,
   * Los tipos de articulo de su club,
   * Los artículos de su club,  
-* Puede crear y modificar sus comentarios de noticias de su club.
-* Puede crear y modificar sus puntuaciones de noticias de su club.
-* Puede crear y modificar sus comentarios de artículos de tipos de articulos de su club.
-* Puede introducir productos de su club en su carrito de la compra.
-* Puede comprar productos de su carrito de la compra. Si lo hace, se pasan los productos de su carrito a compra y se crea una factura asociada al usuario con esos productos.
+  * Sus facturas con las compras.
+  * Los datos de usuario de usuarios de su club excepto el password.
+* Puede crear y modificar: 
+  * sólo sus comentarios de las noticias de su club.
+  * sólo sus puntuaciones de sus noticias de su club.
+  * sólo sus comentarios de artículos sólo de los tipos de articulos de su club.
+* Puede introducir, borrar o modificar productos de su club en su carrito de la compra, lo que equivale a que tiene que poder escribir, borrar o modificar productos de su club en la tabla de carrito de la compra.
+* Puede comprar productos de su carrito de la compra. Para comprar se debe ejeutar el siguiente proceso:
+  1 El sistema comprueba que el usuario tiene productos en su carrito de la compra.
+  2 Si el usuario no tiene productos en su carrito de la compra, se emite una excepción  indicando que no se pueden realizar compras sin productos en el carrito.
+  3 Si el usuario tiene productos en su carrito de la compra, se procede a realizar la compra.
+    4 Se crea una nueva factura con id=x asociada al usuario en la fecha y hora actuales.
+    5 Se copian las referencias de los artículos y cantidades a la tabla compra, incluyendo el precio actual de cada artículo en el momento de la compra y se vinculan todas las líneas creadas con el id=x de la factura creada en el paso anterior.
+    6 Se borran los registros del carrito de la compra del usuario.
 * No tiene permisos para ver nada de otros clubes.
+* No tiene permisos para crear modificar o borrar fuera de lo mencionado anteriormente.

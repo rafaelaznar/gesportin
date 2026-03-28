@@ -32,7 +32,7 @@ public class CategoriaService {
     public CategoriaEntity get(Long id) {
         CategoriaEntity e = oCategoriaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Categoria no encontrado con id: " + id));
-        if (oSessionService.isEquipoAdmin()) {
+        if (oSessionService.isEquipoAdmin() || oSessionService.isUsuario()) {
             Long clubId = e.getTemporada().getClub().getId();
             oSessionService.checkSameClub(clubId);
         }

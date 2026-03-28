@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import net.ausiasmarch.gesportin.entity.CarritoEntity;
+import net.ausiasmarch.gesportin.entity.FacturaEntity;
 import net.ausiasmarch.gesportin.service.CarritoService;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 3600)
@@ -44,6 +45,11 @@ public class CarritoApi {
     @DeleteMapping("/{id}")
     public ResponseEntity<Long> delete(@PathVariable Long id) {
         return ResponseEntity.ok(oCarritoService.delete(id));
+    }
+
+    @PostMapping("/comprar")
+    public ResponseEntity<FacturaEntity> comprar() {
+        return ResponseEntity.ok(oCarritoService.comprar());
     }
 
     @PostMapping("/fill/{cantidad}")

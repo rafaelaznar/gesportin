@@ -106,24 +106,11 @@ public class CompraService {
         if (oSessionService.isEquipoAdmin()) {
             throw new UnauthorizedException("Acceso denegado: equipo‑admin no puede crear compras");
         }
-        // regular usuarios can only create compras for their own factura and club
         if (oSessionService.isUsuario()) {
-            Long currentUserId = oSessionService.getIdUsuario();
-            var factura = oFacturaService.get(oCompraEntity.getFactura().getId());
-            if (!currentUserId.equals(factura.getUsuario().getId())) {
-                throw new UnauthorizedException("Acceso denegado: solo puede crear compras para su propia factura");
-            }
-            Long userClub = oSessionService.getIdClub();
-            Long articuloClub = oArticuloService.get(oCompraEntity.getArticulo().getId()).getTipoarticulo().getClub().getId();
-            if (!userClub.equals(articuloClub)) {
-                throw new UnauthorizedException("Acceso denegado: solo puede comprar artículos de su club");
-            }
-            oCompraEntity.setFactura(factura);
-            oCompraEntity.setArticulo(oArticuloService.get(oCompraEntity.getArticulo().getId()));
-        } else {
-            oCompraEntity.setArticulo(oArticuloService.get(oCompraEntity.getArticulo().getId()));
-            oCompraEntity.setFactura(oFacturaService.get(oCompraEntity.getFactura().getId()));
+            throw new UnauthorizedException("Acceso denegado: utilice el proceso de compra del carrito");
         }
+        oCompraEntity.setArticulo(oArticuloService.get(oCompraEntity.getArticulo().getId()));
+        oCompraEntity.setFactura(oFacturaService.get(oCompraEntity.getFactura().getId()));
         oCompraEntity.setId(null);
         return oCompraRepository.save(oCompraEntity);
     }
@@ -132,20 +119,12 @@ public class CompraService {
         if (oSessionService.isEquipoAdmin()) {
             throw new UnauthorizedException("Acceso denegado: equipo‑admin no puede modificar compras");
         }
+        if (oSessionService.isUsuario()) {
+            throw new UnauthorizedException("Acceso denegado: no puede modificar compras directamente");
+        }
         CompraEntity oCompraExistente = oCompraRepository.findById(oCompraEntity.getId())
                 .orElseThrow(
                         () -> new ResourceNotFoundException("Compra no encontrada con id: " + oCompraEntity.getId()));
-        if (oSessionService.isUsuario()) {
-            Long currentUserId = oSessionService.getIdUsuario();
-            if (!currentUserId.equals(oCompraExistente.getFactura().getUsuario().getId())) {
-                throw new UnauthorizedException("Acceso denegado: solo puede modificar sus propias compras");
-            }
-            Long userClub = oSessionService.getIdClub();
-            Long articuloClub = oArticuloService.get(oCompraEntity.getArticulo().getId()).getTipoarticulo().getClub().getId();
-            if (!userClub.equals(articuloClub)) {
-                throw new UnauthorizedException("Acceso denegado: solo puede usar artículos de su club");
-            }
-        }
         oCompraExistente.setCantidad(oCompraEntity.getCantidad());
         oCompraExistente.setPrecio(oCompraEntity.getPrecio());
         oCompraExistente.setArticulo(oArticuloService.get(oCompraEntity.getArticulo().getId()));
@@ -157,19 +136,11 @@ public class CompraService {
         if (oSessionService.isEquipoAdmin()) {
             throw new UnauthorizedException("Acceso denegado: equipo‑admin no puede borrar compras");
         }
+        if (oSessionService.isUsuario()) {
+            throw new UnauthorizedException("Acceso denegado: no puede borrar compras directamente");
+        }
         CompraEntity oCompra = oCompraRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Compra no encontrada con id: " + id));
-        if (oSessionService.isUsuario()) {
-            Long currentUserId = oSessionService.getIdUsuario();
-            if (!currentUserId.equals(oCompra.getFactura().getUsuario().getId())) {
-                throw new UnauthorizedException("Acceso denegado: solo puede borrar sus propias compras");
-            }
-            Long userClub = oSessionService.getIdClub();
-            Long articuloClub = oCompra.getArticulo().getTipoarticulo().getClub().getId();
-            if (!userClub.equals(articuloClub)) {
-                throw new UnauthorizedException("Acceso denegado: solo puede borrar compras de su club");
-            }
-        }
         oCompraRepository.delete(oCompra);
         return id;
     }

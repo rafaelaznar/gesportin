@@ -1,20 +1,36 @@
 package net.ausiasmarch.gesportin.service;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import net.ausiasmarch.gesportin.entity.CarritoEntity;
+import net.ausiasmarch.gesportin.entity.CompraEntity;
+import net.ausiasmarch.gesportin.entity.FacturaEntity;
+import net.ausiasmarch.gesportin.entity.UsuarioEntity;
+import net.ausiasmarch.gesportin.exception.GeneralException;
 import net.ausiasmarch.gesportin.exception.ResourceNotFoundException;
 import net.ausiasmarch.gesportin.exception.UnauthorizedException;
 import net.ausiasmarch.gesportin.repository.CarritoRepository;
+import net.ausiasmarch.gesportin.repository.CompraRepository;
+import net.ausiasmarch.gesportin.repository.FacturaRepository;
 
 @Service
 public class CarritoService {
 
     @Autowired
     private CarritoRepository oCarritoRepository;
+
+    @Autowired
+    private FacturaRepository oFacturaRepository;
+
+    @Autowired
+    private CompraRepository oCompraRepository;
 
     @Autowired
     private AleatorioService oAleatorioService;
@@ -144,6 +160,33 @@ public class CarritoService {
         }
         oCarritoRepository.delete(carrito);
         return id;
+    }
+
+    @Transactional
+    public FacturaEntity comprar() {
+        if (!oSessionService.isUsuario()) {
+            throw new UnauthorizedException("Acceso denegado: solo los usuarios pueden realizar compras");
+        }
+        Long currentUserId = oSessionService.getIdUsuario();
+        List<CarritoEntity> items = oCarritoRepository.findByUsuarioId(currentUserId);
+        if (items == null || items.isEmpty()) {
+            throw new GeneralException("No se pueden realizar compras sin productos en el carrito");
+        }
+        UsuarioEntity usuario = oUsuarioService.get(currentUserId);
+        FacturaEntity factura = new FacturaEntity();
+        factura.setUsuario(usuario);
+        factura.setFecha(LocalDateTime.now());
+        factura = oFacturaRepository.save(factura);
+        for (CarritoEntity item : items) {
+            CompraEntity compra = new CompraEntity();
+            compra.setArticulo(item.getArticulo());
+            compra.setCantidad(item.getCantidad());
+            compra.setPrecio(item.getArticulo().getPrecio().doubleValue());
+            compra.setFactura(factura);
+            oCompraRepository.save(compra);
+        }
+        oCarritoRepository.deleteAll(items);
+        return factura;
     }
 
     public Long empty() {

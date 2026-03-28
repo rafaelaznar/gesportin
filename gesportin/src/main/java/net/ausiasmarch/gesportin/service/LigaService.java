@@ -38,7 +38,7 @@ public class LigaService {
     public LigaEntity get(Long id) {
         LigaEntity e = oLigaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Liga no encontrado con id: " + id));
-        if (oSessionService.isEquipoAdmin()) {
+        if (oSessionService.isEquipoAdmin() || oSessionService.isUsuario()) {
             Long clubId = e.getEquipo().getCategoria().getTemporada().getClub().getId();
             oSessionService.checkSameClub(clubId);
         }

@@ -33,10 +33,9 @@ public class PagoService {
     public PagoEntity get(Long id) {
         PagoEntity e = oPagoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Pago no encontrado con id: " + id));
-        if (oSessionService.isEquipoAdmin()) {
+        if (oSessionService.isEquipoAdmin() || oSessionService.isUsuario()) {
             Long clubCuota = e.getCuota().getEquipo().getCategoria().getTemporada().getClub().getId();
             Long clubJugador = e.getJugador().getUsuario().getClub().getId();
-            // both should match and equal user's club
             oSessionService.checkSameClub(clubCuota);
             oSessionService.checkSameClub(clubJugador);
         }
@@ -44,7 +43,7 @@ public class PagoService {
     }
 
     public Page<PagoEntity> getPage(Pageable oPageable, Long idCuota, Long idJugador) {
-        if (oSessionService.isEquipoAdmin()) {
+        if (oSessionService.isEquipoAdmin() || oSessionService.isUsuario()) {
             Long myClub = oSessionService.getIdClub();
             if (idCuota != null) {
                 Long clubC = oCuotaService.get(idCuota).getEquipo().getCategoria().getTemporada().getClub().getId();
@@ -72,6 +71,7 @@ public class PagoService {
     }
 
     public PagoEntity create(PagoEntity oPagoEntity) {
+        oSessionService.denyUsuario();
         if (oSessionService.isEquipoAdmin()) {
             Long clubC = oCuotaService.get(oPagoEntity.getCuota().getId())
                     .getEquipo().getCategoria().getTemporada().getClub().getId();
@@ -88,6 +88,7 @@ public class PagoService {
     }
 
     public PagoEntity update(PagoEntity oPagoEntity) {
+        oSessionService.denyUsuario();
         PagoEntity oPagoExistente = oPagoRepository.findById(oPagoEntity.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Pago no encontrado con id: " + oPagoEntity.getId()));
         if (oSessionService.isEquipoAdmin()) {
@@ -110,6 +111,7 @@ public class PagoService {
     }
 
     public Long delete(Long id) {
+        oSessionService.denyUsuario();
         PagoEntity oPago = oPagoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Pago no encontrado con id: " + id));
         if (oSessionService.isEquipoAdmin()) {

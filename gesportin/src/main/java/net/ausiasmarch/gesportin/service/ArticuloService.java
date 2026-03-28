@@ -69,8 +69,13 @@ public class ArticuloService {
                     throw new UnauthorizedException("Acceso denegado: solo articulos de su club");
                 }
             }
-            if ((descripcion == null || descripcion.isEmpty()) && id_tipoarticulo == null) {
-                return oArticuloRepository.findByTipoarticuloClubId(myClub, pageable);
+            if (descripcion != null && !descripcion.isEmpty() && id_tipoarticulo == null) {
+                return oArticuloRepository.findByDescripcionContainingIgnoreCaseAndTipoarticuloClubId(descripcion, myClub, pageable);
+            }
+            if (descripcion == null || descripcion.isEmpty()) {
+                if (id_tipoarticulo == null) {
+                    return oArticuloRepository.findByTipoarticuloClubId(myClub, pageable);
+                }
             }
         }
         if (descripcion != null && !descripcion.isEmpty()) {

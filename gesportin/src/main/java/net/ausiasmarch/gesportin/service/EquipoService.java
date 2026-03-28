@@ -33,7 +33,7 @@ public class EquipoService {
     public EquipoEntity get(Long id) {
         EquipoEntity e = oEquipoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Equipo no encontrado con id: " + id));
-        if (oSessionService.isEquipoAdmin()) {
+        if (oSessionService.isEquipoAdmin() || oSessionService.isUsuario()) {
             Long clubId = e.getCategoria().getTemporada().getClub().getId();
             oSessionService.checkSameClub(clubId);
         }

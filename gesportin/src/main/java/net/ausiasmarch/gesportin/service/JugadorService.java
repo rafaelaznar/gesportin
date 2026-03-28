@@ -64,7 +64,7 @@ public class JugadorService {
     public JugadorEntity get(Long id) {
         JugadorEntity e = oJugadorRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Jugador no encontrado con id: " + id));
-        if (oSessionService.isEquipoAdmin()) {
+        if (oSessionService.isEquipoAdmin() || oSessionService.isUsuario()) {
             Long clubUsuario = e.getUsuario().getClub().getId();
             Long clubEquipo = e.getEquipo().getCategoria().getTemporada().getClub().getId();
             oSessionService.checkSameClub(clubUsuario);
@@ -79,7 +79,7 @@ public class JugadorService {
             Long idUsuario,
             Long idEquipo) {
 
-        if (oSessionService.isEquipoAdmin()) {
+        if (oSessionService.isEquipoAdmin() || oSessionService.isUsuario()) {
             Long myClub = oSessionService.getIdClub();
             if (idUsuario != null) {
                 Long clubUsr = oUsuarioService.get(idUsuario).getClub().getId();
@@ -94,9 +94,6 @@ public class JugadorService {
                 }
             }
             if ((posicion == null || posicion.isEmpty()) && idUsuario == null && idEquipo == null) {
-                // no filter: restrict to club
-                // combine both user-club and equipo-club results by using one query then filter? easiest is to use equipo query and/or user query or run union
-                // for simplicity, only use equipo-based query since every jugador is assigned a equipo
                 return oJugadorRepository.findByEquipoCategoriaTemporadaClubId(myClub, pageable);
             }
         }
@@ -113,6 +110,7 @@ public class JugadorService {
     }
 
     public JugadorEntity create(JugadorEntity oJugadorEntity) {
+        oSessionService.denyUsuario();
         if (oSessionService.isEquipoAdmin()) {
             Long clubUsr = oUsuarioService.get(oJugadorEntity.getUsuario().getId()).getClub().getId();
             Long clubEq = oEquipoService.get(oJugadorEntity.getEquipo().getId())
@@ -128,6 +126,7 @@ public class JugadorService {
     }
 
     public JugadorEntity update(JugadorEntity oJugadorEntity) {
+        oSessionService.denyUsuario();
         JugadorEntity oJugadorExistente = oJugadorRepository.findById(oJugadorEntity.getId())
                 .orElseThrow(
                         () -> new ResourceNotFoundException("Jugador no encontrado con id: " + oJugadorEntity.getId()));
@@ -152,6 +151,7 @@ public class JugadorService {
     }
 
     public Long delete(Long id) {
+        oSessionService.denyUsuario();
         JugadorEntity oJugador = oJugadorRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Jugador no encontrado con id: " + id));
         if (oSessionService.isEquipoAdmin()) {

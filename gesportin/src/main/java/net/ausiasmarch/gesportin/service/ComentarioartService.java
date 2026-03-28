@@ -53,7 +53,7 @@ public class ComentarioartService {
     public ComentarioartEntity get(Long id) {
         ComentarioartEntity e = oComentarioartRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Comentarioart no encontrado con id: " + id));
-        if (oSessionService.isEquipoAdmin()) {
+        if (oSessionService.isEquipoAdmin() || oSessionService.isUsuario()) {
             Long clubId = e.getArticulo().getTipoarticulo().getClub().getId();
             oSessionService.checkSameClub(clubId);
         }
@@ -61,7 +61,7 @@ public class ComentarioartService {
     }
 
     public Page<ComentarioartEntity> getPage(Pageable oPageable, String contenido, Long id_articulo, Long id_usuario) {
-        if (oSessionService.isEquipoAdmin()) {
+        if (oSessionService.isEquipoAdmin() || oSessionService.isUsuario()) {
             Long myClub = oSessionService.getIdClub();
             if (id_articulo != null) {
                 Long clubArt = oArticuloService.get(id_articulo).getTipoarticulo().getClub().getId();
@@ -95,9 +95,19 @@ public class ComentarioartService {
         if (oSessionService.isEquipoAdmin()) {
             throw new UnauthorizedException("Acceso denegado: no puede gestionar comentarios");
         }
+        if (oSessionService.isUsuario()) {
+            Long currentUserId = oSessionService.getIdUsuario();
+            oComentarioartEntity.setUsuario(oUsuarioService.get(currentUserId));
+            Long userClub = oSessionService.getIdClub();
+            Long articuloClub = oArticuloService.get(oComentarioartEntity.getArticulo().getId()).getTipoarticulo().getClub().getId();
+            if (!userClub.equals(articuloClub)) {
+                throw new UnauthorizedException("Acceso denegado: solo puede comentar artículos de su club");
+            }
+        } else {
+            oComentarioartEntity.setUsuario(oUsuarioService.get(oComentarioartEntity.getUsuario().getId()));
+        }
         oComentarioartEntity.setId(null);
         oComentarioartEntity.setArticulo(oArticuloService.get(oComentarioartEntity.getArticulo().getId()));
-        oComentarioartEntity.setUsuario(oUsuarioService.get(oComentarioartEntity.getUsuario().getId()));
         return oComentarioartRepository.save(oComentarioartEntity);
     }
 
@@ -108,9 +118,22 @@ public class ComentarioartService {
         ComentarioartEntity oComentarioartExistente = oComentarioartRepository.findById(oComentarioartEntity.getId())
                 .orElseThrow(() -> new ResourceNotFoundException(
                 "Comentarioart no encontrado con id: " + oComentarioartEntity.getId()));
+        if (oSessionService.isUsuario()) {
+            Long currentUserId = oSessionService.getIdUsuario();
+            if (!currentUserId.equals(oComentarioartExistente.getUsuario().getId())) {
+                throw new UnauthorizedException("Acceso denegado: solo puede modificar sus propios comentarios");
+            }
+            Long userClub = oSessionService.getIdClub();
+            Long articuloClub = oArticuloService.get(oComentarioartEntity.getArticulo().getId()).getTipoarticulo().getClub().getId();
+            if (!userClub.equals(articuloClub)) {
+                throw new UnauthorizedException("Acceso denegado: solo puede comentar artículos de su club");
+            }
+            oComentarioartExistente.setUsuario(oUsuarioService.get(currentUserId));
+        } else {
+            oComentarioartExistente.setUsuario(oUsuarioService.get(oComentarioartEntity.getUsuario().getId()));
+        }
         oComentarioartExistente.setContenido(oComentarioartEntity.getContenido());
         oComentarioartExistente.setArticulo(oArticuloService.get(oComentarioartEntity.getArticulo().getId()));
-        oComentarioartExistente.setUsuario(oUsuarioService.get(oComentarioartEntity.getUsuario().getId()));
         return oComentarioartRepository.save(oComentarioartExistente);
     }
 
@@ -120,6 +143,12 @@ public class ComentarioartService {
         }
         ComentarioartEntity oComentarioart = oComentarioartRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Comentarioart no encontrado con id: " + id));
+        if (oSessionService.isUsuario()) {
+            Long currentUserId = oSessionService.getIdUsuario();
+            if (!currentUserId.equals(oComentarioart.getUsuario().getId())) {
+                throw new UnauthorizedException("Acceso denegado: solo puede eliminar sus propios comentarios");
+            }
+        }
         oComentarioartRepository.delete(oComentarioart);
         return id;
     }

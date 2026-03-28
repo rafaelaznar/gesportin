@@ -1,5 +1,7 @@
 package net.ausiasmarch.gesportin.repository;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -7,6 +9,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import net.ausiasmarch.gesportin.entity.CarritoEntity;
 
 public interface CarritoRepository extends JpaRepository<CarritoEntity, Long> {
+
+    List<CarritoEntity> findByUsuarioId(Long idUsuario);
 
     Page<CarritoEntity> findByUsuarioId(Long idUsuario, Pageable pageable);
 
