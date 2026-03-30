@@ -138,9 +138,9 @@
                         </td>
                         <td>
                           @if (isDialogMode()) {
-                            {{ oPago.jugador.usuario.nombre || 'N/A' }}
+                            {{ oPago.jugador.usuario.nombre }} {{ oPago.jugador.usuario.apellido1 }} {{ oPago.jugador.usuario.apellido2 }}
                           } @else {
-                            <a [routerLink]="['/jugador/view', oPago.jugador.id]">{{ oPago.jugador.usuario.nombre || 'N/A' }}</a>
+                            <a [routerLink]="['/jugador/view', oPago.jugador.id]">{{ oPago.jugador.usuario.nombre }} {{ oPago.jugador.usuario.apellido1 }} {{ oPago.jugador.usuario.apellido2 }}</a>
                             <a class="btn btn-warning btn-sm ms-2 float-end" [routerLink]="[session.isClubAdmin() ? '/pago/teamadmin/jugador' : '/pago/jugador', oPago.jugador.id]" role="button" title="Filtrar por jugador"><i class="bi bi-funnel-fill" aria-hidden="true"></i></a>
                           }
                         </td>

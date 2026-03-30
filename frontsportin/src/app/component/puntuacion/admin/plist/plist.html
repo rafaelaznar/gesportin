@@ -110,9 +110,9 @@
                           <td>{{ p.puntuacion }}</td>
                           <td>
                             @if (isDialogMode()) {
-                              {{ p.usuario.nombre }}
+                              {{ p.usuario.nombre }} {{ p.usuario.apellido1 }} {{ p.usuario.apellido2 }}
                             } @else {
-                              <a [routerLink]="['/usuario/view', p.usuario.id]">{{ p.usuario.nombre }}</a>
+                              <a [routerLink]="['/usuario/view', p.usuario.id]">{{ p.usuario.nombre }} {{ p.usuario.apellido1 }} {{ p.usuario.apellido2 }}</a>
                               <a class="btn btn-warning btn-sm ms-2 float-end" [routerLink]="['/puntuacion/usuario', p.usuario.id]" role="button" title="Filtrar por usuario"><i class="bi bi-funnel-fill" aria-hidden="true"></i></a>
                             }
                           </td>

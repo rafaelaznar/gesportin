@@ -33,7 +33,7 @@
       >
         <option [ngValue]="null">Selecciona jugador</option>
         @for (jugador of jugadores(); track jugador.id) {
-          <option [value]="jugador.id">{{ jugador.usuario.nombre }} ({{ jugador.id }})</option>
+          <option [value]="jugador.id">{{ jugador.usuario.nombre }} {{ jugador.usuario.apellido1 }} {{ jugador.usuario.apellido2 }} ({{ jugador.id }})</option>
         }
       </select>
       @if (id_jugador?.invalid && id_jugador?.touched) {

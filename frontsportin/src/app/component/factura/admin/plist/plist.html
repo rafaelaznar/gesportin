@@ -111,9 +111,9 @@
                         <td>{{ oFactura.fecha }}</td>
                         <td>
                           @if (isDialogMode()) {
-                            {{ oFactura.usuario.nombre || 'N/A' }}
+                            {{ oFactura.usuario.nombre }} {{ oFactura.usuario.apellido1 }} {{ oFactura.usuario.apellido2 }}
                           } @else {
-                            <a [routerLink]="['/usuario/view', oFactura.usuario.id]">{{ oFactura.usuario.nombre || 'N/A' }}</a>
+                            <a [routerLink]="['/usuario/view', oFactura.usuario.id]">{{ oFactura.usuario.nombre }} {{ oFactura.usuario.apellido1 }} {{ oFactura.usuario.apellido2 }}</a>
                             <a class="btn btn-warning btn-sm ms-2 float-end" [routerLink]="['/factura/usuario', oFactura.usuario.id]" role="button" title="Filtrar por usuario"><i class="bi bi-funnel-fill" aria-hidden="true"></i></a>
                           }
                         </td>

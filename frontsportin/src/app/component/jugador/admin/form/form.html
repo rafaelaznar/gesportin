@@ -84,7 +84,7 @@
       >
         <option [ngValue]="null">Selecciona usuario</option>
         @for (usuario of usuarios(); track usuario.id) {
-          <option [value]="usuario.id">{{ usuario.nombre }} ({{ usuario.id }})</option>
+          <option [value]="usuario.id">{{ usuario.nombre }} {{ usuario.apellido1 }} {{ usuario.apellido2 }} ({{ usuario.id }})</option>
         }
       </select>
       @if (id_usuario?.invalid && id_usuario?.touched) {
