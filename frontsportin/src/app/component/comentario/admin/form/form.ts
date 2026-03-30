@@ -16,7 +16,7 @@ import { NoticiaAdminPlist } from '../../../noticia/admin/plist/plist';
 @Component({
   standalone: true,
   selector: 'app-comentario-admin-form',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, UsuarioAdminPlist, NoticiaAdminPlist],
   templateUrl: './form.html',
   styleUrl: './form.css',
 })
@@ -144,36 +144,24 @@ export class ComentarioAdminForm implements OnInit {
 
     this.submitting.set(true);
 
-    const id_usuario = Number(this.comentarioForm.value.id_usuario);
-    const id_noticia = Number(this.comentarioForm.value.id_noticia);
+    const comentarioData: any = {
+      contenido: this.comentarioForm.value.contenido,
+      usuario: { id: Number(this.comentarioForm.value.id_usuario) },
+      noticia: { id: Number(this.comentarioForm.value.id_noticia) },
+    };
 
-    this.oUsuarioService.get(id_usuario).subscribe({
-      next: () => {
-        this.oNoticiaService.getById(id_noticia).subscribe({
-          next: () => {
-            const comentarioData: any = {
-              contenido: this.comentarioForm.value.contenido,
-              usuario: { id: id_usuario },
-              noticia: { id: id_noticia }
-            };
-            if (this.isEditMode && this.comentario?.id) {
-              comentarioData.id = this.comentario.id;
-              this.oComentarioService.update(comentarioData).subscribe({
-                next: () => { this.snackBar.open('Comentario actualizado exitosamente', 'Cerrar', { duration: 4000 }); this.submitting.set(false); this.formSuccess.emit(); },
-                error: (err: HttpErrorResponse) => { this.error.set('Error actualizando el comentario'); this.snackBar.open('Error actualizando el comentario', 'Cerrar', { duration: 4000 }); console.error(err); this.submitting.set(false); }
-              });
-            } else {
-              this.oComentarioService.create(comentarioData).subscribe({
-                next: () => { this.snackBar.open('Comentario creado exitosamente', 'Cerrar', { duration: 4000 }); this.submitting.set(false); this.formSuccess.emit(); },
-                error: (err: HttpErrorResponse) => { this.error.set('Error creando el comentario'); this.snackBar.open('Error creando el comentario', 'Cerrar', { duration: 4000 }); console.error(err); this.submitting.set(false); }
-              });
-            }
-          },
-          error: (err: HttpErrorResponse) => { this.error.set('Noticia no válida'); this.snackBar.open('Noticia no válida', 'Cerrar', { duration: 4000 }); this.submitting.set(false); }
-        });
-      },
-      error: (err: HttpErrorResponse) => { this.error.set('Usuario no válido'); this.snackBar.open('Usuario no válido', 'Cerrar', { duration: 4000 }); this.submitting.set(false); }
-    });
+    if (this.isEditMode && this.comentario?.id) {
+      comentarioData.id = this.comentario.id;
+      this.oComentarioService.update(comentarioData).subscribe({
+        next: () => { this.snackBar.open('Comentario actualizado exitosamente', 'Cerrar', { duration: 4000 }); this.submitting.set(false); this.formSuccess.emit(); },
+        error: (err: HttpErrorResponse) => { this.error.set('Error actualizando el comentario'); this.snackBar.open('Error actualizando el comentario', 'Cerrar', { duration: 4000 }); console.error(err); this.submitting.set(false); }
+      });
+    } else {
+      this.oComentarioService.create(comentarioData).subscribe({
+        next: () => { this.snackBar.open('Comentario creado exitosamente', 'Cerrar', { duration: 4000 }); this.submitting.set(false); this.formSuccess.emit(); },
+        error: (err: HttpErrorResponse) => { this.error.set('Error creando el comentario'); this.snackBar.open('Error creando el comentario', 'Cerrar', { duration: 4000 }); console.error(err); this.submitting.set(false); }
+      });
+    }
   }
 
   onCancel(): void { this.formCancel.emit(); }

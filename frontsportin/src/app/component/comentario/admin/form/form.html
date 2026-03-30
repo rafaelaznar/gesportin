@@ -1,39 +1,71 @@
 <form [formGroup]="comentarioForm" (ngSubmit)="onSubmit()">
-  <div class="row mb-3">
-    <label class="col-form-label col-2">Contenido</label>
-    <div class="col-10">
-      <textarea formControlName="contenido" class="form-control" rows="4"></textarea>
-      <div *ngIf="contenido?.invalid && (contenido?.dirty || contenido?.touched)" class="text-danger small">
-        <div *ngIf="contenido?.errors?.['required']">El contenido es obligatorio.</div>
-        <div *ngIf="contenido?.errors?.['minlength']">El contenido es demasiado corto.</div>
+  <div class="mb-3">
+    <label class="form-label">Contenido <span class="text-danger">*</span></label>
+    <textarea formControlName="contenido" class="form-control" rows="4" [class.is-invalid]="contenido?.invalid && contenido?.touched"></textarea>
+    @if (contenido?.invalid && contenido?.touched) {
+      <div class="invalid-feedback">
+        @if (contenido?.errors?.['required']) { <span>El contenido es obligatorio.</span> }
+        @if (contenido?.errors?.['minlength']) { <span>El contenido es demasiado corto.</span> }
+        @if (contenido?.errors?.['maxlength']) { <span>Máx 1000 caracteres.</span> }
       </div>
-    </div>
+    }
   </div>
 
-  <div class="row mb-3">
-    <label class="col-form-label col-2">Usuario</label>
-    <div class="col-8">
-      <input class="form-control" [value]="selectedUsuario()?.nombre || ''" readonly />
+  <div class="p-3 rounded mb-3" style="background-color: #f8f9fa; border-left: 4px solid #0d6efd;">
+    <div class="mb-2">
+      <label class="form-label">Usuario <span class="text-danger">*</span></label>
+      <input type="text" class="form-control" [value]="selectedUsuario()?.nombre + ' ' + (selectedUsuario()?.apellido1 || '') || ''" readonly />
     </div>
-    <div class="col-2">
-      <button type="button" class="btn btn-outline-primary" (click)="openUsuarioFinderModal()">Seleccionar</button>
+    <div class="d-flex gap-3 align-items-end">
+      <button type="button" class="btn btn-info" (click)="openUsuarioFinderModal()">
+        <i class="bi bi-search me-2"></i>Buscar
+      </button>
+      <div>
+        <label class="form-label">ID Usuario</label>
+        <input type="text" class="form-control" [value]="id_usuario?.value || ''" readonly />
+      </div>
+      @if (selectedUsuario()) {
+        <div class="flex-grow-1">
+          <label class="form-label">Nombre</label>
+          <p class="form-control-plaintext fw-semibold mb-0">{{ selectedUsuario()?.nombre }} {{ selectedUsuario()?.apellido1 }}</p>
+        </div>
+      }
     </div>
+    @if (id_usuario?.invalid && id_usuario?.touched) {
+      <div class="text-danger small mt-1">El usuario es obligatorio.</div>
+    }
   </div>
 
-  <div class="row mb-3">
-    <label class="col-form-label col-2">Noticia</label>
-    <div class="col-8">
-      <input class="form-control" [value]="selectedNoticia()?.titulo || ''" readonly />
+  <div class="p-3 rounded mb-3" style="background-color: #f8f9fa; border-left: 4px solid #0d6efd;">
+    <div class="mb-2">
+      <label class="form-label">Noticia <span class="text-danger">*</span></label>
+      <input type="text" class="form-control" [value]="selectedNoticia()?.titulo || ''" readonly />
     </div>
-    <div class="col-2">
-      <button type="button" class="btn btn-outline-primary" (click)="openNoticiaFinderModal()">Seleccionar</button>
+    <div class="d-flex gap-3 align-items-end">
+      <button type="button" class="btn btn-info" (click)="openNoticiaFinderModal()">
+        <i class="bi bi-search me-2"></i>Buscar
+      </button>
+      <div>
+        <label class="form-label">ID Noticia</label>
+        <input type="text" class="form-control" [value]="id_noticia?.value || ''" readonly />
+      </div>
+      @if (selectedNoticia()) {
+        <div class="flex-grow-1">
+          <label class="form-label">Título</label>
+          <p class="form-control-plaintext fw-semibold mb-0">{{ selectedNoticia()?.titulo }}</p>
+        </div>
+      }
     </div>
+    @if (id_noticia?.invalid && id_noticia?.touched) {
+      <div class="text-danger small mt-1">La noticia es obligatoria.</div>
+    }
   </div>
 
-  <div class="row">
-    <div class="col-12 d-flex justify-content-end gap-2">
-      <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancelar</button>
-      <button type="submit" class="btn btn-primary" [disabled]="submitting()">Guardar</button>
-    </div>
+  <div class="d-flex justify-content-between">
+    <button type="button" class="btn btn-outline-secondary" (click)="onCancel()">Cancelar</button>
+    <button type="submit" class="btn btn-primary" [disabled]="submitting() || comentarioForm.invalid">
+      @if (submitting()) { <span class="spinner-border spinner-border-sm me-2"></span> }
+      {{ isEditMode ? 'Guardar' : 'Crear' }}
+    </button>
   </div>
 </form>

@@ -1,0 +1,5 @@
+<div class="modal-overlay" (click)="onBackdropClick()">
+  <div class="modal-panel" (click)="$event.stopPropagation()">
+    <ng-container #contentHost></ng-container>
+  </div>
+</div>

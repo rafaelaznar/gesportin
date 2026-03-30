@@ -1,0 +1,46 @@
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 14, 26, 0.65);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+  animation: overlayIn 0.18s ease-out forwards;
+}
+
+.modal-panel {
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 24px 60px -4px rgba(0, 0, 0, 0.28),
+    0 0 0 1px rgba(255, 255, 255, 0.08);
+  min-width: 420px;
+  max-width: 92vw;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: panelIn 0.22s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes overlayIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes panelIn {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

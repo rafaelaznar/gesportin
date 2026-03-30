@@ -16,7 +16,7 @@ import { UsuarioAdminPlist } from '../../../usuario/admin/plist/plist';
 @Component({
   standalone: true,
   selector: 'app-puntuacion-admin-form',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, NoticiaAdminPlist, UsuarioAdminPlist],
   templateUrl: './form.html',
   styleUrl: './form.css',
 })
@@ -37,8 +37,6 @@ export class PuntuacionAdminForm implements OnInit {
   loading = signal(false);
   error = signal<string | null>(null);
   submitting = signal(false);
-  noticias = signal<INoticia[]>([]);
-  usuarios = signal<IUsuario[]>([]);
   selectedNoticia = signal<INoticia | null>(null);
   selectedUsuario = signal<IUsuario | null>(null);
 
@@ -53,8 +51,6 @@ export class PuntuacionAdminForm implements OnInit {
 
   ngOnInit(): void {
     this.initForm();
-    this.loadNoticias();
-    this.loadUsuarios();
 
     if (this.puntuacion) {
       this.loadPuntuacionData(this.puntuacion);
@@ -67,18 +63,6 @@ export class PuntuacionAdminForm implements OnInit {
       puntuacion: [0, [Validators.required, Validators.min(0), Validators.max(5)]],
       id_noticia: [null, Validators.required],
       id_usuario: [null, Validators.required],
-    });
-
-    this.puntuacionForm.get('id_noticia')?.valueChanges.subscribe((id) => {
-      if (id) {
-        this.syncNoticia(Number(id));
-      }
-    });
-
-    this.puntuacionForm.get('id_usuario')?.valueChanges.subscribe((id) => {
-      if (id) {
-        this.syncUsuario(Number(id));
-      }
     });
   }
 
@@ -94,82 +78,46 @@ export class PuntuacionAdminForm implements OnInit {
     });
 
     if (noticiaId) {
-      this.syncNoticia(noticiaId);
+      this.loadNoticia(noticiaId);
     }
 
     if (usuarioId) {
-      this.syncUsuario(usuarioId);
+      this.loadUsuario(usuarioId);
     }
   }
 
-  private loadNoticias(): void {
-    this.oNoticiaService.getPage(0, 1000, 'titulo', 'asc', '', 0).subscribe({
-      next: (page) => {
-        this.noticias.set(page.content);
-        const idActual = this.puntuacionForm.get('id_noticia')?.value;
-        if (idActual) {
-          this.syncNoticia(Number(idActual));
-        }
-      },
-      error: (err: HttpErrorResponse) => {
-        this.snackBar.open('Error cargando noticias', 'Cerrar', { duration: 4000 });
-        console.error(err);
-      },
+  private loadNoticia(idNoticia: number): void {
+    this.oNoticiaService.getById(idNoticia).subscribe({
+      next: (noticia) => this.selectedNoticia.set(noticia),
+      error: () => this.selectedNoticia.set(null),
     });
   }
 
-  private loadUsuarios(): void {
-    this.oUsuarioService.getPage(0, 1000, 'nombre', 'asc', '', 0, 0, 0).subscribe({
-      next: (page) => {
-        this.usuarios.set(page.content);
-        const idActual = this.puntuacionForm.get('id_usuario')?.value;
-        if (idActual) {
-          this.syncUsuario(Number(idActual));
-        }
-      },
-      error: (err: HttpErrorResponse) => {
-        this.snackBar.open('Error cargando usuarios', 'Cerrar', { duration: 4000 });
-        console.error(err);
-      },
+  private loadUsuario(idUsuario: number): void {
+    this.oUsuarioService.get(idUsuario).subscribe({
+      next: (usuario) => this.selectedUsuario.set(usuario),
+      error: () => this.selectedUsuario.set(null),
     });
-  }
-
-  private syncNoticia(idNoticia: number): void {
-    const seleccionada = this.noticias().find((n) => n.id === idNoticia) || null;
-    this.selectedNoticia.set(seleccionada);
-  }
-
-  private syncUsuario(idUsuario: number): void {
-    const seleccionado = this.usuarios().find((u) => u.id === idUsuario) || null;
-    this.selectedUsuario.set(seleccionado);
   }
 
   openNoticiaFinderModal(): void {
-    const dialogRef = this.dialog.open(NoticiaAdminPlist, {
-      height: '800px', width: '1100px', maxWidth: '95vw', panelClass: 'noticia-dialog',
-      data: { title: 'Elegir noticia', message: 'Seleccione la noticia para la puntuación' }
-    });
-
+    const dialogRef = this.dialog.open(NoticiaAdminPlist, { height: '800px', width: '1100px', maxWidth: '95vw' });
     dialogRef.afterClosed().subscribe((noticia: INoticia | null) => {
-      if (noticia) {
+      if (noticia?.id != null) {
         this.puntuacionForm.patchValue({ id_noticia: noticia.id });
-        this.syncNoticia(noticia.id);
+        this.selectedNoticia.set(noticia);
         this.snackBar.open(`Noticia seleccionada: ${noticia.titulo}`, 'Cerrar', { duration: 3000 });
       }
     });
   }
 
   openUsuarioFinderModal(): void {
-    const dialogRef = this.dialog.open(UsuarioAdminPlist, {
-      height: '800px', width: '1100px', maxWidth: '95vw', panelClass: 'usuario-dialog',
-      data: { title: 'Elegir usuario', message: 'Seleccione el usuario para la puntuación' }
-    });
-
+    const dialogRef = this.dialog.open(UsuarioAdminPlist, { height: '800px', width: '1100px', maxWidth: '95vw' });
     dialogRef.afterClosed().subscribe((usuario: IUsuario | null) => {
-      if (usuario) {
+      if (usuario?.id != null) {
         this.puntuacionForm.patchValue({ id_usuario: usuario.id });
-        this.syncUsuario(usuario.id);
-        this.snackBar.open(`Usuario seleccionado: ${usuario.nombre}`, 'Cerrar', { duration: 3000 });
+        this.selectedUsuario.set(usuario);
+        this.snackBar.open(`Usuario seleccionado: ${usuario.nombre} ${usuario.apellido1}`, 'Cerrar', { duration: 3000 });
       }
     });
   }
