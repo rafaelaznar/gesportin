@@ -7,10 +7,11 @@ import { IPage } from '../../../../model/plist';
 import { IClub } from '../../../../model/club';
 import { ClubService } from '../../../../service/club';
 import { SessionService } from '../../../../service/session';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-club-teamadmin-plist',
-  imports: [Paginacion, BotoneraRpp, RouterLink],
+  imports: [Paginacion, BotoneraRpp, RouterLink, DatePipe],
   templateUrl: './plist.html',
   styleUrl: './plist.css',
 })
