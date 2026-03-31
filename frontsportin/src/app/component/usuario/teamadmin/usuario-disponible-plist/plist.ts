@@ -1,8 +1,7 @@
-import { Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, input, OnDestroy, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subject, Subscription, debounceTime, distinctUntilChanged } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
-import { MODAL_DATA } from '../../../shared/modal/modal.tokens';
 import { MODAL_REF } from '../../../shared/modal/modal.tokens';
 import { ModalRef } from '../../../shared/modal/modal-ref';
 import { debounceTimeSearch } from '../../../../environment/environment';
@@ -12,10 +11,6 @@ import { IPage } from '../../../../model/plist';
 import { BotoneraRpp } from '../../../shared/botonera-rpp/botonera-rpp';
 import { Paginacion } from '../../../shared/paginacion/paginacion';
 
-export interface UsuarioDisponibleModalData {
-  id_equipo: number;
-}
-
 @Component({
   selector: 'app-jugador-usuario-disponible-plist',
   standalone: true,
@@ -24,8 +19,10 @@ export interface UsuarioDisponibleModalData {
 })
 export class UsuarioDisponiblePlist implements OnInit, OnDestroy {
 
-  private readonly modalData = inject(MODAL_DATA, { optional: true }) as UsuarioDisponibleModalData | null;
-  private readonly modalRef = inject(MODAL_REF, { optional: true }) as ModalRef<UsuarioDisponibleModalData, IUsuario | null> | null;
+  /** ID del equipo — recibido via setInput desde ModalComponent (config.data.idEquipo) */
+  idEquipo = input<number>(0);
+
+  private readonly modalRef = inject(MODAL_REF, { optional: true }) as ModalRef<unknown, IUsuario | null> | null;
   private readonly oJugadorService = inject(JugadorService);
 
   oPage = signal<IPage<IUsuario> | null>(null);
@@ -39,10 +36,6 @@ export class UsuarioDisponiblePlist implements OnInit, OnDestroy {
 
   private searchSubject = new Subject<string>();
   private searchSubscription?: Subscription;
-
-  private get idEquipo(): number {
-    return this.modalData?.id_equipo ?? 0;
-  }
 
   ngOnInit(): void {
     this.searchSubscription = this.searchSubject
@@ -60,11 +53,11 @@ export class UsuarioDisponiblePlist implements OnInit, OnDestroy {
   }
 
   getPage(): void {
-    if (this.idEquipo <= 0) return;
+    if (this.idEquipo() <= 0) return;
     this.loading.set(true);
     this.oJugadorService
       .getUsuariosDisponibles(
-        this.idEquipo,
+        this.idEquipo(),
         this.numPage(),
         this.numRpp(),
         this.orderField(),

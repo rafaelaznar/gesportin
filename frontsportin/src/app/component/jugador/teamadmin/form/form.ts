@@ -143,10 +143,10 @@ export class JugadorTeamadminForm implements OnInit {
   }
 
   openUsuarioFinderModal(): void {
-    const idEquipo = this.jugadorForm.get('id_equipo')?.value;
-    const ref = this.modalService.open<{ id_equipo: number }, IUsuario | null>(
+    const idEquipo = this.selectedEquipo()?.id ?? (Number(this.jugadorForm.get('id_equipo')?.value) || 0);
+    const ref = this.modalService.open<{ idEquipo: number }, IUsuario | null>(
       UsuarioDisponiblePlist,
-      { data: { id_equipo: Number(idEquipo) || 0 } },
+      { data: { idEquipo } },
     );
     ref.afterClosed$.subscribe((usuario: IUsuario | null) => {
       if (usuario?.id != null) {

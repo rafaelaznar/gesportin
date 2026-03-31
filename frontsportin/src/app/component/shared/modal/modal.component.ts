@@ -36,7 +36,20 @@ export class ModalComponent implements OnInit {
             parent: this.parentInjector,
         });
 
-        this.contentHost.createComponent(this.contentComponent(), { injector });
+        const contentRef = this.contentHost.createComponent(this.contentComponent(), { injector });
+
+        // Reenvía cada propiedad de data() como @Input() del componente contenido.
+        // Así los componentes pueden usar input() signals en lugar de inject(MODAL_DATA),
+        // garantizando que los valores estén disponibles antes de ngOnInit del contenido.
+        if (this.data() && typeof this.data() === 'object') {
+            for (const [key, value] of Object.entries(this.data() as Record<string, unknown>)) {
+                try {
+                    contentRef.setInput(key, value);
+                } catch {
+                    // El componente no expone este input como @Input(), se ignora
+                }
+            }
+        }
     }
 
     onBackdropClick(): void {
