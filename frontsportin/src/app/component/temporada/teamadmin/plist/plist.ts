@@ -5,7 +5,6 @@ import { debounceTime, distinctUntilChanged, Subject, Subscription } from 'rxjs'
 import { debounceTimeSearch } from '../../../../environment/environment';
 import { TemporadaService } from '../../../../service/temporada';
 import { HttpErrorResponse } from '@angular/common/http';
-import { BotoneraRpp } from '../../../shared/botonera-rpp/botonera-rpp';
 import { Paginacion } from '../../../shared/paginacion/paginacion';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TrimPipe } from '../../../../pipe/trim-pipe';
@@ -15,7 +14,7 @@ import { BreadcrumbComponent, BreadcrumbItem } from '../../../shared/breadcrumb/
 
 @Component({
   selector: 'app-temporada-teamadmin-plist',
-  imports: [BotoneraRpp, Paginacion, RouterLink, TrimPipe, BotoneraActionsPlist, BreadcrumbComponent],
+  imports: [Paginacion, RouterLink, TrimPipe, BotoneraActionsPlist, BreadcrumbComponent],
   templateUrl: './plist.html',
   styleUrl: './plist.css',
 })

@@ -13,8 +13,8 @@
     <small class="text-muted">Total registros: {{ totalRecords() || 0 }}</small>
   </div>
 
-  <!-- Paginación y RPP si hay registros -->
-  @if (totalRecords() > 0) {
+  <!-- Paginación -->
+  @if (totalRecords() > 0 && (oPage()?.totalPages ?? 1) > 1) {
     <div class="container-fluid p-0 my-1">
       <div class="controls-row mb-2">
         <div class="col-control left">
@@ -23,12 +23,6 @@
             [numPages]="oPage()?.totalPages || 1"
             (pageChange)="goToPage($event)"
           ></app-paginacion>
-        </div>
-        <div class="col-control right">
-          <app-botonera-rpp
-            [numRpp]="numRpp()"
-            (rppChange)="onRppChange($event)"
-          ></app-botonera-rpp>
         </div>
       </div>
     </div>
@@ -139,9 +133,9 @@
             </div>
           </div>
           <div class="card-footer d-flex justify-content-end gap-2">
-            <a [routerLink]="['/club/view', oClub.id]" class="btn btn-outline-primary btn-sm">
+            <a [routerLink]="['/club/teamadmin/view', oClub.id]" class="btn btn-outline-primary btn-sm">
               <i class="bi bi-eye" aria-hidden="true"></i>
-              <span class="d-none d-sm-inline ms-1">Ver</span>
+              <span class="d-none d-sm-inline ms-1">Ver detalles del club</span>
             </a>
           </div>
         </div>

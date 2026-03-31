@@ -2,7 +2,6 @@ import { Component, signal, computed, inject, Input } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Paginacion } from '../../../shared/paginacion/paginacion';
-import { BotoneraRpp } from '../../../shared/botonera-rpp/botonera-rpp';
 import { IPage } from '../../../../model/plist';
 import { INoticia } from '../../../../model/noticia';
 import { NoticiaService } from '../../../../service/noticia';
@@ -13,7 +12,7 @@ import { BreadcrumbComponent, BreadcrumbItem } from '../../../shared/breadcrumb/
 
 @Component({
   selector: 'app-noticia-teamadmin-plist',
-  imports: [Paginacion, BotoneraRpp, RouterLink, DatetimePipe, TrimPipe, BreadcrumbComponent],
+  imports: [Paginacion, RouterLink, DatetimePipe, TrimPipe, BreadcrumbComponent],
   templateUrl: './plist.html',
   styleUrl: './plist.css',
 })

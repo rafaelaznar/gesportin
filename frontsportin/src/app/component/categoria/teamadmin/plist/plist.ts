@@ -9,14 +9,13 @@ import { ICategoria } from '../../../../model/categoria';
 import { IPage } from '../../../../model/plist';
 import { CategoriaService } from '../../../../service/categoria';
 import { TemporadaService } from '../../../../service/temporada';
-import { BotoneraRpp } from '../../../shared/botonera-rpp/botonera-rpp';
 import { Paginacion } from '../../../shared/paginacion/paginacion';
 import { BotoneraActionsPlist } from '../../../shared/botonera-actions-plist/botonera-actions-plist';
 import { BreadcrumbComponent, BreadcrumbItem } from '../../../shared/breadcrumb/breadcrumb';
 
 @Component({
   selector: 'app-categoria-teamadmin-plist',
-  imports: [BotoneraRpp, Paginacion, RouterLink, BotoneraActionsPlist, BreadcrumbComponent],
+  imports: [Paginacion, RouterLink, BotoneraActionsPlist, BreadcrumbComponent],
   templateUrl: './plist.html',
   styleUrl: './plist.css',
   standalone: true,

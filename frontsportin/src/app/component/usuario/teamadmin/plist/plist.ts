@@ -11,13 +11,12 @@ import { IPage } from '../../../../model/plist';
 import { UsuarioService } from '../../../../service/usuarioService';
 import { Paginacion } from '../../../shared/paginacion/paginacion';
 import { BotoneraActionsPlist } from '../../../shared/botonera-actions-plist/botonera-actions-plist';
-import { BotoneraRpp } from '../../../shared/botonera-rpp/botonera-rpp';
 import { BreadcrumbComponent, BreadcrumbItem } from '../../../shared/breadcrumb/breadcrumb';
 
 @Component({
   standalone: true,
   selector: 'app-usuario-teamadmin-plist',
-  imports: [RouterLink, Paginacion, BotoneraActionsPlist, BotoneraRpp, BreadcrumbComponent],
+  imports: [RouterLink, Paginacion, BotoneraActionsPlist, BreadcrumbComponent],
   templateUrl: './plist.html',
   styleUrl: './plist.css',
 })

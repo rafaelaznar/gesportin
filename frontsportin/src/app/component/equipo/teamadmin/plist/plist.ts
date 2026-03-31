@@ -6,7 +6,6 @@ import { debounceTimeSearch } from '../../../../environment/environment';
 import { EquipoService } from '../../../../service/equipo';
 import { CategoriaService } from '../../../../service/categoria';
 import { HttpErrorResponse } from '@angular/common/http';
-import { BotoneraRpp } from '../../../shared/botonera-rpp/botonera-rpp';
 import { Paginacion } from '../../../shared/paginacion/paginacion';
 import { RouterLink } from '@angular/router';
 import { ModalRef } from '../../../shared/modal/modal-ref';
@@ -16,7 +15,7 @@ import { BreadcrumbComponent, BreadcrumbItem } from '../../../shared/breadcrumb/
 
 @Component({
   selector: 'app-equipo-teamadmin-plist',
-  imports: [BotoneraRpp, Paginacion, RouterLink, BotoneraActionsPlist, BreadcrumbComponent],
+  imports: [Paginacion, RouterLink, BotoneraActionsPlist, BreadcrumbComponent],
   templateUrl: './plist.html',
   styleUrl: './plist.css',
   standalone: true,

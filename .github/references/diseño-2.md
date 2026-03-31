@@ -203,19 +203,23 @@ Esto proporciona una navegación más visual y táctil adecuada para el gestor d
 
 ### 4.6 Controles de paginación y rpp
 
-- Solo se muestran si `totalRecords() > 0`.
-- Estructura idéntica al perfil Administrador:
+- **Botonera de paginación**: solo se muestra si `totalRecords() > 0` **y** hay más de una
+  página (`oPage()?.totalPages > 1`). Si todos los registros caben en una sola página, la
+  botonera se omite completamente.
+- **Botonera de registros por página (`app-botonera-rpp`)**: **no se muestra** en el perfil
+  teamadmin. El valor de `rpp` está fijado implícitamente a **10** (valor por defecto del
+  backend). No se ofrece selector al usuario.
+- Estructura resultante:
   ```html
-  <div class="container-fluid p-0 my-1">
-    <div class="controls-row mb-2">
-      <div class="col-control left">
-        <app-paginacion ...></app-paginacion>
-      </div>
-      <div class="col-control right">
-        <app-botonera-rpp ...></app-botonera-rpp>
+  @if (totalRecords() > 0 && (oPage()?.totalPages ?? 1) > 1) {
+    <div class="container-fluid p-0 my-1">
+      <div class="controls-row mb-2">
+        <div class="col-control left">
+          <app-paginacion ...></app-paginacion>
+        </div>
       </div>
     </div>
-  </div>
+  }
   ```
 
 ### 4.7 Botón de creación

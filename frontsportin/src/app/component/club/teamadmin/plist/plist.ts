@@ -2,7 +2,6 @@ import { Component, signal, computed, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Paginacion } from '../../../shared/paginacion/paginacion';
-import { BotoneraRpp } from '../../../shared/botonera-rpp/botonera-rpp';
 import { IPage } from '../../../../model/plist';
 import { IClub } from '../../../../model/club';
 import { ClubService } from '../../../../service/club';
@@ -11,7 +10,7 @@ import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-club-teamadmin-plist',
-  imports: [Paginacion, BotoneraRpp, RouterLink, DatePipe],
+  imports: [Paginacion, RouterLink, DatePipe],
   templateUrl: './plist.html',
   styleUrl: './plist.css',
 })
