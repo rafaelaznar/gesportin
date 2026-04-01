@@ -1,47 +1,39 @@
 <div>
 
   <app-breadcrumb [items]="breadcrumbItems()"></app-breadcrumb>
+
   <!-- Búsqueda por descripción -->
   <div class="d-flex justify-content-center my-2">
-    <input
-      class="form-control me-2"
-      type="search"
-      placeholder="Buscar por descripción"
-      aria-label="Search"
-      (input)="onSearchDescription($any($event.target).value)"
-      [value]="descripcion()"
-      name="searchDescription"
-    />
+    <input class="form-control me-2" type="search" placeholder="Buscar por descripción de la temporada"
+      aria-label="Search" (input)="onSearchDescription($any($event.target).value)" [value]="descripcion()"
+      name="searchDescription" />
   </div>
 
   <!-- Total registros -->
   <div class="d-flex justify-content-center my-1">
-    <small class="text-muted">Total registros: {{ totalRecords() || 0 }}</small>
+    <small class="text-muted">Total temporadas: {{ totalRecords() || 0 }}</small>
     @if (descripcion().length > 0) {
-      <small class="text-muted ms-3">Filtro: descripción contiene "{{ descripcion() }}"</small>
+    <small class="text-muted ms-3">Filtro: descripción contiene "{{ descripcion() }}"</small>
     }
   </div>
 
   <!-- Paginación -->
   @if (totalRecords() > 0 && (oPage()?.totalPages ?? 1) > 1) {
-    <div class="container-fluid p-0 my-1">
-      <div class="controls-row mb-2">
-        <div class="col-control left">
-          <app-paginacion
-            [numPage]="numPage()"
-            [numPages]="oPage()?.totalPages || 1"
-            (pageChange)="goToPage($event)"
-          ></app-paginacion>
-        </div>
+  <div class="container-fluid p-0 my-1">
+    <div class="controls-row mb-2">
+      <div class="col-control left">
+        <app-paginacion [numPage]="numPage()" [numPages]="oPage()?.totalPages || 1"
+          (pageChange)="goToPage($event)"></app-paginacion>
       </div>
     </div>
+  </div>
   }
 
   <div class="d-flex my-1">
     <div class="w-100 d-flex justify-content-center">
       <a class="btn btn-primary new-btn" [routerLink]="['/temporada/teamadmin/new']" role="button">
         <i class="bi bi-plus-circle" aria-hidden="true"></i>
-        <span class="d-none d-sm-inline">Nueva Temporada</span>
+        <span class="d-none d-sm-inline">Crear una nueva Temporada</span>
       </a>
     </div>
   </div>
@@ -49,46 +41,39 @@
   <!-- Cards -->
   <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
     @for (oTemporada of oPage()?.content; track oTemporada.id) {
-      <div class="col">
-        <div class="card h-100 shadow-sm">
-          <div class="card-header">
-            <h5 class="card-title mb-0">ID {{ oTemporada.id }}</h5>
-          </div>
-          <div class="card-body">
-            <p class="card-text"><strong>Descripción:</strong> {{ oTemporada.descripcion }}</p>
-            <p class="card-text">
-              <strong>Club:</strong>
-              <a [routerLink]="['/club/teamadmin/view', oTemporada.club.id]">{{ oTemporada.club.nombre | trim: 20 }} ({{ oTemporada.club.id }})</a>
-            </p>
-            <div class="d-flex flex-wrap gap-2 align-items-center">
-              @if (oTemporada.categorias === 0) {
-                <a
-                  [routerLink]="['/categoria/teamadmin/new']"
-                  [queryParams]="{ id_temporada: oTemporada.id }"
-                  class="badge bg-warning text-dark text-decoration-none"
-                  title="Crear primera categoría"
-                >
-                  <i class="bi bi-plus-circle me-1"></i>0 categorías
-                </a>
-              } @else {
-                <a
-                  [routerLink]="['/categoria/teamadmin/temporada', oTemporada.id]"
-                  class="badge bg-primary text-decoration-none"
-                  title="Ver categorías de temporada"
-                >
-                  <i class="bi bi-tags-fill me-1"></i>{{ oTemporada.categorias }} categorías
-                </a>
-              }
-            </div>
-          </div>
-          <div class="card-footer d-flex justify-content-between">
-            <a [routerLink]="['/categoria/teamadmin/temporada', oTemporada.id]" class="btn btn-sm btn-outline-secondary">
-              Ver categorías
-            </a>
-            <app-botonera-actions-plist [id]="oTemporada.id" strEntity="temporada" strRole="teamadmin"></app-botonera-actions-plist>
+    <div class="col">
+      <div class="card h-100 shadow-sm">
+        <div class="card-header">
+          <h5 class="card-title mb-0">ID {{ oTemporada.id }}</h5>
+        </div>
+        <div class="card-body">
+          <p class="card-text"><strong>Descripción: </strong> {{ oTemporada.descripcion }}</p>
+          <p class="card-text">
+            <strong>Club: </strong>
+            <a [routerLink]="['/club/teamadmin/view', oTemporada.club.id]">{{ oTemporada.club.nombre | trim: 20 }} ({{
+              oTemporada.club.id }})</a>
+          </p>
+          <div class="d-flex flex-wrap gap-2 align-items-center">
+
           </div>
         </div>
+        <div class="card-footer d-flex justify-content-between">
+          @if (oTemporada.categorias === 0) {
+          <a [routerLink]="['/categoria/teamadmin/new']" [queryParams]="{ id_temporada: oTemporada.id }"
+            class="badge big-badge bg-warning text-dark text-decoration-none" title="Crear primera categoría">
+            <i class="bi bi-plus-circle me-1"></i>0 categorías
+          </a>
+          } @else {
+          <a [routerLink]="['/categoria/teamadmin/temporada', oTemporada.id]"
+            class="badge big-badge bg-primary text-decoration-none" title="Ver categorías de temporada">
+            <i class="bi bi-tags-fill me-1"></i>{{ oTemporada.categorias }} categorías
+          </a>
+          }
+          <app-botonera-actions-plist [id]="oTemporada.id" strEntity="temporada"
+            strRole="teamadmin"></app-botonera-actions-plist>
+        </div>
       </div>
+    </div>
     }
   </div>
 </div>

@@ -161,7 +161,7 @@ Cada `<th>` sigue este patrón:
 ### 3.7 CSS del componente plist
 
 - Importar siempre el CSS compartido al inicio del fichero CSS:
-  `@import '../../../shared/plist-styles.css';`
+  ``
   (ajustar la ruta relativa según la profundidad de la entidad)
 - Solo añadir reglas propias del componente si son estrictamente necesarias.
 - Regla mínima obligatoria:

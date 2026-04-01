@@ -1,5 +1,5 @@
 
-@import '../../../shared/plist-styles.css';
+
 
 /* Controls layout: two controls on one row (left/right) and New button on its own line */
 .controls-row { display: flex; flex-wrap: nowrap; gap: 0.5rem; align-items: center; }

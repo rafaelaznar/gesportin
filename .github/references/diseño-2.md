@@ -354,7 +354,7 @@ edición/borrado por entidad (ver Sección 10).
 
 ### 4.10 CSS del componente plist teamadmin
 
-- Importar el CSS compartido al inicio: `@import '../../../shared/plist-styles.css';`
+- Importar el CSS compartido al inicio: ``
   (ajustar ruta relativa según profundidad).
 - Solo `controls-row` y clases de paginación se usan del CSS compartido (las reglas de tabla
   se ignoran al no haber tabla).

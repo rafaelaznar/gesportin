@@ -10,7 +10,7 @@
 }
 
 
-<!-- Paginación -->
+<!-- Paginación: no se muestra si sólo hay un club -->
 @if (totalRecords() > 0 && (oPage()?.totalPages ?? 1) > 1) {
   <div class="container-fluid p-0 my-1">
     <div class="controls-row mb-2">
@@ -25,8 +25,8 @@
   </div>
 }
 
-<!-- Cards -->
-<div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
+<!-- como el administrador de club sólo puede tener un club asignado se presenta como una Card centrada -->
+<div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4 justify-content-center">
   @for (oClub of oPage()?.content; track oClub.id) {
     <div class="col">
       <div class="card h-100 shadow-sm">
@@ -68,7 +68,7 @@
             @if (oClub.temporadas === 0) {
               <a
                 [routerLink]="['/temporada/teamadmin/new']"
-                class="badge bg-warning text-dark text-decoration-none"
+                class="badge big-badge bg-warning text-dark text-decoration-none"
                 title="Crear primera temporada"
               >
                 <i class="bi bi-plus-circle me-1"></i>0 temporadas
@@ -76,7 +76,7 @@
             } @else {
               <a
                 [routerLink]="['/temporada/teamadmin/club', oClub.id]"
-                class="badge bg-primary text-decoration-none"
+                class="badge big-badge bg-primary text-decoration-none"
               >
                 <i class="bi bi-calendar me-1"></i>{{ oClub.temporadas }} temporadas
               </a>
@@ -85,7 +85,7 @@
             @if (oClub.noticias === 0) {
               <a
                 [routerLink]="['/noticia/teamadmin/new']"
-                class="badge bg-warning text-dark text-decoration-none"
+                class="badge big-badge bg-warning text-dark text-decoration-none"
                 title="Crear primera noticia"
               >
                 <i class="bi bi-plus-circle me-1"></i>0 noticias
@@ -93,7 +93,7 @@
             } @else {
               <a
                 [routerLink]="['/noticia/teamadmin/club', oClub.id]"
-                class="badge bg-primary text-decoration-none"
+                class="badge big-badge bg-primary text-decoration-none"
               >
                 <i class="bi bi-newspaper me-1"></i>{{ oClub.noticias }} noticias
               </a>
@@ -102,7 +102,7 @@
             @if (oClub.tipoarticulos === 0) {
               <a
                 [routerLink]="['/tipoarticulo/teamadmin/new']"
-                class="badge bg-warning text-dark text-decoration-none"
+                class="badge big-badge bg-warning text-dark text-decoration-none"
                 title="Crear primer tipo de artículo"
               >
                 <i class="bi bi-plus-circle me-1"></i>0 tipos art.
@@ -110,7 +110,7 @@
             } @else {
               <a
                 [routerLink]="['/tipoarticulo/teamadmin/club', oClub.id]"
-                class="badge bg-primary text-decoration-none"
+                class="badge big-badge bg-primary text-decoration-none"
               >
                 <i class="bi bi-bookmark-fill me-1"></i>{{ oClub.tipoarticulos }} tipos art.
               </a>
@@ -119,7 +119,7 @@
             @if (oClub.usuarios === 0) {
               <a
                 [routerLink]="['/usuario/teamadmin/new']"
-                class="badge bg-warning text-dark text-decoration-none"
+                class="badge big-badge bg-warning text-dark text-decoration-none"
                 title="Crear primer usuario"
               >
                 <i class="bi bi-plus-circle me-1"></i>0 usuarios
@@ -127,7 +127,7 @@
             } @else {
               <a
                 [routerLink]="['/usuario/teamadmin/club', oClub.id]"
-                class="badge bg-primary text-decoration-none"
+                class="badge big-badge bg-primary text-decoration-none"
               >
                 <i class="bi bi-people me-1"></i>{{ oClub.usuarios }} usuarios
               </a>

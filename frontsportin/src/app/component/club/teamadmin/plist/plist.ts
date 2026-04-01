@@ -59,9 +59,10 @@ export class ClubTeamadminPlist {
       .getPage(this.numPage(), this.numRpp(), this.orderField(), this.orderDirection())
       .subscribe({
         next: (data: IPage<IClub>) => {
+          // sólo puede haber un club
           this.oPage.set(data);
           this.breadcrumbItems.set([
-            { label: 'Mis Clubes (' + this.totalRecords() + ')', route: '/club/teamadmin' }
+            { label: 'Mi Club (' + this.totalRecords() + ')', route: '/club/teamadmin' }
           ]);
           if (this.numPage() > 0 && this.numPage() >= data.totalPages) {
             this.numPage.set(data.totalPages - 1);

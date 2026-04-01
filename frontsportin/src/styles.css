@@ -33,3 +33,110 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .cdk-overlay-backdrop {
 	z-index: 2050 !important;
 }
+
+
+
+
+/* Shared plist styles: controls layout and responsive behavior copied from noticias/comentarios
+ *
+ * Usage:
+ * 1. Import this file at top of any component-specific plist CSS.
+ *    e.g. @import '../../shared/plist-styles.css';
+ *
+ * 2. In the template, wrap pagination/RPP + new-button rows with:
+ *       <div class="container-fluid p-0 my-1">
+ *         <div class="controls-row mb-2"> ... </div>
+ *         <div class="d-flex"><div class="w-100 d-flex justify-content-center"> ... </div></div>
+ *       </div>
+ *    This ensures consistent alignment and stacking on narrow screens.
+ *
+ * 3. Add class="table-responsive w-100" around <table> for scrollable overflow.
+ * 4. Apply `.text-truncate-col` to any <td> containing long text.
+ * 5. Tables narrower than 768px automatically hide nonessential columns.
+ */
+.controls-row { display: flex; flex-wrap: nowrap; gap: 0.5rem; align-items: center; }
+.controls-row .col-control { flex: 1 1 50%; display: flex; align-items: center; }
+.controls-row .col-control.left { justify-content: flex-start; }
+.controls-row .col-control.right { justify-content: flex-end; }
+.new-btn { display: inline-block; margin: 10px auto; }
+.new-btn i { margin-right: 0.5rem; }
+
+/* Stacked header: icon on top, label below */
+.header-stacked { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.header-top { display: flex; align-items: center; justify-content: center; gap: 0.2rem; }
+
+/* Table body: smaller font and vertical centering */
+tbody td { font-size: 0.82em; vertical-align: middle; }
+tbody th { vertical-align: middle; }
+
+/* Ensure components behave as inline-flex so they can be centered */
+.controls-row app-paginacion,
+.controls-row app-botonera-rpp { display: inline-flex; justify-content: center; }
+
+/* Truncate long text cells */
+.text-truncate-col {
+	max-width: 420px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+/* At small widths (<=850px) stack controls and center them */
+@media (max-width: 850px) {
+	.controls-row { flex-wrap: wrap; justify-content: center; }
+	.controls-row .col-control { flex: 1 1 100%; justify-content: center; }
+	.controls-row app-paginacion,
+	.controls-row app-botonera-rpp { width: auto; margin: 0.25rem auto; }
+	.new-btn { width: auto; }
+}
+
+/* Hide nonessential columns on narrow screens: keep first two and last (actions) */
+@media (max-width: 767px) {
+	.table-responsive table th:not(:nth-child(1)):not(:nth-child(2)):not(:last-child),
+	.table-responsive table td:not(:nth-child(1)):not(:nth-child(2)):not(:last-child) {
+		display: none !important;
+	}
+}
+
+
+
+
+
+/* Styles for enlarged badges plist */
+.big-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.7rem;
+	padding: 0.45rem 0.9rem;
+	font-size: 1.05rem;
+	font-weight: 500;
+	border-radius: 0.5rem;
+	white-space: nowrap;
+	text-decoration: none;
+	transition: transform .08s ease, box-shadow .08s ease;
+}
+
+.big-badge .bi {
+	font-size: 1.25rem;
+	line-height: 1;
+	vertical-align: middle;
+}
+
+.big-badge:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+	text-decoration: none;
+}
+
+@media (max-width: 575.98px) {
+	.big-badge {
+		font-size: 0.95rem;
+		padding: 0.35rem 0.6rem;
+		gap: 0.4rem;
+	}
+
+	.big-badge .bi {
+		font-size: 1.05rem;
+	}
+}
+

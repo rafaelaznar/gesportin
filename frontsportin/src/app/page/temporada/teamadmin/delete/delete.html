@@ -1,14 +1,18 @@
 @if (error()) {
-  <div class="alert alert-danger m-3">{{ error() }}</div>
+<div class="alert alert-danger m-3">{{ error() }}</div>
 }
+
 @if (!error()) {
-  <div class="container py-3">
-    <div class="alert alert-danger d-flex align-items-center gap-2 mb-3" role="alert">
+<div class="container py-3">
+
+  <app-temporada-teamadmin-detail [id]="id_temporada"></app-temporada-teamadmin-detail>
+
+  <div class="alert alert-danger d-flex flex-column m-3" role="alert">
+    <div class="m-2">
       <i class="bi bi-exclamation-triangle-fill"></i>
-      <strong>¿Eliminar este registro?</strong> Esta acción no se puede deshacer.
+      <strong> ¿Seguro que desea eliminar esta temporada?</strong> Esta acción no se puede deshacer.
     </div>
-    <app-temporada-teamadmin-detail [id]="id_temporada"></app-temporada-teamadmin-detail>
-    <div class="d-flex gap-2 mt-3">
+    <div class="d-flex justify-content-end gap-2 m-3">
       <button class="btn btn-danger" (click)="doDelete()">
         <i class="bi bi-trash me-2"></i>Eliminar
       </button>
@@ -17,4 +21,5 @@
       </button>
     </div>
   </div>
+</div>
 }
