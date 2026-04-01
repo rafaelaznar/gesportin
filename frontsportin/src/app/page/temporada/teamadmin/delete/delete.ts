@@ -5,10 +5,11 @@ import { TemporadaService } from '../../../../service/temporada';
 import { NotificacionService } from '../../../../service/notificacion';
 import { TemporadaTeamadminDetail } from '../../../../component/temporada/teamadmin/detail/detail';
 import { ConfirmacionBorradoComponent } from '../../../../component/shared/confirmacion-borrado/confirmacion-borrado.component';
+import { BreadcrumbComponent, BreadcrumbItem } from '../../../../component/shared/breadcrumb/breadcrumb';
 
 @Component({
   selector: 'app-temporada-teamadmin-delete-page',
-  imports: [TemporadaTeamadminDetail, ConfirmacionBorradoComponent],
+  imports: [TemporadaTeamadminDetail, ConfirmacionBorradoComponent, BreadcrumbComponent],
   templateUrl: './delete.html',
 })
 export class TemporadaTeamadminDeletePage implements OnInit {
@@ -17,6 +18,7 @@ export class TemporadaTeamadminDeletePage implements OnInit {
   private temporadaService = inject(TemporadaService);
   private notificacion = inject(NotificacionService);
   error = signal<string | null>(null);
+  breadcrumbItems = signal<BreadcrumbItem[]>([{ label: 'Temporadas', route: '/temporada/teamadmin' }, { label: 'Eliminar Temporada' }]);
   id_temporada = signal<number>(0);
 
   ngOnInit(): void {

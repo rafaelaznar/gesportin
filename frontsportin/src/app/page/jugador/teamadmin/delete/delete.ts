@@ -4,10 +4,11 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { JugadorService } from '../../../../service/jugador-service';
 import { NotificacionService } from '../../../../service/notificacion';;
 import { JugadorTeamadminDetail } from '../../../../component/jugador/teamadmin/detail/detail';
+import { BreadcrumbComponent, BreadcrumbItem } from '../../../../component/shared/breadcrumb/breadcrumb';
 
 @Component({
   selector: 'app-jugador-teamadmin-delete-page',
-  imports: [JugadorTeamadminDetail],
+  imports: [JugadorTeamadminDetail, BreadcrumbComponent],
   templateUrl: './delete.html',
 })
 export class JugadorTeamadminDeletePage implements OnInit {
@@ -16,6 +17,7 @@ export class JugadorTeamadminDeletePage implements OnInit {
   private jugadorService = inject(JugadorService);
   private notificacion = inject(NotificacionService);
   error = signal<string | null>(null);
+  breadcrumbItems = signal<BreadcrumbItem[]>([{ label: 'Jugadores', route: '/jugador/teamadmin' }, { label: 'Eliminar Jugador' }]);
   id_jugador = signal<number>(0);
 
   ngOnInit(): void {

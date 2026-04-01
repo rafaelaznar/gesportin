@@ -4,10 +4,11 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ComentarioService } from '../../../../service/comentario';
 import { NotificacionService } from '../../../../service/notificacion';;
 import { ComentarioTeamadminDetail } from '../../../../component/comentario/teamadmin/detail/detail';
+import { BreadcrumbComponent, BreadcrumbItem } from '../../../../component/shared/breadcrumb/breadcrumb';
 
 @Component({
   selector: 'app-comentario-teamadmin-delete-page',
-  imports: [ComentarioTeamadminDetail],
+  imports: [ComentarioTeamadminDetail, BreadcrumbComponent],
   templateUrl: './delete.html',
 })
 export class ComentarioTeamadminDeletePage implements OnInit {
@@ -16,6 +17,7 @@ export class ComentarioTeamadminDeletePage implements OnInit {
   private comentarioService = inject(ComentarioService);
   private notificacion = inject(NotificacionService);
   error = signal<string | null>(null);
+  breadcrumbItems = signal<BreadcrumbItem[]>([{ label: 'Comentarios', route: '/comentario/teamadmin' }, { label: 'Eliminar Comentario' }]);
   id_comentario = signal<number>(0);
 
   ngOnInit(): void {

@@ -4,10 +4,11 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { CuotaService } from '../../../../service/cuota';
 import { NotificacionService } from '../../../../service/notificacion';;
 import { CuotaTeamadminDetail } from '../../../../component/cuota/teamadmin/detail/detail';
+import { BreadcrumbComponent, BreadcrumbItem } from '../../../../component/shared/breadcrumb/breadcrumb';
 
 @Component({
   selector: 'app-cuota-teamadmin-delete-page',
-  imports: [CuotaTeamadminDetail],
+  imports: [CuotaTeamadminDetail, BreadcrumbComponent],
   templateUrl: './delete.html',
 })
 export class CuotaTeamadminDeletePage implements OnInit {
@@ -16,6 +17,7 @@ export class CuotaTeamadminDeletePage implements OnInit {
   private cuotaService = inject(CuotaService);
   private notificacion = inject(NotificacionService);
   error = signal<string | null>(null);
+  breadcrumbItems = signal<BreadcrumbItem[]>([{ label: 'Cuotas', route: '/cuota/teamadmin' }, { label: 'Eliminar Cuota' }]);
   id_cuota = signal<number>(0);
 
   ngOnInit(): void {

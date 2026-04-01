@@ -7,16 +7,14 @@ import { IClub } from '../../../../model/club';
 import { ClubService } from '../../../../service/club';
 import { SessionService } from '../../../../service/session';
 import { DatePipe } from '@angular/common';
-import { BreadcrumbItem, BreadcrumbComponent } from '../../../shared/breadcrumb/breadcrumb';
 
 @Component({
   selector: 'app-club-teamadmin-plist',
-  imports: [Paginacion, RouterLink, DatePipe, BreadcrumbComponent],
+  imports: [Paginacion, RouterLink, DatePipe],
   templateUrl: './plist.html',
   styleUrl: './plist.css',
 })
 export class ClubTeamadminPlist {
-  @Input() showBreadcrumb = true;
   oPage = signal<IPage<IClub> | null>(null);
   numPage = signal<number>(0);
   numRpp = signal<number>(5);
@@ -31,10 +29,6 @@ export class ClubTeamadminPlist {
   private oClubService = inject(ClubService);
   private route = inject(ActivatedRoute);
   session: SessionService = inject(SessionService);
-
-  breadcrumbItems = signal<BreadcrumbItem[]>([
-    { label: 'Mis Clubes (' + this.totalRecords() + ')', route: '/club/teamadmin' }    
-  ]);
 
   ngOnInit() {
     const msg = this.route.snapshot.queryParamMap.get('msg');
@@ -62,9 +56,6 @@ export class ClubTeamadminPlist {
         next: (data: IPage<IClub>) => {
           // sólo puede haber un club
           this.oPage.set(data);
-          this.breadcrumbItems.set([
-            { label: 'Mi Club (' + this.totalRecords() + ')', route: '/club/teamadmin' }
-          ]);
           if (this.numPage() > 0 && this.numPage() >= data.totalPages) {
             this.numPage.set(data.totalPages - 1);
             this.getPage();

@@ -5,11 +5,10 @@ import { IClub } from '../../../../model/club';
 import { DatetimePipe } from '../../../../pipe/datetime-pipe';
 import { ClubService } from '../../../../service/club';
 import { SessionService } from '../../../../service/session';
-import { BreadcrumbComponent, BreadcrumbItem } from '../../../shared/breadcrumb/breadcrumb';
 
 @Component({
   selector: 'app-club-teamadmin-detail',
-  imports: [DatetimePipe, RouterLink, BreadcrumbComponent],
+  imports: [DatetimePipe, RouterLink],
   templateUrl: './detail.html',
   styleUrl: './detail.css',
 })
@@ -23,10 +22,6 @@ export class ClubTeamadminDetail implements OnInit {
   oClub = signal<IClub | null>(null);
   loading = signal(true);
   error = signal<string | null>(null);
-  breadcrumbItems = signal<BreadcrumbItem[]>([
-    { label: 'Mis Clubes', route: '/club/teamadmin' },
-    { label: 'Club' },
-  ]);
 
   ngOnInit(): void {  
     this.load(this.id());
@@ -37,10 +32,6 @@ export class ClubTeamadminDetail implements OnInit {
       next: (data: IClub) => {
         this.oClub.set(data);
         this.loading.set(false);
-        this.breadcrumbItems.set([
-          { label: 'Mis Clubes', route: '/club/teamadmin' },
-          { label: data.nombre },
-        ]);
       },
       error: (err: HttpErrorResponse) => {
         this.error.set('Error cargando el club');

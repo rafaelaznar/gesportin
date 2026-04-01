@@ -1,14 +1,17 @@
 import { Component, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UsuarioTeamadminPlist } from '../../../../component/usuario/teamadmin/plist/plist';
+import { BreadcrumbComponent, BreadcrumbItem } from '../../../../component/shared/breadcrumb/breadcrumb';
 
 @Component({
   selector: 'app-usuario-teamadmin-plist-page',
-  imports: [UsuarioTeamadminPlist],
+  imports: [UsuarioTeamadminPlist, BreadcrumbComponent],
   templateUrl: './plist.html',
   styleUrl: './plist.css',
 })
 export class UsuarioTeamadminPlistPage {
+  breadcrumbItems = signal<BreadcrumbItem[]>([{ label: 'Mis Clubes', route: '/club/teamadmin' }, { label: 'Usuarios' }]);
+
   id_club = signal<number>(0);
 
   constructor(private route: ActivatedRoute) {}

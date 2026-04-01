@@ -3,6 +3,7 @@
 }
 @if (!error()) {
   <div class="container-fluid py-3">
+  <app-breadcrumb [items]="breadcrumbItems()"></app-breadcrumb>
     <div class="alert alert-danger d-flex align-items-center gap-2 mb-3" role="alert">
       <i class="bi bi-exclamation-triangle-fill"></i>
       <strong>¿Eliminar este registro?</strong> Esta acción no se puede deshacer.

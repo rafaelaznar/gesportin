@@ -4,10 +4,11 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { UsuarioService } from '../../../../service/usuarioService';
 import { NotificacionService } from '../../../../service/notificacion';;
 import { UsuarioTeamadminDetail } from '../../../../component/usuario/teamadmin/detail/detail';
+import { BreadcrumbComponent, BreadcrumbItem } from '../../../../component/shared/breadcrumb/breadcrumb';
 
 @Component({
   selector: 'app-usuario-teamadmin-delete-page',
-  imports: [UsuarioTeamadminDetail],
+  imports: [UsuarioTeamadminDetail, BreadcrumbComponent],
   templateUrl: './delete.html',
 })
 export class UsuarioTeamadminDeletePage implements OnInit {
@@ -16,6 +17,7 @@ export class UsuarioTeamadminDeletePage implements OnInit {
   private usuarioService = inject(UsuarioService);
   private notificacion = inject(NotificacionService);
   error = signal<string | null>(null);
+  breadcrumbItems = signal<BreadcrumbItem[]>([{ label: 'Usuarios', route: '/usuario/teamadmin' }, { label: 'Eliminar Usuario' }]);
   id_usuario = signal<number>(0);
 
   ngOnInit(): void {

@@ -11,24 +11,16 @@ import { CategoriaService } from '../../../../service/categoria';
 import { TemporadaService } from '../../../../service/temporada';
 import { Paginacion } from '../../../shared/paginacion/paginacion';
 import { BotoneraActionsPlist } from '../../../shared/botonera-actions-plist/botonera-actions-plist';
-import { BreadcrumbComponent, BreadcrumbItem } from '../../../shared/breadcrumb/breadcrumb';
 
 @Component({
   selector: 'app-categoria-teamadmin-plist',
-  imports: [Paginacion, RouterLink, BotoneraActionsPlist, BreadcrumbComponent],
+  imports: [Paginacion, RouterLink, BotoneraActionsPlist],
   templateUrl: './plist.html',
   styleUrl: './plist.css',
   standalone: true,
 })
 export class CategoriaTeamadminPlist {
   @Input() temporada: number = 0;
-  @Input() showBreadcrumb = true;
-
-  breadcrumbItems = signal<BreadcrumbItem[]>([
-    { label: 'Mis Clubes', route: '/club/teamadmin' },
-    { label: 'Temporadas', route: '/temporada/teamadmin' },
-    { label: 'Categorías' },
-  ]);
 
   oPage = signal<IPage<ICategoria> | null>(null);
   numPage = signal<number>(0);
@@ -51,12 +43,6 @@ export class CategoriaTeamadminPlist {
     if (this.temporada > 0) {
       this.oTemporadaService.get(this.temporada).subscribe({
         next: (t) => {
-          this.breadcrumbItems.set([
-            { label: 'Mis Clubes', route: '/club/teamadmin' },
-            { label: 'Temporadas', route: '/temporada/teamadmin' },
-            { label: t.descripcion, route: `/temporada/teamadmin/view/${t.id}` },
-            { label: 'Categorías' },
-          ]);
         },
         error: () => {},
       });

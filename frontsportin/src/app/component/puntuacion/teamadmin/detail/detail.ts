@@ -5,12 +5,11 @@ import { CommonModule } from '@angular/common';
 import { DatetimePipe } from '../../../../pipe/datetime-pipe';
 import { PuntuacionService } from '../../../../service/puntuacion';
 import { IPuntuacion } from '../../../../model/puntuacion';
-import { BreadcrumbComponent, BreadcrumbItem } from '../../../shared/breadcrumb/breadcrumb';
 
 @Component({
   standalone: true,
   selector: 'app-puntuacion-teamadmin-detail',
-  imports: [CommonModule, RouterLink, DatetimePipe, BreadcrumbComponent],
+  imports: [CommonModule, RouterLink, DatetimePipe],
   templateUrl: './detail.html',
   styleUrl: './detail.css',
 })
@@ -22,12 +21,6 @@ export class PuntuacionTeamadminDetail implements OnInit {
   oPuntuacion = signal<IPuntuacion | null>(null);
   loading = signal(true);
   error = signal<string | null>(null);
-  breadcrumbItems = signal<BreadcrumbItem[]>([
-    { label: 'Mis Clubes', route: '/club/teamadmin' },
-    { label: 'Noticias', route: '/noticia/teamadmin' },
-    { label: 'Puntuaciones', route: '/puntuacion/teamadmin' },
-    { label: 'Puntuación' },
-  ]);
 
   ngOnInit(): void {
     this.load(this.id());
@@ -40,13 +33,6 @@ export class PuntuacionTeamadminDetail implements OnInit {
         this.loading.set(false);
         const noticia = data.noticia;
         const titulo = noticia?.titulo ?? '';
-        this.breadcrumbItems.set([
-          { label: 'Mis Clubes', route: '/club/teamadmin' },
-          { label: 'Noticias', route: '/noticia/teamadmin' },
-          ...(noticia ? [{ label: titulo.length > 40 ? titulo.substring(0, 40) + '…' : titulo, route: `/noticia/teamadmin/view/${noticia.id}` }] : []),
-          { label: 'Puntuaciones', route: noticia ? `/puntuacion/teamadmin/noticia/${noticia.id}` : '/puntuacion/teamadmin' },
-          { label: `#${data.id}` },
-        ]);
       },
       error: (err: HttpErrorResponse) => {
         this.error.set('Error cargando la puntuación');

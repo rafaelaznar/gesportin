@@ -4,10 +4,11 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { CategoriaService } from '../../../../service/categoria';
 import { NotificacionService } from '../../../../service/notificacion';;
 import { CategoriaTeamadminDetail } from '../../../../component/categoria/teamadmin/detail/detail';
+import { BreadcrumbComponent, BreadcrumbItem } from '../../../../component/shared/breadcrumb/breadcrumb';
 
 @Component({
   selector: 'app-categoria-teamadmin-delete-page',
-  imports: [CategoriaTeamadminDetail],
+  imports: [CategoriaTeamadminDetail, BreadcrumbComponent],
   templateUrl: './delete.html',
 })
 export class CategoriaTeamadminDeletePage implements OnInit {
@@ -16,6 +17,7 @@ export class CategoriaTeamadminDeletePage implements OnInit {
   private categoriaService = inject(CategoriaService);
   private notificacion = inject(NotificacionService);
   error = signal<string | null>(null);
+  breadcrumbItems = signal<BreadcrumbItem[]>([{ label: 'Categorías', route: '/categoria/teamadmin' }, { label: 'Eliminar Categoría' }]);
   id_categoria = signal<number>(0);
 
   ngOnInit(): void {

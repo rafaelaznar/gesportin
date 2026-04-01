@@ -1,7 +1,3 @@
-@if (showBreadcrumb) {
-  <app-breadcrumb [items]="breadcrumbItems()"></app-breadcrumb>
-}
-
 <!-- Aviso (mensaje desde queryParams) -->
 @if (message()) {
   <div class="d-flex justify-content-center my-2">
@@ -10,7 +6,6 @@
     </div>
   </div>
 }
-
 
 <!-- Paginación: no se muestra si sólo hay un club -->
 @if (totalRecords() > 0 && (oPage()?.totalPages ?? 1) > 1) {

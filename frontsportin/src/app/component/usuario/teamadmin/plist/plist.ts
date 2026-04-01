@@ -11,23 +11,16 @@ import { IPage } from '../../../../model/plist';
 import { UsuarioService } from '../../../../service/usuarioService';
 import { Paginacion } from '../../../shared/paginacion/paginacion';
 import { BotoneraActionsPlist } from '../../../shared/botonera-actions-plist/botonera-actions-plist';
-import { BreadcrumbComponent, BreadcrumbItem } from '../../../shared/breadcrumb/breadcrumb';
-import { ClubService } from '../../../../service/club';
 
 @Component({
   standalone: true,
   selector: 'app-usuario-teamadmin-plist',
-  imports: [RouterLink, Paginacion, BotoneraActionsPlist, BreadcrumbComponent],
+  imports: [RouterLink, Paginacion, BotoneraActionsPlist],
   templateUrl: './plist.html',
   styleUrl: './plist.css',
 })
 export class UsuarioTeamadminPlist {
   @Input() id_club?: number;
-
-  breadcrumbItems = signal<BreadcrumbItem[]>([
-    { label: 'Mis Clubes', route: '/club/teamadmin' },
-    { label: 'Usuarios' },
-  ]);
 
   oPage = signal<IPage<IUsuario> | null>(null);
   numPage = signal<number>(0);
@@ -42,19 +35,9 @@ export class UsuarioTeamadminPlist {
   private usuarioService = inject(UsuarioService);
   private modalRef = inject(MODAL_REF, { optional: true });
   session = inject(SessionService);
-  private clubService = inject(ClubService);
 
   ngOnInit() {
-    if (this.id_club) {
-      this.clubService.get(this.id_club).subscribe({
-        next: (club) => this.breadcrumbItems.set([
-          { label: 'Mis Clubes', route: '/club/teamadmin' },
-          { label: club.nombre, route: `/club/teamadmin/view/${club.id}` },
-          { label: 'Usuarios' },
-        ]),
-      });
-    }
-    this.searchSubscription = this.searchSubject
+        this.searchSubscription = this.searchSubject
       .pipe(debounceTime(debounceTimeSearch), distinctUntilChanged())
       .subscribe((searchTerm: string) => {
         this.nombre.set(searchTerm);

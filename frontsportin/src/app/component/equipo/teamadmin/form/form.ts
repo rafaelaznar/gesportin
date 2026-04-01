@@ -13,12 +13,11 @@ import { IUsuario } from '../../../../model/usuario';
 import { IEquipo } from '../../../../model/equipo';
 import { CategoriaAdminPlist } from '../../../categoria/admin/plist/plist';
 import { UsuarioAdminPlist } from '../../../usuario/admin/plist/plist';
-import { BreadcrumbComponent, BreadcrumbItem } from '../../../shared/breadcrumb/breadcrumb';
 
 @Component({
   selector: 'app-equipo-teamadmin-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, BreadcrumbComponent],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './form.html',
   styleUrls: ['./form.css']
 })
@@ -41,13 +40,6 @@ export class EquipoTeamadminForm implements OnInit {
   submitting = signal(false);
   selectedCategoria = signal<ICategoria | null>(null);
   selectedEntrenador = signal<IUsuario | null>(null);
-  breadcrumbItems = signal<BreadcrumbItem[]>([
-    { label: 'Mis Clubes', route: '/club/teamadmin' },
-    { label: 'Temporadas', route: '/temporada/teamadmin' },
-    { label: 'Categórías', route: '/categoria/teamadmin' },
-    { label: 'Equipos', route: '/equipo/teamadmin' },
-    { label: 'Equipo' },
-  ]);
 
   ngOnInit(): void {
     this.initForm();
@@ -71,7 +63,6 @@ export class EquipoTeamadminForm implements OnInit {
       id_entrenador: [null, Validators.required],
     });
   }
-
 
   private loadById(id: number): void {
     this.loading.set(true);
@@ -119,15 +110,6 @@ export class EquipoTeamadminForm implements OnInit {
         const temp = categoria.temporada;
         const isEdit = this.id() > 0;
         const nombre = this.equipoForm.get('nombre')?.value ?? '';
-        this.breadcrumbItems.set([
-          { label: 'Mis Clubes', route: '/club/teamadmin' },
-          { label: 'Temporadas', route: '/temporada/teamadmin' },
-          ...(temp ? [{ label: temp.descripcion, route: `/temporada/teamadmin/view/${temp.id}` }] : []),
-          { label: 'Categorías', route: temp ? `/categoria/teamadmin/temporada/${temp.id}` : '/categoria/teamadmin' },
-          { label: categoria.nombre, route: `/categoria/teamadmin/view/${categoria.id}` },
-          { label: 'Equipos', route: `/equipo/teamadmin/categoria/${categoria.id}` },
-          ...(isEdit ? [{ label: nombre || 'Equipo', route: `/equipo/teamadmin/view/${this.id()}` }, { label: 'Editar' }] : [{ label: 'Nuevo Equipo' }]),
-        ]);
       },
       error: (err: HttpErrorResponse) => {
         this.selectedCategoria.set(null);

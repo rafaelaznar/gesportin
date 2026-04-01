@@ -12,12 +12,11 @@ import { TipoarticuloService } from '../../../../service/tipoarticulo';
 import { BotoneraRpp } from '../../../shared/botonera-rpp/botonera-rpp';
 import { Paginacion } from '../../../shared/paginacion/paginacion';
 import { BotoneraActionsPlist } from '../../../shared/botonera-actions-plist/botonera-actions-plist';
-import { BreadcrumbComponent, BreadcrumbItem } from '../../../shared/breadcrumb/breadcrumb';
 
 @Component({
   standalone: true,
   selector: 'app-tipoarticulo-teamadmin-plist',
-  imports: [RouterLink, BotoneraRpp, Paginacion, BotoneraActionsPlist, BreadcrumbComponent],
+  imports: [RouterLink, BotoneraRpp, Paginacion, BotoneraActionsPlist],
   templateUrl: './plist.html',
   styleUrl: './plist.css',
 })
@@ -33,10 +32,6 @@ export class TipoarticuloTeamadminPlist {
   totalRecords = computed(() => this.oPage()?.totalElements ?? 0);
   orderField = signal<string>('id');
   orderDirection = signal<'asc' | 'desc'>('asc');
-  breadcrumbItems = signal<BreadcrumbItem[]>([
-    { label: 'Mis Clubes', route: '/club/teamadmin' },
-    { label: 'Tipos de Artículos' },
-  ]);
 
   private tipoarticuloService = inject(TipoarticuloService);
   private route = inject(ActivatedRoute);

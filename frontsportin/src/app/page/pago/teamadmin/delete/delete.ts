@@ -4,10 +4,11 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { PagoService } from '../../../../service/pago';
 import { NotificacionService } from '../../../../service/notificacion';;
 import { PagoTeamadminDetail } from '../../../../component/pago/teamadmin/detail/detail';
+import { BreadcrumbComponent, BreadcrumbItem } from '../../../../component/shared/breadcrumb/breadcrumb';
 
 @Component({
   selector: 'app-pago-teamadmin-delete-page',
-  imports: [PagoTeamadminDetail],
+  imports: [PagoTeamadminDetail, BreadcrumbComponent],
   templateUrl: './delete.html',
 })
 export class PagoTeamadminDeletePage implements OnInit {
@@ -16,6 +17,7 @@ export class PagoTeamadminDeletePage implements OnInit {
   private pagoService = inject(PagoService);
   private notificacion = inject(NotificacionService);
   error = signal<string | null>(null);
+  breadcrumbItems = signal<BreadcrumbItem[]>([{ label: 'Pagos', route: '/pago/teamadmin' }, { label: 'Eliminar Pago' }]);
   id_pago = signal<number>(0);
 
   ngOnInit(): void {

@@ -11,12 +11,11 @@ import { UsuarioAdminPlist } from '../../../usuario/admin/plist/plist';
 import { IFactura } from '../../../../model/factura';
 import { IUsuario } from '../../../../model/usuario';
 import { SessionService } from '../../../../service/session';
-import { BreadcrumbComponent, BreadcrumbItem } from '../../../shared/breadcrumb/breadcrumb';
 
 @Component({
   selector: 'app-factura-teamadmin-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, BreadcrumbComponent],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './form.html',
   styleUrl: './form.css',
 })
@@ -37,12 +36,6 @@ export class FacturaTeamadminForm implements OnInit {
   loading = signal<boolean>(false);
   submitting = signal(false);
   selectedUsuario = signal<IUsuario | null>(null);
-  breadcrumbItems = signal<BreadcrumbItem[]>([
-    { label: 'Mis Clubes', route: '/club/teamadmin' },
-    { label: 'Usuarios', route: '/usuario/teamadmin' },
-    { label: 'Facturas', route: '/factura/teamadmin' },
-    { label: 'Nueva Factura' },
-  ]);
 
   ngOnInit(): void {
     this.initForm();
@@ -61,7 +54,6 @@ export class FacturaTeamadminForm implements OnInit {
       id_usuario: [null, Validators.required],
     });
   }
-
 
   private loadById(id: number): void {
     this.loading.set(true);
@@ -85,14 +77,6 @@ export class FacturaTeamadminForm implements OnInit {
       id_usuario: factura.usuario?.id,
     });
     const usuario = factura.usuario;
-    this.breadcrumbItems.set([
-      { label: 'Mis Clubes', route: '/club/teamadmin' },
-      { label: 'Usuarios', route: '/usuario/teamadmin' },
-      ...(usuario ? [{ label: `${usuario.nombre} ${usuario.apellido1}`, route: `/usuario/teamadmin/view/${usuario.id}` }] : []),
-      { label: 'Facturas', route: usuario ? `/factura/teamadmin/usuario/${usuario.id}` : '/factura/teamadmin' },
-      { label: `#${factura.id}`, route: `/factura/teamadmin/view/${factura.id}` },
-      { label: 'Editar' },
-    ]);
     if (factura.usuario?.id) {
       this.loadUsuario(factura.usuario.id);
     }

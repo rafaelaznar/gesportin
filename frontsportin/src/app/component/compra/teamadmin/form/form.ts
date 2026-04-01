@@ -14,12 +14,11 @@ import { IFactura } from '../../../../model/factura';
 import { SessionService } from '../../../../service/session';
 import { ArticuloAdminPlist } from '../../../articulo/admin/plist/plist';
 import { FacturaAdminPlist } from '../../../factura/admin/plist/plist';
-import { BreadcrumbComponent, BreadcrumbItem } from '../../../shared/breadcrumb/breadcrumb';
 
 @Component({
   selector: 'app-compra-teamadmin-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, BreadcrumbComponent],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './form.html',
   styleUrl: './form.css',
 })
@@ -43,13 +42,6 @@ export class CompraTeamadminForm implements OnInit {
   submitting = signal(false);
   selectedArticulo = signal<IArticulo | null>(null);
   selectedFactura = signal<IFactura | null>(null);
-  breadcrumbItems = signal<BreadcrumbItem[]>([
-    { label: 'Mis Clubes', route: '/club/teamadmin' },
-    { label: 'Tipos de Artículos', route: '/tipoarticulo/teamadmin' },
-    { label: 'Artículos', route: '/articulo/teamadmin' },
-    { label: 'Compras', route: '/compra/teamadmin' },
-    { label: 'Compra' },
-  ]);
 
   ngOnInit(): void {
     this.initForm();
@@ -108,15 +100,6 @@ export class CompraTeamadminForm implements OnInit {
         this.selectedArticulo.set(articulo);
         const tipo = articulo.tipoarticulo;
         const isEdit = this.id() > 0;
-        this.breadcrumbItems.set([
-          { label: 'Mis Clubes', route: '/club/teamadmin' },
-          { label: 'Tipos de Artículos', route: '/tipoarticulo/teamadmin' },
-          ...(tipo ? [{ label: tipo.descripcion, route: `/tipoarticulo/teamadmin/view/${tipo.id}` }] : []),
-          { label: 'Artículos', route: tipo ? `/articulo/teamadmin/tipoarticulo/${tipo.id}` : '/articulo/teamadmin' },
-          { label: articulo.descripcion, route: `/articulo/teamadmin/view/${articulo.id}` },
-          { label: 'Compras', route: `/compra/teamadmin/articulo/${articulo.id}` },
-          ...(isEdit ? [{ label: `#${this.id()}`, route: `/compra/teamadmin/view/${this.id()}` }, { label: 'Editar' }] : [{ label: 'Nueva Compra' }]),
-        ]);
       },
       error: () => this.selectedArticulo.set(null),
     });

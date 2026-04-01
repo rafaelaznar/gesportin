@@ -11,8 +11,6 @@
             }
           </h1>
         </header>
-
-        <app-breadcrumb [items]="breadcrumbItems()"></app-breadcrumb>
         <form [formGroup]="noticiaForm" (ngSubmit)="onSubmit()" novalidate>
           @if (id() > 0) {
             <div class="mb-4">

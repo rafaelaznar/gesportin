@@ -10,11 +10,10 @@ import { IClub } from '../../../../model/club';
 import { ModalService } from '../../../shared/modal/modal.service';
 import { ClubService } from '../../../../service/club';
 import { ClubAdminPlist } from '../../../club/admin/plist/plist';
-import { BreadcrumbComponent, BreadcrumbItem } from '../../../shared/breadcrumb/breadcrumb';
 
 @Component({
   selector: 'app-temporada-teamadmin-form',
-  imports: [ReactiveFormsModule, RouterLink, BreadcrumbComponent],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './form.html',
   styleUrl: './form.css',
 })
@@ -36,11 +35,6 @@ export class TemporadaTeamadminForm implements OnInit {
   submitting = signal<boolean>(false);
   temporada = signal<ITemporada | null>(null);
   selectedClub = signal<IClub | null>(null);
-  breadcrumbItems = signal<BreadcrumbItem[]>([
-    { label: 'Mis Clubes', route: '/club/teamadmin' },
-    { label: 'Temporadas', route: '/temporada/teamadmin' },
-    { label: 'Nueva Temporada' },
-  ]);
 
   ngOnInit(): void {
     this.initForm();
@@ -76,13 +70,6 @@ export class TemporadaTeamadminForm implements OnInit {
         });
         this.loading.set(false);
         const club = data.club;
-        this.breadcrumbItems.set([
-          { label: 'Mis Clubes', route: '/club/teamadmin' },
-          ...(club ? [{ label: club.nombre, route: `/club/teamadmin/view/${club.id}` }] : []),
-          { label: 'Temporadas', route: club ? `/temporada/teamadmin/club/${club.id}` : '/temporada/teamadmin' },
-          { label: data.descripcion, route: `/temporada/teamadmin/view/${data.id}` },
-          { label: 'Editar' },
-        ]);
       },
       error: (err: HttpErrorResponse) => {
         this.error.set('Error al cargar el registro');

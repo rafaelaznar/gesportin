@@ -4,10 +4,11 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { NoticiaService } from '../../../../service/noticia';
 import { NotificacionService } from '../../../../service/notificacion';;
 import { NoticiaTeamadminDetail } from '../../../../component/noticia/teamadmin/detail/detail';
+import { BreadcrumbComponent, BreadcrumbItem } from '../../../../component/shared/breadcrumb/breadcrumb';
 
 @Component({
   selector: 'app-noticia-teamadmin-delete-page',
-  imports: [NoticiaTeamadminDetail],
+  imports: [NoticiaTeamadminDetail, BreadcrumbComponent],
   templateUrl: './delete.html',
 })
 export class NoticiaTeamadminDeletePage implements OnInit {
@@ -16,6 +17,7 @@ export class NoticiaTeamadminDeletePage implements OnInit {
   private noticiaService = inject(NoticiaService);
   private notificacion = inject(NotificacionService);
   error = signal<string | null>(null);
+  breadcrumbItems = signal<BreadcrumbItem[]>([{ label: 'Noticias', route: '/noticia/teamadmin' }, { label: 'Eliminar Noticia' }]);
   id_noticia = signal<number>(0);
 
   ngOnInit(): void {

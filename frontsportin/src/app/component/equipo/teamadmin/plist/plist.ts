@@ -4,18 +4,16 @@ import { IEquipo } from '../../../../model/equipo';
 import { debounceTime, distinctUntilChanged, Subject, Subscription } from 'rxjs';
 import { debounceTimeSearch } from '../../../../environment/environment';
 import { EquipoService } from '../../../../service/equipo';
-import { CategoriaService } from '../../../../service/categoria';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Paginacion } from '../../../shared/paginacion/paginacion';
 import { RouterLink } from '@angular/router';
 import { ModalRef } from '../../../shared/modal/modal-ref';
 import { MODAL_REF } from '../../../shared/modal/modal.tokens';
 import { BotoneraActionsPlist } from '../../../shared/botonera-actions-plist/botonera-actions-plist';
-import { BreadcrumbComponent, BreadcrumbItem } from '../../../shared/breadcrumb/breadcrumb';
 
 @Component({
   selector: 'app-equipo-teamadmin-plist',
-  imports: [Paginacion, RouterLink, BotoneraActionsPlist, BreadcrumbComponent],
+  imports: [Paginacion, RouterLink, BotoneraActionsPlist],
   templateUrl: './plist.html',
   styleUrl: './plist.css',
   standalone: true,
@@ -23,13 +21,6 @@ import { BreadcrumbComponent, BreadcrumbItem } from '../../../shared/breadcrumb/
 export class EquipoTeamadminPlist {
   @Input() categoria: number = 0;
   @Input() usuario: number = 0;
-
-  breadcrumbItems = signal<BreadcrumbItem[]>([
-    { label: 'Mis Clubes', route: '/club/teamadmin' },
-    { label: 'Temporadas', route: '/temporada/teamadmin' },
-    { label: 'Categorías', route: '/categoria/teamadmin' },
-    { label: 'Equipos' },
-  ]);
 
   oPage = signal<IPage<IEquipo> | null>(null);
   numPage = signal<number>(0);
@@ -43,30 +34,10 @@ export class EquipoTeamadminPlist {
   private searchSubscription?: Subscription;
 
   oEquipoService = inject(EquipoService);
-  private oCategoriaService = inject(CategoriaService);
   private modalRef = inject(MODAL_REF, { optional: true });
 
   ngOnInit(): void {
-    if (this.categoria > 0) {
-      this.oCategoriaService.get(this.categoria).subscribe({
-        next: (cat) => {
-          const temp = cat.temporada;
-          const items: BreadcrumbItem[] = [
-            { label: 'Mis Clubes', route: '/club/teamadmin' },
-            { label: 'Temporadas', route: '/temporada/teamadmin' },
-          ];
-          if (temp) {
-            items.push({ label: temp.descripcion, route: `/temporada/teamadmin/view/${temp.id}` });
-          }
-          items.push({ label: 'Categorías', route: temp ? `/categoria/teamadmin/temporada/${temp.id}` : '/categoria/teamadmin' });
-          items.push({ label: cat.nombre, route: `/categoria/teamadmin/view/${cat.id}` });
-          items.push({ label: 'Equipos' });
-          this.breadcrumbItems.set(items);
-        },
-        error: () => {},
-      });
-    }
-    this.searchSubscription = this.searchSubject
+        this.searchSubscription = this.searchSubject
       .pipe(debounceTime(debounceTimeSearch), distinctUntilChanged())
       .subscribe((searchTerm) => {
         this.nombre.set(searchTerm);

@@ -1,14 +1,17 @@
 import { Component, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { JugadorTeamadminPlist } from '../../../../component/jugador/teamadmin/plist/plist';
+import { BreadcrumbComponent, BreadcrumbItem } from '../../../../component/shared/breadcrumb/breadcrumb';
 
 @Component({
   selector: 'app-jugador-teamadmin-plist-page',
-  imports: [JugadorTeamadminPlist],
+  imports: [JugadorTeamadminPlist, BreadcrumbComponent],
   templateUrl: './plist.html',
   styleUrl: './plist.css',
 })
 export class JugadorTeamadminPlistPage {
+  breadcrumbItems = signal<BreadcrumbItem[]>([{ label: 'Mis Clubes', route: '/club/teamadmin' }, { label: 'Temporadas', route: '/temporada/teamadmin' }, { label: 'Categorías', route: '/categoria/teamadmin' }, { label: 'Equipos', route: '/equipo/teamadmin' }, { label: 'Jugadores' }]);
+
   id_equipo = signal<number | undefined>(undefined);
   id_usuario = signal<number | undefined>(undefined);
 

@@ -4,10 +4,11 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { CompraService } from '../../../../service/compra';
 import { NotificacionService } from '../../../../service/notificacion';;
 import { CompraTeamadminDetail } from '../../../../component/compra/teamadmin/detail/detail';
+import { BreadcrumbComponent, BreadcrumbItem } from '../../../../component/shared/breadcrumb/breadcrumb';
 
 @Component({
   selector: 'app-compra-teamadmin-delete-page',
-  imports: [CompraTeamadminDetail],
+  imports: [CompraTeamadminDetail, BreadcrumbComponent],
   templateUrl: './delete.html',
 })
 export class CompraTeamadminDeletePage implements OnInit {
@@ -16,6 +17,7 @@ export class CompraTeamadminDeletePage implements OnInit {
   private compraService = inject(CompraService);
   private notificacion = inject(NotificacionService);
   error = signal<string | null>(null);
+  breadcrumbItems = signal<BreadcrumbItem[]>([{ label: 'Compras', route: '/compra/teamadmin' }, { label: 'Eliminar Compra' }]);
   id_compra = signal<number>(0);
 
   ngOnInit(): void {

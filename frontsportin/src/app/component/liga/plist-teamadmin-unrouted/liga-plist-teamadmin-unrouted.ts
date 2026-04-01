@@ -9,30 +9,20 @@ import { debounceTimeSearch } from '../../../environment/environment';
 import { ILiga } from '../../../model/liga';
 import { IPage } from '../../../model/plist';
 import { LigaService } from '../../../service/liga';
-import { EquipoService } from '../../../service/equipo';
 
 import { BotoneraRpp } from '../../shared/botonera-rpp/botonera-rpp';
 import { Paginacion } from '../../shared/paginacion/paginacion';
 import { BotoneraActionsPlist } from '../../shared/botonera-actions-plist/botonera-actions-plist';
-import { BreadcrumbComponent, BreadcrumbItem } from '../../shared/breadcrumb/breadcrumb';
 
 @Component({
   selector: 'app-liga-plist-teamadmin-unrouted',
-  imports: [BotoneraRpp, Paginacion, RouterLink, BotoneraActionsPlist, BreadcrumbComponent],
+  imports: [BotoneraRpp, Paginacion, RouterLink, BotoneraActionsPlist],
   templateUrl: './liga-plist-teamadmin-unrouted.html',
   styleUrls: ['./liga-plist-teamadmin-unrouted.css'],
   standalone: true,
 })
 export class LigaPlistTeamAdminUnrouted {
   @Input() equipo = signal<number>(0);
-
-  breadcrumbItems = signal<BreadcrumbItem[]>([
-    { label: 'Mis Clubes', route: '/club/teamadmin' },
-    { label: 'Temporadas', route: '/temporada/teamadmin' },
-    { label: 'Categorías', route: '/categoria/teamadmin' },
-    { label: 'Equipos', route: '/equipo/teamadmin' },
-    { label: 'Ligas' },
-  ]);
 
   oPage = signal<IPage<ILiga> | null>(null);
   numPage = signal<number>(0);
@@ -50,7 +40,6 @@ export class LigaPlistTeamAdminUnrouted {
   private searchSubscription?: Subscription;
 
   private oLigaService = inject(LigaService);
-  private oEquipoService = inject(EquipoService);
   private route = inject(ActivatedRoute);
   private modalRef = inject(MODAL_REF, { optional: true });
 
@@ -59,31 +48,7 @@ export class LigaPlistTeamAdminUnrouted {
     if (msg) {
       this.showMessage(msg);
     }
-    if (this.equipo() > 0) {
-      this.oEquipoService.get(this.equipo()).subscribe({
-        next: (eq) => {
-          const cat = eq.categoria;
-          const temp = cat?.temporada;
-          const items: BreadcrumbItem[] = [
-            { label: 'Mis Clubes', route: '/club/teamadmin' },
-            { label: 'Temporadas', route: '/temporada/teamadmin' },
-          ];
-          if (temp) {
-            items.push({ label: temp.descripcion, route: `/temporada/teamadmin/view/${temp.id}` });
-          }
-          if (cat) {
-            items.push({ label: 'Categorías', route: temp ? `/categoria/teamadmin/temporada/${temp.id}` : '/categoria/teamadmin' });
-            items.push({ label: cat.nombre, route: `/categoria/teamadmin/view/${cat.id}` });
-          }
-          items.push({ label: 'Equipos', route: cat ? `/equipo/teamadmin/categoria/${cat.id}` : '/equipo/teamadmin' });
-          if (eq.nombre) items.push({ label: eq.nombre, route: `/equipo/teamadmin/view/${eq.id}` });
-          items.push({ label: 'Ligas' });
-          this.breadcrumbItems.set(items);
-        },
-        error: () => {},
-      });
-    }
-    this.searchSubscription = this.searchSubject
+        this.searchSubscription = this.searchSubject
       .pipe(debounceTime(debounceTimeSearch), distinctUntilChanged())
       .subscribe((searchTerm) => {
         this.nombre.set(searchTerm);

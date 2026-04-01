@@ -17,12 +17,11 @@ import { SessionService } from '../../../../service/session';
 import { ClubAdminPlist } from '../../../club/admin/plist/plist';
 import { TipousuarioAdminPlist } from '../../../tipousuario/admin/plist/plist';
 import { RolusuarioAdminPlist } from '../../../rolusuario/admin/plist/plist';
-import { BreadcrumbComponent, BreadcrumbItem } from '../../../shared/breadcrumb/breadcrumb';
 
 @Component({
   selector: 'app-usuario-teamadmin-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, BreadcrumbComponent],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './form.html',
   styleUrl: './form.css',
 })
@@ -47,11 +46,6 @@ export class UsuarioTeamadminForm implements OnInit {
   selectedClub = signal<IClub | null>(null);
   selectedTipousuario = signal<ITipousuario | null>(null);
   selectedRolusuario = signal<IRolusuario | null>(null);
-  breadcrumbItems = signal<BreadcrumbItem[]>([
-    { label: 'Mis Clubes', route: '/club/teamadmin' },
-    { label: 'Usuarios', route: '/usuario/teamadmin' },
-    { label: 'Nuevo Usuario' },
-  ]);
 
   ngOnInit(): void {
     this.initForm();
@@ -95,7 +89,6 @@ export class UsuarioTeamadminForm implements OnInit {
     }
   }
 
-
   private loadById(id: number): void {
     this.loading.set(true);
     this.oUsuarioService.get(id).subscribe({
@@ -122,13 +115,6 @@ export class UsuarioTeamadminForm implements OnInit {
       id_rolusuario: usuario.rolusuario?.id,
       id_club: usuario.club?.id,
     });
-    this.breadcrumbItems.set([
-      { label: 'Mis Clubes', route: '/club/teamadmin' },
-      ...(usuario.club ? [{ label: usuario.club.nombre, route: `/club/teamadmin/view/${usuario.club.id}` }] : []),
-      { label: 'Usuarios', route: usuario.club ? `/usuario/teamadmin/club/${usuario.club.id}` : '/usuario/teamadmin' },
-      { label: `${usuario.nombre} ${usuario.apellido1}`, route: `/usuario/teamadmin/view/${usuario.id}` },
-      { label: 'Editar' },
-    ]);
     if (usuario.tipousuario?.id) this.loadTipousuario(usuario.tipousuario.id);
     if (usuario.rolusuario?.id) this.loadRolusuario(usuario.rolusuario.id);
     if (usuario.club?.id) this.loadClub(usuario.club.id);

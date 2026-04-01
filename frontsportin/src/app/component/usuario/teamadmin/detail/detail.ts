@@ -5,12 +5,11 @@ import { CommonModule } from '@angular/common';
 import { DatetimePipe } from '../../../../pipe/datetime-pipe';
 import { UsuarioService } from '../../../../service/usuarioService';
 import { IUsuario } from '../../../../model/usuario';
-import { BreadcrumbComponent, BreadcrumbItem } from '../../../shared/breadcrumb/breadcrumb';
 
 @Component({
   standalone: true,
   selector: 'app-usuario-teamadmin-detail',
-  imports: [CommonModule, RouterLink, DatetimePipe, BreadcrumbComponent],
+  imports: [CommonModule, RouterLink, DatetimePipe],
   templateUrl: './detail.html',
   styleUrl: './detail.css',
 })
@@ -22,11 +21,6 @@ export class UsuarioTeamadminDetail implements OnInit {
   oUsuario = signal<IUsuario | null>(null);
   loading = signal(true);
   error = signal<string | null>(null);
-  breadcrumbItems = signal<BreadcrumbItem[]>([
-    { label: 'Mis Clubes', route: '/club/teamadmin' },
-    { label: 'Usuarios', route: '/usuario/teamadmin' },
-    { label: 'Usuario' },
-  ]);
 
   ngOnInit(): void {
     const idUsuario = this.id();
@@ -44,12 +38,6 @@ export class UsuarioTeamadminDetail implements OnInit {
         this.oUsuario.set(data);
         this.loading.set(false);
         const club = data.club;
-        this.breadcrumbItems.set([
-          { label: 'Mis Clubes', route: '/club/teamadmin' },
-          ...(club ? [{ label: club.nombre, route: `/club/teamadmin/view/${club.id}` }] : []),
-          { label: 'Usuarios', route: club ? `/usuario/teamadmin/club/${club.id}` : '/usuario/teamadmin' },
-          { label: `${data.nombre} ${data.apellido1}` },
-        ]);
       },
       error: (err: HttpErrorResponse) => {
         this.error.set('Error cargando el usuario');

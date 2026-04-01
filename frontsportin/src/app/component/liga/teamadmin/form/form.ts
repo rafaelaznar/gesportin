@@ -11,12 +11,11 @@ import { SessionService } from '../../../../service/session';
 import { ILiga } from '../../../../model/liga';
 import { IEquipo } from '../../../../model/equipo';
 import { EquipoAdminPlist } from '../../../equipo/admin/plist/plist';
-import { BreadcrumbComponent, BreadcrumbItem } from '../../../shared/breadcrumb/breadcrumb';
 
 @Component({
   selector: 'app-liga-teamadmin-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, BreadcrumbComponent],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './form.html',
   styleUrl: './form.css',
 })
@@ -39,14 +38,6 @@ export class LigaTeamadminForm implements OnInit {
   error = signal<string | null>(null);
   equipos = signal<IEquipo[]>([]);
   selectedEquipo = signal<IEquipo | null>(null);
-  breadcrumbItems = signal<BreadcrumbItem[]>([
-    { label: 'Mis Clubes', route: '/club/teamadmin' },
-    { label: 'Temporadas', route: '/temporada/teamadmin' },
-    { label: 'Categorías', route: '/categoria/teamadmin' },
-    { label: 'Equipos', route: '/equipo/teamadmin' },
-    { label: 'Ligas', route: '/liga/teamadmin' },
-    { label: 'Liga' },
-  ]);
 
   ngOnInit(): void {
     this.initForm();
@@ -107,7 +98,6 @@ export class LigaTeamadminForm implements OnInit {
       });
   }
 
-
   private loadById(id: number): void {
     this.loading.set(true);
     this.ligaService.get(id).subscribe({
@@ -142,17 +132,6 @@ export class LigaTeamadminForm implements OnInit {
         const temp = cat?.temporada;
         const isEdit = this.id() > 0;
         const nombre = this.ligaForm.get('nombre')?.value ?? '';
-        this.breadcrumbItems.set([
-          { label: 'Mis Clubes', route: '/club/teamadmin' },
-          { label: 'Temporadas', route: '/temporada/teamadmin' },
-          ...(temp ? [{ label: temp.descripcion, route: `/temporada/teamadmin/view/${temp.id}` }] : []),
-          { label: 'Categorías', route: temp ? `/categoria/teamadmin/temporada/${temp.id}` : '/categoria/teamadmin' },
-          ...(cat ? [{ label: cat.nombre, route: `/categoria/teamadmin/view/${cat.id}` }] : []),
-          { label: 'Equipos', route: cat ? `/equipo/teamadmin/categoria/${cat.id}` : '/equipo/teamadmin' },
-          { label: equipo.nombre ?? '', route: `/equipo/teamadmin/view/${equipo.id}` },
-          { label: 'Ligas', route: `/liga/teamadmin/equipo/${equipo.id}` },
-          ...(isEdit ? [{ label: nombre || 'Liga', route: `/liga/teamadmin/view/${this.id()}` }, { label: 'Editar' }] : [{ label: 'Nueva Liga' }]),
-        ]);
       },
       error: (err: HttpErrorResponse) => {
         this.selectedEquipo.set(null);

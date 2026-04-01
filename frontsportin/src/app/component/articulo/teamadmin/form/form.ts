@@ -11,12 +11,11 @@ import { IArticulo } from '../../../../model/articulo';
 import { ITipoarticulo } from '../../../../model/tipoarticulo';
 import { SessionService } from '../../../../service/session';
 import { TipoarticuloAdminPlist } from '../../../tipoarticulo/admin/plist/plist';
-import { BreadcrumbComponent, BreadcrumbItem } from '../../../shared/breadcrumb/breadcrumb';
 
 @Component({
   selector: 'app-articulo-teamadmin-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, BreadcrumbComponent],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './form.html',
   styleUrl: './form.css',
 })
@@ -38,12 +37,6 @@ export class ArticuloTeamadminForm implements OnInit {
   loading = signal<boolean>(false);
   submitting = signal(false);
   selectedTipoarticulo = signal<ITipoarticulo | null>(null);
-  breadcrumbItems = signal<BreadcrumbItem[]>([
-    { label: 'Mis Clubes', route: '/club/teamadmin' },
-    { label: 'Tipos de Artículos', route: '/tipoarticulo/teamadmin' },
-    { label: 'Artículos', route: '/articulo/teamadmin' },
-    { label: 'Nuevo Artículo' },
-  ]);
 
   ngOnInit(): void {
     this.initForm();
@@ -69,7 +62,6 @@ export class ArticuloTeamadminForm implements OnInit {
     });
   }
 
-
   private loadById(id: number): void {
     this.loading.set(true);
     this.oArticuloService.get(id).subscribe({
@@ -94,14 +86,6 @@ export class ArticuloTeamadminForm implements OnInit {
       id_tipoarticulo: articulo.tipoarticulo?.id,
     });
     const tipo = articulo.tipoarticulo;
-    this.breadcrumbItems.set([
-      { label: 'Mis Clubes', route: '/club/teamadmin' },
-      { label: 'Tipos de Artículos', route: '/tipoarticulo/teamadmin' },
-      ...(tipo ? [{ label: tipo.descripcion, route: `/tipoarticulo/teamadmin/view/${tipo.id}` }] : []),
-      { label: 'Artículos', route: tipo ? `/articulo/teamadmin/tipoarticulo/${tipo.id}` : '/articulo/teamadmin' },
-      { label: articulo.descripcion, route: `/articulo/teamadmin/view/${articulo.id}` },
-      { label: 'Editar' },
-    ]);
     if (articulo.tipoarticulo?.id) this.loadTipoarticulo(articulo.tipoarticulo.id);
   }
 
@@ -110,13 +94,6 @@ export class ArticuloTeamadminForm implements OnInit {
       next: (tipoarticulo) => {
         this.selectedTipoarticulo.set(tipoarticulo);
         if (this.id() === 0) {
-          this.breadcrumbItems.set([
-            { label: 'Mis Clubes', route: '/club/teamadmin' },
-            { label: 'Tipos de Artículos', route: '/tipoarticulo/teamadmin' },
-            { label: tipoarticulo.descripcion, route: `/tipoarticulo/teamadmin/view/${tipoarticulo.id}` },
-            { label: 'Artículos', route: `/articulo/teamadmin/tipoarticulo/${tipoarticulo.id}` },
-            { label: 'Nuevo Artículo' },
-          ]);
         }
       },
       error: () => this.selectedTipoarticulo.set(null),
