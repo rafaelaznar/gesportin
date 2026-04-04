@@ -91,6 +91,7 @@ export class PagoTeamadminPlistPage implements OnInit {
             items.push({ label: `${usuario.nombre} ${usuario.apellido1}`, route: `/usuario/teamadmin/view/${usuario.id}` });
           }
           items.push({ label: 'Jugadores', route: usuario ? `/jugador/teamadmin/usuario/${usuario.id}` : '/jugador/teamadmin' });
+          items.push({ label: `${jugador.usuario.nombre} ${jugador.usuario.apellido1}`, route: `/jugador/teamadmin/view/${jugador.id}` });
           items.push({ label: 'Pagos' });
           this.breadcrumbItems.set(items);
         },
