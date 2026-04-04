@@ -27,7 +27,7 @@ export class UsuarioAdminPlist {
 
   oPage = signal<IPage<IUsuario> | null>(null);
   numPage = signal<number>(0);
-  numRpp = signal<number>(10);
+  numRpp = signal<number>(5);
   nombre = signal<string>('');
   private searchSubject = new Subject<string>();
   private searchSubscription?: Subscription;

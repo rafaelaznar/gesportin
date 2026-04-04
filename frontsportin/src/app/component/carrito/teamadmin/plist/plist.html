@@ -1,1 +1,95 @@
-<app-carrito-admin-plist strRole="teamadmin"></app-carrito-admin-plist>
+<div>
+  @if ((id_articulo == null || id_articulo <= 0) && (id_usuario == null || id_usuario <= 0)) {
+    <div class="d-flex justify-content-center my-2">
+      <input
+        class="form-control me-2"
+        type="search"
+        placeholder="Buscar por artículo"
+        aria-label="Buscar"
+        (input)="onSearch($any($event.target).value)"
+        [value]="descripcion()"
+        name="searchDescripcion"
+      />
+    </div>
+  }
+
+  <div class="d-flex justify-content-center my-1">
+    <small class="text-muted">Total registros: {{ totalRecords() || 0 }}</small>
+    @if (id_articulo && id_articulo > 0) {
+      <small class="text-muted ms-3">Filtro: id de artículo = {{ id_articulo }}</small>
+    }
+    @if (id_usuario && id_usuario > 0) {
+      <small class="text-muted ms-3">Filtro: id de usuario = {{ id_usuario }}</small>
+    }
+    @if (descripcion().length > 0) {
+      <small class="text-muted ms-3">Filtro: búsqueda contiene "{{ descripcion() }}"</small>
+    }
+  </div>
+
+  @if (totalRecords() > 0) {
+    <div class="container-fluid p-0 my-1">
+      <div class="controls-row mb-2">
+        <div class="col-control left">
+          <app-paginacion [numPage]="numPage()" [numPages]="oPage()?.totalPages || 1" (pageChange)="goToPage($event)"></app-paginacion>
+        </div>
+        <div class="col-control right">
+          <app-botonera-rpp [numRpp]="numRpp()" (rppChange)="onRppChange($event)"></app-botonera-rpp>
+        </div>
+      </div>
+    </div>
+  }
+
+  <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
+    @for (oCarrito of oPage()?.content; track oCarrito.id) {
+      <div class="col">
+        <div class="card h-100 shadow-sm" (click)="onSelect(oCarrito)" [style.cursor]="isDialogMode() ? 'pointer' : 'default'">
+          <div class="card-header d-flex align-items-center gap-2">
+            <i class="bi bi-cart fs-5" aria-hidden="true"></i>
+            <strong class="text-truncate">Carrito #{{ oCarrito.id }}</strong>
+          </div>
+          <div class="card-body pb-2">
+            <ul class="list-unstyled mb-3">
+              <li class="mb-1">
+                <i class="bi bi-hash text-muted me-1"></i>
+                <span class="text-muted">ID:</span> {{ oCarrito.id }}
+              </li>
+              <li class="mb-1">
+                <i class="bi bi-123 text-muted me-1"></i>
+                <span class="text-muted">Cantidad:</span> {{ oCarrito.cantidad }}
+              </li>
+            </ul>
+            @if (oCarrito.articulo) {
+              <p class="mb-1">
+                <strong>Artículo:</strong>
+                <a [routerLink]="['/articulo/teamadmin/view', oCarrito.articulo.id]" class="ms-1">
+                  {{ oCarrito.articulo.descripcion }}
+                </a>
+              </p>
+            }
+            @if (oCarrito.usuario) {
+              <p class="mb-1">
+                <strong>Usuario:</strong>
+                <span class="ms-1">{{ oCarrito.usuario.nombre }} {{ oCarrito.usuario.apellido1 }}</span>
+              </p>
+            }
+          </div>
+          @if (isDialogMode()) {
+            <div class="card-footer d-flex justify-content-center">
+              <button class="btn btn-success btn-sm" (click)="onSelect(oCarrito)" title="Seleccionar">
+                <i class="bi bi-check-circle" aria-hidden="true"></i> Seleccionar
+              </button>
+            </div>
+          } @else {
+            <div class="card-footer d-flex justify-content-end gap-2">
+              <a [routerLink]="['/carrito/teamadmin/view', oCarrito.id]" class="btn btn-outline-primary btn-sm">
+                <i class="bi bi-eye" aria-hidden="true"></i>
+                <span class="d-none d-sm-inline ms-1">Ver</span>
+              </a>
+              <app-botonera-actions-plist [id]="oCarrito.id" strEntity="carrito" strRole="teamadmin"></app-botonera-actions-plist>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div>

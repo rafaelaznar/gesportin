@@ -23,7 +23,7 @@ import { BotoneraActionsPlist } from '../../../shared/botonera-actions-plist/bot
 export class TipousuarioAdminPlist {
   oPage = signal<IPage<ITipousuario> | null>(null);
   numPage = signal<number>(0);
-  numRpp = signal<number>(10);
+  numRpp = signal<number>(5);
   descripcion = signal<string>('');
   private searchSubject = new Subject<string>();
   private searchSubscription?: Subscription;

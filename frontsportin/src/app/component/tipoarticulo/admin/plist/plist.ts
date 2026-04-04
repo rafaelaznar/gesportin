@@ -26,7 +26,7 @@ export class TipoarticuloAdminPlist {
 
   oPage = signal<IPage<ITipoarticulo> | null>(null);
   numPage = signal<number>(0);
-  numRpp = signal<number>(10);
+  numRpp = signal<number>(5);
   descripcion = signal<string>('');
   private searchSubject = new Subject<string>();
   private searchSubscription?: Subscription;
