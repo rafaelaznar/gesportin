@@ -15,7 +15,7 @@
 
   <div class="d-flex justify-content-center my-1">
     <small class="text-muted">Total registros: {{ totalRecords() || 0 }}</small>
-    @if (id_articulo && id_articulo > 0) {
+    @if (showFilterInfo && id_articulo && id_articulo > 0) {
       <small class="text-muted ms-3">Filtro: id de artículo = {{ id_articulo }}</small>
       @if (!isDialogMode()) {
         <a class="ms-2" [routerLink]="strRole ? ['/comentarioart', strRole] : ['/comentarioart']" role="button" title="Quitar filtro">
@@ -23,7 +23,7 @@
         </a>
       }
     }
-    @if (id_usuario && id_usuario > 0) {
+    @if (showFilterInfo && id_usuario && id_usuario > 0) {
       <small class="text-muted ms-3">Filtro: id de usuario = {{ id_usuario }}</small>
       @if (!isDialogMode()) {
         <a class="ms-2" [routerLink]="strRole ? ['/comentarioart', strRole] : ['/comentarioart']" role="button" title="Quitar filtro">
@@ -46,7 +46,7 @@
     </div>
   </div>
 
-  @if (totalRecords() > 0) {
+  @if (totalRecords() > 0 && (oPage()?.totalPages || 1) > 1) {
     <div class="container-fluid p-0 my-1">
       <div class="controls-row mb-2">
         <div class="col-control left">
@@ -55,9 +55,6 @@
             [numPages]="oPage()?.totalPages || 1"
             (pageChange)="goToPage($event)"
           ></app-paginacion>
-        </div>
-        <div class="col-control right">
-          <app-botonera-rpp [numRpp]="numRpp()" (rppChange)="onRppChange($event)"></app-botonera-rpp>
         </div>
       </div>
     </div>

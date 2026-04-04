@@ -1,2 +1,7 @@
-<app-breadcrumb [items]="breadcrumbItems()"></app-breadcrumb>
-<app-articulo-teamadmin-plist [id_tipoarticulo]="id_tipoarticulo()"></app-articulo-teamadmin-plist>
+<div class="container-fluid">
+  <app-breadcrumb [items]="breadcrumbItems()"></app-breadcrumb>
+  <div class="d-flex justify-content-center my-3">
+    <h1 class="mb-0"><i class="bi bi-box-seam me-2" aria-hidden="true"></i>Mis artículos</h1>
+  </div>
+  <app-articulo-teamadmin-plist [id_tipoarticulo]="id_tipoarticulo()"></app-articulo-teamadmin-plist>
+</div>

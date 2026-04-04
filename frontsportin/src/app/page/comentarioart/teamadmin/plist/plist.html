@@ -1,2 +1,7 @@
-<app-breadcrumb [items]="breadcrumbItems()"></app-breadcrumb>
-<app-comentarioart-teamadmin-plist></app-comentarioart-teamadmin-plist>
+<div class="container-fluid">
+  <app-breadcrumb [items]="breadcrumbItems()"></app-breadcrumb>
+  <div class="d-flex justify-content-center my-3">
+    <h1 class="mb-0"><i class="bi bi-chat-dots me-2" aria-hidden="true"></i>Comentarios de artículos</h1>
+  </div>
+  <app-comentarioart-teamadmin-plist [id_articulo]="id_articulo()" [id_usuario]="id_usuario()"></app-comentarioart-teamadmin-plist>
+</div>

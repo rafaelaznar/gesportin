@@ -25,6 +25,7 @@ export class ComentarioartAdminPlist {
   @Input() id_articulo?: number;
   @Input() id_usuario?: number;
   @Input() strRole: string = '';
+  @Input() showFilterInfo = true;
 
   oPage = signal<IPage<IComentarioart> | null>(null);
   numPage = signal<number>(0);

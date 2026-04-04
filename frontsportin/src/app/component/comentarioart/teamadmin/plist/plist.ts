@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ComentarioartAdminPlist } from '../../../comentarioart/admin/plist/plist';
 
 @Component({
@@ -8,4 +8,7 @@ import { ComentarioartAdminPlist } from '../../../comentarioart/admin/plist/plis
   templateUrl: './plist.html',
   styleUrl: './plist.css',
 })
-export class ComentarioartTeamadminPlist {}
+export class ComentarioartTeamadminPlist {
+  @Input() id_articulo?: number;
+  @Input() id_usuario?: number;
+}

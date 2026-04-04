@@ -41,6 +41,15 @@ export class CompraAdminPlist {
   session = inject(SessionService);
 
   ngOnInit() {
+    if (this.id_articulo != null) {
+      // ya se filtra por input
+    } else {
+      const idArticulo = this.route.snapshot.paramMap.get('id_articulo');
+      if (idArticulo) {
+        this.id_articulo = Number(idArticulo);
+      }
+    }
+
     if (this.id_factura != null) {
       // ya se filtra por input
     } else {
