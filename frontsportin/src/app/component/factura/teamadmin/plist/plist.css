@@ -1,1 +1,41 @@
-/* Factura teamadmin plist styles */
+.controls-row {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.controls-row .col-control {
+  flex: 1 1 50%;
+  display: flex;
+  align-items: center;
+}
+
+.controls-row .col-control.left {
+  justify-content: flex-start;
+}
+
+.controls-row .col-control.right {
+  justify-content: flex-end;
+}
+
+.new-btn {
+  display: inline-block;
+  margin: 10px auto;
+}
+
+.controls-row app-paginacion {
+  display: inline-flex;
+  justify-content: center;
+}
+
+@media (max-width: 850px) {
+  .controls-row {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .controls-row .col-control {
+    flex: 1 1 100%;
+    justify-content: center;
+  }
+}

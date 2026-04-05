@@ -77,7 +77,7 @@
                   <i class="bi bi-star-fill me-1"></i>0 puntuaciones
                 </span>
               } @else {
-                <a [routerLink]="['/puntuacion/noticia', oNoticia.id]"
+                <a [routerLink]="['/puntuacion/teamadmin/noticia', oNoticia.id]"
                    class="badge big-badge bg-primary text-decoration-none">
                   <i class="bi bi-star-fill me-1"></i>{{ oNoticia.puntuaciones }} ({{ oNoticia.mediaPuntuacion | number: '1.1' }}/5)
                 </a>

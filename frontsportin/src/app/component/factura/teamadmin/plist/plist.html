@@ -1,1 +1,141 @@
-<app-factura-admin-plist strRole="teamadmin"></app-factura-admin-plist>
+<div>
+  <!-- 1. Barra de búsqueda: solo si NO hay filtro FK activo -->
+  @if (!id_usuario || id_usuario === 0) {
+    <div class="d-flex justify-content-center my-2">
+      <input
+        class="form-control me-2"
+        type="search"
+        placeholder="Buscar por fecha"
+        aria-label="Search"
+        (input)="onSearch($any($event.target).value)"
+        [value]="fecha()"
+        name="searchField"
+      />
+    </div>
+  }
+
+  <!-- 2. Contador total + filtro de texto activo -->
+  <div class="d-flex justify-content-center my-1">
+    <small class="text-muted">Total registros: {{ totalRecords() || 0 }}</small>
+    @if (fecha() && fecha().length > 0) {
+      <small class="text-muted ms-3">Filtro: búsqueda contiene "{{ fecha() }}"</small>
+    }
+  </div>
+
+  <!-- 3. Botón crear (oculto si hay filtro FK) -->
+  @if (!id_usuario || id_usuario === 0) {
+    <div class="d-flex my-1">
+      <div class="w-100 d-flex justify-content-center">
+        <a class="btn btn-primary new-btn"
+           [routerLink]="['/factura/teamadmin/new']"
+           role="button">
+          <i class="bi bi-plus-circle me-2" aria-hidden="true"></i>
+          <span class="d-none d-sm-inline">Crear factura</span>
+        </a>
+      </div>
+    </div>
+  }
+
+  <!-- 4. Paginación: solo si hay más de 1 página -->
+  @if (totalRecords() > 0 && (oPage()?.totalPages ?? 1) > 1) {
+    <div class="container-fluid p-0 my-1">
+      <div class="controls-row mb-2">
+        <div class="col-control left">
+          <app-paginacion
+            [numPage]="numPage()"
+            [numPages]="oPage()?.totalPages || 1"
+            (pageChange)="goToPage($event)"
+          ></app-paginacion>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- 5. Tabla -->
+  <div class="d-flex justify-content-center">
+    <div class="table-responsive w-100">
+      <table class="table table-striped table-bordered table-sm w-100">
+        <thead>
+          <tr>
+            <th scope="col" (click)="onOrder('id')" style="cursor: pointer; width: 8%">
+              <div class="header-stacked">
+                <div class="header-top">
+                  <i class="bi bi-hash" aria-hidden="true"></i>
+                  @if (orderField() === 'id') {
+                    @if (orderDirection() === 'asc') { <i class="bi bi-caret-up-fill" aria-hidden="true"></i> }
+                    @if (orderDirection() === 'desc') { <i class="bi bi-caret-down-fill" aria-hidden="true"></i> }
+                  }
+                </div>
+                <span>ID</span>
+              </div>
+            </th>
+            <th scope="col" (click)="onOrder('fecha')" style="cursor: pointer; width: 18%">
+              <div class="header-stacked">
+                <div class="header-top">
+                  <i class="bi bi-calendar-event" aria-hidden="true"></i>
+                  @if (orderField() === 'fecha') {
+                    @if (orderDirection() === 'asc') { <i class="bi bi-caret-up-fill" aria-hidden="true"></i> }
+                    @if (orderDirection() === 'desc') { <i class="bi bi-caret-down-fill" aria-hidden="true"></i> }
+                  }
+                </div>
+                <span>Fecha</span>
+              </div>
+            </th>
+            <th scope="col" style="width: 30%">
+              <div class="header-stacked">
+                <div class="header-top"><i class="bi bi-person" aria-hidden="true"></i></div>
+                <span>Usuario</span>
+              </div>
+            </th>
+            <th scope="col" style="width: 15%">
+              <div class="header-stacked">
+                <div class="header-top"><i class="bi bi-bag" aria-hidden="true"></i></div>
+                <span>Compras</span>
+              </div>
+            </th>
+            <th scope="col" class="text-center" style="width: 14%">
+              <div class="header-stacked">
+                <div class="header-top"><i class="bi bi-gear" aria-hidden="true"></i></div>
+                <span>Acciones</span>
+              </div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (oItem of oPage()?.content; track oItem.id) {
+            <tr>
+              <th scope="row" class="text-center">{{ oItem.id }}</th>
+              <td>{{ oItem.fecha }}</td>
+              <td>
+                <a [routerLink]="['/usuario/teamadmin/view', oItem.usuario.id]">
+                  {{ oItem.usuario.nombre }} {{ oItem.usuario.apellido1 }} {{ oItem.usuario.apellido2 }}
+                </a>
+              </td>
+              <td class="text-center">
+                @if (!oItem.compras || oItem.compras === 0) {
+                  <i class="bi bi-ban" aria-hidden="true"></i>
+                } @else {
+                  <a [routerLink]="['/compra/teamadmin/factura', oItem.id]">
+                    {{ oItem.compras }}
+                  </a>
+                }
+              </td>
+              <td class="text-center">
+                <app-botonera-actions-plist
+                  [id]="oItem.id"
+                  strEntity="factura"
+                  strRole="teamadmin"
+                ></app-botonera-actions-plist>
+              </td>
+            </tr>
+          }
+          @empty {
+            <tr>
+              <td colspan="5" class="text-center text-muted py-3">No se encontraron registros</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -254,221 +254,454 @@ El wrapper teamadmin pasa `strRole="teamadmin"` al componente compartido cuando 
 
 ---
 
-## 4. Diseño del componente `plist` (listado) — Layout de tarjetas
+## 4. Diseño del componente `plist` (listado)
 
-El perfil teamadmin usa **tarjetas (cards)** en lugar de tablas para los listados principales.
-Esto proporciona una navegación más visual y táctil adecuada para el gestor de club.
+El perfil teamadmin dispone de **dos layouts estándar** para componentes plist. Cada nuevo
+componente plist debe usar **exactamente uno** de los dos modelos; no se mezclan ni se
+inventan variantes.
 
-### 4.1 Raíz del template
+---
 
-- Un único `<div>` raíz sin clases de contenedor (el contenedor lo pone la página).
+### 4.1 Plist tipo LISTA (tabla) — modelo: `usuario/teamadmin`
 
-### 4.2 Breadcrumb
+Usado para entidades con muchos campos tabulares o donde la comparación columnar es relevante.
+**Referencia canónica**: `component/usuario/teamadmin/plist/`
 
-- Primera línea del template: `<app-breadcrumb [items]="breadcrumbItems()"></app-breadcrumb>`.
+#### 4.1.1 TypeScript
 
-### 4.3 Mensaje de éxito (queryParams)
+```typescript
+@Component({
+  standalone: true,
+  selector: 'app-<entidad>-teamadmin-plist',
+  imports: [RouterLink, Paginacion, BotoneraActionsPlist],
+  // Añadir TrimPipe si se truncan textos; NO importar BotoneraRpp
+  templateUrl: './plist.html',
+  styleUrl: './plist.css',
+})
+export class <Entidad>TeamadminPlist implements OnInit, OnDestroy {
+  @Input() id_<padre>?: number;   // FK opcional; omitir si no hay filtro
 
-- Si la ruta trae `?msg=...`, mostrar un alert temporal:
-  ```html
-  @if (message()) {
-    <div class="d-flex justify-content-center my-2">
-      <div class="alert alert-success w-100 text-center" role="alert">
-        {{ message() }}
-      </div>
-    </div>
+  oPage = signal<IPage<I<Entidad>> | null>(null);
+  numPage = signal<number>(0);
+  numRpp = signal<number>(10);    // siempre 10, NO exponer al usuario
+  totalRecords = computed(() => this.oPage()?.totalElements ?? 0);
+  orderField = signal<string>('id');
+  orderDirection = signal<'asc' | 'desc'>('asc');
+
+  // Búsqueda de texto (si aplica)
+  nombre = signal<string>('');
+  private searchSubject = new Subject<string>();
+  private searchSubscription?: Subscription;
+
+  private <entidad>Service = inject(<Entidad>Service);
+  private modalRef = inject(MODAL_REF, { optional: true });
+
+  ngOnInit() {
+    this.searchSubscription = this.searchSubject
+      .pipe(debounceTime(debounceTimeSearch), distinctUntilChanged())
+      .subscribe((term) => { this.nombre.set(term); this.numPage.set(0); this.getPage(); });
+    this.getPage();
   }
-  ```
-- El mensaje se auto-oculta tras 4 segundos mediante `setTimeout`.
 
-### 4.4 Barra de búsqueda global
+  ngOnDestroy() { this.searchSubscription?.unsubscribe(); }
 
-- `<div class="d-flex justify-content-center my-2">` con `<input>` de búsqueda idéntico al
-  del perfil Administrador (ver Sección 3.2 del perfil id=1).
-- Binding con `debounceTime` vía `Subject<string>`.
-- Si el componente ya filtra por FK (ej. `categoria > 0`), la barra puede mostrarse igualmente
-  porque el filtro FK se combina con la búsqueda de texto.
-
-### 4.5 Línea de contadores
-
-- `<div class="d-flex justify-content-center my-1">`:
-  - `<small class="text-muted">Total registros: {{ totalRecords() || 0 }}</small>`
-  - Si hay filtro de texto activo:
-    `<small class="text-muted ms-3">Filtro: nombre contiene "{{ nombre() }}"</small>`
-
-### 4.6 Controles de paginación y rpp
-
-- **Botonera de paginación**: se muestra siempre que `totalRecords() > 0` (independientemente
-  del número de páginas). Se omite solo si no hay registros.
-- **Botonera de registros por página (`app-botonera-rpp`)**: se muestra en el perfil teamadmin
-  igual que en el perfil Administrador. El valor por defecto de `numRpp` es **5**.
-- Estructura resultante:
-  ```html
-  @if (totalRecords() > 0) {
-    <div class="container-fluid p-0 my-1">
-      <div class="controls-row mb-2">
-        <div class="col-control left">
-          <app-paginacion [numPage]="numPage()" [numPages]="oPage()?.totalPages || 1"
-            (pageChange)="goToPage($event)"></app-paginacion>
-        </div>
-        <div class="col-control right">
-          <app-botonera-rpp [numRpp]="numRpp()" (rppChange)="changeRpp($event)"></app-botonera-rpp>
-        </div>
-      </div>
-    </div>
+  getPage() {
+    this.<entidad>Service.getPage(
+      this.numPage(), this.numRpp(), this.orderField(), this.orderDirection(),
+      this.nombre(), this.id_<padre> ?? 0
+    ).subscribe({
+      next: (data) => {
+        this.oPage.set(data);
+        if (this.numPage() > 0 && this.numPage() >= data.totalPages) {
+          this.numPage.set(data.totalPages - 1);
+          this.getPage();
+        }
+      },
+      error: (err) => console.error(err),
+    });
   }
-  ```
-- El componente `.ts` debe importar `BotoneraRpp` y declarar `changeRpp(rpp: number):
-  ```typescript
-  changeRpp(rpp: number): void {
-    this.numRpp.set(rpp);
+
+  onOrder(field: string) {
+    if (this.orderField() === field) {
+      this.orderDirection.set(this.orderDirection() === 'asc' ? 'desc' : 'asc');
+    } else {
+      this.orderField.set(field);
+      this.orderDirection.set('asc');
+    }
     this.numPage.set(0);
     this.getPage();
   }
-  ```
 
-### 4.7 Botón de creación
+  goToPage(n: number) { this.numPage.set(n); this.getPage(); }
+  onSearch(v: string) { this.searchSubject.next(v); }
+  isDialogMode() { return !!this.modalRef; }
+  onSelect(item: I<Entidad>) { this.modalRef?.close(item); }
+}
+```
 
-- `<div class="d-flex my-1">` → `<div class="w-100 d-flex justify-content-center">`:
-  ```html
-  <a class="btn btn-primary new-btn" [routerLink]="['/<entidad>/teamadmin/new']" role="button">
-    <i class="bi bi-plus-circle" aria-hidden="true"></i>
-    <span class="d-none d-sm-inline">Crear <entidad></span>
-  </a>
-  ```
-- En modo diálogo (`isDialogMode()`), el botón se oculta.
-- Para entidades que el club admin no puede crear (ver Sección 10, restricciones por entidad),
-  el botón se omite completamente del template.
-- Cuando el plist está filtrado por una entidad padre (FK activa), el botón pasa el ID del
-  padre como `queryParam` para que el formulario de creación lo precargue automáticamente:
-  ```html
-  <a class="btn btn-primary new-btn"
-     [routerLink]="['/<entidad>/teamadmin/new']"
-     [queryParams]="idPadre ? { id_padre: idPadre } : {}"
-     role="button">
-    <i class="bi bi-plus-circle" aria-hidden="true"></i>
-    <span class="d-none d-sm-inline">Crear <entidad></span>
-  </a>
-  ```
-  Si `idPadre` es `0` o `undefined`, `[queryParams]` devuelve `{}` (sin parámetros).
-  En plists que reutilizan el plist admin con `strRole`, el routerLink es dinámico:
-  ```html
-  [routerLink]="strRole ? ['/<entidad>', strRole, 'new'] : ['/<entidad>/new']"
-  [queryParams]="idPadre ? { id_padre: idPadre } : {}"
-  ```
+**Reglas del `.ts` tipo lista**:
+- `numRpp` fijo a **10**. No se importa ni usa `BotoneraRpp`.
+- Búsqueda de texto con debounce vía `Subject<string>` + `debounceTimeSearch`.
+- Si el filtro es por FK (ej. `id_club`), la barra de búsqueda se oculta cuando el `@Input` tiene valor.
+- `MODAL_REF` se inyecta como opcional para soportar uso como selector modal.
 
-### 4.8 Rejilla de tarjetas
-
-- Contenedor: `<div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">`.
-- Iteración: `@for (oEntidad of oPage()?.content; track oEntidad.id)`.
-
-Cada tarjeta sigue este patrón:
+#### 4.1.2 Template HTML
 
 ```html
-<div class="col">
-  <div class="card h-100 shadow-sm">
-    <div class="card-header d-flex align-items-center gap-2">
-      <i class="bi bi-<icono> fs-5" aria-hidden="true"></i>
-      <strong class="text-truncate">{{ oEntidad.campoDescriptivo }}</strong>
+<div>
+  <!-- 1. Barra de búsqueda: solo si NO hay filtro FK activo -->
+  @if (!id_<padre> || id_<padre> === 0) {
+    <div class="d-flex justify-content-center my-2">
+      <input
+        class="form-control me-2"
+        type="search"
+        placeholder="Buscar por <campo>"
+        aria-label="Search"
+        (input)="onSearch($any($event.target).value)"
+        [value]="nombre()"
+        name="searchField"
+      />
     </div>
-    <div class="card-body pb-2">
-      <ul class="list-unstyled mb-3">
-        <li class="mb-1">
-          <i class="bi bi-hash text-muted me-1"></i>
-          <span class="text-muted">ID:</span> {{ oEntidad.id }}
-        </li>
-        <!-- Campos propios relevantes con icono + texto -->
-        <li class="mb-1">
-          <i class="bi bi-<icono-campo> text-muted me-1"></i>
-          <span class="text-muted"><Label>:</span> {{ oEntidad.campo }}
-        </li>
-      </ul>
-      <!-- Relaciones ManyToOne como texto con enlace -->
-      <p><strong><Relación>:</strong>
-        @if (oEntidad.relacion) {
-          <a [routerLink]="['/<relacion>/teamadmin/view', oEntidad.relacion.id]">
-            {{ oEntidad.relacion.campoDescriptivo }}
-          </a>
-        } @else { Sin <relación> }
-      </p>
-      <!-- Contadores (OneToMany) como badges -->
-      <div class="d-flex flex-wrap gap-2">
-        @if (oEntidad.contador === 0) {
-          <span class="badge bg-secondary opacity-75">
-            <i class="bi bi-<icono> me-1"></i>0 <nombre>
-          </span>
-        } @else {
-          <a [routerLink]="['/<entidadHija>/teamadmin/<entidad>', oEntidad.id]"
-             class="badge bg-primary text-decoration-none">
-            <i class="bi bi-<icono> me-1"></i>{{ oEntidad.contador }} <nombre>
-          </a>
-        }
+  }
+
+  <!-- 2. Contador total + filtro de texto activo -->
+  <div class="d-flex justify-content-center my-1">
+    <small class="text-muted">Total registros: {{ totalRecords() || 0 }}</small>
+    @if (nombre() && nombre().length > 0) {
+      <small class="text-muted ms-3">Filtro: búsqueda contiene "{{ nombre() }}"</small>
+    }
+  </div>
+
+  <!-- 3. Botón crear (oculto en modo diálogo y si entidad no es editable) -->
+  @if (!isDialogMode()) {
+    <div class="d-flex my-1">
+      <div class="w-100 d-flex justify-content-center">
+        <a class="btn btn-primary new-btn"
+           [routerLink]="['/<entidad>/teamadmin/new']"
+           [queryParams]="id_<padre> ? { id_<padre>: id_<padre> } : {}"
+           role="button">
+          <i class="bi bi-plus-circle me-2" aria-hidden="true"></i>
+          <span class="d-none d-sm-inline">Crear <entidad></span>
+        </a>
       </div>
     </div>
-    <div class="card-footer d-flex justify-content-end gap-2">
-      <!-- Botón Ver explícito -->
-      <a [routerLink]="['/<entidad>/teamadmin/view', oEntidad.id]"
-         class="btn btn-outline-primary btn-sm">
-        <i class="bi bi-eye" aria-hidden="true"></i>
-        <span class="d-none d-sm-inline ms-1">Ver</span>
-      </a>
-      <!-- Botones Editar/Eliminar (si la entidad lo permite) -->
-      <a [routerLink]="['/<entidad>/teamadmin/edit', oEntidad.id]"
-         class="btn btn-outline-warning btn-sm">
-        <i class="bi bi-pencil" aria-hidden="true"></i>
-        <span class="d-none d-sm-inline ms-1">Editar</span>
-      </a>
-      <a [routerLink]="['/<entidad>/teamadmin/delete', oEntidad.id]"
-         class="btn btn-outline-danger btn-sm">
-        <i class="bi bi-trash" aria-hidden="true"></i>
-        <span class="d-none d-sm-inline ms-1">Eliminar</span>
-      </a>
+  }
+
+  <!-- 4. Paginación: solo si hay más de 1 página -->
+  @if (totalRecords() > 0 && (oPage()?.totalPages ?? 1) > 1) {
+    <div class="container-fluid p-0 my-1">
+      <div class="controls-row mb-2">
+        <div class="col-control left">
+          <app-paginacion
+            [numPage]="numPage()"
+            [numPages]="oPage()?.totalPages || 1"
+            (pageChange)="goToPage($event)"
+          ></app-paginacion>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- 5. Tabla -->
+  <div class="d-flex justify-content-center">
+    <div class="table-responsive w-100">
+      <table class="table table-striped table-bordered table-sm w-100">
+        <thead>
+          <tr>
+            <th scope="col" (click)="onOrder('id')" style="cursor: pointer; width: 6%">
+              <div class="header-stacked">
+                <div class="header-top">
+                  <i class="bi bi-hash" aria-hidden="true"></i>
+                  @if (orderField() === 'id') {
+                    @if (orderDirection() === 'asc') { <i class="bi bi-caret-up-fill"></i> }
+                    @if (orderDirection() === 'desc') { <i class="bi bi-caret-down-fill"></i> }
+                  }
+                </div>
+                <span>ID</span>
+              </div>
+            </th>
+            <!-- Columnas de campos: (click)="onOrder('<campo>')" y header-stacked -->
+            <!-- Columnas de contadores: class="d-none d-lg-table-cell text-center" -->
+            <th scope="col" class="text-center" style="width: 14%">
+              <div class="header-stacked">
+                <div class="header-top"><i class="bi bi-gear" aria-hidden="true"></i></div>
+                <span>Acciones</span>
+              </div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (oItem of oPage()?.content; track oItem.id) {
+            <tr (click)="onSelect(oItem)" [style.cursor]="isDialogMode() ? 'pointer' : 'default'">
+              <th scope="row" class="text-center">{{ oItem.id }}</th>
+              <!-- Celdas de campos -->
+              <!-- Contadores con routerLink teamadmin o bi-ban si 0 -->
+              <td class="text-center">
+                <app-botonera-actions-plist
+                  [id]="oItem.id"
+                  strEntity="<entidad>"
+                  strRole="teamadmin"
+                ></app-botonera-actions-plist>
+              </td>
+            </tr>
+          }
+          @empty {
+            <tr>
+              <td colspan="<N>" class="text-center text-muted py-3">No se encontraron registros</td>
+            </tr>
+          }
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
 ```
 
-**Alternativa con `app-botonera-actions-plist`**:
-En lugar de botones manuales en el `card-footer`, se puede usar el componente compartido
-pasando `strRole="teamadmin"`:
+**Reglas del template tipo lista**:
+- `numRpp` **nunca** se muestra ni se pasa a `app-botonera-rpp`. No existe botonera RPP.
+- La paginación (`app-paginacion`) se muestra **solo si `totalPages > 1`**.
+- Cabeceras de columna con `<div class="header-stacked">`: icono arriba, label abajo, flechas de orden si corresponde.
+- Columnas informativas opcionales con `class="d-none d-md-table-cell"` o `d-none d-lg-table-cell`.
+- Contadores en celdas: `<a [routerLink]="['/hija/teamadmin/padre', oItem.id]">` si `> 0`; `<i class="bi bi-ban">` si `= 0`.
+- Fila `@empty` con `colspan` igual al número de columnas.
+
+#### 4.1.3 CSS
+
+```css
+.controls-row { display: flex; flex-wrap: nowrap; gap: 0.5rem; align-items: center; }
+.controls-row .col-control { flex: 1 1 50%; display: flex; align-items: center; }
+.controls-row .col-control.left { justify-content: flex-start; }
+.controls-row .col-control.right { justify-content: flex-end; }
+.new-btn { display: inline-block; margin: 10px auto; }
+.controls-row app-paginacion { display: inline-flex; justify-content: center; }
+@media (max-width: 850px) {
+  .controls-row { flex-wrap: wrap; justify-content: center; }
+  .controls-row .col-control { flex: 1 1 100%; justify-content: center; }
+}
+```
+
+---
+
+### 4.2 Plist tipo CARD (tarjetas) — modelo: `temporada/teamadmin`
+
+Usado para entidades que se presentan mejor con tarjetas visuales (más campos descriptivos,
+contadores relacionados, navegación jerarquizada).
+**Referencia canónica**: `component/temporada/teamadmin/plist/`
+
+#### 4.2.1 TypeScript
+
+```typescript
+@Component({
+  standalone: true,
+  selector: 'app-<entidad>-teamadmin-plist',
+  imports: [Paginacion, RouterLink, TrimPipe, BotoneraActionsPlist],
+  // Añadir TrimPipe si se truncan textos; NO importar BotoneraRpp
+  templateUrl: './plist.html',
+  styleUrl: './plist.css',
+})
+export class <Entidad>TeamadminPlist implements OnInit, OnDestroy {
+  @Input() id_<padre>?: number;   // FK opcional
+
+  oPage = signal<IPage<I<Entidad>> | null>(null);
+  numPage = signal<number>(0);
+  numRpp = signal<number>(10);    // siempre 10, NO exponer al usuario
+  totalRecords = computed(() => this.oPage()?.totalElements ?? 0);
+  orderField = signal<string>('id');
+  orderDirection = signal<'asc' | 'desc'>('asc');
+
+  // Campo de búsqueda de texto
+  descripcion = signal<string>('');
+  private searchSubject = new Subject<string>();
+  private searchSubscription?: Subscription;
+
+  private <entidad>Service = inject(<Entidad>Service);
+
+  ngOnInit(): void {
+    this.searchSubscription = this.searchSubject
+      .pipe(debounceTime(debounceTimeSearch), distinctUntilChanged())
+      .subscribe((term) => { this.descripcion.set(term); this.numPage.set(0); this.getPage(); });
+    this.getPage();
+  }
+
+  ngOnDestroy(): void { this.searchSubscription?.unsubscribe(); }
+
+  getPage(): void {
+    this.<entidad>Service.getPage(
+      this.numPage(), this.numRpp(), this.orderField(), this.orderDirection(),
+      this.descripcion(), this.id_<padre> ?? 0
+    ).subscribe({
+      next: (data) => {
+        this.oPage.set(data);
+        if (this.numPage() > 0 && this.numPage() >= data.totalPages) {
+          this.numPage.set(data.totalPages - 1);
+          this.getPage();
+        }
+      },
+      error: (err) => console.error(err),
+    });
+  }
+
+  goToPage(n: number): void { this.numPage.set(n); this.getPage(); }
+  onSearchDescription(v: string) { this.searchSubject.next(v); }
+}
+```
+
+**Reglas del `.ts` tipo card**:
+- `numRpp` fijo a **10**. No se importa ni usa `BotoneraRpp`.
+- No se inyecta `MODAL_REF` (las cards no se usan como selector modal).
+- La búsqueda de texto siempre visible (no depende de FK).
+
+#### 4.2.2 Template HTML
+
 ```html
-<div class="card-footer d-flex justify-content-between">
-  <a [routerLink]="['/<entidad>/teamadmin/view', oEntidad.id]"
-     class="btn btn-outline-secondary btn-sm">Ver</a>
-  <app-botonera-actions-plist [id]="oEntidad.id"
-    strEntity="<entidad>" strRole="teamadmin">
-  </app-botonera-actions-plist>
+<div>
+  <!-- 1. Barra de búsqueda (siempre visible) -->
+  <div class="d-flex justify-content-center my-2">
+    <input
+      class="form-control me-2"
+      type="search"
+      placeholder="Buscar por descripción"
+      aria-label="Search"
+      (input)="onSearchDescription($any($event.target).value)"
+      [value]="descripcion()"
+      name="searchDescription"
+    />
+  </div>
+
+  <!-- 2. Contador total + filtro de texto activo -->
+  <div class="d-flex justify-content-center my-1">
+    <small class="text-muted">Total registros: {{ totalRecords() || 0 }}</small>
+    @if (descripcion().length > 0) {
+      <small class="text-muted ms-3">Filtro: descripción contiene "{{ descripcion() }}"</small>
+    }
+  </div>
+
+  <!-- 3. Paginación: solo si hay más de 1 página -->
+  @if (totalRecords() > 0 && (oPage()?.totalPages ?? 1) > 1) {
+    <div class="container-fluid p-0 my-1">
+      <div class="controls-row mb-2">
+        <div class="col-control left">
+          <app-paginacion
+            [numPage]="numPage()"
+            [numPages]="oPage()?.totalPages || 1"
+            (pageChange)="goToPage($event)"
+          ></app-paginacion>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- 4. Botón crear -->
+  <div class="d-flex my-1">
+    <div class="w-100 d-flex justify-content-center">
+      <a class="btn btn-primary new-btn"
+         [routerLink]="['/<entidad>/teamadmin/new']"
+         [queryParams]="id_<padre> ? { id_<padre>: id_<padre> } : {}"
+         role="button">
+        <i class="bi bi-plus-circle" aria-hidden="true"></i>
+        <span class="d-none d-sm-inline">Crear <entidad></span>
+      </a>
+    </div>
+  </div>
+
+  <!-- 5. Grid de cards -->
+  <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
+    @for (oItem of oPage()?.content; track oItem.id) {
+      <div class="col">
+        <div class="card h-100 shadow-sm">
+          <div class="card-header">
+            <h5 class="card-title mb-0">ID {{ oItem.id }}</h5>
+          </div>
+          <div class="card-body">
+            <!-- Campo descriptivo principal -->
+            <p class="card-text"><strong>Descripción:</strong> {{ oItem.descripcion }}</p>
+            <!-- Relaciones ManyToOne con enlace teamadmin -->
+            <p class="card-text">
+              <strong><Relación>:</strong>
+              <a [routerLink]="['/<relacion>/teamadmin/view', oItem.<relacion>.id]">
+                {{ oItem.<relacion>.campo | trim: 20 }} ({{ oItem.<relacion>.id }})
+              </a>
+            </p>
+            <!-- Contadores badge (filosofía 0 = puerta de creación, ver 4.11) -->
+            <div class="d-flex flex-wrap gap-2 align-items-center">
+            </div>
+          </div>
+          <div class="card-footer d-flex justify-content-between">
+            <!-- Badge(s) de contador de entidades hijas -->
+            @if (oItem.hijas === 0) {
+              <a [routerLink]="['/<hija>/teamadmin/new']"
+                 [queryParams]="{ id_<entidad>: oItem.id }"
+                 class="badge big-badge bg-warning text-dark text-decoration-none"
+                 title="Crear primera <hija>">
+                <i class="bi bi-plus-circle me-1"></i>0 <hijas>
+              </a>
+            } @else {
+              <a [routerLink]="['/<hija>/teamadmin/<entidad>', oItem.id]"
+                 class="badge big-badge bg-primary text-decoration-none"
+                 title="Ver <hijas>">
+                <i class="bi bi-<icono> me-1"></i>{{ oItem.hijas }} <hijas>
+              </a>
+            }
+            <app-botonera-actions-plist
+              [id]="oItem.id"
+              strEntity="<entidad>"
+              strRole="teamadmin"
+            ></app-botonera-actions-plist>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
 </div>
 ```
-**Nota**: usar `[id]="oEntidad.id"` sin `?? 0`. Si el modelo declara `id: number` (no nullable),
-el operador `??` produce el error NG8102. Solo usar `?? 0` cuando el modelo declara `id?: number`
-(ej. `IEquipo` tiene `id?: number`).
 
-El componente `BotoneraActionsPlist` genera automáticamente las rutas con el segmento
-`/teamadmin/` cuando recibe `strRole="teamadmin"`, y aplica internamente las restricciones de
-edición/borrado por entidad (ver Sección 10).
+**Reglas del template tipo card**:
+- `numRpp` **nunca** se muestra ni se pasa a `app-botonera-rpp`. No existe botonera RPP.
+- La paginación (`app-paginacion`) se muestra **solo si `totalPages > 1`**.
+- El botón crear **siempre visible** (no condicionado a `isDialogMode`), excepto si la entidad
+  es de solo lectura para el club admin.
+- Cards con `class="card h-100 shadow-sm"`, header con `<h5 class="card-title mb-0">ID N</h5>`.
+- Footer con `d-flex justify-content-between`: contadores de hijas a la izquierda,
+  `app-botonera-actions-plist` a la derecha.
+- Aplicar filosofía «0 = puerta de creación» del apartado 4.11.
 
-### 4.9 Diferencia con el plist del perfil Administrador (id=1)
+#### 4.2.3 CSS
 
-| Aspecto | Admin (id=1) | Teamadmin (id=2) |
-|---------|-------------|-----------------|
-| Layout | Tabla `<table>` con columnas ordenables | Tarjetas `card` en grid responsivo |
-| Navegación primaria | Menú lateral / sidebar | Breadcrumbs + enlaces en tarjetas |
-| Breadcrumb | No se usa | Obligatorio en todo plist |
-| Rutas | `/<entidad>/...` | `/<entidad>/teamadmin/...` |
-| Botón crear | Siempre visible | Visible solo si entidad es editable |
-| Filtro FK | Indicado en línea de contadores | Indicado en breadcrumb dinámico |
-| Contadores | Columnas de tabla | Badges dentro de la tarjeta |
+```css
+.controls-row { display: flex; flex-wrap: nowrap; gap: 0.5rem; align-items: center; }
+.controls-row .col-control { flex: 1 1 50%; display: flex; align-items: center; }
+.controls-row .col-control.left { justify-content: flex-start; }
+.controls-row .col-control.right { justify-content: flex-end; }
+.new-btn { display: inline-block; margin: 10px auto; }
+.controls-row app-paginacion { display: inline-flex; justify-content: center; }
+@media (max-width: 850px) {
+  .controls-row { flex-wrap: wrap; justify-content: center; }
+  .controls-row .col-control { flex: 1 1 100%; justify-content: center; }
+}
+```
 
-### 4.10 CSS del componente plist teamadmin
+---
 
-- Importar el CSS compartido al inicio: ``
-  (ajustar ruta relativa según profundidad).
-- Solo `controls-row` y clases de paginación se usan del CSS compartido (las reglas de tabla
-  se ignoran al no haber tabla).
-- Regla mínima obligatoria: `:host { display: block; }`.
+### 4.3 Tabla comparativa de los dos layouts
 
-### 4.11 Filosofía «0 = puerta de entrada a creación»
+| Aspecto | Tipo LISTA (tabla) | Tipo CARD (tarjetas) |
+|---------|-------------------|---------------------|
+| Referencia | `usuario/teamadmin` | `temporada/teamadmin` |
+| Layout HTML | `<table>` con `thead`/`tbody` | `row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4` |
+| `numRpp` por defecto | 10 | 10 |
+| Botonera RPP | **No existe** | **No existe** |
+| Paginación | Solo si `totalPages > 1` | Solo si `totalPages > 1` |
+| Búsqueda de texto | Cuando no hay FK activa | Siempre visible |
+| Botón crear | Solo si `!isDialogMode()` | Siempre visible (si aplica) |
+| Modo diálogo | Sí (soporta `MODAL_REF`) | No |
+| Ordenación por columna | Sí (`onOrder()`, flechas) | No |
+| Contadores | Celdas con link o `bi-ban` | Badges en `card-footer` |
+| Fila vacía | `@empty` con `colspan` | No aplica |
+| Admin (id=1) | Tabla igual, con `BotoneraRpp` | No aplica (admin siempre tabla) |
+
+---
+
+### 4.4 Filosofía «0 = puerta de entrada a creación»
 
 El perfil teamadmin **no dispone de menú lateral** y solo puede navegar mediante breadcrumbs
 y los enlaces de las tarjetas. Para garantizar que el club admin nunca quede bloqueado ante
@@ -801,13 +1034,20 @@ Mismas reglas que el perfil Administrador (Secciones 5.5, 5.7 y 5.8 del perfil i
 
 ### 7.1 Página `plist` (wrapper del componente plist)
 
-- Contenedor: `<div class="container-fluid my-2">`.
-- **No lleva título `<h1>`** propio; el breadcrumb del componente ya indica la ubicación.
-- Montaje del componente con filtros si aplica:
+- Contenedor: `<div class="container-fluid">`.
+- **Incluye breadcrumb y título `<h1>` centrado con icono**:
   ```html
-  <app-<entidad>-teamadmin-plist [categoria]="categoria()" [usuario]="usuario()">
-  </app-<entidad>-teamadmin-plist>
+  <div class="container-fluid">
+    <app-breadcrumb [items]="breadcrumbItems()"></app-breadcrumb>
+    <div class="d-flex justify-content-center my-3">
+      <h1 class="mb-0"><i class="bi bi-<icono>" aria-hidden="true"></i><Entidades en plural></h1>
+    </div>
+    <app-<entidad>-teamadmin-plist [id_<padre>]="id_<padre>()"></app-<entidad>-teamadmin-plist>
+  </div>
   ```
+  - El icono es específico de la entidad (ej. `bi-people` para usuarios, `bi-receipt` para facturas).
+  - El texto es siempre el nombre plural de la entidad con mayúscula inicial.
+  - El espaciado vertical es `my-3` y el título no tiene margen inferior (`mb-0`).
 - Cuando el plist puede recibir **múltiples parámetros de ruta** distintos (rutas duales),
   la página declara un signal por cada parámetro posible y los lee todos en `ngOnInit()`.
   Ver **Sección 13** para el patrón completo de rutas duales y breadcrumbs contextuales.

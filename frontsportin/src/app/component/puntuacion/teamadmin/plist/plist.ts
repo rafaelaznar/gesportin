@@ -5,7 +5,6 @@ import { IPage } from '../../../../model/plist';
 import { IPuntuacion } from '../../../../model/puntuacion';
 import { PuntuacionService } from '../../../../service/puntuacion';
 import { Paginacion } from '../../../shared/paginacion/paginacion';
-import { BotoneraRpp } from '../../../shared/botonera-rpp/botonera-rpp';
 import { BotoneraActionsPlist } from '../../../shared/botonera-actions-plist/botonera-actions-plist';
 import { ModalRef } from '../../../shared/modal/modal-ref';
 import { MODAL_REF } from '../../../shared/modal/modal.tokens';
@@ -13,7 +12,7 @@ import { MODAL_REF } from '../../../shared/modal/modal.tokens';
 @Component({
   standalone: true,
   selector: 'app-puntuacion-teamadmin-plist',
-  imports: [Paginacion, RouterLink, BotoneraRpp, BotoneraActionsPlist],
+  imports: [Paginacion, RouterLink, BotoneraActionsPlist],
   templateUrl: './plist.html',
   styleUrl: './plist.css',
 })
@@ -25,7 +24,7 @@ export class PuntuacionTeamadminPlist implements OnInit {
 
   oPage = signal<IPage<IPuntuacion> | null>(null);
   numPage = signal<number>(0);
-  numRpp = signal<number>(5);
+  numRpp = signal<number>(10);
 
   message = signal<string | null>(null);
   totalRecords = computed(() => this.oPage()?.totalElements ?? 0);
@@ -96,12 +95,6 @@ export class PuntuacionTeamadminPlist implements OnInit {
 
   goToPage(numPage: number) {
     this.numPage.set(numPage);
-    this.getPage();
-  }
-
-  onRppChange(n: number) {
-    this.numRpp.set(n);
-    this.numPage.set(0);
     this.getPage();
   }
 
