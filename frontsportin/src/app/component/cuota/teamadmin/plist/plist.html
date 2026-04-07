@@ -90,6 +90,36 @@
                 </a>
               }
             </div>
+            @if (getPagosForCuota(oCuota.id).length > 0) {
+              <div class="mt-2">
+                <table class="table table-sm table-borderless mb-0 w-100">
+                  <thead>
+                    <tr class="border-bottom">
+                      <th class="ps-0 text-muted fw-normal" style="font-size:0.72rem">Jugador</th>
+                      <th class="text-muted fw-normal" style="font-size:0.72rem">Fecha</th>
+                      <th class="text-end pe-0 text-muted fw-normal" style="font-size:0.72rem">Estado</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (pago of getPagosForCuota(oCuota.id); track pago.id) {
+                      <tr>
+                        <td class="ps-0 py-1" style="font-size:0.75rem">
+                          {{ pago.jugador.usuario.nombre }} {{ pago.jugador.usuario.apellido1 }} {{ pago.jugador.usuario.apellido2 }}
+                        </td>
+                        <td class="py-1" style="font-size:0.75rem">{{ pago.fecha }}</td>
+                        <td class="text-end pe-0 py-1">
+                          @if (pago.abonado) {
+                            <i class="bi bi-check-circle-fill text-success" title="Abonado"></i>
+                          } @else {
+                            <i class="bi bi-x-circle-fill text-danger" title="Pendiente"></i>
+                          }
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            }
           </div>
           @if (!isDialogMode()) {
             <div class="card-footer d-flex justify-content-end gap-2">

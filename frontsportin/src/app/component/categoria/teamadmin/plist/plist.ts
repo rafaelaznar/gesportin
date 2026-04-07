@@ -24,7 +24,7 @@ export class CategoriaTeamadminPlist {
 
   oPage = signal<IPage<ICategoria> | null>(null);
   numPage = signal<number>(0);
-  numRpp = signal<number>(5);
+  numRpp = signal<number>(6);
 
   totalRecords = computed(() => this.oPage()?.totalElements ?? 0);
 
