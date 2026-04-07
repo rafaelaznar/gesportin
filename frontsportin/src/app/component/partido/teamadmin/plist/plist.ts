@@ -13,6 +13,8 @@ import { BotoneraRpp } from '../../../shared/botonera-rpp/botonera-rpp';
 import { Paginacion } from '../../../shared/paginacion/paginacion';
 import { BotoneraActionsPlist } from '../../../shared/botonera-actions-plist/botonera-actions-plist';
 import { DatetimePipe } from '../../../../pipe/datetime-pipe';
+import { LigaService } from '../../../../service/liga';
+import { ILiga } from '../../../../model/liga';
 
 @Component({
   standalone: true,
@@ -24,6 +26,9 @@ import { DatetimePipe } from '../../../../pipe/datetime-pipe';
 export class PartidoTeamadminPlist implements OnInit, OnDestroy {
   @Input() id_liga?: number;
 
+// inyectar el servicio de liga para obtener el nombre de la liga y mostrarlo en el título de la página
+  private ligaService = inject(LigaService);
+
   oPage = signal<IPage<IPartido> | null>(null);
   numPage = signal<number>(0);
   numRpp = signal<number>(5);
@@ -31,6 +36,9 @@ export class PartidoTeamadminPlist implements OnInit, OnDestroy {
   private searchSubject = new Subject<string>();
   private searchSubscription?: Subscription;
   totalRecords = computed(() => this.oPage()?.totalElements ?? 0);
+  totalPages = computed(() => this.oPage()?.totalPages ?? 1);
+  // objeto de clase Liga para mostrar su nombre en el título de la página
+  oLiga = signal<ILiga | null>(null);
 
   private partidoService = inject(PartidoService);
   private route = inject(ActivatedRoute);
@@ -44,6 +52,15 @@ export class PartidoTeamadminPlist implements OnInit, OnDestroy {
         this.id_liga = Number(idLiga);
       }
     }
+    // obtener los datos de la liga this.id_liga para mostrar su nombre en el título
+    if (this.id_liga) {
+      this.ligaService.get(this.id_liga).subscribe({
+        next: (liga) => {
+          this.oLiga.set(liga);
+        }
+      });
+    }
+
     this.searchSubscription = this.searchSubject
       .pipe(debounceTime(debounceTimeSearch), distinctUntilChanged())
       .subscribe((term: string) => {
