@@ -1,11 +1,22 @@
 # Reference Guide
 
+Use this guide to find detailed information about the project structure, API, database, UI design, and other important aspects of the application. 
+
+Each section includes a reference to a specific markdown file that contains the relevant information. 
+
+IMPORTANT: When changing the application maintain the information in these reference files up to date, reflecting inside them the changes made to code, as they are the source of truth for the project and are used by the AI models to generate accurate and consistent code. 
+
 Load the detailed guidance based on on context:
 
 ## Estructura de la API
 
 - Reference: [references/api.md](references/api.md)
 - Load When: Cuando necesites saber sobre los endpoints de la API de backend.
+
+## Gestión de errores
+
+- Reference: [references/error.md](references/error.md)
+- Load When: Siempre que tengas que desarrollar o modificar código de gestión de errores en el backend o el frontend, o cuando necesites saber qué HTTP status codes se usan, cómo se estructuran las respuestas de error y cómo el frontend los interpreta y notifica al usuario.
 
 ## Estructura backend
 
@@ -61,3 +72,5 @@ Load the detailed guidance based on on context:
 
 - Reference: [references/roles.md](references/roles.md)
 - Load When: Cuando tengas que tomar decisones sobre permisos para tipos de usuarios (tipousuario id=1,2,3).
+
+

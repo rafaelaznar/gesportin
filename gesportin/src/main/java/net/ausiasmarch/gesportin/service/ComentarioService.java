@@ -99,18 +99,15 @@ public class ComentarioService {
     }
 
     public ComentarioEntity create(ComentarioEntity oComentarioEntity) {
-        if (oSessionService.isEquipoAdmin()) {
-            throw new UnauthorizedException("Acceso denegado: no puede gestionar comentarios");
-        }
         // Ensure the noticia exists and belongs to the allowed club (if any)
         var noticia = oNoticaService.get(oComentarioEntity.getNoticia().getId());
-        if (oSessionService.isUsuario()) {
-            // force comment to be attributed to the current user and in their club
+        if (oSessionService.isEquipoAdmin() || oSessionService.isUsuario()) {
+            // force comment to be attributed to the current user and check same club
             Long currentUserId = oSessionService.getIdUsuario();
             oComentarioEntity.setUsuario(oUsuarioService.get(currentUserId));
             oSessionService.checkSameClub(noticia.getClub().getId());
         } else {
-            // allow admins or other roles to act without restriction
+            // allow admins to act without restriction
             oComentarioEntity.setUsuario(oUsuarioService.get(oComentarioEntity.getUsuario().getId()));
         }
         oComentarioEntity.setId(null);
@@ -119,13 +116,10 @@ public class ComentarioService {
     }
 
     public ComentarioEntity update(ComentarioEntity oComentarioEntity) {
-        if (oSessionService.isEquipoAdmin()) {
-            throw new UnauthorizedException("Acceso denegado: no puede gestionar comentarios");
-        }
         ComentarioEntity oComentarioExistente = oComentariosRepository.findById(oComentarioEntity.getId())
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Comentario no encontrado con id: " + oComentarioEntity.getId()));
-        if (oSessionService.isUsuario()) {
+        if (oSessionService.isEquipoAdmin() || oSessionService.isUsuario()) {
             Long currentUserId = oSessionService.getIdUsuario();
             if (!currentUserId.equals(oComentarioExistente.getUsuario().getId())) {
                 throw new UnauthorizedException("Acceso denegado: solo puede modificar sus propios comentarios");
@@ -142,12 +136,9 @@ public class ComentarioService {
     }
 
     public Long delete(Long id) {
-        if (oSessionService.isEquipoAdmin()) {
-            throw new UnauthorizedException("Acceso denegado: no puede gestionar comentarios");
-        }
         ComentarioEntity oComentario = oComentariosRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Comentario no encontrado con id: " + id));
-        if (oSessionService.isUsuario()) {
+        if (oSessionService.isEquipoAdmin() || oSessionService.isUsuario()) {
             Long currentUserId = oSessionService.getIdUsuario();
             if (!currentUserId.equals(oComentario.getUsuario().getId())) {
                 throw new UnauthorizedException("Acceso denegado: solo puede borrar sus propios comentarios");
