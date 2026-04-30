@@ -32,9 +32,9 @@
 .top-actions .nav-login-btn.active,
 .top-actions .nav-login-btn:active,
 .top-actions .nav-login-btn.active:hover {
-    color: #333333 !important;
-    background-color: rgb(194, 176, 176) !important;
-    border-color: rgb(255, 216, 216) !important;
+    color: #fff !important;
+    background-color: rgba(255, 255, 255, 0.18) !important;
+    border-color: rgba(255, 255, 255, 0.6) !important;
 }
 .top-actions .nav-login-btn.active i,
 .top-actions .nav-login-btn:active i {

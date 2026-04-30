@@ -8,8 +8,8 @@
    version="1.1"
    id="svg5"
    inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
-   sodipodi:docname="logo.svg"
-   inkscape:export-filename="logofondo.png"
+   sodipodi:docname="logo2.svg"
+   inkscape:export-filename="logowhite2.png"
    inkscape:export-xdpi="300"
    inkscape:export-ydpi="300"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
@@ -28,8 +28,8 @@
      inkscape:document-units="mm"
      showgrid="false"
      inkscape:zoom="17.214677"
-     inkscape:cx="0.95848442"
-     inkscape:cy="20.070083"
+     inkscape:cx="21.987052"
+     inkscape:cy="13.912547"
      inkscape:window-width="1920"
      inkscape:window-height="1008"
      inkscape:window-x="1920"
@@ -46,7 +46,7 @@
        aria-label="G"
        id="text113"
        style="font-size:10.3573px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.863105;stroke-opacity:1"
-       transform="translate(-0.18443564,0.01536963)">
+       transform="matrix(1.4806696,0,0,1.4806696,-2.8826001,-2.3845723)">
       <path
          id="path320"
          style="fill:#000000;fill-opacity:1;stroke:none;stroke-opacity:1"

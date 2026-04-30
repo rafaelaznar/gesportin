@@ -81,8 +81,10 @@ export class LoginComponent implements OnInit {
             this.notificacion.success('Login successful');
             if (this.oSessionService.isUser()) {
               this.router.navigate(['/mi']);
+            } else if (this.oSessionService.isClubAdmin()) {
+              this.router.navigate(['/club/teamadmin']);
             } else {
-              this.router.navigate(['']);
+              this.router.navigate(['/admin']);
             }
           },
           error: (err: HttpErrorResponse) => {

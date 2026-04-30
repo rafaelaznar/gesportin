@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { Home } from './component/shared/home/home';
+import { LandingPage } from './component/shared/landing/landing';
 import { Logout } from './component/shared/logout/logout';
 import { LoginComponent } from './component/shared/login/login.component';
 import { ArticuloAdminPlistPage } from './page/articulo/admin/plist/plist';
@@ -206,12 +207,12 @@ import { JugadorUsuarioEquipoPlistPage } from './page/jugador/usuario/equipo-pli
 import { AdminDataToolsPage } from './page/admin/data-tools/data-tools';
 
 export const publicRoutes: Routes = [
+  { path: '', component: LandingPage },
   { path: 'login', component: LoginComponent },
   { path: 'logout', component: Logout },
 ];
 
 const protectedRoutes: Routes = [
-  { path: '', component: Home },
   { path: 'admin/datos', component: AdminDataToolsPage },
   { path: 'usuario', component: UsuarioAdminPlistPage },
   { path: 'usuario/tipousuario/:id_tipousuario', component: UsuarioAdminPlistPage },
@@ -390,6 +391,8 @@ const protectedRoutes: Routes = [
 
 export const routes: Routes = [
   ...publicRoutes,
+  // Home específico de cada perfil de usuario
+  { path: 'admin', component: Home, canActivate: [AdminGuard] },
   { path: 'usuario/teamadmin', component: UsuarioTeamadminPlistPage, canActivate: [ClubAdminGuard] },
   { path: 'usuario/teamadmin/club/:id_club', component: UsuarioTeamadminPlistPage, canActivate: [ClubAdminGuard] },
   { path: 'club/teamadmin', component: ClubPlistTeamadminPage, canActivate: [ClubAdminGuard] },
