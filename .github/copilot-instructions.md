@@ -52,7 +52,7 @@ Load the detailed guidance based on on context:
 - Reference: [references/permisos.md](references/permisos.md)
 - Load When: Cuando tengas que tomar decisones sobre permisos para tipos de usuarios (tipousuario id=1,2,3).
 
-## Fichero de referecnia
+## Fichero de referencia
 
 - Reference: [references/references.md](references/references.md)
 - Load When: Siempre que tengas que desarrollar o modificar ficheros de referencia para modelos de inteligencia artificial en .github/references.

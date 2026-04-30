@@ -14,7 +14,7 @@ export class NotificacionService {
     this.modalService.open<NotificacionData, void>(NotificacionComponent, { data });
   }
 
-  success(mensaje: string, titulo = '¡Correcto!', opts?: Partial<NotificacionData>): void {
+  success(mensaje: string, titulo = '¡Bienvenido/a!', opts?: Partial<NotificacionData>): void {
     this.show({ tipo: 'success', titulo, mensaje, ...opts });
   }
 
