@@ -11,7 +11,7 @@
 
 /* Asegurar icono y nombre en blanco sobre fondo negro */
 .top-actions {
-    background-color: #000;
+    background-color: #1a1a1a;
 }
 .top-actions .username,
 .top-actions .user-info,
