@@ -1,4 +1,11 @@
 <div class="container-fluid">
   <app-breadcrumb [items]="breadcrumbItems()"></app-breadcrumb>
-  <app-comentario-teamadmin-plist [id_noticia]="id_noticia()"></app-comentario-teamadmin-plist>
+  <div class="d-flex justify-content-center my-3">
+    <h1 class="mb-0"><i class="bi bi-chat-left-text me-2" aria-hidden="true"></i>Comentarios</h1>
+  </div>
+  <app-comentario-teamadmin-plist
+    [id_noticia]="id_noticia()"
+    [noticiaData]="noticia()"
+    [showFilterInfo]="id_noticia() === undefined"
+  ></app-comentario-teamadmin-plist>
 </div>

@@ -1,6 +1,8 @@
 import { Component, signal, computed, inject, Input, OnInit, OnDestroy } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
+import { DatePipe } from '@angular/common';
 import { IComentario } from '../../../../model/comentario';
+import { INoticia } from '../../../../model/noticia';
 import { IPage } from '../../../../model/plist';
 import { ComentarioService } from '../../../../service/comentario';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -17,7 +19,7 @@ import { BotoneraActionsPlist } from '../../../shared/botonera-actions-plist/bot
   selector: 'app-comentario-teamadmin-plist',
   templateUrl: './plist.html',
   styleUrl: './plist.css',
-  imports: [Paginacion, RouterLink, TrimPipe, BotoneraRpp, BotoneraActionsPlist],
+  imports: [Paginacion, RouterLink, TrimPipe, BotoneraRpp, BotoneraActionsPlist, DatePipe],
 })
 export class ComentarioTeamadminPlist implements OnInit, OnDestroy {
   readonly strRole = 'teamadmin';
@@ -25,6 +27,7 @@ export class ComentarioTeamadminPlist implements OnInit, OnDestroy {
   @Input() id_usuario?: number;
   @Input() id_noticia?: number;
   @Input() showFilterInfo = true;
+  @Input() noticiaData?: INoticia | null;
 
   oPage = signal<IPage<IComentario> | null>(null);
   numPage = signal<number>(0);

@@ -4,6 +4,7 @@ import { ComentarioTeamadminPlist } from '../../../../component/comentario/teama
 import { BreadcrumbComponent, BreadcrumbItem } from '../../../../component/shared/breadcrumb/breadcrumb';
 import { NoticiaService } from '../../../../service/noticia';
 import { UsuarioService } from '../../../../service/usuarioService';
+import { INoticia } from '../../../../model/noticia';
 
 @Component({
   selector: 'app-comentario-teamadmin-plist-page',
@@ -14,6 +15,7 @@ import { UsuarioService } from '../../../../service/usuarioService';
 export class ComentarioTeamadminPlistPage implements OnInit {
   id_noticia = signal<number | undefined>(undefined);
   id_usuario = signal<number | undefined>(undefined);
+  noticia = signal<INoticia | null>(null);
 
   breadcrumbItems = signal<BreadcrumbItem[]>([
     { label: 'Mis Clubes', route: '/club/teamadmin' },
@@ -36,6 +38,7 @@ export class ComentarioTeamadminPlistPage implements OnInit {
       this.id_noticia.set(id);
       this.noticiaService.getById(id).subscribe({
         next: (noticia) => {
+          this.noticia.set(noticia);
           const items: BreadcrumbItem[] = [
             { label: 'Mis Clubes', route: '/club/teamadmin' },
           ];

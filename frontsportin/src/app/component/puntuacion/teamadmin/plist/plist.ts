@@ -1,8 +1,10 @@
 import { Component, Input, signal, computed, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
+import { DatePipe, DecimalPipe } from '@angular/common';
 import { IPage } from '../../../../model/plist';
 import { IPuntuacion } from '../../../../model/puntuacion';
+import { INoticia } from '../../../../model/noticia';
 import { PuntuacionService } from '../../../../service/puntuacion';
 import { Paginacion } from '../../../shared/paginacion/paginacion';
 import { BotoneraActionsPlist } from '../../../shared/botonera-actions-plist/botonera-actions-plist';
@@ -12,7 +14,7 @@ import { MODAL_REF } from '../../../shared/modal/modal.tokens';
 @Component({
   standalone: true,
   selector: 'app-puntuacion-teamadmin-plist',
-  imports: [Paginacion, RouterLink, BotoneraActionsPlist],
+  imports: [Paginacion, RouterLink, BotoneraActionsPlist, DatePipe, DecimalPipe],
   templateUrl: './plist.html',
   styleUrl: './plist.css',
 })
@@ -21,6 +23,7 @@ export class PuntuacionTeamadminPlist implements OnInit {
 
   @Input() id_noticia?: number;
   @Input() id_usuario?: number;
+  @Input() noticiaData?: INoticia | null;
 
   oPage = signal<IPage<IPuntuacion> | null>(null);
   numPage = signal<number>(0);

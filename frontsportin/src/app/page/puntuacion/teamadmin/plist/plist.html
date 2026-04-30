@@ -1,2 +1,11 @@
-<app-breadcrumb [items]="breadcrumbItems()"></app-breadcrumb>
-<app-puntuacion-teamadmin-plist></app-puntuacion-teamadmin-plist>
+<div class="container-fluid">
+  <app-breadcrumb [items]="breadcrumbItems()"></app-breadcrumb>
+  <div class="d-flex justify-content-center my-3">
+    <h1 class="mb-0"><i class="bi bi-bar-chart me-2" aria-hidden="true"></i>Puntuaciones</h1>
+  </div>
+  <app-puntuacion-teamadmin-plist
+    [id_noticia]="id_noticia()"
+    [id_usuario]="id_usuario()"
+    [noticiaData]="noticia()"
+  ></app-puntuacion-teamadmin-plist>
+</div>

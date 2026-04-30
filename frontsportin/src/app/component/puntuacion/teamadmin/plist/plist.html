@@ -1,4 +1,14 @@
 <div>
+  @if (noticiaData) {
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5 class="card-title"><i class="bi bi-megaphone me-2" aria-hidden="true"></i>{{ noticiaData.titulo }}</h5>
+        <p class="card-text">{{ noticiaData.contenido }}</p>
+        <small class="text-muted"><i class="bi bi-calendar me-1" aria-hidden="true"></i>{{ noticiaData.fecha | date:'dd/MM/yyyy' }}</small>
+      </div>
+    </div>
+  }
+
   <div class="d-flex justify-content-center my-1">
     <small class="text-muted">Total registros: {{ totalRecords() || 0 }}</small>
   </div>
@@ -99,6 +109,18 @@
             </tr>
           }
         </tbody>
+        @if (noticiaData && noticiaData.mediaPuntuacion != null) {
+          <tfoot>
+            <tr class="table-info fw-semibold">
+              <td colspan="2" class="text-end">
+                <i class="bi bi-calculator me-1" aria-hidden="true"></i>Media de puntuaciones:
+              </td>
+              <td colspan="3">
+                {{ noticiaData.mediaPuntuacion | number:'1.2-2' }}
+              </td>
+            </tr>
+          </tfoot>
+        }
       </table>
     </div>
   </div>

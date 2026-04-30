@@ -1,4 +1,14 @@
 <div>
+  @if (noticiaData) {
+    <div class="card mb-3">
+      <div class="card-body">
+        <h5 class="card-title"><i class="bi bi-megaphone me-2" aria-hidden="true"></i>{{ noticiaData.titulo }}</h5>
+        <p class="card-text">{{ noticiaData.contenido }}</p>
+        <small class="text-muted"><i class="bi bi-calendar me-1" aria-hidden="true"></i>{{ noticiaData.fecha | date:'dd/MM/yyyy' }}</small>
+      </div>
+    </div>
+  }
+
   @if (message()) {
     <div class="d-flex justify-content-center my-2">
       <div class="alert alert-success w-100 text-center" role="alert">
