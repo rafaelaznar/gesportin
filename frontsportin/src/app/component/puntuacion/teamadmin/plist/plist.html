@@ -2,7 +2,10 @@
   @if (noticiaData) {
     <div class="card mb-3">
       <div class="card-body">
-        <h5 class="card-title"><i class="bi bi-megaphone me-2" aria-hidden="true"></i>{{ noticiaData.titulo }}</h5>
+        <h5 class="card-title">
+          <i class="bi bi-megaphone me-2" aria-hidden="true"></i>
+          <a [routerLink]="['/noticia', strRole, 'view', noticiaData.id]">{{ noticiaData.titulo }}</a>
+        </h5>
         <p class="card-text">{{ noticiaData.contenido }}</p>
         <small class="text-muted"><i class="bi bi-calendar me-1" aria-hidden="true"></i>{{ noticiaData.fecha | date:'dd/MM/yyyy' }}</small>
       </div>
@@ -68,12 +71,14 @@
                 <span>Usuario</span>
               </div>
             </th>
+            @if (!noticia()) {
             <th scope="col" style="width: 30%">
               <div class="header-stacked">
                 <div class="header-top"><i class="bi bi-megaphone" aria-hidden="true"></i></div>
                 <span>Noticia</span>
               </div>
             </th>
+            }
             <th scope="col" class="text-center">
               <div class="header-stacked">
                 <div class="header-top"><i class="bi bi-gear" aria-hidden="true"></i></div>
@@ -86,7 +91,8 @@
           @for (p of oPage()?.content; track p.id) {
             <tr>
               <th scope="row" class="text-center">{{ p.id }}</th>
-              <td>{{ p.puntuacion }}</td>
+              <!--  center -->
+              <td class="text-center">{{ p.puntuacion }}</td>
               <td>
                 @if (isDialogMode()) {
                   {{ p.usuario.nombre }} {{ p.usuario.apellido1 }} {{ p.usuario.apellido2 }}
@@ -95,6 +101,7 @@
                   <a class="btn btn-warning btn-sm ms-2 float-end" [routerLink]="['/puntuacion', strRole, 'usuario', p.usuario.id]" role="button" title="Filtrar por usuario"><i class="bi bi-funnel-fill" aria-hidden="true"></i></a>
                 }
               </td>
+              @if (!noticia()) {
               <td>
                 @if (isDialogMode()) {
                   {{ p.noticia.titulo }}
@@ -103,6 +110,7 @@
                   <a class="btn btn-warning btn-sm ms-2 float-end" [routerLink]="['/puntuacion', strRole, 'noticia', p.noticia.id]" role="button" title="Filtrar por noticia"><i class="bi bi-funnel-fill" aria-hidden="true"></i></a>
                 }
               </td>
+              }
               <td class="text-center">
                 <app-botonera-actions-plist [id]="p.id" strEntity="puntuacion" [strRole]="strRole"></app-botonera-actions-plist>
               </td>
@@ -115,7 +123,7 @@
               <td colspan="2" class="text-end">
                 <i class="bi bi-calculator me-1" aria-hidden="true"></i>Media de puntuaciones:
               </td>
-              <td colspan="3">
+              <td colspan="2">
                 {{ noticiaData.mediaPuntuacion | number:'1.2-2' }}
               </td>
             </tr>
