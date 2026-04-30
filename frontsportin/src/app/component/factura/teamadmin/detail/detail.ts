@@ -21,6 +21,10 @@ export class FacturaTeamadminDetail implements OnInit {
   oFactura = signal<IFactura | null>(null);
   loading = signal(true);
   error = signal<string | null>(null);
+  showUsuario = signal(false);
+  showUsuarioTipousuario = signal(false);
+  showUsuarioRolusuario = signal(false);
+  showUsuarioClub = signal(false);
 
   ngOnInit(): void {
     const idFactura = this.id();

@@ -22,6 +22,7 @@ export class TemporadaTeamadminDetail implements OnInit {
   oTemporada = signal<ITemporada | null>(null);
   loading = signal(true);
   error = signal<string | null>(null);
+  showClub = signal(false);
 
   ngOnInit(): void {
     this.load(this.id());

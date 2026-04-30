@@ -23,6 +23,14 @@ export class LigaTeamadminDetail implements OnInit {
   oLiga = signal<ILiga | null>(null);
   loading = signal(true);
   error = signal<string | null>(null);
+  showEquipo = signal(false);
+  showEquipoCategoria = signal(false);
+  showEquipoCategoriaTemporada = signal(false);
+  showEquipoCategoriaTemporadaClub = signal(false);
+  showEquipoUsuario = signal(false);
+  showEquipoUsuarioTipousuario = signal(false);
+  showEquipoUsuarioRolusuario = signal(false);
+  showEquipoUsuarioClub = signal(false);
 
   ngOnInit(): void {
     this.load(this.id());

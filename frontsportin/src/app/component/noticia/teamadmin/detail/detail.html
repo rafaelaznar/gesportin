@@ -34,14 +34,16 @@
           <div class="col-7 fw-semibold small">@if (oNoticia()?.imagen) { <img [src]="'data:image/jpeg;base64,' + oNoticia()?.imagen" class="img-thumbnail" style="max-height:80px" alt="noticia"/> } @else { Sin imagen }</div>
         </div>
         <div class="card border-start border-3 border-info mt-3">
-          <div class="card-header py-1 d-flex align-items-center gap-2 bg-info bg-opacity-10">
+          <div class="card-header py-1 d-flex align-items-center gap-2 bg-info bg-opacity-10" style="cursor:pointer" (click)="showClub.set(!showClub())">
             <i class="bi bi-building-fill text-info small"></i>
             <span class="text-uppercase small fw-semibold text-info">Club</span>
-            <a [routerLink]="['/club/teamadmin/view', oNoticia()?.club?.id]" class="ms-auto badge bg-info text-white text-decoration-none small">
+            <i class="bi ms-1 text-info small" [class.bi-chevron-down]="!showClub()" [class.bi-chevron-up]="showClub()"></i>
+            <a [routerLink]="['/club/teamadmin/view', oNoticia()?.club?.id]" class="ms-auto badge bg-info text-white text-decoration-none small" (click)="$event.stopPropagation()">
               {{ oNoticia()?.club?.nombre }} <span class="opacity-75 ms-1">#{{oNoticia()?.club?.id}}</span>
               <i class="bi bi-box-arrow-up-right ms-1"></i>
             </a>
           </div>
+          @if (showClub()) {
           <div class="card-body p-2">
             <div class="row g-1">
               <div class="col-5 text-muted small text-uppercase">ID</div>
@@ -64,9 +66,9 @@
               <div class="col-7 fw-semibold small">@if ((oNoticia()?.club?.usuarios ?? 0) > 0) { <a [routerLink]="['/usuario/teamadmin/club', oNoticia()?.club?.id]" class="text-decoration-none">{{ oNoticia()?.club?.usuarios }}</a> } @else { 0 }</div>
             </div>
           </div>
+          }
         </div>
         <div class="border-top mt-3 pt-3">
-          <div class="text-uppercase small text-muted fw-semibold mb-2"><i class="bi bi-bar-chart-fill me-1"></i>Contadores</div>
           <div class="row g-2">
             <div class="col-6 col-md-4 col-lg-3">
               <div class="border rounded p-2 text-center bg-light">

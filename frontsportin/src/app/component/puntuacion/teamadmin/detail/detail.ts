@@ -21,6 +21,12 @@ export class PuntuacionTeamadminDetail implements OnInit {
   oPuntuacion = signal<IPuntuacion | null>(null);
   loading = signal(true);
   error = signal<string | null>(null);
+  showNoticia = signal(false);
+  showNoticiaClub = signal(false);
+  showUsuario = signal(false);
+  showUsuarioTipousuario = signal(false);
+  showUsuarioRolusuario = signal(false);
+  showUsuarioClub = signal(false);
 
   ngOnInit(): void {
     this.load(this.id());

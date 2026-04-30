@@ -23,6 +23,8 @@ export class CategoriaTeamadminDetail implements OnInit {
   oCategoria = signal<ICategoria | null>(null);
   loading = signal(true);
   error = signal<string | null>(null);
+  showTemporada = signal(false);
+  showTemporadaClub = signal(false);
 
   ngOnInit(): void {
     this.load(this.id());

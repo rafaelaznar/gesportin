@@ -21,6 +21,15 @@ export class PartidoTeamadminDetail implements OnInit {
   oPartido = signal<IPartido | null>(null);
   loading = signal(true);
   error = signal<string | null>(null);
+  showLiga = signal(false);
+  showLigaEquipo = signal(false);
+  showLigaEquipoCategoria = signal(false);
+  showLigaEquipoCategoriaTemporada = signal(false);
+  showLigaEquipoCategoriaTemporadaClub = signal(false);
+  showLigaEquipoUsuario = signal(false);
+  showLigaEquipoUsuarioTipousuario = signal(false);
+  showLigaEquipoUsuarioRolusuario = signal(false);
+  showLigaEquipoUsuarioClub = signal(false);
 
   ngOnInit(): void {
     const idPartido = this.id();

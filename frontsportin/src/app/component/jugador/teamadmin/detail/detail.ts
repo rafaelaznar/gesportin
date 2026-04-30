@@ -23,6 +23,18 @@ export class JugadorTeamadminDetail implements OnInit {
   oJugador = signal<IJugador | null>(null);
   loading = signal(true);
   error = signal<string | null>(null);
+  showUsuario = signal(false);
+  showUsuarioTipousuario = signal(false);
+  showUsuarioRolusuario = signal(false);
+  showUsuarioClub = signal(false);
+  showEquipo = signal(false);
+  showEquipoCategoria = signal(false);
+  showEquipoCategoriaTemporada = signal(false);
+  showEquipoCategoriaTemporadaClub = signal(false);
+  showEquipoUsuario = signal(false);
+  showEquipoUsuarioTipousuario = signal(false);
+  showEquipoUsuarioRolusuario = signal(false);
+  showEquipoUsuarioClub = signal(false);
 
   ngOnInit(): void {
     const idJugador = this.id();

@@ -49,14 +49,16 @@
           </div>
         </div>
         <div class="card border-start border-3 border-info mt-3">
-          <div class="card-header py-1 d-flex align-items-center gap-2 bg-info bg-opacity-10">
+          <div class="card-header py-1 d-flex align-items-center gap-2 bg-info bg-opacity-10" style="cursor:pointer" (click)="showLiga.set(!showLiga())">
             <i class="bi bi-trophy-fill text-info small"></i>
             <span class="text-uppercase small fw-semibold text-info">Liga</span>
-            <a [routerLink]="['/liga/teamadmin/view', oPartido()?.liga?.id]" class="ms-auto badge bg-info text-white text-decoration-none small">
+            <i class="bi ms-1 text-info small" [class.bi-chevron-down]="!showLiga()" [class.bi-chevron-up]="showLiga()"></i>
+            <a [routerLink]="['/liga/teamadmin/view', oPartido()?.liga?.id]" class="ms-auto badge bg-info text-white text-decoration-none small" (click)="$event.stopPropagation()">
               {{ oPartido()?.liga?.nombre }} <span class="opacity-75 ms-1">#{{oPartido()?.liga?.id}}</span>
               <i class="bi bi-box-arrow-up-right ms-1"></i>
             </a>
           </div>
+          @if (showLiga()) {
           <div class="card-body p-2">
             <div class="row g-1">
               <div class="col-5 text-muted small text-uppercase">ID</div>
@@ -67,14 +69,16 @@
               <div class="col-7 fw-semibold small">@if ((oPartido()?.liga?.partidos ?? 0) > 0) { <a [routerLink]="['/partido/teamadmin/liga', oPartido()?.liga?.id]" class="text-decoration-none">{{ oPartido()?.liga?.partidos }}</a> } @else { 0 }</div>
             </div>
             <div class="card border-start border-3 border-success mt-3">
-              <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10">
+              <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10" style="cursor:pointer" (click)="showLigaEquipo.set(!showLigaEquipo())">
                 <i class="bi bi-people-fill text-success small"></i>
                 <span class="text-uppercase small fw-semibold text-success">Equipo</span>
-                <a [routerLink]="['/equipo/teamadmin/view', oPartido()?.liga?.equipo?.id]" class="ms-auto badge bg-success text-white text-decoration-none small">
+                <i class="bi ms-1 text-success small" [class.bi-chevron-down]="!showLigaEquipo()" [class.bi-chevron-up]="showLigaEquipo()"></i>
+                <a [routerLink]="['/equipo/teamadmin/view', oPartido()?.liga?.equipo?.id]" class="ms-auto badge bg-success text-white text-decoration-none small" (click)="$event.stopPropagation()">
                   {{ oPartido()?.liga?.equipo?.nombre }} <span class="opacity-75 ms-1">#{{oPartido()?.liga?.equipo?.id}}</span>
                   <i class="bi bi-box-arrow-up-right ms-1"></i>
                 </a>
               </div>
+              @if (showLigaEquipo()) {
               <div class="card-body p-2">
                 <div class="row g-1">
                   <div class="col-5 text-muted small text-uppercase">ID</div>
@@ -89,14 +93,16 @@
                   <div class="col-7 fw-semibold small">@if ((oPartido()?.liga?.equipo?.ligas ?? 0) > 0) { <a [routerLink]="['/liga/teamadmin/equipo', oPartido()?.liga?.equipo?.id]" class="text-decoration-none">{{ oPartido()?.liga?.equipo?.ligas }}</a> } @else { 0 }</div>
                 </div>
                 <div class="card border-start border-3 border-warning mt-3">
-                  <div class="card-header py-1 d-flex align-items-center gap-2 bg-warning bg-opacity-10">
+                  <div class="card-header py-1 d-flex align-items-center gap-2 bg-warning bg-opacity-10" style="cursor:pointer" (click)="showLigaEquipoCategoria.set(!showLigaEquipoCategoria())">
                     <i class="bi bi-diagram-3-fill text-warning small"></i>
                     <span class="text-uppercase small fw-semibold text-warning">Categoría</span>
-                    <a [routerLink]="['/categoria/teamadmin/view', oPartido()?.liga?.equipo?.categoria?.id]" class="ms-auto badge bg-warning text-white text-decoration-none small">
+                    <i class="bi ms-1 text-warning small" [class.bi-chevron-down]="!showLigaEquipoCategoria()" [class.bi-chevron-up]="showLigaEquipoCategoria()"></i>
+                    <a [routerLink]="['/categoria/teamadmin/view', oPartido()?.liga?.equipo?.categoria?.id]" class="ms-auto badge bg-warning text-white text-decoration-none small" (click)="$event.stopPropagation()">
                       {{ oPartido()?.liga?.equipo?.categoria?.nombre }} <span class="opacity-75 ms-1">#{{oPartido()?.liga?.equipo?.categoria?.id}}</span>
                       <i class="bi bi-box-arrow-up-right ms-1"></i>
                     </a>
                   </div>
+                  @if (showLigaEquipoCategoria()) {
                   <div class="card-body p-2">
                     <div class="row g-1">
                       <div class="col-5 text-muted small text-uppercase">ID</div>
@@ -107,14 +113,16 @@
                       <div class="col-7 fw-semibold small">@if ((oPartido()?.liga?.equipo?.categoria?.equipos ?? 0) > 0) { <a [routerLink]="['/equipo/teamadmin/categoria', oPartido()?.liga?.equipo?.categoria?.id]" class="text-decoration-none">{{ oPartido()?.liga?.equipo?.categoria?.equipos }}</a> } @else { 0 }</div>
                     </div>
                     <div class="card border-start border-3 border-warning mt-3">
-                      <div class="card-header py-1 d-flex align-items-center gap-2 bg-warning bg-opacity-10">
+                      <div class="card-header py-1 d-flex align-items-center gap-2 bg-warning bg-opacity-10" style="cursor:pointer" (click)="showLigaEquipoCategoriaTemporada.set(!showLigaEquipoCategoriaTemporada())">
                         <i class="bi bi-calendar3 text-warning small"></i>
                         <span class="text-uppercase small fw-semibold text-warning">Temporada</span>
-                        <a [routerLink]="['/temporada/teamadmin/view', oPartido()?.liga?.equipo?.categoria?.temporada?.id]" class="ms-auto badge bg-warning text-white text-decoration-none small">
+                        <i class="bi ms-1 text-warning small" [class.bi-chevron-down]="!showLigaEquipoCategoriaTemporada()" [class.bi-chevron-up]="showLigaEquipoCategoriaTemporada()"></i>
+                        <a [routerLink]="['/temporada/teamadmin/view', oPartido()?.liga?.equipo?.categoria?.temporada?.id]" class="ms-auto badge bg-warning text-white text-decoration-none small" (click)="$event.stopPropagation()">
                           {{ oPartido()?.liga?.equipo?.categoria?.temporada?.descripcion }} <span class="opacity-75 ms-1">#{{oPartido()?.liga?.equipo?.categoria?.temporada?.id}}</span>
                           <i class="bi bi-box-arrow-up-right ms-1"></i>
                         </a>
                       </div>
+                      @if (showLigaEquipoCategoriaTemporada()) {
                       <div class="card-body p-2">
                         <div class="row g-1">
                           <div class="col-5 text-muted small text-uppercase">ID</div>
@@ -125,14 +133,16 @@
                           <div class="col-7 fw-semibold small">@if ((oPartido()?.liga?.equipo?.categoria?.temporada?.categorias ?? 0) > 0) { <a [routerLink]="['/categoria/teamadmin/temporada', oPartido()?.liga?.equipo?.categoria?.temporada?.id]" class="text-decoration-none">{{ oPartido()?.liga?.equipo?.categoria?.temporada?.categorias }}</a> } @else { 0 }</div>
                         </div>
                         <div class="card border-start border-3 border-warning mt-3">
-                          <div class="card-header py-1 d-flex align-items-center gap-2 bg-warning bg-opacity-10">
+                          <div class="card-header py-1 d-flex align-items-center gap-2 bg-warning bg-opacity-10" style="cursor:pointer" (click)="showLigaEquipoCategoriaTemporadaClub.set(!showLigaEquipoCategoriaTemporadaClub())">
                             <i class="bi bi-building-fill text-warning small"></i>
                             <span class="text-uppercase small fw-semibold text-warning">Club</span>
-                            <a [routerLink]="['/club/teamadmin/view', oPartido()?.liga?.equipo?.categoria?.temporada?.club?.id]" class="ms-auto badge bg-warning text-white text-decoration-none small">
+                            <i class="bi ms-1 text-warning small" [class.bi-chevron-down]="!showLigaEquipoCategoriaTemporadaClub()" [class.bi-chevron-up]="showLigaEquipoCategoriaTemporadaClub()"></i>
+                            <a [routerLink]="['/club/teamadmin/view', oPartido()?.liga?.equipo?.categoria?.temporada?.club?.id]" class="ms-auto badge bg-warning text-white text-decoration-none small" (click)="$event.stopPropagation()">
                               {{ oPartido()?.liga?.equipo?.categoria?.temporada?.club?.nombre }} <span class="opacity-75 ms-1">#{{oPartido()?.liga?.equipo?.categoria?.temporada?.club?.id}}</span>
                               <i class="bi bi-box-arrow-up-right ms-1"></i>
                             </a>
                           </div>
+                          @if (showLigaEquipoCategoriaTemporadaClub()) {
                           <div class="card-body p-2">
                             <div class="row g-1">
                               <div class="col-5 text-muted small text-uppercase">ID</div>
@@ -155,20 +165,25 @@
                               <div class="col-7 fw-semibold small">@if ((oPartido()?.liga?.equipo?.categoria?.temporada?.club?.usuarios ?? 0) > 0) { <a [routerLink]="['/usuario/teamadmin/club', oPartido()?.liga?.equipo?.categoria?.temporada?.club?.id]" class="text-decoration-none">{{ oPartido()?.liga?.equipo?.categoria?.temporada?.club?.usuarios }}</a> } @else { 0 }</div>
                             </div>
                           </div>
+                          }
                         </div>
                       </div>
+                      }
                     </div>
                   </div>
+                  }
                 </div>
                 <div class="card border-start border-3 border-warning mt-3">
-                  <div class="card-header py-1 d-flex align-items-center gap-2 bg-warning bg-opacity-10">
+                  <div class="card-header py-1 d-flex align-items-center gap-2 bg-warning bg-opacity-10" style="cursor:pointer" (click)="showLigaEquipoUsuario.set(!showLigaEquipoUsuario())">
                     <i class="bi bi-person-fill text-warning small"></i>
                     <span class="text-uppercase small fw-semibold text-warning">Usuario</span>
-                    <a [routerLink]="['/usuario/teamadmin/view', oPartido()?.liga?.equipo?.entrenador?.id]" class="ms-auto badge bg-warning text-white text-decoration-none small">
+                    <i class="bi ms-1 text-warning small" [class.bi-chevron-down]="!showLigaEquipoUsuario()" [class.bi-chevron-up]="showLigaEquipoUsuario()"></i>
+                    <a [routerLink]="['/usuario/teamadmin/view', oPartido()?.liga?.equipo?.entrenador?.id]" class="ms-auto badge bg-warning text-white text-decoration-none small" (click)="$event.stopPropagation()">
                       {{ oPartido()?.liga?.equipo?.entrenador?.nombre }} {{ oPartido()?.liga?.equipo?.entrenador?.apellido1 }} <span class="opacity-75 ms-1">#{{oPartido()?.liga?.equipo?.entrenador?.id}}</span>
                       <i class="bi bi-box-arrow-up-right ms-1"></i>
                     </a>
                   </div>
+                  @if (showLigaEquipoUsuario()) {
                   <div class="card-body p-2">
                     <div class="row g-1">
                       <div class="col-5 text-muted small text-uppercase">ID</div>
@@ -201,14 +216,16 @@
                       <div class="col-7 fw-semibold small">@if ((oPartido()?.liga?.equipo?.entrenador?.jugadores ?? 0) > 0) { <a [routerLink]="['/jugador/teamadmin/usuario', oPartido()?.liga?.equipo?.entrenador?.id]" class="text-decoration-none">{{ oPartido()?.liga?.equipo?.entrenador?.jugadores }}</a> } @else { 0 }</div>
                     </div>
                     <div class="card border-start border-3 border-success mt-3">
-                      <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10">
+                      <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10" style="cursor:pointer" (click)="showLigaEquipoUsuarioTipousuario.set(!showLigaEquipoUsuarioTipousuario())">
                         <i class="bi bi-person-badge-fill text-success small"></i>
                         <span class="text-uppercase small fw-semibold text-success">Tipo de usuario</span>
-                        <a [routerLink]="['/tipousuario/view', oPartido()?.liga?.equipo?.entrenador?.tipousuario?.id]" class="ms-auto badge bg-success text-white text-decoration-none small">
+                        <i class="bi ms-1 text-success small" [class.bi-chevron-down]="!showLigaEquipoUsuarioTipousuario()" [class.bi-chevron-up]="showLigaEquipoUsuarioTipousuario()"></i>
+                        <a [routerLink]="['/tipousuario/view', oPartido()?.liga?.equipo?.entrenador?.tipousuario?.id]" class="ms-auto badge bg-success text-white text-decoration-none small" (click)="$event.stopPropagation()">
                           {{ oPartido()?.liga?.equipo?.entrenador?.tipousuario?.descripcion }} <span class="opacity-75 ms-1">#{{oPartido()?.liga?.equipo?.entrenador?.tipousuario?.id}}</span>
                           <i class="bi bi-box-arrow-up-right ms-1"></i>
                         </a>
                       </div>
+                      @if (showLigaEquipoUsuarioTipousuario()) {
                       <div class="card-body p-2">
                         <div class="row g-1">
                           <div class="col-5 text-muted small text-uppercase">ID</div>
@@ -219,16 +236,19 @@
                           <div class="col-7 fw-semibold small">@if ((oPartido()?.liga?.equipo?.entrenador?.tipousuario?.usuarios ?? 0) > 0) { <a [routerLink]="['/usuario/tipousuario', oPartido()?.liga?.equipo?.entrenador?.tipousuario?.id]" class="text-decoration-none">{{ oPartido()?.liga?.equipo?.entrenador?.tipousuario?.usuarios }}</a> } @else { 0 }</div>
                         </div>
                       </div>
+                      }
                     </div>
                     <div class="card border-start border-3 border-success mt-3">
-                      <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10">
+                      <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10" style="cursor:pointer" (click)="showLigaEquipoUsuarioRolusuario.set(!showLigaEquipoUsuarioRolusuario())">
                         <i class="bi bi-shield-fill text-success small"></i>
                         <span class="text-uppercase small fw-semibold text-success">Rol de usuario</span>
-                        <a [routerLink]="['/rolusuario/view', oPartido()?.liga?.equipo?.entrenador?.rolusuario?.id]" class="ms-auto badge bg-success text-white text-decoration-none small">
+                        <i class="bi ms-1 text-success small" [class.bi-chevron-down]="!showLigaEquipoUsuarioRolusuario()" [class.bi-chevron-up]="showLigaEquipoUsuarioRolusuario()"></i>
+                        <a [routerLink]="['/rolusuario/view', oPartido()?.liga?.equipo?.entrenador?.rolusuario?.id]" class="ms-auto badge bg-success text-white text-decoration-none small" (click)="$event.stopPropagation()">
                           {{ oPartido()?.liga?.equipo?.entrenador?.rolusuario?.descripcion }} <span class="opacity-75 ms-1">#{{oPartido()?.liga?.equipo?.entrenador?.rolusuario?.id}}</span>
                           <i class="bi bi-box-arrow-up-right ms-1"></i>
                         </a>
                       </div>
+                      @if (showLigaEquipoUsuarioRolusuario()) {
                       <div class="card-body p-2">
                         <div class="row g-1">
                           <div class="col-5 text-muted small text-uppercase">ID</div>
@@ -239,16 +259,19 @@
                           <div class="col-7 fw-semibold small">@if ((oPartido()?.liga?.equipo?.entrenador?.rolusuario?.usuarios ?? 0) > 0) { <a [routerLink]="['/usuario/rol', oPartido()?.liga?.equipo?.entrenador?.rolusuario?.id]" class="text-decoration-none">{{ oPartido()?.liga?.equipo?.entrenador?.rolusuario?.usuarios }}</a> } @else { 0 }</div>
                         </div>
                       </div>
+                      }
                     </div>
                     <div class="card border-start border-3 border-success mt-3">
-                      <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10">
+                      <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10" style="cursor:pointer" (click)="showLigaEquipoUsuarioClub.set(!showLigaEquipoUsuarioClub())">
                         <i class="bi bi-building-fill text-success small"></i>
                         <span class="text-uppercase small fw-semibold text-success">Club</span>
-                        <a [routerLink]="['/club/teamadmin/view', oPartido()?.liga?.equipo?.entrenador?.club?.id]" class="ms-auto badge bg-success text-white text-decoration-none small">
+                        <i class="bi ms-1 text-success small" [class.bi-chevron-down]="!showLigaEquipoUsuarioClub()" [class.bi-chevron-up]="showLigaEquipoUsuarioClub()"></i>
+                        <a [routerLink]="['/club/teamadmin/view', oPartido()?.liga?.equipo?.entrenador?.club?.id]" class="ms-auto badge bg-success text-white text-decoration-none small" (click)="$event.stopPropagation()">
                           {{ oPartido()?.liga?.equipo?.entrenador?.club?.nombre }} <span class="opacity-75 ms-1">#{{oPartido()?.liga?.equipo?.entrenador?.club?.id}}</span>
                           <i class="bi bi-box-arrow-up-right ms-1"></i>
                         </a>
                       </div>
+                      @if (showLigaEquipoUsuarioClub()) {
                       <div class="card-body p-2">
                         <div class="row g-1">
                           <div class="col-5 text-muted small text-uppercase">ID</div>
@@ -271,12 +294,16 @@
                           <div class="col-7 fw-semibold small">@if ((oPartido()?.liga?.equipo?.entrenador?.club?.usuarios ?? 0) > 0) { <a [routerLink]="['/usuario/teamadmin/club', oPartido()?.liga?.equipo?.entrenador?.club?.id]" class="text-decoration-none">{{ oPartido()?.liga?.equipo?.entrenador?.club?.usuarios }}</a> } @else { 0 }</div>
                         </div>
                       </div>
+                      }
                     </div>
                   </div>
+                  }
                 </div>
               </div>
+              }
             </div>
           </div>
+          }
         </div>
 
       </div>

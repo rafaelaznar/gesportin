@@ -20,6 +20,7 @@ export class NoticiaTeamadminDetail implements OnInit {
   oNoticia = signal<INoticia | null>(null);
   loading = signal(true);
   error = signal<string | null>(null);
+  showClub = signal(false);
 
   ngOnInit(): void {
     this.load(this.id());

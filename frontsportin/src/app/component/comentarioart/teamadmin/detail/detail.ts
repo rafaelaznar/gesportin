@@ -21,6 +21,13 @@ export class ComentarioartTeamadminDetail implements OnInit {
   oComentarioart = signal<IComentarioart | null>(null);
   loading = signal(true);
   error = signal<string | null>(null);
+  showArticulo = signal(false);
+  showArticuloTipoarticulo = signal(false);
+  showArticuloTipoarticuloClub = signal(false);
+  showUsuario = signal(false);
+  showUsuarioTipousuario = signal(false);
+  showUsuarioRolusuario = signal(false);
+  showUsuarioClub = signal(false);
 
   ngOnInit(): void {
     const idComentarioart = this.id();

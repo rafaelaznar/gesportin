@@ -21,6 +21,13 @@ export class CarritoTeamadminDetail implements OnInit {
   oCarrito = signal<ICarrito | null>(null);
   loading = signal(true);
   error = signal<string | null>(null);
+  showArticulo = signal(false);
+  showArticuloTipoarticulo = signal(false);
+  showArticuloTipoarticuloClub = signal(false);
+  showUsuario = signal(false);
+  showUsuarioTipousuario = signal(false);
+  showUsuarioRolusuario = signal(false);
+  showUsuarioClub = signal(false);
 
   ngOnInit(): void {
     const idCarrito = this.id();
