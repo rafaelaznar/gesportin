@@ -19,6 +19,7 @@ En gesportin, los perfiles y permisos se gestionan a través de roles. Cada rol 
   * Los equipos de cada categoría de su club (crud completo pero sólo de equipos de su club),
   * Las ligas en las que participan los equipos de su club (crud completo pero sólo de ligas de su club),
   * Los partidos que se juegan dentro de las ligas de su club (crud completo pero sólo de partidos de su club)
+    * Puede editar el comentario de cualquier partido de su club
   * Los jugadores de su club (crud completo pero sólo de jugadores de su club)
   * Las cuotas que pagan los jugadores de su club (crud completo pero sólo de cuotas de su club)
   * Los pagos de los jugadores de su club (crud completo pero sólo de pagos de su club)

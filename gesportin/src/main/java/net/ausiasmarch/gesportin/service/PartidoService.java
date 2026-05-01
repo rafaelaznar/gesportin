@@ -91,6 +91,7 @@ public class PartidoService {
         oPartidoExistente.setResultado(oPartidoEntity.getResultado());
         oPartidoExistente.setFecha(oPartidoEntity.getFecha());
         oPartidoExistente.setLugar(oPartidoEntity.getLugar());
+        oPartidoExistente.setComentario(oPartidoEntity.getComentario());
         if (oPartidoEntity.getEstadopartido() != null && oPartidoEntity.getEstadopartido().getId() != null) {
             oPartidoExistente.setEstadopartido(oEstadopartidoService.get(oPartidoEntity.getEstadopartido().getId()));
         } else {

@@ -664,6 +664,10 @@ Expande: `liga` (→ `equipo` → `categoria` → `temporada` → `club`, y → 
 | `liga` | LigaEntity | object | **EXPANDIDO** (profundidad 5) |
 | `local` | Boolean | boolean | `true`=local, `false`=visitante |
 | `resultado` | String | string | Ej: "3-1" |
+| `fecha` | LocalDateTime | string | ISO datetime; nullable |
+| `lugar` | String | string | Lugar del partido |
+| `comentario` | String | string | Comentario opcional; nullable |
+| `estadopartido` | EstadopartidoEntity | object | FK expandida; nullable |
 
 ```json
 {

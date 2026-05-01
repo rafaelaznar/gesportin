@@ -52,6 +52,12 @@
           <div class="col-7 fw-semibold small">{{ oPartido()?.fecha ? (oPartido()!.fecha | datetime:'solofechacompleta') : '-' }}</div>
           <div class="col-5 text-muted small text-uppercase">Lugar</div>
           <div class="col-7 fw-semibold small">{{ oPartido()?.lugar || '-' }}</div>
+          @if (oPartido()?.comentario) {
+            <div class="col-12 mt-3 pt-2 border-top">
+              <div class="text-muted small text-uppercase mb-2"><strong>Comentario</strong></div>
+              <div class="col-12 fw-normal small text-break">{{ oPartido()?.comentario }}</div>
+            </div>
+          }
           <div class="col-5 text-muted small text-uppercase">Estado</div>
           <div class="col-7 fw-semibold small">
             @if (oPartido()?.estadopartido) {

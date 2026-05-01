@@ -197,6 +197,7 @@ Partido disputado en una liga.
 | `resultado` | varchar(255) | NO | — | Ej: "3-1"; vacío si aún no jugado |
 | `fecha` | datetime | SÍ | NULL | Fecha/hora del partido |
 | `lugar` | varchar(255) | NO | — | Lugar donde se juega |
+| `comentario` | text | SÍ | NULL | Comentario opcional sobre el partido |
 | `id_estadopartido` | bigint | SÍ | NULL | FK → estadopartido |
 
 ---
