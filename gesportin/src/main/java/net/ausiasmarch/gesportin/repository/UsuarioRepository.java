@@ -16,4 +16,5 @@ public interface UsuarioRepository extends JpaRepository<UsuarioEntity, Long> {
     Page<UsuarioEntity> findByTipousuarioId(Long idTipousuario, Pageable pageable);
     Page<UsuarioEntity> findByClubId(Long idClub, Pageable pageable);
     Page<UsuarioEntity> findByRolusuarioId(Long idRolusuario, Pageable pageable);
+    Page<UsuarioEntity> findByClubIdAndTipousuarioId(Long idClub, Long idTipousuario, Pageable pageable);
 }

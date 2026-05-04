@@ -28,14 +28,16 @@
           <div class="col-7 fw-semibold small">@for (s of [1,2,3,4,5]; track s) { <i class="bi" [class.bi-star-fill]="s <= (oPuntuacion()?.puntuacion ?? 0)" [class.bi-star]="s > (oPuntuacion()?.puntuacion ?? 0)" class="text-warning"></i> } <span class="ms-1 fw-bold">{{ oPuntuacion()?.puntuacion }}/5</span></div>
         </div>
         <div class="card border-start border-3 border-info mt-3">
-          <div class="card-header py-1 d-flex align-items-center gap-2 bg-info bg-opacity-10">
+          <div class="card-header py-1 d-flex align-items-center gap-2 bg-info bg-opacity-10" style="cursor:pointer" (click)="showNoticia.set(!showNoticia())">
             <i class="bi bi-newspaper text-info small"></i>
             <span class="text-uppercase small fw-semibold text-info">Noticia</span>
-            <a [routerLink]="['/noticia/teamadmin/view', oPuntuacion()?.noticia?.id]" class="ms-auto badge bg-info text-white text-decoration-none small">
+            <i class="bi ms-1 text-info small" [class.bi-chevron-down]="!showNoticia()" [class.bi-chevron-up]="showNoticia()"></i>
+            <a [routerLink]="['/noticia/teamadmin/view', oPuntuacion()?.noticia?.id]" class="ms-auto badge bg-info text-white text-decoration-none small" (click)="$event.stopPropagation()">
               {{ oPuntuacion()?.noticia?.titulo | slice:0:30 }} <span class="opacity-75 ms-1">#{{oPuntuacion()?.noticia?.id}}</span>
               <i class="bi bi-box-arrow-up-right ms-1"></i>
             </a>
           </div>
+          @if (showNoticia()) {
           <div class="card-body p-2">
             <div class="row g-1">
               <div class="col-5 text-muted small text-uppercase">ID</div>
@@ -50,14 +52,16 @@
               <div class="col-7 fw-semibold small">@if ((oPuntuacion()?.noticia?.puntuaciones ?? 0) > 0) { <a [routerLink]="['/puntuacion/teamadmin/noticia', oPuntuacion()?.noticia?.id]" class="text-decoration-none">{{ oPuntuacion()?.noticia?.puntuaciones }}</a> } @else { 0 }</div>
             </div>
             <div class="card border-start border-3 border-success mt-3">
-              <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10">
+              <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10" style="cursor:pointer" (click)="showNoticiaClub.set(!showNoticiaClub())">
                 <i class="bi bi-building-fill text-success small"></i>
                 <span class="text-uppercase small fw-semibold text-success">Club</span>
-                <a [routerLink]="['/club/teamadmin/view', oPuntuacion()?.noticia?.club?.id]" class="ms-auto badge bg-success text-white text-decoration-none small">
+                <i class="bi ms-1 text-success small" [class.bi-chevron-down]="!showNoticiaClub()" [class.bi-chevron-up]="showNoticiaClub()"></i>
+                <a [routerLink]="['/club/teamadmin/view', oPuntuacion()?.noticia?.club?.id]" class="ms-auto badge bg-success text-white text-decoration-none small" (click)="$event.stopPropagation()">
                   {{ oPuntuacion()?.noticia?.club?.nombre }} <span class="opacity-75 ms-1">#{{oPuntuacion()?.noticia?.club?.id}}</span>
                   <i class="bi bi-box-arrow-up-right ms-1"></i>
                 </a>
               </div>
+              @if (showNoticiaClub()) {
               <div class="card-body p-2">
                 <div class="row g-1">
                   <div class="col-5 text-muted small text-uppercase">ID</div>
@@ -80,18 +84,22 @@
                   <div class="col-7 fw-semibold small">@if ((oPuntuacion()?.noticia?.club?.usuarios ?? 0) > 0) { <a [routerLink]="['/usuario/teamadmin/club', oPuntuacion()?.noticia?.club?.id]" class="text-decoration-none">{{ oPuntuacion()?.noticia?.club?.usuarios }}</a> } @else { 0 }</div>
                 </div>
               </div>
+              }
             </div>
           </div>
+          }
         </div>
         <div class="card border-start border-3 border-info mt-3">
-          <div class="card-header py-1 d-flex align-items-center gap-2 bg-info bg-opacity-10">
+          <div class="card-header py-1 d-flex align-items-center gap-2 bg-info bg-opacity-10" style="cursor:pointer" (click)="showUsuario.set(!showUsuario())">
             <i class="bi bi-person-fill text-info small"></i>
             <span class="text-uppercase small fw-semibold text-info">Usuario</span>
-            <a [routerLink]="['/usuario/teamadmin/view', oPuntuacion()?.usuario?.id]" class="ms-auto badge bg-info text-white text-decoration-none small">
+            <i class="bi ms-1 text-info small" [class.bi-chevron-down]="!showUsuario()" [class.bi-chevron-up]="showUsuario()"></i>
+            <a [routerLink]="['/usuario/teamadmin/view', oPuntuacion()?.usuario?.id]" class="ms-auto badge bg-info text-white text-decoration-none small" (click)="$event.stopPropagation()">
               {{ oPuntuacion()?.usuario?.nombre }} {{ oPuntuacion()?.usuario?.apellido1 }} <span class="opacity-75 ms-1">#{{oPuntuacion()?.usuario?.id}}</span>
               <i class="bi bi-box-arrow-up-right ms-1"></i>
             </a>
           </div>
+          @if (showUsuario()) {
           <div class="card-body p-2">
             <div class="row g-1">
               <div class="col-5 text-muted small text-uppercase">ID</div>
@@ -124,14 +132,16 @@
               <div class="col-7 fw-semibold small">@if ((oPuntuacion()?.usuario?.jugadores ?? 0) > 0) { <a [routerLink]="['/jugador/teamadmin/usuario', oPuntuacion()?.usuario?.id]" class="text-decoration-none">{{ oPuntuacion()?.usuario?.jugadores }}</a> } @else { 0 }</div>
             </div>
             <div class="card border-start border-3 border-success mt-3">
-              <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10">
+              <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10" style="cursor:pointer" (click)="showUsuarioTipousuario.set(!showUsuarioTipousuario())">
                 <i class="bi bi-person-badge-fill text-success small"></i>
                 <span class="text-uppercase small fw-semibold text-success">Tipo de usuario</span>
-                <a [routerLink]="['/tipousuario/view', oPuntuacion()?.usuario?.tipousuario?.id]" class="ms-auto badge bg-success text-white text-decoration-none small">
+                <i class="bi ms-1 text-success small" [class.bi-chevron-down]="!showUsuarioTipousuario()" [class.bi-chevron-up]="showUsuarioTipousuario()"></i>
+                <a [routerLink]="['/tipousuario/view', oPuntuacion()?.usuario?.tipousuario?.id]" class="ms-auto badge bg-success text-white text-decoration-none small" (click)="$event.stopPropagation()">
                   {{ oPuntuacion()?.usuario?.tipousuario?.descripcion }} <span class="opacity-75 ms-1">#{{oPuntuacion()?.usuario?.tipousuario?.id}}</span>
                   <i class="bi bi-box-arrow-up-right ms-1"></i>
                 </a>
               </div>
+              @if (showUsuarioTipousuario()) {
               <div class="card-body p-2">
                 <div class="row g-1">
                   <div class="col-5 text-muted small text-uppercase">ID</div>
@@ -142,16 +152,19 @@
                   <div class="col-7 fw-semibold small">@if ((oPuntuacion()?.usuario?.tipousuario?.usuarios ?? 0) > 0) { <a [routerLink]="['/usuario/tipousuario', oPuntuacion()?.usuario?.tipousuario?.id]" class="text-decoration-none">{{ oPuntuacion()?.usuario?.tipousuario?.usuarios }}</a> } @else { 0 }</div>
                 </div>
               </div>
+              }
             </div>
             <div class="card border-start border-3 border-success mt-3">
-              <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10">
+              <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10" style="cursor:pointer" (click)="showUsuarioRolusuario.set(!showUsuarioRolusuario())">
                 <i class="bi bi-shield-fill text-success small"></i>
                 <span class="text-uppercase small fw-semibold text-success">Rol de usuario</span>
-                <a [routerLink]="['/rolusuario/view', oPuntuacion()?.usuario?.rolusuario?.id]" class="ms-auto badge bg-success text-white text-decoration-none small">
+                <i class="bi ms-1 text-success small" [class.bi-chevron-down]="!showUsuarioRolusuario()" [class.bi-chevron-up]="showUsuarioRolusuario()"></i>
+                <a [routerLink]="['/rolusuario/view', oPuntuacion()?.usuario?.rolusuario?.id]" class="ms-auto badge bg-success text-white text-decoration-none small" (click)="$event.stopPropagation()">
                   {{ oPuntuacion()?.usuario?.rolusuario?.descripcion }} <span class="opacity-75 ms-1">#{{oPuntuacion()?.usuario?.rolusuario?.id}}</span>
                   <i class="bi bi-box-arrow-up-right ms-1"></i>
                 </a>
               </div>
+              @if (showUsuarioRolusuario()) {
               <div class="card-body p-2">
                 <div class="row g-1">
                   <div class="col-5 text-muted small text-uppercase">ID</div>
@@ -162,16 +175,19 @@
                   <div class="col-7 fw-semibold small">@if ((oPuntuacion()?.usuario?.rolusuario?.usuarios ?? 0) > 0) { <a [routerLink]="['/usuario/rol', oPuntuacion()?.usuario?.rolusuario?.id]" class="text-decoration-none">{{ oPuntuacion()?.usuario?.rolusuario?.usuarios }}</a> } @else { 0 }</div>
                 </div>
               </div>
+              }
             </div>
             <div class="card border-start border-3 border-success mt-3">
-              <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10">
+              <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10" style="cursor:pointer" (click)="showUsuarioClub.set(!showUsuarioClub())">
                 <i class="bi bi-building-fill text-success small"></i>
                 <span class="text-uppercase small fw-semibold text-success">Club</span>
-                <a [routerLink]="['/club/teamadmin/view', oPuntuacion()?.usuario?.club?.id]" class="ms-auto badge bg-success text-white text-decoration-none small">
+                <i class="bi ms-1 text-success small" [class.bi-chevron-down]="!showUsuarioClub()" [class.bi-chevron-up]="showUsuarioClub()"></i>
+                <a [routerLink]="['/club/teamadmin/view', oPuntuacion()?.usuario?.club?.id]" class="ms-auto badge bg-success text-white text-decoration-none small" (click)="$event.stopPropagation()">
                   {{ oPuntuacion()?.usuario?.club?.nombre }} <span class="opacity-75 ms-1">#{{oPuntuacion()?.usuario?.club?.id}}</span>
                   <i class="bi bi-box-arrow-up-right ms-1"></i>
                 </a>
               </div>
+              @if (showUsuarioClub()) {
               <div class="card-body p-2">
                 <div class="row g-1">
                   <div class="col-5 text-muted small text-uppercase">ID</div>
@@ -194,8 +210,10 @@
                   <div class="col-7 fw-semibold small">@if ((oPuntuacion()?.usuario?.club?.usuarios ?? 0) > 0) { <a [routerLink]="['/usuario/teamadmin/club', oPuntuacion()?.usuario?.club?.id]" class="text-decoration-none">{{ oPuntuacion()?.usuario?.club?.usuarios }}</a> } @else { 0 }</div>
                 </div>
               </div>
+              }
             </div>
           </div>
+          }
         </div>
 
       </div>

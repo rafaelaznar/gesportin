@@ -249,7 +249,8 @@ CREATE TABLE `partido` (
   `resultado` varchar(1024) CHARACTER SET utf32 COLLATE utf32_unicode_ci NOT NULL,
   `fecha` datetime DEFAULT NULL,
   `lugar` varchar(255) CHARACTER SET utf32 COLLATE utf32_unicode_ci NOT NULL,
-  `id_estadopartido` bigint DEFAULT NULL
+  `id_estadopartido` bigint DEFAULT NULL,
+  `comentario` text COLLATE utf32_unicode_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf32 COLLATE=utf32_unicode_ci;
 
 -- --------------------------------------------------------

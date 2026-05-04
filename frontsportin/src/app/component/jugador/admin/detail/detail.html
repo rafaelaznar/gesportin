@@ -1,18 +1,25 @@
 <div class="container-fluid">
-  <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 border rounded bg-light p-2 mb-3">
+  <div
+    class="d-flex flex-wrap align-items-center justify-content-between gap-2 border rounded bg-light p-2 mb-3"
+  >
     <div>
-      <div class="text-uppercase small text-muted fw-semibold">Jugadores</div>
+      <div class="text-uppercase small text-muted fw-semibold fs-2">Jugador</div>
       <div class="fw-bold">Detalle de jugador</div>
       <div class="text-muted small">Panel administrativo</div>
     </div>
-    <a class="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2" [routerLink]="session.isClubAdmin() ? '/jugador/teamadmin' : '/jugador'">
+    <a
+      class="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2"
+      [routerLink]="session.isClubAdmin() ? '/jugador/teamadmin' : '/jugador'"
+    >
       <i class="bi bi-arrow-left"></i> Volver
     </a>
   </div>
 
   @if (loading()) {
     <div class="text-center py-4">
-      <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Cargando...</span></div>
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando...</span>
+      </div>
       <p class="text-muted small mt-2 mb-0">Cargando detalle...</p>
     </div>
   }
@@ -27,7 +34,10 @@
     <div class="card border-0 shadow-sm">
       <div class="card-header bg-primary text-white d-flex align-items-center gap-2">
         <i class="bi bi-person-badge"></i>
-        <span class="fw-semibold">{{ oJugador()?.usuario?.nombre }} {{ oJugador()?.usuario?.apellido1 }} {{ oJugador()?.usuario?.apellido2 }}</span>
+        <span class="fw-semibold"
+          >{{ oJugador()?.usuario?.nombre }} {{ oJugador()?.usuario?.apellido1 }}
+          {{ oJugador()?.usuario?.apellido2 }}</span
+        >
         <span class="badge bg-white text-primary ms-auto">ID {{ oJugador()?.id }}</span>
       </div>
       <div class="card-body">
@@ -41,14 +51,44 @@
           <div class="col-5 text-muted small text-uppercase">Capitán</div>
           <div class="col-7 fw-semibold small">{{ oJugador()?.capitan ? 'Sí' : 'No' }}</div>
           <div class="col-5 text-muted small text-uppercase">Imagen</div>
-          <div class="col-7 fw-semibold small">@if (oJugador()?.imagen) { <img [src]="oJugador()?.imagen" class="img-thumbnail" style="max-height:80px" alt="jugador"/> } @else { Sin imagen }</div>
+          <div class="col-7 fw-semibold small">
+            @if (oJugador()?.imagen) {
+              <img
+                [src]="oJugador()?.imagen"
+                class="img-thumbnail"
+                style="max-height: 80px"
+                alt="jugador"
+              />
+            } @else {
+              Sin imagen
+            }
+          </div>
+          <div class="col-5 text-muted small text-uppercase">Pagos</div>
+          <div class="col-7 fw-semibold small">
+            @if ((oJugador()?.pagos ?? 0) > 0) {
+              <a
+                [routerLink]="[
+                  session.isClubAdmin() ? '/pago/teamadmin/jugador' : '/pago/jugador',
+                  oJugador()?.id,
+                ]"
+                class="text-decoration-none"
+                >{{ oJugador()?.pagos }}</a
+              >
+            } @else {
+              0
+            }
+          </div>
         </div>
         <div class="card border-start border-3 border-info mt-3">
           <div class="card-header py-1 d-flex align-items-center gap-2 bg-info bg-opacity-10">
             <i class="bi bi-person-fill text-info small"></i>
             <span class="text-uppercase small fw-semibold text-info">Usuario</span>
-            <a [routerLink]="['/usuario/view', oJugador()?.usuario?.id]" class="ms-auto badge bg-info text-white text-decoration-none small">
-              {{ oJugador()?.usuario?.nombre }} {{ oJugador()?.usuario?.apellido1 }} <span class="opacity-75 ms-1">#{{oJugador()?.usuario?.id}}</span>
+            <a
+              [routerLink]="['/usuario/view', oJugador()?.usuario?.id]"
+              class="ms-auto badge bg-info text-white text-decoration-none small"
+            >
+              {{ oJugador()?.usuario?.nombre }} {{ oJugador()?.usuario?.apellido1 }}
+              <span class="opacity-75 ms-1">#{{ oJugador()?.usuario?.id }}</span>
               <i class="bi bi-box-arrow-up-right ms-1"></i>
             </a>
           </div>
@@ -65,70 +105,193 @@
               <div class="col-5 text-muted small text-uppercase">Username</div>
               <div class="col-7 fw-semibold small">{{ oJugador()?.usuario?.username }}</div>
               <div class="col-5 text-muted small text-uppercase">Fecha alta</div>
-              <div class="col-7 fw-semibold small">{{ oJugador()?.usuario?.fechaAlta | datetime }}</div>
+              <div class="col-7 fw-semibold small">
+                {{ oJugador()?.usuario?.fechaAlta | datetime }}
+              </div>
               <div class="col-5 text-muted small text-uppercase">Género</div>
-              <div class="col-7 fw-semibold small">{{ oJugador()?.usuario?.genero === 0 ? 'Hombre' : 'Mujer' }}</div>
+              <div class="col-7 fw-semibold small">
+                {{ oJugador()?.usuario?.genero === 0 ? 'Hombre' : 'Mujer' }}
+              </div>
               <div class="col-5 text-muted small text-uppercase">Comentarios</div>
-              <div class="col-7 fw-semibold small">@if ((oJugador()?.usuario?.comentarios ?? 0) > 0) { <a [routerLink]="['/comentario/usuario', oJugador()?.usuario?.id]" class="text-decoration-none">{{ oJugador()?.usuario?.comentarios }}</a> } @else { 0 }</div>
+              <div class="col-7 fw-semibold small">
+                @if ((oJugador()?.usuario?.comentarios ?? 0) > 0) {
+                  <a
+                    [routerLink]="['/comentario/usuario', oJugador()?.usuario?.id]"
+                    class="text-decoration-none"
+                    >{{ oJugador()?.usuario?.comentarios }}</a
+                  >
+                } @else {
+                  0
+                }
+              </div>
               <div class="col-5 text-muted small text-uppercase">Puntuaciones</div>
-              <div class="col-7 fw-semibold small">@if ((oJugador()?.usuario?.puntuaciones ?? 0) > 0) { <a [routerLink]="['/puntuacion/usuario', oJugador()?.usuario?.id]" class="text-decoration-none">{{ oJugador()?.usuario?.puntuaciones }}</a> } @else { 0 }</div>
+              <div class="col-7 fw-semibold small">
+                @if ((oJugador()?.usuario?.puntuaciones ?? 0) > 0) {
+                  <a
+                    [routerLink]="['/puntuacion/usuario', oJugador()?.usuario?.id]"
+                    class="text-decoration-none"
+                    >{{ oJugador()?.usuario?.puntuaciones }}</a
+                  >
+                } @else {
+                  0
+                }
+              </div>
               <div class="col-5 text-muted small text-uppercase">Com. artículos</div>
-              <div class="col-7 fw-semibold small">@if ((oJugador()?.usuario?.comentarioarts ?? 0) > 0) { <a [routerLink]="['/comentarioart/usuario', oJugador()?.usuario?.id]" class="text-decoration-none">{{ oJugador()?.usuario?.comentarioarts }}</a> } @else { 0 }</div>
+              <div class="col-7 fw-semibold small">
+                @if ((oJugador()?.usuario?.comentarioarts ?? 0) > 0) {
+                  <a
+                    [routerLink]="['/comentarioart/usuario', oJugador()?.usuario?.id]"
+                    class="text-decoration-none"
+                    >{{ oJugador()?.usuario?.comentarioarts }}</a
+                  >
+                } @else {
+                  0
+                }
+              </div>
               <div class="col-5 text-muted small text-uppercase">Carritos</div>
-              <div class="col-7 fw-semibold small">@if ((oJugador()?.usuario?.carritos ?? 0) > 0) { <a [routerLink]="['/carrito/usuario', oJugador()?.usuario?.id]" class="text-decoration-none">{{ oJugador()?.usuario?.carritos }}</a> } @else { 0 }</div>
+              <div class="col-7 fw-semibold small">
+                @if ((oJugador()?.usuario?.carritos ?? 0) > 0) {
+                  <a
+                    [routerLink]="['/carrito/usuario', oJugador()?.usuario?.id]"
+                    class="text-decoration-none"
+                    >{{ oJugador()?.usuario?.carritos }}</a
+                  >
+                } @else {
+                  0
+                }
+              </div>
               <div class="col-5 text-muted small text-uppercase">Facturas</div>
-              <div class="col-7 fw-semibold small">@if ((oJugador()?.usuario?.facturas ?? 0) > 0) { <a [routerLink]="['/factura/usuario', oJugador()?.usuario?.id]" class="text-decoration-none">{{ oJugador()?.usuario?.facturas }}</a> } @else { 0 }</div>
+              <div class="col-7 fw-semibold small">
+                @if ((oJugador()?.usuario?.facturas ?? 0) > 0) {
+                  <a
+                    [routerLink]="['/factura/usuario', oJugador()?.usuario?.id]"
+                    class="text-decoration-none"
+                    >{{ oJugador()?.usuario?.facturas }}</a
+                  >
+                } @else {
+                  0
+                }
+              </div>
               <div class="col-5 text-muted small text-uppercase">Equipos entren.</div>
-              <div class="col-7 fw-semibold small">@if ((oJugador()?.usuario?.equiposentrenados ?? 0) > 0) { <a [routerLink]="['/equipo/usuario', oJugador()?.usuario?.id]" class="text-decoration-none">{{ oJugador()?.usuario?.equiposentrenados }}</a> } @else { 0 }</div>
+              <div class="col-7 fw-semibold small">
+                @if ((oJugador()?.usuario?.equiposentrenados ?? 0) > 0) {
+                  <a
+                    [routerLink]="['/equipo/usuario', oJugador()?.usuario?.id]"
+                    class="text-decoration-none"
+                    >{{ oJugador()?.usuario?.equiposentrenados }}</a
+                  >
+                } @else {
+                  0
+                }
+              </div>
               <div class="col-5 text-muted small text-uppercase">Jugadores</div>
-              <div class="col-7 fw-semibold small">@if ((oJugador()?.usuario?.jugadores ?? 0) > 0) { <a [routerLink]="['/jugador/usuario', oJugador()?.usuario?.id]" class="text-decoration-none">{{ oJugador()?.usuario?.jugadores }}</a> } @else { 0 }</div>
+              <div class="col-7 fw-semibold small">
+                @if ((oJugador()?.usuario?.jugadores ?? 0) > 0) {
+                  <a
+                    [routerLink]="['/jugador/usuario', oJugador()?.usuario?.id]"
+                    class="text-decoration-none"
+                    >{{ oJugador()?.usuario?.jugadores }}</a
+                  >
+                } @else {
+                  0
+                }
+              </div>
             </div>
             <div class="card border-start border-3 border-success mt-3">
-              <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10">
+              <div
+                class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10"
+              >
                 <i class="bi bi-person-badge-fill text-success small"></i>
                 <span class="text-uppercase small fw-semibold text-success">Tipo de usuario</span>
-                <a [routerLink]="['/tipousuario/view', oJugador()?.usuario?.tipousuario?.id]" class="ms-auto badge bg-success text-white text-decoration-none small">
-                  {{ oJugador()?.usuario?.tipousuario?.descripcion }} <span class="opacity-75 ms-1">#{{oJugador()?.usuario?.tipousuario?.id}}</span>
+                <a
+                  [routerLink]="['/tipousuario/view', oJugador()?.usuario?.tipousuario?.id]"
+                  class="ms-auto badge bg-success text-white text-decoration-none small"
+                >
+                  {{ oJugador()?.usuario?.tipousuario?.descripcion }}
+                  <span class="opacity-75 ms-1">#{{ oJugador()?.usuario?.tipousuario?.id }}</span>
                   <i class="bi bi-box-arrow-up-right ms-1"></i>
                 </a>
               </div>
               <div class="card-body p-2">
                 <div class="row g-1">
                   <div class="col-5 text-muted small text-uppercase">ID</div>
-                  <div class="col-7 fw-semibold small">{{ oJugador()?.usuario?.tipousuario?.id }}</div>
+                  <div class="col-7 fw-semibold small">
+                    {{ oJugador()?.usuario?.tipousuario?.id }}
+                  </div>
                   <div class="col-5 text-muted small text-uppercase">Descripción</div>
-                  <div class="col-7 fw-semibold small">{{ oJugador()?.usuario?.tipousuario?.descripcion }}</div>
+                  <div class="col-7 fw-semibold small">
+                    {{ oJugador()?.usuario?.tipousuario?.descripcion }}
+                  </div>
                   <div class="col-5 text-muted small text-uppercase">Usuarios</div>
-                  <div class="col-7 fw-semibold small">@if ((oJugador()?.usuario?.tipousuario?.usuarios ?? 0) > 0) { <a [routerLink]="['/usuario/tipousuario', oJugador()?.usuario?.tipousuario?.id]" class="text-decoration-none">{{ oJugador()?.usuario?.tipousuario?.usuarios }}</a> } @else { 0 }</div>
+                  <div class="col-7 fw-semibold small">
+                    @if ((oJugador()?.usuario?.tipousuario?.usuarios ?? 0) > 0) {
+                      <a
+                        [routerLink]="[
+                          '/usuario/tipousuario',
+                          oJugador()?.usuario?.tipousuario?.id,
+                        ]"
+                        class="text-decoration-none"
+                        >{{ oJugador()?.usuario?.tipousuario?.usuarios }}</a
+                      >
+                    } @else {
+                      0
+                    }
+                  </div>
                 </div>
               </div>
             </div>
             <div class="card border-start border-3 border-success mt-3">
-              <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10">
+              <div
+                class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10"
+              >
                 <i class="bi bi-shield-fill text-success small"></i>
                 <span class="text-uppercase small fw-semibold text-success">Rol de usuario</span>
-                <a [routerLink]="['/rolusuario/view', oJugador()?.usuario?.rolusuario?.id]" class="ms-auto badge bg-success text-white text-decoration-none small">
-                  {{ oJugador()?.usuario?.rolusuario?.descripcion }} <span class="opacity-75 ms-1">#{{oJugador()?.usuario?.rolusuario?.id}}</span>
+                <a
+                  [routerLink]="['/rolusuario/view', oJugador()?.usuario?.rolusuario?.id]"
+                  class="ms-auto badge bg-success text-white text-decoration-none small"
+                >
+                  {{ oJugador()?.usuario?.rolusuario?.descripcion }}
+                  <span class="opacity-75 ms-1">#{{ oJugador()?.usuario?.rolusuario?.id }}</span>
                   <i class="bi bi-box-arrow-up-right ms-1"></i>
                 </a>
               </div>
               <div class="card-body p-2">
                 <div class="row g-1">
                   <div class="col-5 text-muted small text-uppercase">ID</div>
-                  <div class="col-7 fw-semibold small">{{ oJugador()?.usuario?.rolusuario?.id }}</div>
+                  <div class="col-7 fw-semibold small">
+                    {{ oJugador()?.usuario?.rolusuario?.id }}
+                  </div>
                   <div class="col-5 text-muted small text-uppercase">Descripción</div>
-                  <div class="col-7 fw-semibold small">{{ oJugador()?.usuario?.rolusuario?.descripcion }}</div>
+                  <div class="col-7 fw-semibold small">
+                    {{ oJugador()?.usuario?.rolusuario?.descripcion }}
+                  </div>
                   <div class="col-5 text-muted small text-uppercase">Usuarios</div>
-                  <div class="col-7 fw-semibold small">@if ((oJugador()?.usuario?.rolusuario?.usuarios ?? 0) > 0) { <a [routerLink]="['/usuario/rol', oJugador()?.usuario?.rolusuario?.id]" class="text-decoration-none">{{ oJugador()?.usuario?.rolusuario?.usuarios }}</a> } @else { 0 }</div>
+                  <div class="col-7 fw-semibold small">
+                    @if ((oJugador()?.usuario?.rolusuario?.usuarios ?? 0) > 0) {
+                      <a
+                        [routerLink]="['/usuario/rol', oJugador()?.usuario?.rolusuario?.id]"
+                        class="text-decoration-none"
+                        >{{ oJugador()?.usuario?.rolusuario?.usuarios }}</a
+                      >
+                    } @else {
+                      0
+                    }
+                  </div>
                 </div>
               </div>
             </div>
             <div class="card border-start border-3 border-success mt-3">
-              <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10">
+              <div
+                class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10"
+              >
                 <i class="bi bi-building-fill text-success small"></i>
                 <span class="text-uppercase small fw-semibold text-success">Club</span>
-                <a [routerLink]="['/club/view', oJugador()?.usuario?.club?.id]" class="ms-auto badge bg-success text-white text-decoration-none small">
-                  {{ oJugador()?.usuario?.club?.nombre }} <span class="opacity-75 ms-1">#{{oJugador()?.usuario?.club?.id}}</span>
+                <a
+                  [routerLink]="['/club/view', oJugador()?.usuario?.club?.id]"
+                  class="ms-auto badge bg-success text-white text-decoration-none small"
+                >
+                  {{ oJugador()?.usuario?.club?.nombre }}
+                  <span class="opacity-75 ms-1">#{{ oJugador()?.usuario?.club?.id }}</span>
                   <i class="bi bi-box-arrow-up-right ms-1"></i>
                 </a>
               </div>
@@ -139,19 +302,65 @@
                   <div class="col-5 text-muted small text-uppercase">Nombre</div>
                   <div class="col-7 fw-semibold small">{{ oJugador()?.usuario?.club?.nombre }}</div>
                   <div class="col-5 text-muted small text-uppercase">Dirección</div>
-                  <div class="col-7 fw-semibold small">{{ oJugador()?.usuario?.club?.direccion }}</div>
+                  <div class="col-7 fw-semibold small">
+                    {{ oJugador()?.usuario?.club?.direccion }}
+                  </div>
                   <div class="col-5 text-muted small text-uppercase">Teléfono</div>
-                  <div class="col-7 fw-semibold small">{{ oJugador()?.usuario?.club?.telefono }}</div>
+                  <div class="col-7 fw-semibold small">
+                    {{ oJugador()?.usuario?.club?.telefono }}
+                  </div>
                   <div class="col-5 text-muted small text-uppercase">Fecha alta</div>
-                  <div class="col-7 fw-semibold small">{{ oJugador()?.usuario?.club?.fechaAlta | datetime }}</div>
+                  <div class="col-7 fw-semibold small">
+                    {{ oJugador()?.usuario?.club?.fechaAlta | datetime }}
+                  </div>
                   <div class="col-5 text-muted small text-uppercase">Temporadas</div>
-                  <div class="col-7 fw-semibold small">@if ((oJugador()?.usuario?.club?.temporadas ?? 0) > 0) { <a [routerLink]="['/temporada/club', oJugador()?.usuario?.club?.id]" class="text-decoration-none">{{ oJugador()?.usuario?.club?.temporadas }}</a> } @else { 0 }</div>
+                  <div class="col-7 fw-semibold small">
+                    @if ((oJugador()?.usuario?.club?.temporadas ?? 0) > 0) {
+                      <a
+                        [routerLink]="['/temporada/club', oJugador()?.usuario?.club?.id]"
+                        class="text-decoration-none"
+                        >{{ oJugador()?.usuario?.club?.temporadas }}</a
+                      >
+                    } @else {
+                      0
+                    }
+                  </div>
                   <div class="col-5 text-muted small text-uppercase">Noticias</div>
-                  <div class="col-7 fw-semibold small">@if ((oJugador()?.usuario?.club?.noticias ?? 0) > 0) { <a [routerLink]="['/noticia/club', oJugador()?.usuario?.club?.id]" class="text-decoration-none">{{ oJugador()?.usuario?.club?.noticias }}</a> } @else { 0 }</div>
+                  <div class="col-7 fw-semibold small">
+                    @if ((oJugador()?.usuario?.club?.noticias ?? 0) > 0) {
+                      <a
+                        [routerLink]="['/noticia/club', oJugador()?.usuario?.club?.id]"
+                        class="text-decoration-none"
+                        >{{ oJugador()?.usuario?.club?.noticias }}</a
+                      >
+                    } @else {
+                      0
+                    }
+                  </div>
                   <div class="col-5 text-muted small text-uppercase">Tipos artículo</div>
-                  <div class="col-7 fw-semibold small">@if ((oJugador()?.usuario?.club?.tipoarticulos ?? 0) > 0) { <a [routerLink]="['/tipoarticulo/club', oJugador()?.usuario?.club?.id]" class="text-decoration-none">{{ oJugador()?.usuario?.club?.tipoarticulos }}</a> } @else { 0 }</div>
+                  <div class="col-7 fw-semibold small">
+                    @if ((oJugador()?.usuario?.club?.tipoarticulos ?? 0) > 0) {
+                      <a
+                        [routerLink]="['/tipoarticulo/club', oJugador()?.usuario?.club?.id]"
+                        class="text-decoration-none"
+                        >{{ oJugador()?.usuario?.club?.tipoarticulos }}</a
+                      >
+                    } @else {
+                      0
+                    }
+                  </div>
                   <div class="col-5 text-muted small text-uppercase">Usuarios</div>
-                  <div class="col-7 fw-semibold small">@if ((oJugador()?.usuario?.club?.usuarios ?? 0) > 0) { <a [routerLink]="['/usuario/club', oJugador()?.usuario?.club?.id]" class="text-decoration-none">{{ oJugador()?.usuario?.club?.usuarios }}</a> } @else { 0 }</div>
+                  <div class="col-7 fw-semibold small">
+                    @if ((oJugador()?.usuario?.club?.usuarios ?? 0) > 0) {
+                      <a
+                        [routerLink]="['/usuario/club', oJugador()?.usuario?.club?.id]"
+                        class="text-decoration-none"
+                        >{{ oJugador()?.usuario?.club?.usuarios }}</a
+                      >
+                    } @else {
+                      0
+                    }
+                  </div>
                 </div>
               </div>
             </div>
@@ -161,8 +370,12 @@
           <div class="card-header py-1 d-flex align-items-center gap-2 bg-info bg-opacity-10">
             <i class="bi bi-people-fill text-info small"></i>
             <span class="text-uppercase small fw-semibold text-info">Equipo</span>
-            <a [routerLink]="['/equipo/view', oJugador()?.equipo?.id]" class="ms-auto badge bg-info text-white text-decoration-none small">
-              {{ oJugador()?.equipo?.nombre }} <span class="opacity-75 ms-1">#{{oJugador()?.equipo?.id}}</span>
+            <a
+              [routerLink]="['/equipo/view', oJugador()?.equipo?.id]"
+              class="ms-auto badge bg-info text-white text-decoration-none small"
+            >
+              {{ oJugador()?.equipo?.nombre }}
+              <span class="opacity-75 ms-1">#{{ oJugador()?.equipo?.id }}</span>
               <i class="bi bi-box-arrow-up-right ms-1"></i>
             </a>
           </div>
@@ -173,18 +386,54 @@
               <div class="col-5 text-muted small text-uppercase">Nombre</div>
               <div class="col-7 fw-semibold small">{{ oJugador()?.equipo?.nombre }}</div>
               <div class="col-5 text-muted small text-uppercase">Jugadores</div>
-              <div class="col-7 fw-semibold small">@if ((oJugador()?.equipo?.jugadores ?? 0) > 0) { <a [routerLink]="['/jugador/equipo', oJugador()?.equipo?.id]" class="text-decoration-none">{{ oJugador()?.equipo?.jugadores }}</a> } @else { 0 }</div>
+              <div class="col-7 fw-semibold small">
+                @if ((oJugador()?.equipo?.jugadores ?? 0) > 0) {
+                  <a
+                    [routerLink]="['/jugador/equipo', oJugador()?.equipo?.id]"
+                    class="text-decoration-none"
+                    >{{ oJugador()?.equipo?.jugadores }}</a
+                  >
+                } @else {
+                  0
+                }
+              </div>
               <div class="col-5 text-muted small text-uppercase">Cuotas</div>
-              <div class="col-7 fw-semibold small">@if ((oJugador()?.equipo?.cuotas ?? 0) > 0) { <a [routerLink]="['/cuota/equipo', oJugador()?.equipo?.id]" class="text-decoration-none">{{ oJugador()?.equipo?.cuotas }}</a> } @else { 0 }</div>
+              <div class="col-7 fw-semibold small">
+                @if ((oJugador()?.equipo?.cuotas ?? 0) > 0) {
+                  <a
+                    [routerLink]="['/cuota/equipo', oJugador()?.equipo?.id]"
+                    class="text-decoration-none"
+                    >{{ oJugador()?.equipo?.cuotas }}</a
+                  >
+                } @else {
+                  0
+                }
+              </div>
               <div class="col-5 text-muted small text-uppercase">Ligas</div>
-              <div class="col-7 fw-semibold small">@if ((oJugador()?.equipo?.ligas ?? 0) > 0) { <a [routerLink]="['/liga/equipo', oJugador()?.equipo?.id]" class="text-decoration-none">{{ oJugador()?.equipo?.ligas }}</a> } @else { 0 }</div>
+              <div class="col-7 fw-semibold small">
+                @if ((oJugador()?.equipo?.ligas ?? 0) > 0) {
+                  <a
+                    [routerLink]="['/liga/equipo', oJugador()?.equipo?.id]"
+                    class="text-decoration-none"
+                    >{{ oJugador()?.equipo?.ligas }}</a
+                  >
+                } @else {
+                  0
+                }
+              </div>
             </div>
             <div class="card border-start border-3 border-success mt-3">
-              <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10">
+              <div
+                class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10"
+              >
                 <i class="bi bi-diagram-3-fill text-success small"></i>
                 <span class="text-uppercase small fw-semibold text-success">Categoría</span>
-                <a [routerLink]="['/categoria/view', oJugador()?.equipo?.categoria?.id]" class="ms-auto badge bg-success text-white text-decoration-none small">
-                  {{ oJugador()?.equipo?.categoria?.nombre }} <span class="opacity-75 ms-1">#{{oJugador()?.equipo?.categoria?.id}}</span>
+                <a
+                  [routerLink]="['/categoria/view', oJugador()?.equipo?.categoria?.id]"
+                  class="ms-auto badge bg-success text-white text-decoration-none small"
+                >
+                  {{ oJugador()?.equipo?.categoria?.nombre }}
+                  <span class="opacity-75 ms-1">#{{ oJugador()?.equipo?.categoria?.id }}</span>
                   <i class="bi bi-box-arrow-up-right ms-1"></i>
                 </a>
               </div>
@@ -193,57 +442,183 @@
                   <div class="col-5 text-muted small text-uppercase">ID</div>
                   <div class="col-7 fw-semibold small">{{ oJugador()?.equipo?.categoria?.id }}</div>
                   <div class="col-5 text-muted small text-uppercase">Nombre</div>
-                  <div class="col-7 fw-semibold small">{{ oJugador()?.equipo?.categoria?.nombre }}</div>
+                  <div class="col-7 fw-semibold small">
+                    {{ oJugador()?.equipo?.categoria?.nombre }}
+                  </div>
                   <div class="col-5 text-muted small text-uppercase">Equipos</div>
-                  <div class="col-7 fw-semibold small">@if ((oJugador()?.equipo?.categoria?.equipos ?? 0) > 0) { <a [routerLink]="['/equipo/categoria', oJugador()?.equipo?.categoria?.id]" class="text-decoration-none">{{ oJugador()?.equipo?.categoria?.equipos }}</a> } @else { 0 }</div>
+                  <div class="col-7 fw-semibold small">
+                    @if ((oJugador()?.equipo?.categoria?.equipos ?? 0) > 0) {
+                      <a
+                        [routerLink]="['/equipo/categoria', oJugador()?.equipo?.categoria?.id]"
+                        class="text-decoration-none"
+                        >{{ oJugador()?.equipo?.categoria?.equipos }}</a
+                      >
+                    } @else {
+                      0
+                    }
+                  </div>
                 </div>
                 <div class="card border-start border-3 border-warning mt-3">
-                  <div class="card-header py-1 d-flex align-items-center gap-2 bg-warning bg-opacity-10">
+                  <div
+                    class="card-header py-1 d-flex align-items-center gap-2 bg-warning bg-opacity-10"
+                  >
                     <i class="bi bi-calendar3 text-warning small"></i>
                     <span class="text-uppercase small fw-semibold text-warning">Temporada</span>
-                    <a [routerLink]="['/temporada/view', oJugador()?.equipo?.categoria?.temporada?.id]" class="ms-auto badge bg-warning text-white text-decoration-none small">
-                      {{ oJugador()?.equipo?.categoria?.temporada?.descripcion }} <span class="opacity-75 ms-1">#{{oJugador()?.equipo?.categoria?.temporada?.id}}</span>
+                    <a
+                      [routerLink]="[
+                        '/temporada/view',
+                        oJugador()?.equipo?.categoria?.temporada?.id,
+                      ]"
+                      class="ms-auto badge bg-warning text-white text-decoration-none small"
+                    >
+                      {{ oJugador()?.equipo?.categoria?.temporada?.descripcion }}
+                      <span class="opacity-75 ms-1"
+                        >#{{ oJugador()?.equipo?.categoria?.temporada?.id }}</span
+                      >
                       <i class="bi bi-box-arrow-up-right ms-1"></i>
                     </a>
                   </div>
                   <div class="card-body p-2">
                     <div class="row g-1">
                       <div class="col-5 text-muted small text-uppercase">ID</div>
-                      <div class="col-7 fw-semibold small">{{ oJugador()?.equipo?.categoria?.temporada?.id }}</div>
+                      <div class="col-7 fw-semibold small">
+                        {{ oJugador()?.equipo?.categoria?.temporada?.id }}
+                      </div>
                       <div class="col-5 text-muted small text-uppercase">Descripción</div>
-                      <div class="col-7 fw-semibold small">{{ oJugador()?.equipo?.categoria?.temporada?.descripcion }}</div>
+                      <div class="col-7 fw-semibold small">
+                        {{ oJugador()?.equipo?.categoria?.temporada?.descripcion }}
+                      </div>
                       <div class="col-5 text-muted small text-uppercase">Categorías</div>
-                      <div class="col-7 fw-semibold small">@if ((oJugador()?.equipo?.categoria?.temporada?.categorias ?? 0) > 0) { <a [routerLink]="['/categoria/temporada', oJugador()?.equipo?.categoria?.temporada?.id]" class="text-decoration-none">{{ oJugador()?.equipo?.categoria?.temporada?.categorias }}</a> } @else { 0 }</div>
+                      <div class="col-7 fw-semibold small">
+                        @if ((oJugador()?.equipo?.categoria?.temporada?.categorias ?? 0) > 0) {
+                          <a
+                            [routerLink]="[
+                              '/categoria/temporada',
+                              oJugador()?.equipo?.categoria?.temporada?.id,
+                            ]"
+                            class="text-decoration-none"
+                            >{{ oJugador()?.equipo?.categoria?.temporada?.categorias }}</a
+                          >
+                        } @else {
+                          0
+                        }
+                      </div>
                     </div>
                     <div class="card border-start border-3 border-warning mt-3">
-                      <div class="card-header py-1 d-flex align-items-center gap-2 bg-warning bg-opacity-10">
+                      <div
+                        class="card-header py-1 d-flex align-items-center gap-2 bg-warning bg-opacity-10"
+                      >
                         <i class="bi bi-building-fill text-warning small"></i>
                         <span class="text-uppercase small fw-semibold text-warning">Club</span>
-                        <a [routerLink]="['/club/view', oJugador()?.equipo?.categoria?.temporada?.club?.id]" class="ms-auto badge bg-warning text-white text-decoration-none small">
-                          {{ oJugador()?.equipo?.categoria?.temporada?.club?.nombre }} <span class="opacity-75 ms-1">#{{oJugador()?.equipo?.categoria?.temporada?.club?.id}}</span>
+                        <a
+                          [routerLink]="[
+                            '/club/view',
+                            oJugador()?.equipo?.categoria?.temporada?.club?.id,
+                          ]"
+                          class="ms-auto badge bg-warning text-white text-decoration-none small"
+                        >
+                          {{ oJugador()?.equipo?.categoria?.temporada?.club?.nombre }}
+                          <span class="opacity-75 ms-1"
+                            >#{{ oJugador()?.equipo?.categoria?.temporada?.club?.id }}</span
+                          >
                           <i class="bi bi-box-arrow-up-right ms-1"></i>
                         </a>
                       </div>
                       <div class="card-body p-2">
                         <div class="row g-1">
                           <div class="col-5 text-muted small text-uppercase">ID</div>
-                          <div class="col-7 fw-semibold small">{{ oJugador()?.equipo?.categoria?.temporada?.club?.id }}</div>
+                          <div class="col-7 fw-semibold small">
+                            {{ oJugador()?.equipo?.categoria?.temporada?.club?.id }}
+                          </div>
                           <div class="col-5 text-muted small text-uppercase">Nombre</div>
-                          <div class="col-7 fw-semibold small">{{ oJugador()?.equipo?.categoria?.temporada?.club?.nombre }}</div>
+                          <div class="col-7 fw-semibold small">
+                            {{ oJugador()?.equipo?.categoria?.temporada?.club?.nombre }}
+                          </div>
                           <div class="col-5 text-muted small text-uppercase">Dirección</div>
-                          <div class="col-7 fw-semibold small">{{ oJugador()?.equipo?.categoria?.temporada?.club?.direccion }}</div>
+                          <div class="col-7 fw-semibold small">
+                            {{ oJugador()?.equipo?.categoria?.temporada?.club?.direccion }}
+                          </div>
                           <div class="col-5 text-muted small text-uppercase">Teléfono</div>
-                          <div class="col-7 fw-semibold small">{{ oJugador()?.equipo?.categoria?.temporada?.club?.telefono }}</div>
+                          <div class="col-7 fw-semibold small">
+                            {{ oJugador()?.equipo?.categoria?.temporada?.club?.telefono }}
+                          </div>
                           <div class="col-5 text-muted small text-uppercase">Fecha alta</div>
-                          <div class="col-7 fw-semibold small">{{ oJugador()?.equipo?.categoria?.temporada?.club?.fechaAlta | datetime }}</div>
+                          <div class="col-7 fw-semibold small">
+                            {{
+                              oJugador()?.equipo?.categoria?.temporada?.club?.fechaAlta | datetime
+                            }}
+                          </div>
                           <div class="col-5 text-muted small text-uppercase">Temporadas</div>
-                          <div class="col-7 fw-semibold small">@if ((oJugador()?.equipo?.categoria?.temporada?.club?.temporadas ?? 0) > 0) { <a [routerLink]="['/temporada/club', oJugador()?.equipo?.categoria?.temporada?.club?.id]" class="text-decoration-none">{{ oJugador()?.equipo?.categoria?.temporada?.club?.temporadas }}</a> } @else { 0 }</div>
+                          <div class="col-7 fw-semibold small">
+                            @if (
+                              (oJugador()?.equipo?.categoria?.temporada?.club?.temporadas ?? 0) > 0
+                            ) {
+                              <a
+                                [routerLink]="[
+                                  '/temporada/club',
+                                  oJugador()?.equipo?.categoria?.temporada?.club?.id,
+                                ]"
+                                class="text-decoration-none"
+                                >{{ oJugador()?.equipo?.categoria?.temporada?.club?.temporadas }}</a
+                              >
+                            } @else {
+                              0
+                            }
+                          </div>
                           <div class="col-5 text-muted small text-uppercase">Noticias</div>
-                          <div class="col-7 fw-semibold small">@if ((oJugador()?.equipo?.categoria?.temporada?.club?.noticias ?? 0) > 0) { <a [routerLink]="['/noticia/club', oJugador()?.equipo?.categoria?.temporada?.club?.id]" class="text-decoration-none">{{ oJugador()?.equipo?.categoria?.temporada?.club?.noticias }}</a> } @else { 0 }</div>
+                          <div class="col-7 fw-semibold small">
+                            @if (
+                              (oJugador()?.equipo?.categoria?.temporada?.club?.noticias ?? 0) > 0
+                            ) {
+                              <a
+                                [routerLink]="[
+                                  '/noticia/club',
+                                  oJugador()?.equipo?.categoria?.temporada?.club?.id,
+                                ]"
+                                class="text-decoration-none"
+                                >{{ oJugador()?.equipo?.categoria?.temporada?.club?.noticias }}</a
+                              >
+                            } @else {
+                              0
+                            }
+                          </div>
                           <div class="col-5 text-muted small text-uppercase">Tipos artículo</div>
-                          <div class="col-7 fw-semibold small">@if ((oJugador()?.equipo?.categoria?.temporada?.club?.tipoarticulos ?? 0) > 0) { <a [routerLink]="['/tipoarticulo/club', oJugador()?.equipo?.categoria?.temporada?.club?.id]" class="text-decoration-none">{{ oJugador()?.equipo?.categoria?.temporada?.club?.tipoarticulos }}</a> } @else { 0 }</div>
+                          <div class="col-7 fw-semibold small">
+                            @if (
+                              (oJugador()?.equipo?.categoria?.temporada?.club?.tipoarticulos ?? 0) >
+                              0
+                            ) {
+                              <a
+                                [routerLink]="[
+                                  '/tipoarticulo/club',
+                                  oJugador()?.equipo?.categoria?.temporada?.club?.id,
+                                ]"
+                                class="text-decoration-none"
+                                >{{
+                                  oJugador()?.equipo?.categoria?.temporada?.club?.tipoarticulos
+                                }}</a
+                              >
+                            } @else {
+                              0
+                            }
+                          </div>
                           <div class="col-5 text-muted small text-uppercase">Usuarios</div>
-                          <div class="col-7 fw-semibold small">@if ((oJugador()?.equipo?.categoria?.temporada?.club?.usuarios ?? 0) > 0) { <a [routerLink]="['/usuario/club', oJugador()?.equipo?.categoria?.temporada?.club?.id]" class="text-decoration-none">{{ oJugador()?.equipo?.categoria?.temporada?.club?.usuarios }}</a> } @else { 0 }</div>
+                          <div class="col-7 fw-semibold small">
+                            @if (
+                              (oJugador()?.equipo?.categoria?.temporada?.club?.usuarios ?? 0) > 0
+                            ) {
+                              <a
+                                [routerLink]="[
+                                  '/usuario/club',
+                                  oJugador()?.equipo?.categoria?.temporada?.club?.id,
+                                ]"
+                                class="text-decoration-none"
+                                >{{ oJugador()?.equipo?.categoria?.temporada?.club?.usuarios }}</a
+                              >
+                            } @else {
+                              0
+                            }
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -252,131 +627,340 @@
               </div>
             </div>
             <div class="card border-start border-3 border-success mt-3">
-              <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10">
+              <div
+                class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10"
+              >
                 <i class="bi bi-person-fill text-success small"></i>
                 <span class="text-uppercase small fw-semibold text-success">Usuario</span>
-                <a [routerLink]="['/usuario/view', oJugador()?.equipo?.entrenador?.id]" class="ms-auto badge bg-success text-white text-decoration-none small">
-                  {{ oJugador()?.equipo?.entrenador?.nombre }} {{ oJugador()?.equipo?.entrenador?.apellido1 }} <span class="opacity-75 ms-1">#{{oJugador()?.equipo?.entrenador?.id}}</span>
+                <a
+                  [routerLink]="['/usuario/view', oJugador()?.equipo?.entrenador?.id]"
+                  class="ms-auto badge bg-success text-white text-decoration-none small"
+                >
+                  {{ oJugador()?.equipo?.entrenador?.nombre }}
+                  {{ oJugador()?.equipo?.entrenador?.apellido1 }}
+                  <span class="opacity-75 ms-1">#{{ oJugador()?.equipo?.entrenador?.id }}</span>
                   <i class="bi bi-box-arrow-up-right ms-1"></i>
                 </a>
               </div>
               <div class="card-body p-2">
                 <div class="row g-1">
                   <div class="col-5 text-muted small text-uppercase">ID</div>
-                  <div class="col-7 fw-semibold small">{{ oJugador()?.equipo?.entrenador?.id }}</div>
+                  <div class="col-7 fw-semibold small">
+                    {{ oJugador()?.equipo?.entrenador?.id }}
+                  </div>
                   <div class="col-5 text-muted small text-uppercase">Nombre</div>
-                  <div class="col-7 fw-semibold small">{{ oJugador()?.equipo?.entrenador?.nombre }}</div>
+                  <div class="col-7 fw-semibold small">
+                    {{ oJugador()?.equipo?.entrenador?.nombre }}
+                  </div>
                   <div class="col-5 text-muted small text-uppercase">Apellido 1</div>
-                  <div class="col-7 fw-semibold small">{{ oJugador()?.equipo?.entrenador?.apellido1 }}</div>
+                  <div class="col-7 fw-semibold small">
+                    {{ oJugador()?.equipo?.entrenador?.apellido1 }}
+                  </div>
                   <div class="col-5 text-muted small text-uppercase">Apellido 2</div>
-                  <div class="col-7 fw-semibold small">{{ oJugador()?.equipo?.entrenador?.apellido2 || '-' }}</div>
+                  <div class="col-7 fw-semibold small">
+                    {{ oJugador()?.equipo?.entrenador?.apellido2 || '-' }}
+                  </div>
                   <div class="col-5 text-muted small text-uppercase">Username</div>
-                  <div class="col-7 fw-semibold small">{{ oJugador()?.equipo?.entrenador?.username }}</div>
+                  <div class="col-7 fw-semibold small">
+                    {{ oJugador()?.equipo?.entrenador?.username }}
+                  </div>
                   <div class="col-5 text-muted small text-uppercase">Fecha alta</div>
-                  <div class="col-7 fw-semibold small">{{ oJugador()?.equipo?.entrenador?.fechaAlta | datetime }}</div>
+                  <div class="col-7 fw-semibold small">
+                    {{ oJugador()?.equipo?.entrenador?.fechaAlta | datetime }}
+                  </div>
                   <div class="col-5 text-muted small text-uppercase">Género</div>
-                  <div class="col-7 fw-semibold small">{{ oJugador()?.equipo?.entrenador?.genero === 0 ? 'Hombre' : 'Mujer' }}</div>
+                  <div class="col-7 fw-semibold small">
+                    {{ oJugador()?.equipo?.entrenador?.genero === 0 ? 'Hombre' : 'Mujer' }}
+                  </div>
                   <div class="col-5 text-muted small text-uppercase">Comentarios</div>
-                  <div class="col-7 fw-semibold small">@if ((oJugador()?.equipo?.entrenador?.comentarios ?? 0) > 0) { <a [routerLink]="['/comentario/usuario', oJugador()?.equipo?.entrenador?.id]" class="text-decoration-none">{{ oJugador()?.equipo?.entrenador?.comentarios }}</a> } @else { 0 }</div>
+                  <div class="col-7 fw-semibold small">
+                    @if ((oJugador()?.equipo?.entrenador?.comentarios ?? 0) > 0) {
+                      <a
+                        [routerLink]="['/comentario/usuario', oJugador()?.equipo?.entrenador?.id]"
+                        class="text-decoration-none"
+                        >{{ oJugador()?.equipo?.entrenador?.comentarios }}</a
+                      >
+                    } @else {
+                      0
+                    }
+                  </div>
                   <div class="col-5 text-muted small text-uppercase">Puntuaciones</div>
-                  <div class="col-7 fw-semibold small">@if ((oJugador()?.equipo?.entrenador?.puntuaciones ?? 0) > 0) { <a [routerLink]="['/puntuacion/usuario', oJugador()?.equipo?.entrenador?.id]" class="text-decoration-none">{{ oJugador()?.equipo?.entrenador?.puntuaciones }}</a> } @else { 0 }</div>
+                  <div class="col-7 fw-semibold small">
+                    @if ((oJugador()?.equipo?.entrenador?.puntuaciones ?? 0) > 0) {
+                      <a
+                        [routerLink]="['/puntuacion/usuario', oJugador()?.equipo?.entrenador?.id]"
+                        class="text-decoration-none"
+                        >{{ oJugador()?.equipo?.entrenador?.puntuaciones }}</a
+                      >
+                    } @else {
+                      0
+                    }
+                  </div>
                   <div class="col-5 text-muted small text-uppercase">Com. artículos</div>
-                  <div class="col-7 fw-semibold small">@if ((oJugador()?.equipo?.entrenador?.comentarioarts ?? 0) > 0) { <a [routerLink]="['/comentarioart/usuario', oJugador()?.equipo?.entrenador?.id]" class="text-decoration-none">{{ oJugador()?.equipo?.entrenador?.comentarioarts }}</a> } @else { 0 }</div>
+                  <div class="col-7 fw-semibold small">
+                    @if ((oJugador()?.equipo?.entrenador?.comentarioarts ?? 0) > 0) {
+                      <a
+                        [routerLink]="[
+                          '/comentarioart/usuario',
+                          oJugador()?.equipo?.entrenador?.id,
+                        ]"
+                        class="text-decoration-none"
+                        >{{ oJugador()?.equipo?.entrenador?.comentarioarts }}</a
+                      >
+                    } @else {
+                      0
+                    }
+                  </div>
                   <div class="col-5 text-muted small text-uppercase">Carritos</div>
-                  <div class="col-7 fw-semibold small">@if ((oJugador()?.equipo?.entrenador?.carritos ?? 0) > 0) { <a [routerLink]="['/carrito/usuario', oJugador()?.equipo?.entrenador?.id]" class="text-decoration-none">{{ oJugador()?.equipo?.entrenador?.carritos }}</a> } @else { 0 }</div>
+                  <div class="col-7 fw-semibold small">
+                    @if ((oJugador()?.equipo?.entrenador?.carritos ?? 0) > 0) {
+                      <a
+                        [routerLink]="['/carrito/usuario', oJugador()?.equipo?.entrenador?.id]"
+                        class="text-decoration-none"
+                        >{{ oJugador()?.equipo?.entrenador?.carritos }}</a
+                      >
+                    } @else {
+                      0
+                    }
+                  </div>
                   <div class="col-5 text-muted small text-uppercase">Facturas</div>
-                  <div class="col-7 fw-semibold small">@if ((oJugador()?.equipo?.entrenador?.facturas ?? 0) > 0) { <a [routerLink]="['/factura/usuario', oJugador()?.equipo?.entrenador?.id]" class="text-decoration-none">{{ oJugador()?.equipo?.entrenador?.facturas }}</a> } @else { 0 }</div>
+                  <div class="col-7 fw-semibold small">
+                    @if ((oJugador()?.equipo?.entrenador?.facturas ?? 0) > 0) {
+                      <a
+                        [routerLink]="['/factura/usuario', oJugador()?.equipo?.entrenador?.id]"
+                        class="text-decoration-none"
+                        >{{ oJugador()?.equipo?.entrenador?.facturas }}</a
+                      >
+                    } @else {
+                      0
+                    }
+                  </div>
                   <div class="col-5 text-muted small text-uppercase">Equipos entren.</div>
-                  <div class="col-7 fw-semibold small">@if ((oJugador()?.equipo?.entrenador?.equiposentrenados ?? 0) > 0) { <a [routerLink]="['/equipo/usuario', oJugador()?.equipo?.entrenador?.id]" class="text-decoration-none">{{ oJugador()?.equipo?.entrenador?.equiposentrenados }}</a> } @else { 0 }</div>
+                  <div class="col-7 fw-semibold small">
+                    @if ((oJugador()?.equipo?.entrenador?.equiposentrenados ?? 0) > 0) {
+                      <a
+                        [routerLink]="['/equipo/usuario', oJugador()?.equipo?.entrenador?.id]"
+                        class="text-decoration-none"
+                        >{{ oJugador()?.equipo?.entrenador?.equiposentrenados }}</a
+                      >
+                    } @else {
+                      0
+                    }
+                  </div>
                   <div class="col-5 text-muted small text-uppercase">Jugadores</div>
-                  <div class="col-7 fw-semibold small">@if ((oJugador()?.equipo?.entrenador?.jugadores ?? 0) > 0) { <a [routerLink]="['/jugador/usuario', oJugador()?.equipo?.entrenador?.id]" class="text-decoration-none">{{ oJugador()?.equipo?.entrenador?.jugadores }}</a> } @else { 0 }</div>
+                  <div class="col-7 fw-semibold small">
+                    @if ((oJugador()?.equipo?.entrenador?.jugadores ?? 0) > 0) {
+                      <a
+                        [routerLink]="['/jugador/usuario', oJugador()?.equipo?.entrenador?.id]"
+                        class="text-decoration-none"
+                        >{{ oJugador()?.equipo?.entrenador?.jugadores }}</a
+                      >
+                    } @else {
+                      0
+                    }
+                  </div>
                 </div>
                 <div class="card border-start border-3 border-success mt-3">
-                  <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10">
+                  <div
+                    class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10"
+                  >
                     <i class="bi bi-person-badge-fill text-success small"></i>
-                    <span class="text-uppercase small fw-semibold text-success">Tipo de usuario</span>
-                    <a [routerLink]="['/tipousuario/view', oJugador()?.equipo?.entrenador?.tipousuario?.id]" class="ms-auto badge bg-success text-white text-decoration-none small">
-                      {{ oJugador()?.equipo?.entrenador?.tipousuario?.descripcion }} <span class="opacity-75 ms-1">#{{oJugador()?.equipo?.entrenador?.tipousuario?.id}}</span>
+                    <span class="text-uppercase small fw-semibold text-success"
+                      >Tipo de usuario</span
+                    >
+                    <a
+                      [routerLink]="[
+                        '/tipousuario/view',
+                        oJugador()?.equipo?.entrenador?.tipousuario?.id,
+                      ]"
+                      class="ms-auto badge bg-success text-white text-decoration-none small"
+                    >
+                      {{ oJugador()?.equipo?.entrenador?.tipousuario?.descripcion }}
+                      <span class="opacity-75 ms-1"
+                        >#{{ oJugador()?.equipo?.entrenador?.tipousuario?.id }}</span
+                      >
                       <i class="bi bi-box-arrow-up-right ms-1"></i>
                     </a>
                   </div>
                   <div class="card-body p-2">
                     <div class="row g-1">
                       <div class="col-5 text-muted small text-uppercase">ID</div>
-                      <div class="col-7 fw-semibold small">{{ oJugador()?.equipo?.entrenador?.tipousuario?.id }}</div>
+                      <div class="col-7 fw-semibold small">
+                        {{ oJugador()?.equipo?.entrenador?.tipousuario?.id }}
+                      </div>
                       <div class="col-5 text-muted small text-uppercase">Descripción</div>
-                      <div class="col-7 fw-semibold small">{{ oJugador()?.equipo?.entrenador?.tipousuario?.descripcion }}</div>
+                      <div class="col-7 fw-semibold small">
+                        {{ oJugador()?.equipo?.entrenador?.tipousuario?.descripcion }}
+                      </div>
                       <div class="col-5 text-muted small text-uppercase">Usuarios</div>
-                      <div class="col-7 fw-semibold small">@if ((oJugador()?.equipo?.entrenador?.tipousuario?.usuarios ?? 0) > 0) { <a [routerLink]="['/usuario/tipousuario', oJugador()?.equipo?.entrenador?.tipousuario?.id]" class="text-decoration-none">{{ oJugador()?.equipo?.entrenador?.tipousuario?.usuarios }}</a> } @else { 0 }</div>
+                      <div class="col-7 fw-semibold small">
+                        @if ((oJugador()?.equipo?.entrenador?.tipousuario?.usuarios ?? 0) > 0) {
+                          <a
+                            [routerLink]="[
+                              '/usuario/tipousuario',
+                              oJugador()?.equipo?.entrenador?.tipousuario?.id,
+                            ]"
+                            class="text-decoration-none"
+                            >{{ oJugador()?.equipo?.entrenador?.tipousuario?.usuarios }}</a
+                          >
+                        } @else {
+                          0
+                        }
+                      </div>
                     </div>
                   </div>
                 </div>
                 <div class="card border-start border-3 border-success mt-3">
-                  <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10">
+                  <div
+                    class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10"
+                  >
                     <i class="bi bi-shield-fill text-success small"></i>
-                    <span class="text-uppercase small fw-semibold text-success">Rol de usuario</span>
-                    <a [routerLink]="['/rolusuario/view', oJugador()?.equipo?.entrenador?.rolusuario?.id]" class="ms-auto badge bg-success text-white text-decoration-none small">
-                      {{ oJugador()?.equipo?.entrenador?.rolusuario?.descripcion }} <span class="opacity-75 ms-1">#{{oJugador()?.equipo?.entrenador?.rolusuario?.id}}</span>
+                    <span class="text-uppercase small fw-semibold text-success"
+                      >Rol de usuario</span
+                    >
+                    <a
+                      [routerLink]="[
+                        '/rolusuario/view',
+                        oJugador()?.equipo?.entrenador?.rolusuario?.id,
+                      ]"
+                      class="ms-auto badge bg-success text-white text-decoration-none small"
+                    >
+                      {{ oJugador()?.equipo?.entrenador?.rolusuario?.descripcion }}
+                      <span class="opacity-75 ms-1"
+                        >#{{ oJugador()?.equipo?.entrenador?.rolusuario?.id }}</span
+                      >
                       <i class="bi bi-box-arrow-up-right ms-1"></i>
                     </a>
                   </div>
                   <div class="card-body p-2">
                     <div class="row g-1">
                       <div class="col-5 text-muted small text-uppercase">ID</div>
-                      <div class="col-7 fw-semibold small">{{ oJugador()?.equipo?.entrenador?.rolusuario?.id }}</div>
+                      <div class="col-7 fw-semibold small">
+                        {{ oJugador()?.equipo?.entrenador?.rolusuario?.id }}
+                      </div>
                       <div class="col-5 text-muted small text-uppercase">Descripción</div>
-                      <div class="col-7 fw-semibold small">{{ oJugador()?.equipo?.entrenador?.rolusuario?.descripcion }}</div>
+                      <div class="col-7 fw-semibold small">
+                        {{ oJugador()?.equipo?.entrenador?.rolusuario?.descripcion }}
+                      </div>
                       <div class="col-5 text-muted small text-uppercase">Usuarios</div>
-                      <div class="col-7 fw-semibold small">@if ((oJugador()?.equipo?.entrenador?.rolusuario?.usuarios ?? 0) > 0) { <a [routerLink]="['/usuario/rol', oJugador()?.equipo?.entrenador?.rolusuario?.id]" class="text-decoration-none">{{ oJugador()?.equipo?.entrenador?.rolusuario?.usuarios }}</a> } @else { 0 }</div>
+                      <div class="col-7 fw-semibold small">
+                        @if ((oJugador()?.equipo?.entrenador?.rolusuario?.usuarios ?? 0) > 0) {
+                          <a
+                            [routerLink]="[
+                              '/usuario/rol',
+                              oJugador()?.equipo?.entrenador?.rolusuario?.id,
+                            ]"
+                            class="text-decoration-none"
+                            >{{ oJugador()?.equipo?.entrenador?.rolusuario?.usuarios }}</a
+                          >
+                        } @else {
+                          0
+                        }
+                      </div>
                     </div>
                   </div>
                 </div>
                 <div class="card border-start border-3 border-success mt-3">
-                  <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10">
+                  <div
+                    class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10"
+                  >
                     <i class="bi bi-building-fill text-success small"></i>
                     <span class="text-uppercase small fw-semibold text-success">Club</span>
-                    <a [routerLink]="['/club/view', oJugador()?.equipo?.entrenador?.club?.id]" class="ms-auto badge bg-success text-white text-decoration-none small">
-                      {{ oJugador()?.equipo?.entrenador?.club?.nombre }} <span class="opacity-75 ms-1">#{{oJugador()?.equipo?.entrenador?.club?.id}}</span>
+                    <a
+                      [routerLink]="['/club/view', oJugador()?.equipo?.entrenador?.club?.id]"
+                      class="ms-auto badge bg-success text-white text-decoration-none small"
+                    >
+                      {{ oJugador()?.equipo?.entrenador?.club?.nombre }}
+                      <span class="opacity-75 ms-1"
+                        >#{{ oJugador()?.equipo?.entrenador?.club?.id }}</span
+                      >
                       <i class="bi bi-box-arrow-up-right ms-1"></i>
                     </a>
                   </div>
                   <div class="card-body p-2">
                     <div class="row g-1">
                       <div class="col-5 text-muted small text-uppercase">ID</div>
-                      <div class="col-7 fw-semibold small">{{ oJugador()?.equipo?.entrenador?.club?.id }}</div>
+                      <div class="col-7 fw-semibold small">
+                        {{ oJugador()?.equipo?.entrenador?.club?.id }}
+                      </div>
                       <div class="col-5 text-muted small text-uppercase">Nombre</div>
-                      <div class="col-7 fw-semibold small">{{ oJugador()?.equipo?.entrenador?.club?.nombre }}</div>
+                      <div class="col-7 fw-semibold small">
+                        {{ oJugador()?.equipo?.entrenador?.club?.nombre }}
+                      </div>
                       <div class="col-5 text-muted small text-uppercase">Dirección</div>
-                      <div class="col-7 fw-semibold small">{{ oJugador()?.equipo?.entrenador?.club?.direccion }}</div>
+                      <div class="col-7 fw-semibold small">
+                        {{ oJugador()?.equipo?.entrenador?.club?.direccion }}
+                      </div>
                       <div class="col-5 text-muted small text-uppercase">Teléfono</div>
-                      <div class="col-7 fw-semibold small">{{ oJugador()?.equipo?.entrenador?.club?.telefono }}</div>
+                      <div class="col-7 fw-semibold small">
+                        {{ oJugador()?.equipo?.entrenador?.club?.telefono }}
+                      </div>
                       <div class="col-5 text-muted small text-uppercase">Fecha alta</div>
-                      <div class="col-7 fw-semibold small">{{ oJugador()?.equipo?.entrenador?.club?.fechaAlta | datetime }}</div>
+                      <div class="col-7 fw-semibold small">
+                        {{ oJugador()?.equipo?.entrenador?.club?.fechaAlta | datetime }}
+                      </div>
                       <div class="col-5 text-muted small text-uppercase">Temporadas</div>
-                      <div class="col-7 fw-semibold small">@if ((oJugador()?.equipo?.entrenador?.club?.temporadas ?? 0) > 0) { <a [routerLink]="['/temporada/club', oJugador()?.equipo?.entrenador?.club?.id]" class="text-decoration-none">{{ oJugador()?.equipo?.entrenador?.club?.temporadas }}</a> } @else { 0 }</div>
+                      <div class="col-7 fw-semibold small">
+                        @if ((oJugador()?.equipo?.entrenador?.club?.temporadas ?? 0) > 0) {
+                          <a
+                            [routerLink]="[
+                              '/temporada/club',
+                              oJugador()?.equipo?.entrenador?.club?.id,
+                            ]"
+                            class="text-decoration-none"
+                            >{{ oJugador()?.equipo?.entrenador?.club?.temporadas }}</a
+                          >
+                        } @else {
+                          0
+                        }
+                      </div>
                       <div class="col-5 text-muted small text-uppercase">Noticias</div>
-                      <div class="col-7 fw-semibold small">@if ((oJugador()?.equipo?.entrenador?.club?.noticias ?? 0) > 0) { <a [routerLink]="['/noticia/club', oJugador()?.equipo?.entrenador?.club?.id]" class="text-decoration-none">{{ oJugador()?.equipo?.entrenador?.club?.noticias }}</a> } @else { 0 }</div>
+                      <div class="col-7 fw-semibold small">
+                        @if ((oJugador()?.equipo?.entrenador?.club?.noticias ?? 0) > 0) {
+                          <a
+                            [routerLink]="[
+                              '/noticia/club',
+                              oJugador()?.equipo?.entrenador?.club?.id,
+                            ]"
+                            class="text-decoration-none"
+                            >{{ oJugador()?.equipo?.entrenador?.club?.noticias }}</a
+                          >
+                        } @else {
+                          0
+                        }
+                      </div>
                       <div class="col-5 text-muted small text-uppercase">Tipos artículo</div>
-                      <div class="col-7 fw-semibold small">@if ((oJugador()?.equipo?.entrenador?.club?.tipoarticulos ?? 0) > 0) { <a [routerLink]="['/tipoarticulo/club', oJugador()?.equipo?.entrenador?.club?.id]" class="text-decoration-none">{{ oJugador()?.equipo?.entrenador?.club?.tipoarticulos }}</a> } @else { 0 }</div>
+                      <div class="col-7 fw-semibold small">
+                        @if ((oJugador()?.equipo?.entrenador?.club?.tipoarticulos ?? 0) > 0) {
+                          <a
+                            [routerLink]="[
+                              '/tipoarticulo/club',
+                              oJugador()?.equipo?.entrenador?.club?.id,
+                            ]"
+                            class="text-decoration-none"
+                            >{{ oJugador()?.equipo?.entrenador?.club?.tipoarticulos }}</a
+                          >
+                        } @else {
+                          0
+                        }
+                      </div>
                       <div class="col-5 text-muted small text-uppercase">Usuarios</div>
-                      <div class="col-7 fw-semibold small">@if ((oJugador()?.equipo?.entrenador?.club?.usuarios ?? 0) > 0) { <a [routerLink]="['/usuario/club', oJugador()?.equipo?.entrenador?.club?.id]" class="text-decoration-none">{{ oJugador()?.equipo?.entrenador?.club?.usuarios }}</a> } @else { 0 }</div>
+                      <div class="col-7 fw-semibold small">
+                        @if ((oJugador()?.equipo?.entrenador?.club?.usuarios ?? 0) > 0) {
+                          <a
+                            [routerLink]="[
+                              '/usuario/club',
+                              oJugador()?.equipo?.entrenador?.club?.id,
+                            ]"
+                            class="text-decoration-none"
+                            >{{ oJugador()?.equipo?.entrenador?.club?.usuarios }}</a
+                          >
+                        } @else {
+                          0
+                        }
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="border-top mt-3 pt-3">
-          <div class="text-uppercase small text-muted fw-semibold mb-2"><i class="bi bi-bar-chart-fill me-1"></i>Contadores</div>
-          <div class="row g-2">
-            <div class="col-6 col-md-4 col-lg-3">
-              <div class="border rounded p-2 text-center bg-light">
-                <div class="text-muted small text-uppercase">Pagos</div>
-                <div class="fw-bold fs-5">
-                  @if ((oJugador()?.pagos ?? 0) > 0) {
-                    <a [routerLink]="[session.isClubAdmin() ? '/pago/teamadmin/jugador' : '/pago/jugador', oJugador()?.id]" class="text-decoration-none">{{ oJugador()?.pagos }}</a>
-                  } @else { 0 }
                 </div>
               </div>
             </div>

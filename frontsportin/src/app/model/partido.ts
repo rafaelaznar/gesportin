@@ -10,5 +10,6 @@ export interface IPartido {
     fecha?: string;
     lugar: string;
     estadopartido?: IEstadopartido;
+    comentario?: string;
 }
 

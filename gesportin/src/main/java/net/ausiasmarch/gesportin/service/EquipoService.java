@@ -100,7 +100,7 @@ public class EquipoService {
         oSessionService.denyUsuario();
         EquipoEntity oEquipoExistente = oEquipoRepository.findById(oEquipoEntity.getId())
                 .orElseThrow(() -> new ResourceNotFoundException(
-                        "Equipo no encontrado con id: " + oEquipoEntity.getId()));
+                "Equipo no encontrado con id: " + oEquipoEntity.getId()));
         if (oSessionService.isEquipoAdmin()) {
             Long clubOld = oEquipoExistente.getCategoria().getTemporada().getClub().getId();
             Long clubNew = oCategoriaService.get(oEquipoEntity.getCategoria().getId()).getTemporada().getClub().getId();
@@ -142,13 +142,12 @@ public class EquipoService {
         for (int i = 0; i < cantidad; i++) {
             EquipoEntity oEquipo = new EquipoEntity();
             oEquipo.setNombre(oAleatorioService.generarNombreEquipoAleatorio());
-            // El entrenador debe pertenecer al mismo club que la categoría
+            // El entrenador debe pertenecer al mismo club que la categoría y tener tipousuario=3
             net.ausiasmarch.gesportin.entity.CategoriaEntity categoria = oCategoriaService.getOneRandom();
             Long clubId = categoria.getTemporada().getClub().getId();
-            net.ausiasmarch.gesportin.entity.UsuarioEntity entrenador = oUsuarioService.getOneRandomFromClub(clubId);
+            net.ausiasmarch.gesportin.entity.UsuarioEntity entrenador = oUsuarioService.getOneRandomFromClubAndTipousuario(clubId, 3L);
             if (entrenador == null) {
-                // No hay usuarios en este club: saltamos este registro para
-                // respetar que el entrenador debe pertenecer al mismo club que el equipo.
+                // No hay entrenadores de club (tipousuario=3) en este club: saltamos
                 continue;
             }
             oEquipo.setCategoria(categoria);
@@ -185,6 +184,4 @@ public class EquipoService {
         return oEquipoRepository.countByCategoriaTemporadaId(id_temporada);
     }
 
-
-    
 }

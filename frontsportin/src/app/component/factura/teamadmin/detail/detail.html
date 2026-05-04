@@ -30,14 +30,16 @@
           <div class="col-7 fw-semibold small">@if ((oFactura()?.compras ?? 0) > 0) { <a [routerLink]="['/compra/teamadmin/factura', oFactura()?.id]" class="text-decoration-none">{{ oFactura()?.compras }}</a> } @else { 0 }</div>
         </div>
         <div class="card border-start border-3 border-info mt-3">
-          <div class="card-header py-1 d-flex align-items-center gap-2 bg-info bg-opacity-10">
+          <div class="card-header py-1 d-flex align-items-center gap-2 bg-info bg-opacity-10" style="cursor:pointer" (click)="showUsuario.set(!showUsuario())">
             <i class="bi bi-person-fill text-info small"></i>
             <span class="text-uppercase small fw-semibold text-info">Usuario</span>
-            <a [routerLink]="['/usuario/teamadmin/view', oFactura()?.usuario?.id]" class="ms-auto badge bg-info text-white text-decoration-none small">
+            <i class="bi ms-1 text-info small" [class.bi-chevron-down]="!showUsuario()" [class.bi-chevron-up]="showUsuario()"></i>
+            <a [routerLink]="['/usuario/teamadmin/view', oFactura()?.usuario?.id]" class="ms-auto badge bg-info text-white text-decoration-none small" (click)="$event.stopPropagation()">
               {{ oFactura()?.usuario?.nombre }} {{ oFactura()?.usuario?.apellido1 }} <span class="opacity-75 ms-1">#{{oFactura()?.usuario?.id}}</span>
               <i class="bi bi-box-arrow-up-right ms-1"></i>
             </a>
           </div>
+          @if (showUsuario()) {
           <div class="card-body p-2">
             <div class="row g-1">
               <div class="col-5 text-muted small text-uppercase">ID</div>
@@ -70,14 +72,16 @@
               <div class="col-7 fw-semibold small">@if ((oFactura()?.usuario?.jugadores ?? 0) > 0) { <a [routerLink]="['/jugador/teamadmin/usuario', oFactura()?.usuario?.id]" class="text-decoration-none">{{ oFactura()?.usuario?.jugadores }}</a> } @else { 0 }</div>
             </div>
             <div class="card border-start border-3 border-success mt-3">
-              <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10">
+              <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10" style="cursor:pointer" (click)="showUsuarioTipousuario.set(!showUsuarioTipousuario())">
                 <i class="bi bi-person-badge-fill text-success small"></i>
                 <span class="text-uppercase small fw-semibold text-success">Tipo de usuario</span>
-                <a [routerLink]="['/tipousuario/view', oFactura()?.usuario?.tipousuario?.id]" class="ms-auto badge bg-success text-white text-decoration-none small">
+                <i class="bi ms-1 text-success small" [class.bi-chevron-down]="!showUsuarioTipousuario()" [class.bi-chevron-up]="showUsuarioTipousuario()"></i>
+                <a [routerLink]="['/tipousuario/view', oFactura()?.usuario?.tipousuario?.id]" class="ms-auto badge bg-success text-white text-decoration-none small" (click)="$event.stopPropagation()">
                   {{ oFactura()?.usuario?.tipousuario?.descripcion }} <span class="opacity-75 ms-1">#{{oFactura()?.usuario?.tipousuario?.id}}</span>
                   <i class="bi bi-box-arrow-up-right ms-1"></i>
                 </a>
               </div>
+              @if (showUsuarioTipousuario()) {
               <div class="card-body p-2">
                 <div class="row g-1">
                   <div class="col-5 text-muted small text-uppercase">ID</div>
@@ -88,16 +92,19 @@
                   <div class="col-7 fw-semibold small">@if ((oFactura()?.usuario?.tipousuario?.usuarios ?? 0) > 0) { <a [routerLink]="['/usuario/tipousuario', oFactura()?.usuario?.tipousuario?.id]" class="text-decoration-none">{{ oFactura()?.usuario?.tipousuario?.usuarios }}</a> } @else { 0 }</div>
                 </div>
               </div>
+              }
             </div>
             <div class="card border-start border-3 border-success mt-3">
-              <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10">
+              <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10" style="cursor:pointer" (click)="showUsuarioRolusuario.set(!showUsuarioRolusuario())">
                 <i class="bi bi-shield-fill text-success small"></i>
                 <span class="text-uppercase small fw-semibold text-success">Rol de usuario</span>
-                <a [routerLink]="['/rolusuario/view', oFactura()?.usuario?.rolusuario?.id]" class="ms-auto badge bg-success text-white text-decoration-none small">
+                <i class="bi ms-1 text-success small" [class.bi-chevron-down]="!showUsuarioRolusuario()" [class.bi-chevron-up]="showUsuarioRolusuario()"></i>
+                <a [routerLink]="['/rolusuario/view', oFactura()?.usuario?.rolusuario?.id]" class="ms-auto badge bg-success text-white text-decoration-none small" (click)="$event.stopPropagation()">
                   {{ oFactura()?.usuario?.rolusuario?.descripcion }} <span class="opacity-75 ms-1">#{{oFactura()?.usuario?.rolusuario?.id}}</span>
                   <i class="bi bi-box-arrow-up-right ms-1"></i>
                 </a>
               </div>
+              @if (showUsuarioRolusuario()) {
               <div class="card-body p-2">
                 <div class="row g-1">
                   <div class="col-5 text-muted small text-uppercase">ID</div>
@@ -108,16 +115,19 @@
                   <div class="col-7 fw-semibold small">@if ((oFactura()?.usuario?.rolusuario?.usuarios ?? 0) > 0) { <a [routerLink]="['/usuario/rol', oFactura()?.usuario?.rolusuario?.id]" class="text-decoration-none">{{ oFactura()?.usuario?.rolusuario?.usuarios }}</a> } @else { 0 }</div>
                 </div>
               </div>
+              }
             </div>
             <div class="card border-start border-3 border-success mt-3">
-              <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10">
+              <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10" style="cursor:pointer" (click)="showUsuarioClub.set(!showUsuarioClub())">
                 <i class="bi bi-building-fill text-success small"></i>
                 <span class="text-uppercase small fw-semibold text-success">Club</span>
-                <a [routerLink]="['/club/teamadmin/view', oFactura()?.usuario?.club?.id]" class="ms-auto badge bg-success text-white text-decoration-none small">
+                <i class="bi ms-1 text-success small" [class.bi-chevron-down]="!showUsuarioClub()" [class.bi-chevron-up]="showUsuarioClub()"></i>
+                <a [routerLink]="['/club/teamadmin/view', oFactura()?.usuario?.club?.id]" class="ms-auto badge bg-success text-white text-decoration-none small" (click)="$event.stopPropagation()">
                   {{ oFactura()?.usuario?.club?.nombre }} <span class="opacity-75 ms-1">#{{oFactura()?.usuario?.club?.id}}</span>
                   <i class="bi bi-box-arrow-up-right ms-1"></i>
                 </a>
               </div>
+              @if (showUsuarioClub()) {
               <div class="card-body p-2">
                 <div class="row g-1">
                   <div class="col-5 text-muted small text-uppercase">ID</div>
@@ -140,8 +150,10 @@
                   <div class="col-7 fw-semibold small">@if ((oFactura()?.usuario?.club?.usuarios ?? 0) > 0) { <a [routerLink]="['/usuario/teamadmin/club', oFactura()?.usuario?.club?.id]" class="text-decoration-none">{{ oFactura()?.usuario?.club?.usuarios }}</a> } @else { 0 }</div>
                 </div>
               </div>
+              }
             </div>
           </div>
+          }
         </div>
 
       </div>

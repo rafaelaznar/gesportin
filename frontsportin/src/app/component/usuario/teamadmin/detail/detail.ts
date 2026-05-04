@@ -21,6 +21,9 @@ export class UsuarioTeamadminDetail implements OnInit {
   oUsuario = signal<IUsuario | null>(null);
   loading = signal(true);
   error = signal<string | null>(null);
+  showTipousuario = signal(false);
+  showRolusuario = signal(false);
+  showClub = signal(false);
 
   ngOnInit(): void {
     const idUsuario = this.id();

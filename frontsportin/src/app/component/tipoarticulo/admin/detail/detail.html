@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 border rounded bg-light p-2 mb-3">
     <div>
-      <div class="text-uppercase small text-muted fw-semibold">Tipos de Artículo</div>
+      <div class="text-uppercase small text-muted fw-semibold fs-2">Tipos de Artículo</div>
       <div class="fw-bold">Detalle de tipo de artículo</div>
       <div class="text-muted small">Panel administrativo</div>
     </div>
@@ -12,7 +12,9 @@
 
   @if (loading()) {
     <div class="text-center py-4">
-      <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Cargando...</span></div>
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando...</span>
+      </div>
       <p class="text-muted small mt-2 mb-0">Cargando detalle...</p>
     </div>
   }
@@ -37,7 +39,20 @@
           <div class="col-5 text-muted small text-uppercase">Descripción</div>
           <div class="col-7 fw-semibold small">{{ oTipoarticulo()?.descripcion }}</div>
           <div class="col-5 text-muted small text-uppercase">Artículos</div>
-          <div class="col-7 fw-semibold small">@if ((oTipoarticulo()?.articulos ?? 0) > 0) { <a [routerLink]="[session.isClubAdmin() ? '/articulo/teamadmin/tipoarticulo' : '/articulo/tipoarticulo', oTipoarticulo()?.id]" class="text-decoration-none">{{ oTipoarticulo()?.articulos }}</a> } @else { 0 }</div>
+          <div class="col-7 fw-semibold small">
+            @if ((oTipoarticulo()?.articulos ?? 0) > 0) {
+              <a
+                [routerLink]="[
+                  session.isClubAdmin() ? '/articulo/teamadmin/tipoarticulo' : '/articulo/tipoarticulo',
+                  oTipoarticulo()?.id,
+                ]"
+                class="text-decoration-none"
+                >{{ oTipoarticulo()?.articulos }}</a
+              >
+            } @else {
+              0
+            }
+          </div>
         </div>
         <div class="card border-start border-3 border-info mt-3">
           <div class="card-header py-1 d-flex align-items-center gap-2 bg-info bg-opacity-10">
@@ -61,13 +76,53 @@
               <div class="col-5 text-muted small text-uppercase">Fecha alta</div>
               <div class="col-7 fw-semibold small">{{ oTipoarticulo()?.club?.fechaAlta | datetime }}</div>
               <div class="col-5 text-muted small text-uppercase">Temporadas</div>
-              <div class="col-7 fw-semibold small">@if ((oTipoarticulo()?.club?.temporadas ?? 0) > 0) { <a [routerLink]="['/temporada/club', oTipoarticulo()?.club?.id]" class="text-decoration-none">{{ oTipoarticulo()?.club?.temporadas }}</a> } @else { 0 }</div>
+              <div class="col-7 fw-semibold small">
+                @if ((oTipoarticulo()?.club?.temporadas ?? 0) > 0) {
+                  <a
+                    [routerLink]="['/temporada/club', oTipoarticulo()?.club?.id]"
+                    class="text-decoration-none"
+                    >{{ oTipoarticulo()?.club?.temporadas }}</a
+                  >
+                } @else {
+                  0
+                }
+              </div>
               <div class="col-5 text-muted small text-uppercase">Noticias</div>
-              <div class="col-7 fw-semibold small">@if ((oTipoarticulo()?.club?.noticias ?? 0) > 0) { <a [routerLink]="['/noticia/club', oTipoarticulo()?.club?.id]" class="text-decoration-none">{{ oTipoarticulo()?.club?.noticias }}</a> } @else { 0 }</div>
+              <div class="col-7 fw-semibold small">
+                @if ((oTipoarticulo()?.club?.noticias ?? 0) > 0) {
+                  <a
+                    [routerLink]="['/noticia/club', oTipoarticulo()?.club?.id]"
+                    class="text-decoration-none"
+                    >{{ oTipoarticulo()?.club?.noticias }}</a
+                  >
+                } @else {
+                  0
+                }
+              </div>
               <div class="col-5 text-muted small text-uppercase">Tipos artículo</div>
-              <div class="col-7 fw-semibold small">@if ((oTipoarticulo()?.club?.tipoarticulos ?? 0) > 0) { <a [routerLink]="['/tipoarticulo/club', oTipoarticulo()?.club?.id]" class="text-decoration-none">{{ oTipoarticulo()?.club?.tipoarticulos }}</a> } @else { 0 }</div>
+              <div class="col-7 fw-semibold small">
+                @if ((oTipoarticulo()?.club?.tipoarticulos ?? 0) > 0) {
+                  <a
+                    [routerLink]="['/tipoarticulo/club', oTipoarticulo()?.club?.id]"
+                    class="text-decoration-none"
+                    >{{ oTipoarticulo()?.club?.tipoarticulos }}</a
+                  >
+                } @else {
+                  0
+                }
+              </div>
               <div class="col-5 text-muted small text-uppercase">Usuarios</div>
-              <div class="col-7 fw-semibold small">@if ((oTipoarticulo()?.club?.usuarios ?? 0) > 0) { <a [routerLink]="['/usuario/club', oTipoarticulo()?.club?.id]" class="text-decoration-none">{{ oTipoarticulo()?.club?.usuarios }}</a> } @else { 0 }</div>
+              <div class="col-7 fw-semibold small">
+                @if ((oTipoarticulo()?.club?.usuarios ?? 0) > 0) {
+                  <a
+                    [routerLink]="['/usuario/club', oTipoarticulo()?.club?.id]"
+                    class="text-decoration-none"
+                    >{{ oTipoarticulo()?.club?.usuarios }}</a
+                  >
+                } @else {
+                  0
+                }
+              </div>
             </div>
           </div>
         </div>

@@ -28,14 +28,16 @@
           <div class="col-7 fw-semibold small">{{ oCarrito()?.cantidad }}</div>
         </div>
         <div class="card border-start border-3 border-info mt-3">
-          <div class="card-header py-1 d-flex align-items-center gap-2 bg-info bg-opacity-10">
+          <div class="card-header py-1 d-flex align-items-center gap-2 bg-info bg-opacity-10" style="cursor:pointer" (click)="showArticulo.set(!showArticulo())">
             <i class="bi bi-box-seam-fill text-info small"></i>
             <span class="text-uppercase small fw-semibold text-info">Artículo</span>
-            <a [routerLink]="['/articulo/teamadmin/view', oCarrito()?.articulo?.id]" class="ms-auto badge bg-info text-white text-decoration-none small">
+            <i class="bi ms-1 text-info small" [class.bi-chevron-down]="!showArticulo()" [class.bi-chevron-up]="showArticulo()"></i>
+            <a [routerLink]="['/articulo/teamadmin/view', oCarrito()?.articulo?.id]" class="ms-auto badge bg-info text-white text-decoration-none small" (click)="$event.stopPropagation()">
               {{ oCarrito()?.articulo?.descripcion }} <span class="opacity-75 ms-1">#{{oCarrito()?.articulo?.id}}</span>
               <i class="bi bi-box-arrow-up-right ms-1"></i>
             </a>
           </div>
+          @if (showArticulo()) {
           <div class="card-body p-2">
             <div class="row g-1">
               <div class="col-5 text-muted small text-uppercase">ID</div>
@@ -54,14 +56,16 @@
               <div class="col-7 fw-semibold small">@if ((oCarrito()?.articulo?.carritos ?? 0) > 0) { <a [routerLink]="['/carrito/teamadmin/articulo', oCarrito()?.articulo?.id]" class="text-decoration-none">{{ oCarrito()?.articulo?.carritos }}</a> } @else { 0 }</div>
             </div>
             <div class="card border-start border-3 border-success mt-3">
-              <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10">
+              <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10" style="cursor:pointer" (click)="showArticuloTipoarticulo.set(!showArticuloTipoarticulo())">
                 <i class="bi bi-tag-fill text-success small"></i>
                 <span class="text-uppercase small fw-semibold text-success">Tipo de artículo</span>
-                <a [routerLink]="['/tipoarticulo/teamadmin/view', oCarrito()?.articulo?.tipoarticulo?.id]" class="ms-auto badge bg-success text-white text-decoration-none small">
+                <i class="bi ms-1 text-success small" [class.bi-chevron-down]="!showArticuloTipoarticulo()" [class.bi-chevron-up]="showArticuloTipoarticulo()"></i>
+                <a [routerLink]="['/tipoarticulo/teamadmin/view', oCarrito()?.articulo?.tipoarticulo?.id]" class="ms-auto badge bg-success text-white text-decoration-none small" (click)="$event.stopPropagation()">
                   {{ oCarrito()?.articulo?.tipoarticulo?.descripcion }} <span class="opacity-75 ms-1">#{{oCarrito()?.articulo?.tipoarticulo?.id}}</span>
                   <i class="bi bi-box-arrow-up-right ms-1"></i>
                 </a>
               </div>
+              @if (showArticuloTipoarticulo()) {
               <div class="card-body p-2">
                 <div class="row g-1">
                   <div class="col-5 text-muted small text-uppercase">ID</div>
@@ -72,14 +76,16 @@
                   <div class="col-7 fw-semibold small">@if ((oCarrito()?.articulo?.tipoarticulo?.articulos ?? 0) > 0) { <a [routerLink]="['/articulo/teamadmin/tipoarticulo', oCarrito()?.articulo?.tipoarticulo?.id]" class="text-decoration-none">{{ oCarrito()?.articulo?.tipoarticulo?.articulos }}</a> } @else { 0 }</div>
                 </div>
                 <div class="card border-start border-3 border-warning mt-3">
-                  <div class="card-header py-1 d-flex align-items-center gap-2 bg-warning bg-opacity-10">
+                  <div class="card-header py-1 d-flex align-items-center gap-2 bg-warning bg-opacity-10" style="cursor:pointer" (click)="showArticuloTipoarticuloClub.set(!showArticuloTipoarticuloClub())">
                     <i class="bi bi-building-fill text-warning small"></i>
                     <span class="text-uppercase small fw-semibold text-warning">Club</span>
-                    <a [routerLink]="['/club/teamadmin/view', oCarrito()?.articulo?.tipoarticulo?.club?.id]" class="ms-auto badge bg-warning text-white text-decoration-none small">
+                    <i class="bi ms-1 text-warning small" [class.bi-chevron-down]="!showArticuloTipoarticuloClub()" [class.bi-chevron-up]="showArticuloTipoarticuloClub()"></i>
+                    <a [routerLink]="['/club/teamadmin/view', oCarrito()?.articulo?.tipoarticulo?.club?.id]" class="ms-auto badge bg-warning text-white text-decoration-none small" (click)="$event.stopPropagation()">
                       {{ oCarrito()?.articulo?.tipoarticulo?.club?.nombre }} <span class="opacity-75 ms-1">#{{oCarrito()?.articulo?.tipoarticulo?.club?.id}}</span>
                       <i class="bi bi-box-arrow-up-right ms-1"></i>
                     </a>
                   </div>
+                  @if (showArticuloTipoarticuloClub()) {
                   <div class="card-body p-2">
                     <div class="row g-1">
                       <div class="col-5 text-muted small text-uppercase">ID</div>
@@ -102,20 +108,25 @@
                       <div class="col-7 fw-semibold small">@if ((oCarrito()?.articulo?.tipoarticulo?.club?.usuarios ?? 0) > 0) { <a [routerLink]="['/usuario/teamadmin/club', oCarrito()?.articulo?.tipoarticulo?.club?.id]" class="text-decoration-none">{{ oCarrito()?.articulo?.tipoarticulo?.club?.usuarios }}</a> } @else { 0 }</div>
                     </div>
                   </div>
+                  }
                 </div>
               </div>
+              }
             </div>
           </div>
+          }
         </div>
         <div class="card border-start border-3 border-info mt-3">
-          <div class="card-header py-1 d-flex align-items-center gap-2 bg-info bg-opacity-10">
+          <div class="card-header py-1 d-flex align-items-center gap-2 bg-info bg-opacity-10" style="cursor:pointer" (click)="showUsuario.set(!showUsuario())">
             <i class="bi bi-person-fill text-info small"></i>
             <span class="text-uppercase small fw-semibold text-info">Usuario</span>
-            <a [routerLink]="['/usuario/teamadmin/view', oCarrito()?.usuario?.id]" class="ms-auto badge bg-info text-white text-decoration-none small">
+            <i class="bi ms-1 text-info small" [class.bi-chevron-down]="!showUsuario()" [class.bi-chevron-up]="showUsuario()"></i>
+            <a [routerLink]="['/usuario/teamadmin/view', oCarrito()?.usuario?.id]" class="ms-auto badge bg-info text-white text-decoration-none small" (click)="$event.stopPropagation()">
               {{ oCarrito()?.usuario?.nombre }} {{ oCarrito()?.usuario?.apellido1 }} <span class="opacity-75 ms-1">#{{oCarrito()?.usuario?.id}}</span>
               <i class="bi bi-box-arrow-up-right ms-1"></i>
             </a>
           </div>
+          @if (showUsuario()) {
           <div class="card-body p-2">
             <div class="row g-1">
               <div class="col-5 text-muted small text-uppercase">ID</div>
@@ -148,14 +159,16 @@
               <div class="col-7 fw-semibold small">@if ((oCarrito()?.usuario?.jugadores ?? 0) > 0) { <a [routerLink]="['/jugador/teamadmin/usuario', oCarrito()?.usuario?.id]" class="text-decoration-none">{{ oCarrito()?.usuario?.jugadores }}</a> } @else { 0 }</div>
             </div>
             <div class="card border-start border-3 border-success mt-3">
-              <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10">
+              <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10" style="cursor:pointer" (click)="showUsuarioTipousuario.set(!showUsuarioTipousuario())">
                 <i class="bi bi-person-badge-fill text-success small"></i>
                 <span class="text-uppercase small fw-semibold text-success">Tipo de usuario</span>
-                <a [routerLink]="['/tipousuario/view', oCarrito()?.usuario?.tipousuario?.id]" class="ms-auto badge bg-success text-white text-decoration-none small">
+                <i class="bi ms-1 text-success small" [class.bi-chevron-down]="!showUsuarioTipousuario()" [class.bi-chevron-up]="showUsuarioTipousuario()"></i>
+                <a [routerLink]="['/tipousuario/view', oCarrito()?.usuario?.tipousuario?.id]" class="ms-auto badge bg-success text-white text-decoration-none small" (click)="$event.stopPropagation()">
                   {{ oCarrito()?.usuario?.tipousuario?.descripcion }} <span class="opacity-75 ms-1">#{{oCarrito()?.usuario?.tipousuario?.id}}</span>
                   <i class="bi bi-box-arrow-up-right ms-1"></i>
                 </a>
               </div>
+              @if (showUsuarioTipousuario()) {
               <div class="card-body p-2">
                 <div class="row g-1">
                   <div class="col-5 text-muted small text-uppercase">ID</div>
@@ -166,16 +179,19 @@
                   <div class="col-7 fw-semibold small">@if ((oCarrito()?.usuario?.tipousuario?.usuarios ?? 0) > 0) { <a [routerLink]="['/usuario/tipousuario', oCarrito()?.usuario?.tipousuario?.id]" class="text-decoration-none">{{ oCarrito()?.usuario?.tipousuario?.usuarios }}</a> } @else { 0 }</div>
                 </div>
               </div>
+              }
             </div>
             <div class="card border-start border-3 border-success mt-3">
-              <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10">
+              <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10" style="cursor:pointer" (click)="showUsuarioRolusuario.set(!showUsuarioRolusuario())">
                 <i class="bi bi-shield-fill text-success small"></i>
                 <span class="text-uppercase small fw-semibold text-success">Rol de usuario</span>
-                <a [routerLink]="['/rolusuario/view', oCarrito()?.usuario?.rolusuario?.id]" class="ms-auto badge bg-success text-white text-decoration-none small">
+                <i class="bi ms-1 text-success small" [class.bi-chevron-down]="!showUsuarioRolusuario()" [class.bi-chevron-up]="showUsuarioRolusuario()"></i>
+                <a [routerLink]="['/rolusuario/view', oCarrito()?.usuario?.rolusuario?.id]" class="ms-auto badge bg-success text-white text-decoration-none small" (click)="$event.stopPropagation()">
                   {{ oCarrito()?.usuario?.rolusuario?.descripcion }} <span class="opacity-75 ms-1">#{{oCarrito()?.usuario?.rolusuario?.id}}</span>
                   <i class="bi bi-box-arrow-up-right ms-1"></i>
                 </a>
               </div>
+              @if (showUsuarioRolusuario()) {
               <div class="card-body p-2">
                 <div class="row g-1">
                   <div class="col-5 text-muted small text-uppercase">ID</div>
@@ -186,16 +202,19 @@
                   <div class="col-7 fw-semibold small">@if ((oCarrito()?.usuario?.rolusuario?.usuarios ?? 0) > 0) { <a [routerLink]="['/usuario/rol', oCarrito()?.usuario?.rolusuario?.id]" class="text-decoration-none">{{ oCarrito()?.usuario?.rolusuario?.usuarios }}</a> } @else { 0 }</div>
                 </div>
               </div>
+              }
             </div>
             <div class="card border-start border-3 border-success mt-3">
-              <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10">
+              <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10" style="cursor:pointer" (click)="showUsuarioClub.set(!showUsuarioClub())">
                 <i class="bi bi-building-fill text-success small"></i>
                 <span class="text-uppercase small fw-semibold text-success">Club</span>
-                <a [routerLink]="['/club/teamadmin/view', oCarrito()?.usuario?.club?.id]" class="ms-auto badge bg-success text-white text-decoration-none small">
+                <i class="bi ms-1 text-success small" [class.bi-chevron-down]="!showUsuarioClub()" [class.bi-chevron-up]="showUsuarioClub()"></i>
+                <a [routerLink]="['/club/teamadmin/view', oCarrito()?.usuario?.club?.id]" class="ms-auto badge bg-success text-white text-decoration-none small" (click)="$event.stopPropagation()">
                   {{ oCarrito()?.usuario?.club?.nombre }} <span class="opacity-75 ms-1">#{{oCarrito()?.usuario?.club?.id}}</span>
                   <i class="bi bi-box-arrow-up-right ms-1"></i>
                 </a>
               </div>
+              @if (showUsuarioClub()) {
               <div class="card-body p-2">
                 <div class="row g-1">
                   <div class="col-5 text-muted small text-uppercase">ID</div>
@@ -218,8 +237,10 @@
                   <div class="col-7 fw-semibold small">@if ((oCarrito()?.usuario?.club?.usuarios ?? 0) > 0) { <a [routerLink]="['/usuario/teamadmin/club', oCarrito()?.usuario?.club?.id]" class="text-decoration-none">{{ oCarrito()?.usuario?.club?.usuarios }}</a> } @else { 0 }</div>
                 </div>
               </div>
+              }
             </div>
           </div>
+          }
         </div>
 
       </div>

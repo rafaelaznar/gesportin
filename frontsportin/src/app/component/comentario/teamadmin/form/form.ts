@@ -49,6 +49,12 @@ export class ComentarioTeamadminForm implements OnInit {
     if (this.id() > 0) {
       this.loadById(this.id());
     } else {
+      // Auto-set current session user for teamadmin
+      const userId = this.sessionService.getUserId();
+      if (userId) {
+        this.comentarioForm.patchValue({ id_usuario: userId });
+        this.loadUsuario(userId);
+      }
       if (this.idNoticia() > 0) {
         this.comentarioForm.patchValue({ id_noticia: this.idNoticia() });
         this.loadNoticia(this.idNoticia());
@@ -61,7 +67,7 @@ export class ComentarioTeamadminForm implements OnInit {
     this.comentarioForm = this.fb.group({
       id: [{ value: 0, disabled: true }],
       contenido: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(1000)]],
-      id_usuario: [null, Validators.required],
+      id_usuario: [null],
       id_noticia: [null, Validators.required],
     });
   }
@@ -175,7 +181,12 @@ export class ComentarioTeamadminForm implements OnInit {
         next: () => {
           this.notificacion.success('Comentario creado exitosamente');
           this.submitting.set(false);
-          this.router.navigate([this.returnUrl()]);
+          const idNoticia = this.idNoticia();
+          if (idNoticia > 0) {
+            this.router.navigate(['/comentario/teamadmin/noticia', idNoticia]);
+          } else {
+            this.router.navigate([this.returnUrl()]);
+          }
         },
         error: (err: HttpErrorResponse) => {
           this.error.set('Error creando el comentario');

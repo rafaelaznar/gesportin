@@ -50,9 +50,9 @@
             @if (oCompra.factura && oCompra.factura.usuario) {
               <p class="mb-1">
                 <strong>Usuario:</strong>
-                <span class="ms-1">
+                <a [routerLink]="['/usuario/teamadmin/view', oCompra.factura.usuario.id]" class="ms-1">
                   {{ oCompra.factura.usuario.nombre }} {{ oCompra.factura.usuario.apellido1 }}
-                </span>
+                </a>
               </p>
             }
           </div>

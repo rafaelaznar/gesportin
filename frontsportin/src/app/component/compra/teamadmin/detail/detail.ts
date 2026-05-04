@@ -21,6 +21,14 @@ export class CompraTeamadminDetail implements OnInit {
   oCompra = signal<ICompra | null>(null);
   loading = signal(true);
   error = signal<string | null>(null);
+  showArticulo = signal(false);
+  showArticuloTipoarticulo = signal(false);
+  showArticuloTipoarticuloClub = signal(false);
+  showFactura = signal(false);
+  showFacturaUsuario = signal(false);
+  showFacturaUsuarioTipousuario = signal(false);
+  showFacturaUsuarioRolusuario = signal(false);
+  showFacturaUsuarioClub = signal(false);
 
   ngOnInit(): void {
     const idCompra = this.id();

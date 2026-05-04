@@ -21,6 +21,7 @@ Muy importante cumplirlas para evitar inconsistencias:
 * Los jugadores de un equipo de un club C sólo pueden estar asociados a usuarios del club C.
 * Los pagos de las cuotas de un equipo E sólo pueden ser realizadas por jugadores de ese equipo E. Los jugadores no pueden pagar una cuota dos veces.
 * Las facturas de un usuario de un club C sólo pueden contener compras de artículos del mismo club C.
+* Las facturas tienen que contener al menos un artículo.
 
 ---
 

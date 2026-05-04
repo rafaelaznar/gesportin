@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 border rounded bg-light p-2 mb-3">
     <div>
-      <div class="text-uppercase small text-muted fw-semibold">Usuarios</div>
+      <div class="text-uppercase small text-muted fw-semibold fs-2">Usuarios</div>
       <div class="fw-bold">Detalle de usuario</div>
       <div class="text-muted small">Panel administrativo</div>
     </div>
@@ -12,7 +12,9 @@
 
   @if (loading()) {
     <div class="text-center py-4">
-      <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Cargando...</span></div>
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando...</span>
+      </div>
       <p class="text-muted small mt-2 mb-0">Cargando detalle...</p>
     </div>
   }
@@ -46,6 +48,90 @@
           <div class="col-7 fw-semibold small">{{ oUsuario()?.fechaAlta | datetime }}</div>
           <div class="col-5 text-muted small text-uppercase">Género</div>
           <div class="col-7 fw-semibold small">{{ oUsuario()?.genero === 0 ? 'Hombre' : 'Mujer' }}</div>
+          <div class="col-5 text-muted small text-uppercase">Comentarios</div>
+          <div class="col-7 fw-semibold small">
+            @if ((oUsuario()?.comentarios ?? 0) > 0) {
+              <a
+                [routerLink]="['/comentario/usuario', oUsuario()?.id]"
+                class="text-decoration-none"
+                >{{ oUsuario()?.comentarios }}</a
+              >
+            } @else {
+              0
+            }
+          </div>
+          <div class="col-5 text-muted small text-uppercase">Puntuaciones</div>
+          <div class="col-7 fw-semibold small">
+            @if ((oUsuario()?.puntuaciones ?? 0) > 0) {
+              <a
+                [routerLink]="['/puntuacion/usuario', oUsuario()?.id]"
+                class="text-decoration-none"
+                >{{ oUsuario()?.puntuaciones }}</a
+              >
+            } @else {
+              0
+            }
+          </div>
+          <div class="col-5 text-muted small text-uppercase">Com. artículos</div>
+          <div class="col-7 fw-semibold small">
+            @if ((oUsuario()?.comentarioarts ?? 0) > 0) {
+              <a
+                [routerLink]="['/comentarioart/usuario', oUsuario()?.id]"
+                class="text-decoration-none"
+                >{{ oUsuario()?.comentarioarts }}</a
+              >
+            } @else {
+              0
+            }
+          </div>
+          <div class="col-5 text-muted small text-uppercase">Carritos</div>
+          <div class="col-7 fw-semibold small">
+            @if ((oUsuario()?.carritos ?? 0) > 0) {
+              <a
+                [routerLink]="['/carrito/usuario', oUsuario()?.id]"
+                class="text-decoration-none"
+                >{{ oUsuario()?.carritos }}</a
+              >
+            } @else {
+              0
+            }
+          </div>
+          <div class="col-5 text-muted small text-uppercase">Facturas</div>
+          <div class="col-7 fw-semibold small">
+            @if ((oUsuario()?.facturas ?? 0) > 0) {
+              <a
+                [routerLink]="['/factura/usuario', oUsuario()?.id]"
+                class="text-decoration-none"
+                >{{ oUsuario()?.facturas }}</a
+              >
+            } @else {
+              0
+            }
+          </div>
+          <div class="col-5 text-muted small text-uppercase">Equipos entren.</div>
+          <div class="col-7 fw-semibold small">
+            @if ((oUsuario()?.equiposentrenados ?? 0) > 0) {
+              <a
+                [routerLink]="['/equipo/usuario', oUsuario()?.id]"
+                class="text-decoration-none"
+                >{{ oUsuario()?.equiposentrenados }}</a
+              >
+            } @else {
+              0
+            }
+          </div>
+          <div class="col-5 text-muted small text-uppercase">Jugadores</div>
+          <div class="col-7 fw-semibold small">
+            @if ((oUsuario()?.jugadores ?? 0) > 0) {
+              <a
+                [routerLink]="['/jugador/usuario', oUsuario()?.id]"
+                class="text-decoration-none"
+                >{{ oUsuario()?.jugadores }}</a
+              >
+            } @else {
+              0
+            }
+          </div>
         </div>
         <div class="card border-start border-3 border-info mt-3">
           <div class="card-header py-1 d-flex align-items-center gap-2 bg-info bg-opacity-10">
@@ -63,7 +149,17 @@
               <div class="col-5 text-muted small text-uppercase">Descripción</div>
               <div class="col-7 fw-semibold small">{{ oUsuario()?.tipousuario?.descripcion }}</div>
               <div class="col-5 text-muted small text-uppercase">Usuarios</div>
-              <div class="col-7 fw-semibold small">@if ((oUsuario()?.tipousuario?.usuarios ?? 0) > 0) { <a [routerLink]="['/usuario/tipousuario', oUsuario()?.tipousuario?.id]" class="text-decoration-none">{{ oUsuario()?.tipousuario?.usuarios }}</a> } @else { 0 }</div>
+              <div class="col-7 fw-semibold small">
+                @if ((oUsuario()?.tipousuario?.usuarios ?? 0) > 0) {
+                  <a
+                    [routerLink]="['/usuario/tipousuario', oUsuario()?.tipousuario?.id]"
+                    class="text-decoration-none"
+                    >{{ oUsuario()?.tipousuario?.usuarios }}</a
+                  >
+                } @else {
+                  0
+                }
+              </div>
             </div>
           </div>
         </div>
@@ -83,7 +179,17 @@
               <div class="col-5 text-muted small text-uppercase">Descripción</div>
               <div class="col-7 fw-semibold small">{{ oUsuario()?.rolusuario?.descripcion }}</div>
               <div class="col-5 text-muted small text-uppercase">Usuarios</div>
-              <div class="col-7 fw-semibold small">@if ((oUsuario()?.rolusuario?.usuarios ?? 0) > 0) { <a [routerLink]="['/usuario/rol', oUsuario()?.rolusuario?.id]" class="text-decoration-none">{{ oUsuario()?.rolusuario?.usuarios }}</a> } @else { 0 }</div>
+              <div class="col-7 fw-semibold small">
+                @if ((oUsuario()?.rolusuario?.usuarios ?? 0) > 0) {
+                  <a
+                    [routerLink]="['/usuario/rol', oUsuario()?.rolusuario?.id]"
+                    class="text-decoration-none"
+                    >{{ oUsuario()?.rolusuario?.usuarios }}</a
+                  >
+                } @else {
+                  0
+                }
+              </div>
             </div>
           </div>
         </div>
@@ -109,87 +215,52 @@
               <div class="col-5 text-muted small text-uppercase">Fecha alta</div>
               <div class="col-7 fw-semibold small">{{ oUsuario()?.club?.fechaAlta | datetime }}</div>
               <div class="col-5 text-muted small text-uppercase">Temporadas</div>
-              <div class="col-7 fw-semibold small">@if ((oUsuario()?.club?.temporadas ?? 0) > 0) { <a [routerLink]="['/temporada/club', oUsuario()?.club?.id]" class="text-decoration-none">{{ oUsuario()?.club?.temporadas }}</a> } @else { 0 }</div>
+              <div class="col-7 fw-semibold small">
+                @if ((oUsuario()?.club?.temporadas ?? 0) > 0) {
+                  <a
+                    [routerLink]="['/temporada/club', oUsuario()?.club?.id]"
+                    class="text-decoration-none"
+                    >{{ oUsuario()?.club?.temporadas }}</a
+                  >
+                } @else {
+                  0
+                }
+              </div>
               <div class="col-5 text-muted small text-uppercase">Noticias</div>
-              <div class="col-7 fw-semibold small">@if ((oUsuario()?.club?.noticias ?? 0) > 0) { <a [routerLink]="['/noticia/club', oUsuario()?.club?.id]" class="text-decoration-none">{{ oUsuario()?.club?.noticias }}</a> } @else { 0 }</div>
+              <div class="col-7 fw-semibold small">
+                @if ((oUsuario()?.club?.noticias ?? 0) > 0) {
+                  <a
+                    [routerLink]="['/noticia/club', oUsuario()?.club?.id]"
+                    class="text-decoration-none"
+                    >{{ oUsuario()?.club?.noticias }}</a
+                  >
+                } @else {
+                  0
+                }
+              </div>
               <div class="col-5 text-muted small text-uppercase">Tipos artículo</div>
-              <div class="col-7 fw-semibold small">@if ((oUsuario()?.club?.tipoarticulos ?? 0) > 0) { <a [routerLink]="['/tipoarticulo/club', oUsuario()?.club?.id]" class="text-decoration-none">{{ oUsuario()?.club?.tipoarticulos }}</a> } @else { 0 }</div>
+              <div class="col-7 fw-semibold small">
+                @if ((oUsuario()?.club?.tipoarticulos ?? 0) > 0) {
+                  <a
+                    [routerLink]="['/tipoarticulo/club', oUsuario()?.club?.id]"
+                    class="text-decoration-none"
+                    >{{ oUsuario()?.club?.tipoarticulos }}</a
+                  >
+                } @else {
+                  0
+                }
+              </div>
               <div class="col-5 text-muted small text-uppercase">Usuarios</div>
-              <div class="col-7 fw-semibold small">@if ((oUsuario()?.club?.usuarios ?? 0) > 0) { <a [routerLink]="['/usuario/club', oUsuario()?.club?.id]" class="text-decoration-none">{{ oUsuario()?.club?.usuarios }}</a> } @else { 0 }</div>
-            </div>
-          </div>
-        </div>
-        <div class="border-top mt-3 pt-3">
-          <div class="text-uppercase small text-muted fw-semibold mb-2"><i class="bi bi-bar-chart-fill me-1"></i>Contadores</div>
-          <div class="row g-2">
-            <div class="col-6 col-md-4 col-lg-3">
-              <div class="border rounded p-2 text-center bg-light">
-                <div class="text-muted small text-uppercase">Comentarios</div>
-                <div class="fw-bold fs-5">
-                  @if ((oUsuario()?.comentarios ?? 0) > 0) {
-                    <a [routerLink]="['/comentario/usuario', oUsuario()?.id]" class="text-decoration-none">{{ oUsuario()?.comentarios }}</a>
-                  } @else { 0 }
-                </div>
-              </div>
-            </div>
-            <div class="col-6 col-md-4 col-lg-3">
-              <div class="border rounded p-2 text-center bg-light">
-                <div class="text-muted small text-uppercase">Puntuaciones</div>
-                <div class="fw-bold fs-5">
-                  @if ((oUsuario()?.puntuaciones ?? 0) > 0) {
-                    <a [routerLink]="['/puntuacion/usuario', oUsuario()?.id]" class="text-decoration-none">{{ oUsuario()?.puntuaciones }}</a>
-                  } @else { 0 }
-                </div>
-              </div>
-            </div>
-            <div class="col-6 col-md-4 col-lg-3">
-              <div class="border rounded p-2 text-center bg-light">
-                <div class="text-muted small text-uppercase">Com. artículos</div>
-                <div class="fw-bold fs-5">
-                  @if ((oUsuario()?.comentarioarts ?? 0) > 0) {
-                    <a [routerLink]="['/comentarioart/usuario', oUsuario()?.id]" class="text-decoration-none">{{ oUsuario()?.comentarioarts }}</a>
-                  } @else { 0 }
-                </div>
-              </div>
-            </div>
-            <div class="col-6 col-md-4 col-lg-3">
-              <div class="border rounded p-2 text-center bg-light">
-                <div class="text-muted small text-uppercase">Carritos</div>
-                <div class="fw-bold fs-5">
-                  @if ((oUsuario()?.carritos ?? 0) > 0) {
-                    <a [routerLink]="['/carrito/usuario', oUsuario()?.id]" class="text-decoration-none">{{ oUsuario()?.carritos }}</a>
-                  } @else { 0 }
-                </div>
-              </div>
-            </div>
-            <div class="col-6 col-md-4 col-lg-3">
-              <div class="border rounded p-2 text-center bg-light">
-                <div class="text-muted small text-uppercase">Facturas</div>
-                <div class="fw-bold fs-5">
-                  @if ((oUsuario()?.facturas ?? 0) > 0) {
-                    <a [routerLink]="['/factura/usuario', oUsuario()?.id]" class="text-decoration-none">{{ oUsuario()?.facturas }}</a>
-                  } @else { 0 }
-                </div>
-              </div>
-            </div>
-            <div class="col-6 col-md-4 col-lg-3">
-              <div class="border rounded p-2 text-center bg-light">
-                <div class="text-muted small text-uppercase">Equipos entren.</div>
-                <div class="fw-bold fs-5">
-                  @if ((oUsuario()?.equiposentrenados ?? 0) > 0) {
-                    <a [routerLink]="['/equipo/usuario', oUsuario()?.id]" class="text-decoration-none">{{ oUsuario()?.equiposentrenados }}</a>
-                  } @else { 0 }
-                </div>
-              </div>
-            </div>
-            <div class="col-6 col-md-4 col-lg-3">
-              <div class="border rounded p-2 text-center bg-light">
-                <div class="text-muted small text-uppercase">Jugadores</div>
-                <div class="fw-bold fs-5">
-                  @if ((oUsuario()?.jugadores ?? 0) > 0) {
-                    <a [routerLink]="['/jugador/usuario', oUsuario()?.id]" class="text-decoration-none">{{ oUsuario()?.jugadores }}</a>
-                  } @else { 0 }
-                </div>
+              <div class="col-7 fw-semibold small">
+                @if ((oUsuario()?.club?.usuarios ?? 0) > 0) {
+                  <a
+                    [routerLink]="['/usuario/club', oUsuario()?.club?.id]"
+                    class="text-decoration-none"
+                    >{{ oUsuario()?.club?.usuarios }}</a
+                  >
+                } @else {
+                  0
+                }
               </div>
             </div>
           </div>

@@ -1,0 +1,21 @@
+@if (noticia()) {
+  <div class="card mb-3">
+    <div class="card-header">
+      <h5 class="card-title">
+        <i class="bi bi-megaphone me-2" aria-hidden="true"></i>
+        <a [routerLink]="['/noticia', strRole, 'view', noticia()!.id]">{{
+          noticia()!.titulo
+        }}</a>
+      </h5>
+    </div>
+    <div class="card-body">
+      <p class="card-text">{{ noticia()!.contenido }}</p>
+    </div>
+    <div class="card-footer text-body-secondary">
+      <small class="text-muted"
+        ><i class="bi bi-calendar me-1" aria-hidden="true"></i
+        >{{ noticia()!.fecha | date: 'dd/MM/yyyy' }}</small
+      >
+    </div>
+  </div>
+}

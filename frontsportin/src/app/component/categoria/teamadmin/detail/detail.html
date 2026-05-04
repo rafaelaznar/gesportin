@@ -30,14 +30,16 @@
           <div class="col-7 fw-semibold small">@if ((oCategoria()?.equipos ?? 0) > 0) { <a [routerLink]="[session.isClubAdmin() ? '/equipo/teamadmin/categoria' : '/equipo/teamadmin/categoria', oCategoria()?.id]" class="text-decoration-none">{{ oCategoria()?.equipos }}</a> } @else { 0 <a [routerLink]="['/equipo/teamadmin/new']" [queryParams]="{ id_categoria: oCategoria()?.id }" class="btn btn-outline-success btn-sm ms-1 py-0 px-1" title="Crear equipo para esta categoría"><i class="bi bi-plus-lg"></i></a> }</div>
         </div>
         <div class="card border-start border-3 border-info mt-3">
-          <div class="card-header py-1 d-flex align-items-center gap-2 bg-info bg-opacity-10">
+          <div class="card-header py-1 d-flex align-items-center gap-2 bg-info bg-opacity-10" style="cursor:pointer" (click)="showTemporada.set(!showTemporada())">
             <i class="bi bi-calendar3 text-info small"></i>
             <span class="text-uppercase small fw-semibold text-info">Temporada</span>
-            <a [routerLink]="['/temporada/teamadmin/view', oCategoria()?.temporada?.id]" class="ms-auto badge bg-info text-white text-decoration-none small">
+            <i class="bi ms-1 text-info small" [class.bi-chevron-down]="!showTemporada()" [class.bi-chevron-up]="showTemporada()"></i>
+            <a [routerLink]="['/temporada/teamadmin/view', oCategoria()?.temporada?.id]" class="ms-auto badge bg-info text-white text-decoration-none small" (click)="$event.stopPropagation()">
               {{ oCategoria()?.temporada?.descripcion }} <span class="opacity-75 ms-1">#{{oCategoria()?.temporada?.id}}</span>
               <i class="bi bi-box-arrow-up-right ms-1"></i>
             </a>
           </div>
+          @if (showTemporada()) {
           <div class="card-body p-2">
             <div class="row g-1">
               <div class="col-5 text-muted small text-uppercase">ID</div>
@@ -48,14 +50,16 @@
               <div class="col-7 fw-semibold small">@if ((oCategoria()?.temporada?.categorias ?? 0) > 0) { <a [routerLink]="['/categoria/teamadmin/temporada', oCategoria()?.temporada?.id]" class="text-decoration-none">{{ oCategoria()?.temporada?.categorias }}</a> } @else { 0 }</div>
             </div>
             <div class="card border-start border-3 border-success mt-3">
-              <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10">
+              <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10" style="cursor:pointer" (click)="showTemporadaClub.set(!showTemporadaClub())">
                 <i class="bi bi-building-fill text-success small"></i>
                 <span class="text-uppercase small fw-semibold text-success">Club</span>
-                <a [routerLink]="['/club/teamadmin/view', oCategoria()?.temporada?.club?.id]" class="ms-auto badge bg-success text-white text-decoration-none small">
+                <i class="bi ms-1 text-success small" [class.bi-chevron-down]="!showTemporadaClub()" [class.bi-chevron-up]="showTemporadaClub()"></i>
+                <a [routerLink]="['/club/teamadmin/view', oCategoria()?.temporada?.club?.id]" class="ms-auto badge bg-success text-white text-decoration-none small" (click)="$event.stopPropagation()">
                   {{ oCategoria()?.temporada?.club?.nombre }} <span class="opacity-75 ms-1">#{{oCategoria()?.temporada?.club?.id}}</span>
                   <i class="bi bi-box-arrow-up-right ms-1"></i>
                 </a>
               </div>
+              @if (showTemporadaClub()) {
               <div class="card-body p-2">
                 <div class="row g-1">
                   <div class="col-5 text-muted small text-uppercase">ID</div>
@@ -78,8 +82,10 @@
                   <div class="col-7 fw-semibold small">@if ((oCategoria()?.temporada?.club?.usuarios ?? 0) > 0) { <a [routerLink]="['/usuario/teamadmin/club', oCategoria()?.temporada?.club?.id]" class="text-decoration-none">{{ oCategoria()?.temporada?.club?.usuarios }}</a> } @else { 0 }</div>
                 </div>
               </div>
+              }
             </div>
           </div>
+          }
         </div>
 
       </div>

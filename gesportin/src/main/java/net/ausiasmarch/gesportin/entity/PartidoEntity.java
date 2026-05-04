@@ -57,6 +57,9 @@ public class PartidoEntity {
     @Column(nullable = false)
     private String lugar;
 
+    @Column(nullable = true)
+    private String comentario;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_estadopartido")
     private EstadopartidoEntity estadopartido;

@@ -18,6 +18,7 @@ export class Menu {
   isUser: WritableSignal<boolean> = signal(false);
   oTokenJWT: IJWT | null = null;
   userName: WritableSignal<string> = signal('');
+  userTypeName: WritableSignal<string> = signal('');
   private destroyRef = inject(DestroyRef);
 
   constructor(
@@ -36,6 +37,7 @@ export class Menu {
     if (this.isSessionActive()) {
       this.oTokenJWT = this.oSessionService.parseJWT(this.oSessionService.getToken()!);
       this.userName.set(this.oTokenJWT.username || '');
+      this.userTypeName.set(this.resolveTypeName(this.oTokenJWT.usertype));
       this.isUser.set(this.oSessionService.isUser());
     }
   }
@@ -50,6 +52,7 @@ export class Menu {
         this.oTokenJWT = this.oSessionService.parseJWT(this.oSessionService.getToken()!);
         // opcional, guardamos el nombre para usos futuros
         this.userName.set(this.oTokenJWT?.username || '');
+        this.userTypeName.set(this.resolveTypeName(this.oTokenJWT?.usertype));
         this.isUser.set(this.oSessionService.isUser());
       });
     });
@@ -60,8 +63,18 @@ export class Menu {
         this.isSessionActive.set(false);
         this.oTokenJWT = null;
         this.userName.set('');
+        this.userTypeName.set('');
         this.isUser.set(false);
       });
     });
+  }
+
+  private resolveTypeName(usertype: number | undefined): string {
+    switch (usertype) {
+      case 1: return 'Administrador';
+      case 2: return 'Admin. de club';
+      case 3: return 'Usuario';
+      default: return '';
+    }
   }
 }

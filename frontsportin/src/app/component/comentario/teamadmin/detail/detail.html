@@ -28,14 +28,16 @@
           <div class="col-7 fw-semibold small">{{ oComentario()?.contenido }}</div>
         </div>
         <div class="card border-start border-3 border-info mt-3">
-          <div class="card-header py-1 d-flex align-items-center gap-2 bg-info bg-opacity-10">
+          <div class="card-header py-1 d-flex align-items-center gap-2 bg-info bg-opacity-10" style="cursor:pointer" (click)="showNoticia.set(!showNoticia())">
             <i class="bi bi-newspaper text-info small"></i>
             <span class="text-uppercase small fw-semibold text-info">Noticia</span>
-            <a [routerLink]="['/noticia/teamadmin/view', oComentario()?.noticia?.id]" class="ms-auto badge bg-info text-white text-decoration-none small">
+            <i class="bi ms-1 text-info small" [class.bi-chevron-down]="!showNoticia()" [class.bi-chevron-up]="showNoticia()"></i>
+            <a [routerLink]="['/noticia/teamadmin/view', oComentario()?.noticia?.id]" class="ms-auto badge bg-info text-white text-decoration-none small" (click)="$event.stopPropagation()">
               {{ oComentario()?.noticia?.titulo | slice:0:30 }} <span class="opacity-75 ms-1">#{{oComentario()?.noticia?.id}}</span>
               <i class="bi bi-box-arrow-up-right ms-1"></i>
             </a>
           </div>
+          @if (showNoticia()) {
           <div class="card-body p-2">
             <div class="row g-1">
               <div class="col-5 text-muted small text-uppercase">ID</div>
@@ -50,14 +52,16 @@
               <div class="col-7 fw-semibold small">@if ((oComentario()?.noticia?.puntuaciones ?? 0) > 0) { <a [routerLink]="['/puntuacion/teamadmin/noticia', oComentario()?.noticia?.id]" class="text-decoration-none">{{ oComentario()?.noticia?.puntuaciones }}</a> } @else { 0 }</div>
             </div>
             <div class="card border-start border-3 border-success mt-3">
-              <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10">
+              <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10" style="cursor:pointer" (click)="showNoticiaClub.set(!showNoticiaClub())">
                 <i class="bi bi-building-fill text-success small"></i>
                 <span class="text-uppercase small fw-semibold text-success">Club</span>
-                <a [routerLink]="['/club/teamadmin/view', oComentario()?.noticia?.club?.id]" class="ms-auto badge bg-success text-white text-decoration-none small">
+                <i class="bi ms-1 text-success small" [class.bi-chevron-down]="!showNoticiaClub()" [class.bi-chevron-up]="showNoticiaClub()"></i>
+                <a [routerLink]="['/club/teamadmin/view', oComentario()?.noticia?.club?.id]" class="ms-auto badge bg-success text-white text-decoration-none small" (click)="$event.stopPropagation()">
                   {{ oComentario()?.noticia?.club?.nombre }} <span class="opacity-75 ms-1">#{{oComentario()?.noticia?.club?.id}}</span>
                   <i class="bi bi-box-arrow-up-right ms-1"></i>
                 </a>
               </div>
+              @if (showNoticiaClub()) {
               <div class="card-body p-2">
                 <div class="row g-1">
                   <div class="col-5 text-muted small text-uppercase">ID</div>
@@ -80,18 +84,22 @@
                   <div class="col-7 fw-semibold small">@if ((oComentario()?.noticia?.club?.usuarios ?? 0) > 0) { <a [routerLink]="['/usuario/teamadmin/club', oComentario()?.noticia?.club?.id]" class="text-decoration-none">{{ oComentario()?.noticia?.club?.usuarios }}</a> } @else { 0 }</div>
                 </div>
               </div>
+              }
             </div>
           </div>
+          }
         </div>
         <div class="card border-start border-3 border-info mt-3">
-          <div class="card-header py-1 d-flex align-items-center gap-2 bg-info bg-opacity-10">
+          <div class="card-header py-1 d-flex align-items-center gap-2 bg-info bg-opacity-10" style="cursor:pointer" (click)="showUsuario.set(!showUsuario())">
             <i class="bi bi-person-fill text-info small"></i>
             <span class="text-uppercase small fw-semibold text-info">Usuario</span>
-            <a [routerLink]="['/usuario/teamadmin/view', oComentario()?.usuario?.id]" class="ms-auto badge bg-info text-white text-decoration-none small">
+            <i class="bi ms-1 text-info small" [class.bi-chevron-down]="!showUsuario()" [class.bi-chevron-up]="showUsuario()"></i>
+            <a [routerLink]="['/usuario/teamadmin/view', oComentario()?.usuario?.id]" class="ms-auto badge bg-info text-white text-decoration-none small" (click)="$event.stopPropagation()">
               {{ oComentario()?.usuario?.nombre }} {{ oComentario()?.usuario?.apellido1 }} <span class="opacity-75 ms-1">#{{oComentario()?.usuario?.id}}</span>
               <i class="bi bi-box-arrow-up-right ms-1"></i>
             </a>
           </div>
+          @if (showUsuario()) {
           <div class="card-body p-2">
             <div class="row g-1">
               <div class="col-5 text-muted small text-uppercase">ID</div>
@@ -124,14 +132,16 @@
               <div class="col-7 fw-semibold small">@if ((oComentario()?.usuario?.jugadores ?? 0) > 0) { <a [routerLink]="['/jugador/teamadmin/usuario', oComentario()?.usuario?.id]" class="text-decoration-none">{{ oComentario()?.usuario?.jugadores }}</a> } @else { 0 }</div>
             </div>
             <div class="card border-start border-3 border-success mt-3">
-              <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10">
+              <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10" style="cursor:pointer" (click)="showUsuarioTipousuario.set(!showUsuarioTipousuario())">
                 <i class="bi bi-person-badge-fill text-success small"></i>
                 <span class="text-uppercase small fw-semibold text-success">Tipo de usuario</span>
-                <a [routerLink]="['/tipousuario/view', oComentario()?.usuario?.tipousuario?.id]" class="ms-auto badge bg-success text-white text-decoration-none small">
+                <i class="bi ms-1 text-success small" [class.bi-chevron-down]="!showUsuarioTipousuario()" [class.bi-chevron-up]="showUsuarioTipousuario()"></i>
+                <a [routerLink]="['/tipousuario/view', oComentario()?.usuario?.tipousuario?.id]" class="ms-auto badge bg-success text-white text-decoration-none small" (click)="$event.stopPropagation()">
                   {{ oComentario()?.usuario?.tipousuario?.descripcion }} <span class="opacity-75 ms-1">#{{oComentario()?.usuario?.tipousuario?.id}}</span>
                   <i class="bi bi-box-arrow-up-right ms-1"></i>
                 </a>
               </div>
+              @if (showUsuarioTipousuario()) {
               <div class="card-body p-2">
                 <div class="row g-1">
                   <div class="col-5 text-muted small text-uppercase">ID</div>
@@ -142,16 +152,19 @@
                   <div class="col-7 fw-semibold small">@if ((oComentario()?.usuario?.tipousuario?.usuarios ?? 0) > 0) { <a [routerLink]="['/usuario/tipousuario', oComentario()?.usuario?.tipousuario?.id]" class="text-decoration-none">{{ oComentario()?.usuario?.tipousuario?.usuarios }}</a> } @else { 0 }</div>
                 </div>
               </div>
+              }
             </div>
             <div class="card border-start border-3 border-success mt-3">
-              <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10">
+              <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10" style="cursor:pointer" (click)="showUsuarioRolusuario.set(!showUsuarioRolusuario())">
                 <i class="bi bi-shield-fill text-success small"></i>
                 <span class="text-uppercase small fw-semibold text-success">Rol de usuario</span>
-                <a [routerLink]="['/rolusuario/view', oComentario()?.usuario?.rolusuario?.id]" class="ms-auto badge bg-success text-white text-decoration-none small">
+                <i class="bi ms-1 text-success small" [class.bi-chevron-down]="!showUsuarioRolusuario()" [class.bi-chevron-up]="showUsuarioRolusuario()"></i>
+                <a [routerLink]="['/rolusuario/view', oComentario()?.usuario?.rolusuario?.id]" class="ms-auto badge bg-success text-white text-decoration-none small" (click)="$event.stopPropagation()">
                   {{ oComentario()?.usuario?.rolusuario?.descripcion }} <span class="opacity-75 ms-1">#{{oComentario()?.usuario?.rolusuario?.id}}</span>
                   <i class="bi bi-box-arrow-up-right ms-1"></i>
                 </a>
               </div>
+              @if (showUsuarioRolusuario()) {
               <div class="card-body p-2">
                 <div class="row g-1">
                   <div class="col-5 text-muted small text-uppercase">ID</div>
@@ -162,16 +175,19 @@
                   <div class="col-7 fw-semibold small">@if ((oComentario()?.usuario?.rolusuario?.usuarios ?? 0) > 0) { <a [routerLink]="['/usuario/rol', oComentario()?.usuario?.rolusuario?.id]" class="text-decoration-none">{{ oComentario()?.usuario?.rolusuario?.usuarios }}</a> } @else { 0 }</div>
                 </div>
               </div>
+              }
             </div>
             <div class="card border-start border-3 border-success mt-3">
-              <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10">
+              <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10" style="cursor:pointer" (click)="showUsuarioClub.set(!showUsuarioClub())">
                 <i class="bi bi-building-fill text-success small"></i>
                 <span class="text-uppercase small fw-semibold text-success">Club</span>
-                <a [routerLink]="['/club/teamadmin/view', oComentario()?.usuario?.club?.id]" class="ms-auto badge bg-success text-white text-decoration-none small">
+                <i class="bi ms-1 text-success small" [class.bi-chevron-down]="!showUsuarioClub()" [class.bi-chevron-up]="showUsuarioClub()"></i>
+                <a [routerLink]="['/club/teamadmin/view', oComentario()?.usuario?.club?.id]" class="ms-auto badge bg-success text-white text-decoration-none small" (click)="$event.stopPropagation()">
                   {{ oComentario()?.usuario?.club?.nombre }} <span class="opacity-75 ms-1">#{{oComentario()?.usuario?.club?.id}}</span>
                   <i class="bi bi-box-arrow-up-right ms-1"></i>
                 </a>
               </div>
+              @if (showUsuarioClub()) {
               <div class="card-body p-2">
                 <div class="row g-1">
                   <div class="col-5 text-muted small text-uppercase">ID</div>
@@ -194,8 +210,10 @@
                   <div class="col-7 fw-semibold small">@if ((oComentario()?.usuario?.club?.usuarios ?? 0) > 0) { <a [routerLink]="['/usuario/teamadmin/club', oComentario()?.usuario?.club?.id]" class="text-decoration-none">{{ oComentario()?.usuario?.club?.usuarios }}</a> } @else { 0 }</div>
                 </div>
               </div>
+              }
             </div>
           </div>
+          }
         </div>
 
       </div>

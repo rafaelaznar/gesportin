@@ -1,20 +1,22 @@
 import { Component, Input, signal, computed, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
-import { DatePipe, DecimalPipe } from '@angular/common';
+import { DecimalPipe } from '@angular/common';
 import { IPage } from '../../../../model/plist';
 import { IPuntuacion } from '../../../../model/puntuacion';
 import { INoticia } from '../../../../model/noticia';
 import { PuntuacionService } from '../../../../service/puntuacion';
+import { NoticiaService } from '../../../../service/noticia';
 import { Paginacion } from '../../../shared/paginacion/paginacion';
 import { BotoneraActionsPlist } from '../../../shared/botonera-actions-plist/botonera-actions-plist';
 import { ModalRef } from '../../../shared/modal/modal-ref';
 import { MODAL_REF } from '../../../shared/modal/modal.tokens';
+import { NoticiaTeamadminEmbedded } from '../../../noticia/teamadmin/embedded/embedded';
 
 @Component({
   standalone: true,
   selector: 'app-puntuacion-teamadmin-plist',
-  imports: [Paginacion, RouterLink, BotoneraActionsPlist, DatePipe, DecimalPipe],
+  imports: [Paginacion, RouterLink, BotoneraActionsPlist, DecimalPipe, NoticiaTeamadminEmbedded],
   templateUrl: './plist.html',
   styleUrl: './plist.css',
 })
@@ -23,7 +25,8 @@ export class PuntuacionTeamadminPlist implements OnInit {
 
   @Input() id_noticia?: number;
   @Input() id_usuario?: number;
-  @Input() noticiaData?: INoticia | null;
+
+  noticiaObj = signal<INoticia | null>(null);
 
   oPage = signal<IPage<IPuntuacion> | null>(null);
   numPage = signal<number>(0);
@@ -39,6 +42,7 @@ export class PuntuacionTeamadminPlist implements OnInit {
   usuario = signal<number>(0);
 
   private modalRef = inject(MODAL_REF, { optional: true });
+  private oNoticiaService = inject(NoticiaService);
 
   constructor(
     private oPuntuacionService: PuntuacionService,
@@ -58,6 +62,13 @@ export class PuntuacionTeamadminPlist implements OnInit {
     } else {
       const idNoticia = this.route.snapshot.paramMap.get('id_noticia');
       if (idNoticia) this.noticia.set(+idNoticia);
+    }
+
+    if (this.noticia() > 0) {
+      this.oNoticiaService.getById(this.noticia()).subscribe({
+        next: (data) => this.noticiaObj.set(data),
+        error: () => {},
+      });
     }
 
     this.getPage();

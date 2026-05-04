@@ -530,6 +530,7 @@ No expone `POST`/`PUT`/`DELETE /{id}`. Solo lectura + fill/empty para datos del 
   "resultado": "3-1",
   "fecha": "2025-10-15T18:00:00",
   "lugar": "Estadio Municipal",
+  "comentario": "Excelente desempeño del equipo",
   "estadopartido": { "id": 3, "descripcion": "Ganado" }
 }
 ```
@@ -543,6 +544,7 @@ No expone `POST`/`PUT`/`DELETE /{id}`. Solo lectura + fill/empty para datos del 
 | `resultado` | String | Ej: "3-1"; vacío si aún no jugado |
 | `fecha` | String | ISO datetime; puede ser null |
 | `lugar` | String | Lugar/estadio |
+| `comentario` | String | Comentario opcional; editable por admin o club admin del mismo club; puede ser null |
 | `estadopartido` | Object | FK expandida; puede ser null |
 
 **Endpoints:**

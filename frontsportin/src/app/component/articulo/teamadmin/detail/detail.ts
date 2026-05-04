@@ -21,6 +21,8 @@ export class ArticuloTeamadminDetail implements OnInit {
   oArticulo = signal<IArticulo | null>(null);
   loading = signal(true);
   error = signal<string | null>(null);
+  showTipoarticulo = signal(false);
+  showTipoarticuloClub = signal(false);
 
   ngOnInit(): void {
     const idArticulo = this.id();

@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 border rounded bg-light p-2 mb-3">
     <div>
-      <div class="text-uppercase small text-muted fw-semibold">Carrito</div>
+      <div class="text-uppercase small text-muted fw-semibold fs-2">Carrito</div>
       <div class="fw-bold">Detalle de carrito</div>
       <div class="text-muted small">Panel administrativo</div>
     </div>
@@ -12,7 +12,9 @@
 
   @if (loading()) {
     <div class="text-center py-4">
-      <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Cargando...</span></div>
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando...</span>
+      </div>
       <p class="text-muted small mt-2 mb-0">Cargando detalle...</p>
     </div>
   }
@@ -57,11 +59,41 @@
               <div class="col-5 text-muted small text-uppercase">Descuento</div>
               <div class="col-7 fw-semibold small">{{ oCarrito()?.articulo?.descuento | number:'1.2-2' }}%</div>
               <div class="col-5 text-muted small text-uppercase">Com. artículos</div>
-              <div class="col-7 fw-semibold small">@if ((oCarrito()?.articulo?.comentarioarts ?? 0) > 0) { <a [routerLink]="['/comentarioart/articulo', oCarrito()?.articulo?.id]" class="text-decoration-none">{{ oCarrito()?.articulo?.comentarioarts }}</a> } @else { 0 }</div>
+              <div class="col-7 fw-semibold small">
+                @if ((oCarrito()?.articulo?.comentarioarts ?? 0) > 0) {
+                  <a
+                    [routerLink]="['/comentarioart/articulo', oCarrito()?.articulo?.id]"
+                    class="text-decoration-none"
+                    >{{ oCarrito()?.articulo?.comentarioarts }}</a
+                  >
+                } @else {
+                  0
+                }
+              </div>
               <div class="col-5 text-muted small text-uppercase">Compras</div>
-              <div class="col-7 fw-semibold small">@if ((oCarrito()?.articulo?.compras ?? 0) > 0) { <a [routerLink]="['/compra/articulo', oCarrito()?.articulo?.id]" class="text-decoration-none">{{ oCarrito()?.articulo?.compras }}</a> } @else { 0 }</div>
+              <div class="col-7 fw-semibold small">
+                @if ((oCarrito()?.articulo?.compras ?? 0) > 0) {
+                  <a
+                    [routerLink]="['/compra/articulo', oCarrito()?.articulo?.id]"
+                    class="text-decoration-none"
+                    >{{ oCarrito()?.articulo?.compras }}</a
+                  >
+                } @else {
+                  0
+                }
+              </div>
               <div class="col-5 text-muted small text-uppercase">Carritos</div>
-              <div class="col-7 fw-semibold small">@if ((oCarrito()?.articulo?.carritos ?? 0) > 0) { <a [routerLink]="['/carrito/articulo', oCarrito()?.articulo?.id]" class="text-decoration-none">{{ oCarrito()?.articulo?.carritos }}</a> } @else { 0 }</div>
+              <div class="col-7 fw-semibold small">
+                @if ((oCarrito()?.articulo?.carritos ?? 0) > 0) {
+                  <a
+                    [routerLink]="['/carrito/articulo', oCarrito()?.articulo?.id]"
+                    class="text-decoration-none"
+                    >{{ oCarrito()?.articulo?.carritos }}</a
+                  >
+                } @else {
+                  0
+                }
+              </div>
             </div>
             <div class="card border-start border-3 border-success mt-3">
               <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10">
@@ -79,7 +111,17 @@
                   <div class="col-5 text-muted small text-uppercase">Descripción</div>
                   <div class="col-7 fw-semibold small">{{ oCarrito()?.articulo?.tipoarticulo?.descripcion }}</div>
                   <div class="col-5 text-muted small text-uppercase">Artículos</div>
-                  <div class="col-7 fw-semibold small">@if ((oCarrito()?.articulo?.tipoarticulo?.articulos ?? 0) > 0) { <a [routerLink]="['/articulo/tipoarticulo', oCarrito()?.articulo?.tipoarticulo?.id]" class="text-decoration-none">{{ oCarrito()?.articulo?.tipoarticulo?.articulos }}</a> } @else { 0 }</div>
+                  <div class="col-7 fw-semibold small">
+                    @if ((oCarrito()?.articulo?.tipoarticulo?.articulos ?? 0) > 0) {
+                      <a
+                        [routerLink]="['/articulo/tipoarticulo', oCarrito()?.articulo?.tipoarticulo?.id]"
+                        class="text-decoration-none"
+                        >{{ oCarrito()?.articulo?.tipoarticulo?.articulos }}</a
+                      >
+                    } @else {
+                      0
+                    }
+                  </div>
                 </div>
                 <div class="card border-start border-3 border-warning mt-3">
                   <div class="card-header py-1 d-flex align-items-center gap-2 bg-warning bg-opacity-10">
@@ -103,13 +145,53 @@
                       <div class="col-5 text-muted small text-uppercase">Fecha alta</div>
                       <div class="col-7 fw-semibold small">{{ oCarrito()?.articulo?.tipoarticulo?.club?.fechaAlta | datetime }}</div>
                       <div class="col-5 text-muted small text-uppercase">Temporadas</div>
-                      <div class="col-7 fw-semibold small">@if ((oCarrito()?.articulo?.tipoarticulo?.club?.temporadas ?? 0) > 0) { <a [routerLink]="['/temporada/club', oCarrito()?.articulo?.tipoarticulo?.club?.id]" class="text-decoration-none">{{ oCarrito()?.articulo?.tipoarticulo?.club?.temporadas }}</a> } @else { 0 }</div>
+                      <div class="col-7 fw-semibold small">
+                        @if ((oCarrito()?.articulo?.tipoarticulo?.club?.temporadas ?? 0) > 0) {
+                          <a
+                            [routerLink]="['/temporada/club', oCarrito()?.articulo?.tipoarticulo?.club?.id]"
+                            class="text-decoration-none"
+                            >{{ oCarrito()?.articulo?.tipoarticulo?.club?.temporadas }}</a
+                          >
+                        } @else {
+                          0
+                        }
+                      </div>
                       <div class="col-5 text-muted small text-uppercase">Noticias</div>
-                      <div class="col-7 fw-semibold small">@if ((oCarrito()?.articulo?.tipoarticulo?.club?.noticias ?? 0) > 0) { <a [routerLink]="['/noticia/club', oCarrito()?.articulo?.tipoarticulo?.club?.id]" class="text-decoration-none">{{ oCarrito()?.articulo?.tipoarticulo?.club?.noticias }}</a> } @else { 0 }</div>
+                      <div class="col-7 fw-semibold small">
+                        @if ((oCarrito()?.articulo?.tipoarticulo?.club?.noticias ?? 0) > 0) {
+                          <a
+                            [routerLink]="['/noticia/club', oCarrito()?.articulo?.tipoarticulo?.club?.id]"
+                            class="text-decoration-none"
+                            >{{ oCarrito()?.articulo?.tipoarticulo?.club?.noticias }}</a
+                          >
+                        } @else {
+                          0
+                        }
+                      </div>
                       <div class="col-5 text-muted small text-uppercase">Tipos artículo</div>
-                      <div class="col-7 fw-semibold small">@if ((oCarrito()?.articulo?.tipoarticulo?.club?.tipoarticulos ?? 0) > 0) { <a [routerLink]="['/tipoarticulo/club', oCarrito()?.articulo?.tipoarticulo?.club?.id]" class="text-decoration-none">{{ oCarrito()?.articulo?.tipoarticulo?.club?.tipoarticulos }}</a> } @else { 0 }</div>
+                      <div class="col-7 fw-semibold small">
+                        @if ((oCarrito()?.articulo?.tipoarticulo?.club?.tipoarticulos ?? 0) > 0) {
+                          <a
+                            [routerLink]="['/tipoarticulo/club', oCarrito()?.articulo?.tipoarticulo?.club?.id]"
+                            class="text-decoration-none"
+                            >{{ oCarrito()?.articulo?.tipoarticulo?.club?.tipoarticulos }}</a
+                          >
+                        } @else {
+                          0
+                        }
+                      </div>
                       <div class="col-5 text-muted small text-uppercase">Usuarios</div>
-                      <div class="col-7 fw-semibold small">@if ((oCarrito()?.articulo?.tipoarticulo?.club?.usuarios ?? 0) > 0) { <a [routerLink]="['/usuario/club', oCarrito()?.articulo?.tipoarticulo?.club?.id]" class="text-decoration-none">{{ oCarrito()?.articulo?.tipoarticulo?.club?.usuarios }}</a> } @else { 0 }</div>
+                      <div class="col-7 fw-semibold small">
+                        @if ((oCarrito()?.articulo?.tipoarticulo?.club?.usuarios ?? 0) > 0) {
+                          <a
+                            [routerLink]="['/usuario/club', oCarrito()?.articulo?.tipoarticulo?.club?.id]"
+                            class="text-decoration-none"
+                            >{{ oCarrito()?.articulo?.tipoarticulo?.club?.usuarios }}</a
+                          >
+                        } @else {
+                          0
+                        }
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -143,19 +225,89 @@
               <div class="col-5 text-muted small text-uppercase">Género</div>
               <div class="col-7 fw-semibold small">{{ oCarrito()?.usuario?.genero === 0 ? 'Hombre' : 'Mujer' }}</div>
               <div class="col-5 text-muted small text-uppercase">Comentarios</div>
-              <div class="col-7 fw-semibold small">@if ((oCarrito()?.usuario?.comentarios ?? 0) > 0) { <a [routerLink]="['/comentario/usuario', oCarrito()?.usuario?.id]" class="text-decoration-none">{{ oCarrito()?.usuario?.comentarios }}</a> } @else { 0 }</div>
+              <div class="col-7 fw-semibold small">
+                @if ((oCarrito()?.usuario?.comentarios ?? 0) > 0) {
+                  <a
+                    [routerLink]="['/comentario/usuario', oCarrito()?.usuario?.id]"
+                    class="text-decoration-none"
+                    >{{ oCarrito()?.usuario?.comentarios }}</a
+                  >
+                } @else {
+                  0
+                }
+              </div>
               <div class="col-5 text-muted small text-uppercase">Puntuaciones</div>
-              <div class="col-7 fw-semibold small">@if ((oCarrito()?.usuario?.puntuaciones ?? 0) > 0) { <a [routerLink]="['/puntuacion/usuario', oCarrito()?.usuario?.id]" class="text-decoration-none">{{ oCarrito()?.usuario?.puntuaciones }}</a> } @else { 0 }</div>
+              <div class="col-7 fw-semibold small">
+                @if ((oCarrito()?.usuario?.puntuaciones ?? 0) > 0) {
+                  <a
+                    [routerLink]="['/puntuacion/usuario', oCarrito()?.usuario?.id]"
+                    class="text-decoration-none"
+                    >{{ oCarrito()?.usuario?.puntuaciones }}</a
+                  >
+                } @else {
+                  0
+                }
+              </div>
               <div class="col-5 text-muted small text-uppercase">Com. artículos</div>
-              <div class="col-7 fw-semibold small">@if ((oCarrito()?.usuario?.comentarioarts ?? 0) > 0) { <a [routerLink]="['/comentarioart/usuario', oCarrito()?.usuario?.id]" class="text-decoration-none">{{ oCarrito()?.usuario?.comentarioarts }}</a> } @else { 0 }</div>
+              <div class="col-7 fw-semibold small">
+                @if ((oCarrito()?.usuario?.comentarioarts ?? 0) > 0) {
+                  <a
+                    [routerLink]="['/comentarioart/usuario', oCarrito()?.usuario?.id]"
+                    class="text-decoration-none"
+                    >{{ oCarrito()?.usuario?.comentarioarts }}</a
+                  >
+                } @else {
+                  0
+                }
+              </div>
               <div class="col-5 text-muted small text-uppercase">Carritos</div>
-              <div class="col-7 fw-semibold small">@if ((oCarrito()?.usuario?.carritos ?? 0) > 0) { <a [routerLink]="['/carrito/usuario', oCarrito()?.usuario?.id]" class="text-decoration-none">{{ oCarrito()?.usuario?.carritos }}</a> } @else { 0 }</div>
+              <div class="col-7 fw-semibold small">
+                @if ((oCarrito()?.usuario?.carritos ?? 0) > 0) {
+                  <a
+                    [routerLink]="['/carrito/usuario', oCarrito()?.usuario?.id]"
+                    class="text-decoration-none"
+                    >{{ oCarrito()?.usuario?.carritos }}</a
+                  >
+                } @else {
+                  0
+                }
+              </div>
               <div class="col-5 text-muted small text-uppercase">Facturas</div>
-              <div class="col-7 fw-semibold small">@if ((oCarrito()?.usuario?.facturas ?? 0) > 0) { <a [routerLink]="['/factura/usuario', oCarrito()?.usuario?.id]" class="text-decoration-none">{{ oCarrito()?.usuario?.facturas }}</a> } @else { 0 }</div>
+              <div class="col-7 fw-semibold small">
+                @if ((oCarrito()?.usuario?.facturas ?? 0) > 0) {
+                  <a
+                    [routerLink]="['/factura/usuario', oCarrito()?.usuario?.id]"
+                    class="text-decoration-none"
+                    >{{ oCarrito()?.usuario?.facturas }}</a
+                  >
+                } @else {
+                  0
+                }
+              </div>
               <div class="col-5 text-muted small text-uppercase">Equipos entren.</div>
-              <div class="col-7 fw-semibold small">@if ((oCarrito()?.usuario?.equiposentrenados ?? 0) > 0) { <a [routerLink]="['/equipo/usuario', oCarrito()?.usuario?.id]" class="text-decoration-none">{{ oCarrito()?.usuario?.equiposentrenados }}</a> } @else { 0 }</div>
+              <div class="col-7 fw-semibold small">
+                @if ((oCarrito()?.usuario?.equiposentrenados ?? 0) > 0) {
+                  <a
+                    [routerLink]="['/equipo/usuario', oCarrito()?.usuario?.id]"
+                    class="text-decoration-none"
+                    >{{ oCarrito()?.usuario?.equiposentrenados }}</a
+                  >
+                } @else {
+                  0
+                }
+              </div>
               <div class="col-5 text-muted small text-uppercase">Jugadores</div>
-              <div class="col-7 fw-semibold small">@if ((oCarrito()?.usuario?.jugadores ?? 0) > 0) { <a [routerLink]="['/jugador/usuario', oCarrito()?.usuario?.id]" class="text-decoration-none">{{ oCarrito()?.usuario?.jugadores }}</a> } @else { 0 }</div>
+              <div class="col-7 fw-semibold small">
+                @if ((oCarrito()?.usuario?.jugadores ?? 0) > 0) {
+                  <a
+                    [routerLink]="['/jugador/usuario', oCarrito()?.usuario?.id]"
+                    class="text-decoration-none"
+                    >{{ oCarrito()?.usuario?.jugadores }}</a
+                  >
+                } @else {
+                  0
+                }
+              </div>
             </div>
             <div class="card border-start border-3 border-success mt-3">
               <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10">
@@ -173,7 +325,17 @@
                   <div class="col-5 text-muted small text-uppercase">Descripción</div>
                   <div class="col-7 fw-semibold small">{{ oCarrito()?.usuario?.tipousuario?.descripcion }}</div>
                   <div class="col-5 text-muted small text-uppercase">Usuarios</div>
-                  <div class="col-7 fw-semibold small">@if ((oCarrito()?.usuario?.tipousuario?.usuarios ?? 0) > 0) { <a [routerLink]="['/usuario/tipousuario', oCarrito()?.usuario?.tipousuario?.id]" class="text-decoration-none">{{ oCarrito()?.usuario?.tipousuario?.usuarios }}</a> } @else { 0 }</div>
+                  <div class="col-7 fw-semibold small">
+                    @if ((oCarrito()?.usuario?.tipousuario?.usuarios ?? 0) > 0) {
+                      <a
+                        [routerLink]="['/usuario/tipousuario', oCarrito()?.usuario?.tipousuario?.id]"
+                        class="text-decoration-none"
+                        >{{ oCarrito()?.usuario?.tipousuario?.usuarios }}</a
+                      >
+                    } @else {
+                      0
+                    }
+                  </div>
                 </div>
               </div>
             </div>
@@ -193,7 +355,17 @@
                   <div class="col-5 text-muted small text-uppercase">Descripción</div>
                   <div class="col-7 fw-semibold small">{{ oCarrito()?.usuario?.rolusuario?.descripcion }}</div>
                   <div class="col-5 text-muted small text-uppercase">Usuarios</div>
-                  <div class="col-7 fw-semibold small">@if ((oCarrito()?.usuario?.rolusuario?.usuarios ?? 0) > 0) { <a [routerLink]="['/usuario/rol', oCarrito()?.usuario?.rolusuario?.id]" class="text-decoration-none">{{ oCarrito()?.usuario?.rolusuario?.usuarios }}</a> } @else { 0 }</div>
+                  <div class="col-7 fw-semibold small">
+                    @if ((oCarrito()?.usuario?.rolusuario?.usuarios ?? 0) > 0) {
+                      <a
+                        [routerLink]="['/usuario/rol', oCarrito()?.usuario?.rolusuario?.id]"
+                        class="text-decoration-none"
+                        >{{ oCarrito()?.usuario?.rolusuario?.usuarios }}</a
+                      >
+                    } @else {
+                      0
+                    }
+                  </div>
                 </div>
               </div>
             </div>
@@ -219,13 +391,53 @@
                   <div class="col-5 text-muted small text-uppercase">Fecha alta</div>
                   <div class="col-7 fw-semibold small">{{ oCarrito()?.usuario?.club?.fechaAlta | datetime }}</div>
                   <div class="col-5 text-muted small text-uppercase">Temporadas</div>
-                  <div class="col-7 fw-semibold small">@if ((oCarrito()?.usuario?.club?.temporadas ?? 0) > 0) { <a [routerLink]="['/temporada/club', oCarrito()?.usuario?.club?.id]" class="text-decoration-none">{{ oCarrito()?.usuario?.club?.temporadas }}</a> } @else { 0 }</div>
+                  <div class="col-7 fw-semibold small">
+                    @if ((oCarrito()?.usuario?.club?.temporadas ?? 0) > 0) {
+                      <a
+                        [routerLink]="['/temporada/club', oCarrito()?.usuario?.club?.id]"
+                        class="text-decoration-none"
+                        >{{ oCarrito()?.usuario?.club?.temporadas }}</a
+                      >
+                    } @else {
+                      0
+                    }
+                  </div>
                   <div class="col-5 text-muted small text-uppercase">Noticias</div>
-                  <div class="col-7 fw-semibold small">@if ((oCarrito()?.usuario?.club?.noticias ?? 0) > 0) { <a [routerLink]="['/noticia/club', oCarrito()?.usuario?.club?.id]" class="text-decoration-none">{{ oCarrito()?.usuario?.club?.noticias }}</a> } @else { 0 }</div>
+                  <div class="col-7 fw-semibold small">
+                    @if ((oCarrito()?.usuario?.club?.noticias ?? 0) > 0) {
+                      <a
+                        [routerLink]="['/noticia/club', oCarrito()?.usuario?.club?.id]"
+                        class="text-decoration-none"
+                        >{{ oCarrito()?.usuario?.club?.noticias }}</a
+                      >
+                    } @else {
+                      0
+                    }
+                  </div>
                   <div class="col-5 text-muted small text-uppercase">Tipos artículo</div>
-                  <div class="col-7 fw-semibold small">@if ((oCarrito()?.usuario?.club?.tipoarticulos ?? 0) > 0) { <a [routerLink]="['/tipoarticulo/club', oCarrito()?.usuario?.club?.id]" class="text-decoration-none">{{ oCarrito()?.usuario?.club?.tipoarticulos }}</a> } @else { 0 }</div>
+                  <div class="col-7 fw-semibold small">
+                    @if ((oCarrito()?.usuario?.club?.tipoarticulos ?? 0) > 0) {
+                      <a
+                        [routerLink]="['/tipoarticulo/club', oCarrito()?.usuario?.club?.id]"
+                        class="text-decoration-none"
+                        >{{ oCarrito()?.usuario?.club?.tipoarticulos }}</a
+                      >
+                    } @else {
+                      0
+                    }
+                  </div>
                   <div class="col-5 text-muted small text-uppercase">Usuarios</div>
-                  <div class="col-7 fw-semibold small">@if ((oCarrito()?.usuario?.club?.usuarios ?? 0) > 0) { <a [routerLink]="['/usuario/club', oCarrito()?.usuario?.club?.id]" class="text-decoration-none">{{ oCarrito()?.usuario?.club?.usuarios }}</a> } @else { 0 }</div>
+                  <div class="col-7 fw-semibold small">
+                    @if ((oCarrito()?.usuario?.club?.usuarios ?? 0) > 0) {
+                      <a
+                        [routerLink]="['/usuario/club', oCarrito()?.usuario?.club?.id]"
+                        class="text-decoration-none"
+                        >{{ oCarrito()?.usuario?.club?.usuarios }}</a
+                      >
+                    } @else {
+                      0
+                    }
+                  </div>
                 </div>
               </div>
             </div>

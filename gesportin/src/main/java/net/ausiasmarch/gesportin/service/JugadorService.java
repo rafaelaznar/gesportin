@@ -207,18 +207,18 @@ public class JugadorService {
                     posiciones.get(oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, posiciones.size() - 1)));
             oJugador.setCapitan(oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, 1) == 1);
             oJugador.setImagen(null);
-            // ptes de asignar el usuario y el equipo
-            UsuarioEntity oUsuarioEntity = oUsuarioService.getOneRandom();
-            EquipoEntity equipo = oEquipoService.getOneRandomFromClub(oUsuarioEntity.getClub().getId());
+            // El jugador (tipousuario=3) y el equipo deben pertenecer al mismo club
+            EquipoEntity equipo = oEquipoService.getOneRandom();
+            if (equipo == null) continue;
+            Long clubId = equipo.getCategoria().getTemporada().getClub().getId();
+            UsuarioEntity oUsuarioEntity = oUsuarioService.getOneRandomFromClubAndTipousuario(clubId, 3L);
             int intentos = 0;
-            while (equipo == null ||
+            while (oUsuarioEntity == null ||
                     oJugadorRepository.existsByEquipoIdAndUsuarioId(equipo.getId(), oUsuarioEntity.getId())) {
-                oUsuarioEntity = oUsuarioService.getOneRandom();
-                equipo = oEquipoService.getOneRandomFromClub(oUsuarioEntity.getClub().getId());
-                if (++intentos >= 100)
-                    break;
+                oUsuarioEntity = oUsuarioService.getOneRandomFromClubAndTipousuario(clubId, 3L);
+                if (++intentos >= 100) break;
             }
-            if (equipo == null ||
+            if (oUsuarioEntity == null ||
                     oJugadorRepository.existsByEquipoIdAndUsuarioId(equipo.getId(), oUsuarioEntity.getId())) {
                 continue;
             }

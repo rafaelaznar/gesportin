@@ -34,14 +34,16 @@
           <div class="col-7 fw-semibold small">@if (oArticulo()?.imagen) { <img [src]="'data:image/jpeg;base64,' + oArticulo()?.imagen" class="img-thumbnail" style="max-height:80px" alt="artículo"/> } @else { Sin imagen }</div>
         </div>
         <div class="card border-start border-3 border-info mt-3">
-          <div class="card-header py-1 d-flex align-items-center gap-2 bg-info bg-opacity-10">
+          <div class="card-header py-1 d-flex align-items-center gap-2 bg-info bg-opacity-10" style="cursor:pointer" (click)="showTipoarticulo.set(!showTipoarticulo())">
             <i class="bi bi-tag-fill text-info small"></i>
             <span class="text-uppercase small fw-semibold text-info">Tipo de artículo</span>
-            <a [routerLink]="['/tipoarticulo/teamadmin/view', oArticulo()?.tipoarticulo?.id]" class="ms-auto badge bg-info text-white text-decoration-none small">
+            <i class="bi ms-1 text-info small" [class.bi-chevron-down]="!showTipoarticulo()" [class.bi-chevron-up]="showTipoarticulo()"></i>
+            <a [routerLink]="['/tipoarticulo/teamadmin/view', oArticulo()?.tipoarticulo?.id]" class="ms-auto badge bg-info text-white text-decoration-none small" (click)="$event.stopPropagation()">
               {{ oArticulo()?.tipoarticulo?.descripcion }} <span class="opacity-75 ms-1">#{{oArticulo()?.tipoarticulo?.id}}</span>
               <i class="bi bi-box-arrow-up-right ms-1"></i>
             </a>
           </div>
+          @if (showTipoarticulo()) {
           <div class="card-body p-2">
             <div class="row g-1">
               <div class="col-5 text-muted small text-uppercase">ID</div>
@@ -52,14 +54,16 @@
               <div class="col-7 fw-semibold small">@if ((oArticulo()?.tipoarticulo?.articulos ?? 0) > 0) { <a [routerLink]="['/articulo/teamadmin/tipoarticulo', oArticulo()?.tipoarticulo?.id]" class="text-decoration-none">{{ oArticulo()?.tipoarticulo?.articulos }}</a> } @else { 0 }</div>
             </div>
             <div class="card border-start border-3 border-success mt-3">
-              <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10">
+              <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10" style="cursor:pointer" (click)="showTipoarticuloClub.set(!showTipoarticuloClub())">
                 <i class="bi bi-building-fill text-success small"></i>
                 <span class="text-uppercase small fw-semibold text-success">Club</span>
-                <a [routerLink]="['/club/teamadmin/view', oArticulo()?.tipoarticulo?.club?.id]" class="ms-auto badge bg-success text-white text-decoration-none small">
+                <i class="bi ms-1 text-success small" [class.bi-chevron-down]="!showTipoarticuloClub()" [class.bi-chevron-up]="showTipoarticuloClub()"></i>
+                <a [routerLink]="['/club/teamadmin/view', oArticulo()?.tipoarticulo?.club?.id]" class="ms-auto badge bg-success text-white text-decoration-none small" (click)="$event.stopPropagation()">
                   {{ oArticulo()?.tipoarticulo?.club?.nombre }} <span class="opacity-75 ms-1">#{{oArticulo()?.tipoarticulo?.club?.id}}</span>
                   <i class="bi bi-box-arrow-up-right ms-1"></i>
                 </a>
               </div>
+              @if (showTipoarticuloClub()) {
               <div class="card-body p-2">
                 <div class="row g-1">
                   <div class="col-5 text-muted small text-uppercase">ID</div>
@@ -82,11 +86,12 @@
                   <div class="col-7 fw-semibold small">@if ((oArticulo()?.tipoarticulo?.club?.usuarios ?? 0) > 0) { <a [routerLink]="['/usuario/teamadmin/club', oArticulo()?.tipoarticulo?.club?.id]" class="text-decoration-none">{{ oArticulo()?.tipoarticulo?.club?.usuarios }}</a> } @else { 0 }</div>
                 </div>
               </div>
+              }
             </div>
           </div>
+          }
         </div>
         <div class="border-top mt-3 pt-3">
-          <div class="text-uppercase small text-muted fw-semibold mb-2"><i class="bi bi-bar-chart-fill me-1"></i>Contadores</div>
           <div class="row g-2">
             <div class="col-6 col-md-4 col-lg-3">
               <div class="border rounded p-2 text-center bg-light">

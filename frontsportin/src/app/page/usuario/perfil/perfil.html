@@ -1,0 +1,97 @@
+<div class="container-fluid">
+  <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 border rounded bg-light p-2 mb-3">
+    <div>
+      <div class="text-uppercase small text-muted fw-semibold">Cuenta</div>
+      <div class="fw-bold">Mi perfil</div>
+      <div class="text-muted small">Datos de tu usuario en sesión</div>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="text-center py-4">
+      <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Cargando...</span></div>
+      <p class="text-muted small mt-2 mb-0">Cargando perfil...</p>
+    </div>
+  }
+
+  @if (error()) {
+    <div class="alert alert-danger d-flex align-items-center gap-2" role="alert">
+      <i class="bi bi-exclamation-triangle-fill"></i> {{ error() }}
+    </div>
+  }
+
+  @if (!loading() && !error() && oUsuario()) {
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-primary text-white d-flex align-items-center gap-2">
+        <i class="bi bi-person-circle"></i>
+        <span class="fw-semibold">{{ oUsuario()?.nombre }} {{ oUsuario()?.apellido1 }} {{ oUsuario()?.apellido2 }}</span>
+        <span class="badge bg-white text-primary ms-auto">ID {{ oUsuario()?.id }}</span>
+      </div>
+      <div class="card-body">
+        <div class="row g-1 mb-3">
+          <div class="col-5 text-muted small text-uppercase">ID</div>
+          <div class="col-7 fw-semibold small">{{ oUsuario()?.id }}</div>
+          <div class="col-5 text-muted small text-uppercase">Nombre</div>
+          <div class="col-7 fw-semibold small">{{ oUsuario()?.nombre }}</div>
+          <div class="col-5 text-muted small text-uppercase">Apellido 1</div>
+          <div class="col-7 fw-semibold small">{{ oUsuario()?.apellido1 }}</div>
+          <div class="col-5 text-muted small text-uppercase">Apellido 2</div>
+          <div class="col-7 fw-semibold small">{{ oUsuario()?.apellido2 || '-' }}</div>
+          <div class="col-5 text-muted small text-uppercase">Username</div>
+          <div class="col-7 fw-semibold small">{{ oUsuario()?.username }}</div>
+          <div class="col-5 text-muted small text-uppercase">Fecha alta</div>
+          <div class="col-7 fw-semibold small">{{ oUsuario()?.fechaAlta | datetime }}</div>
+          <div class="col-5 text-muted small text-uppercase">Género</div>
+          <div class="col-7 fw-semibold small">{{ oUsuario()?.genero === 0 ? 'Hombre' : 'Mujer' }}</div>
+        </div>
+
+        <div class="card border-start border-3 border-info mt-3">
+          <div class="card-header py-1 d-flex align-items-center gap-2 bg-info bg-opacity-10">
+            <i class="bi bi-person-badge-fill text-info small"></i>
+            <span class="text-uppercase small fw-semibold text-info">Tipo de usuario</span>
+          </div>
+          <div class="card-body p-2">
+            <div class="row g-1">
+              <div class="col-5 text-muted small text-uppercase">ID</div>
+              <div class="col-7 fw-semibold small">{{ oUsuario()?.tipousuario?.id }}</div>
+              <div class="col-5 text-muted small text-uppercase">Descripción</div>
+              <div class="col-7 fw-semibold small">{{ oUsuario()?.tipousuario?.descripcion }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card border-start border-3 border-info mt-3">
+          <div class="card-header py-1 d-flex align-items-center gap-2 bg-info bg-opacity-10">
+            <i class="bi bi-shield-fill text-info small"></i>
+            <span class="text-uppercase small fw-semibold text-info">Rol de usuario</span>
+          </div>
+          <div class="card-body p-2">
+            <div class="row g-1">
+              <div class="col-5 text-muted small text-uppercase">ID</div>
+              <div class="col-7 fw-semibold small">{{ oUsuario()?.rolusuario?.id }}</div>
+              <div class="col-5 text-muted small text-uppercase">Descripción</div>
+              <div class="col-7 fw-semibold small">{{ oUsuario()?.rolusuario?.descripcion }}</div>
+            </div>
+          </div>
+        </div>
+
+        @if (oUsuario()?.club?.id) {
+          <div class="card border-start border-3 border-info mt-3">
+            <div class="card-header py-1 d-flex align-items-center gap-2 bg-info bg-opacity-10">
+              <i class="bi bi-building-fill text-info small"></i>
+              <span class="text-uppercase small fw-semibold text-info">Club</span>
+            </div>
+            <div class="card-body p-2">
+              <div class="row g-1">
+                <div class="col-5 text-muted small text-uppercase">ID</div>
+                <div class="col-7 fw-semibold small">{{ oUsuario()?.club?.id }}</div>
+                <div class="col-5 text-muted small text-uppercase">Nombre</div>
+                <div class="col-7 fw-semibold small">{{ oUsuario()?.club?.nombre }}</div>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>

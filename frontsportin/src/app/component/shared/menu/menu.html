@@ -22,10 +22,14 @@
           <span class="d-none d-lg-inline">Inicio</span>
         </a>
       }
-      <a class="user-info d-inline-flex align-items-center">
-        <span class="d-none d-lg-inline text-light"
-          ><i class="bi bi-person-circle me-2"></i> {{ userName() }}</span
-        >
+      <a
+        [routerLink]="['/mi/perfil']"
+        class="btn btn-sm btn-outline-light d-inline-flex align-items-center nav-login-btn"
+        [class.active]="activeRoute.startsWith('/mi/perfil')"
+        title="Mi perfil"
+      >
+        <i class="bi bi-person-circle me-2"></i>
+        <span class="d-none d-lg-inline">{{ userName() }} ({{ userTypeName() }})</span>
       </a>
       <a
         [routerLink]="['/logout']"

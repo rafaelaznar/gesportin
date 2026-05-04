@@ -69,6 +69,7 @@ export class PartidoAdminForm implements OnInit {
       fecha: [null],
       lugar: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(255)]],
       id_estadopartido: [null],
+      comentario: [''],
     });
   }
 
@@ -82,6 +83,7 @@ export class PartidoAdminForm implements OnInit {
       fecha: partido.fecha ? partido.fecha.substring(0, 16) : null,
       lugar: partido.lugar,
       id_estadopartido: partido.estadopartido?.id ?? null,
+      comentario: partido.comentario ?? '',
     });
     if (partido.liga?.id) this.loadLiga(partido.liga.id);
   }
@@ -117,6 +119,10 @@ export class PartidoAdminForm implements OnInit {
     return this.partidoForm.get('lugar');
   }
 
+  get comentario() {
+    return this.partidoForm.get('comentario');
+  }
+
   get id_estadopartido() {
     return this.partidoForm.get('id_estadopartido');
   }
@@ -147,6 +153,7 @@ export class PartidoAdminForm implements OnInit {
       resultado: this.partidoForm.value.resultado,
       fecha: this.partidoForm.value.fecha ? toIsoDateTime(this.partidoForm.value.fecha) : null,
       lugar: this.partidoForm.value.lugar,
+      comentario: this.partidoForm.value.comentario,
       estadopartido: this.partidoForm.value.id_estadopartido
         ? { id: Number(this.partidoForm.value.id_estadopartido) }
         : null,

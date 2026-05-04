@@ -1,5 +1,6 @@
 package net.ausiasmarch.gesportin.exception;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -10,6 +11,12 @@ import net.ausiasmarch.gesportin.bean.ExceptionBean;
 
 @ControllerAdvice
 public class ApplicationExceptionHandler {
+
+    @ExceptionHandler(DataAccessException.class)
+    public ResponseEntity<ExceptionBean> handleDataAccessException(DataAccessException ex) {
+        ExceptionBean oExceptionBean = new ExceptionBean(503, "Backend can't access to database", System.currentTimeMillis());
+        return new ResponseEntity<>(oExceptionBean, HttpStatus.SERVICE_UNAVAILABLE);
+    }
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ExceptionBean> handleRuntimeException(RuntimeException ex) {        
@@ -25,8 +32,8 @@ public class ApplicationExceptionHandler {
 
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<ExceptionBean> handleUnauthorizedException(UnauthorizedException ex) {        
-        ExceptionBean oExceptionBean = new ExceptionBean(401, ex.getMessage(), System.currentTimeMillis());
-        return new ResponseEntity<>(oExceptionBean, HttpStatus.UNAUTHORIZED);
+        ExceptionBean oExceptionBean = new ExceptionBean(403, ex.getMessage(), System.currentTimeMillis());
+        return new ResponseEntity<>(oExceptionBean, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(ResourceNotModifiedException.class)

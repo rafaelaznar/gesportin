@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 border rounded bg-light p-2 mb-3">
     <div>
-      <div class="text-uppercase small text-muted fw-semibold">Puntuaciones</div>
+      <div class="text-uppercase small text-muted fw-semibold fs-2">Puntuaciones</div>
       <div class="fw-bold">Detalle de puntuación</div>
       <div class="text-muted small">Panel administrativo</div>
     </div>
@@ -12,7 +12,9 @@
 
   @if (loading()) {
     <div class="text-center py-4">
-      <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Cargando...</span></div>
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando...</span>
+      </div>
       <p class="text-muted small mt-2 mb-0">Cargando detalle...</p>
     </div>
   }
@@ -35,7 +37,12 @@
           <div class="col-5 text-muted small text-uppercase">ID</div>
           <div class="col-7 fw-semibold small">{{ oPuntuacion()?.id }}</div>
           <div class="col-5 text-muted small text-uppercase">Puntuación</div>
-          <div class="col-7 fw-semibold small">@for (s of [1,2,3,4,5]; track s) { <i class="bi" [class.bi-star-fill]="s <= (oPuntuacion()?.puntuacion ?? 0)" [class.bi-star]="s > (oPuntuacion()?.puntuacion ?? 0)" class="text-warning"></i> } <span class="ms-1 fw-bold">{{ oPuntuacion()?.puntuacion }}/5</span></div>
+          <div class="col-7 fw-semibold small">
+            @for (s of [1,2,3,4,5]; track s) {
+              <i class="bi text-warning" [class.bi-star-fill]="s <= (oPuntuacion()?.puntuacion ?? 0)" [class.bi-star]="s > (oPuntuacion()?.puntuacion ?? 0)"></i>
+            }
+            <span class="ms-1 fw-bold">{{ oPuntuacion()?.puntuacion }}/5</span>
+          </div>
         </div>
         <div class="card border-start border-3 border-info mt-3">
           <div class="card-header py-1 d-flex align-items-center gap-2 bg-info bg-opacity-10">
@@ -55,9 +62,29 @@
               <div class="col-5 text-muted small text-uppercase">Fecha</div>
               <div class="col-7 fw-semibold small">{{ oPuntuacion()?.noticia?.fecha | datetime }}</div>
               <div class="col-5 text-muted small text-uppercase">Comentarios</div>
-              <div class="col-7 fw-semibold small">@if ((oPuntuacion()?.noticia?.comentarios ?? 0) > 0) { <a [routerLink]="['/comentario/noticia', oPuntuacion()?.noticia?.id]" class="text-decoration-none">{{ oPuntuacion()?.noticia?.comentarios }}</a> } @else { 0 }</div>
+              <div class="col-7 fw-semibold small">
+                @if ((oPuntuacion()?.noticia?.comentarios ?? 0) > 0) {
+                  <a
+                    [routerLink]="['/comentario/noticia', oPuntuacion()?.noticia?.id]"
+                    class="text-decoration-none"
+                    >{{ oPuntuacion()?.noticia?.comentarios }}</a
+                  >
+                } @else {
+                  0
+                }
+              </div>
               <div class="col-5 text-muted small text-uppercase">Puntuaciones</div>
-              <div class="col-7 fw-semibold small">@if ((oPuntuacion()?.noticia?.puntuaciones ?? 0) > 0) { <a [routerLink]="['/puntuacion/noticia', oPuntuacion()?.noticia?.id]" class="text-decoration-none">{{ oPuntuacion()?.noticia?.puntuaciones }}</a> } @else { 0 }</div>
+              <div class="col-7 fw-semibold small">
+                @if ((oPuntuacion()?.noticia?.puntuaciones ?? 0) > 0) {
+                  <a
+                    [routerLink]="['/puntuacion/noticia', oPuntuacion()?.noticia?.id]"
+                    class="text-decoration-none"
+                    >{{ oPuntuacion()?.noticia?.puntuaciones }}</a
+                  >
+                } @else {
+                  0
+                }
+              </div>
             </div>
             <div class="card border-start border-3 border-success mt-3">
               <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10">
@@ -81,13 +108,53 @@
                   <div class="col-5 text-muted small text-uppercase">Fecha alta</div>
                   <div class="col-7 fw-semibold small">{{ oPuntuacion()?.noticia?.club?.fechaAlta | datetime }}</div>
                   <div class="col-5 text-muted small text-uppercase">Temporadas</div>
-                  <div class="col-7 fw-semibold small">@if ((oPuntuacion()?.noticia?.club?.temporadas ?? 0) > 0) { <a [routerLink]="['/temporada/club', oPuntuacion()?.noticia?.club?.id]" class="text-decoration-none">{{ oPuntuacion()?.noticia?.club?.temporadas }}</a> } @else { 0 }</div>
+                  <div class="col-7 fw-semibold small">
+                    @if ((oPuntuacion()?.noticia?.club?.temporadas ?? 0) > 0) {
+                      <a
+                        [routerLink]="['/temporada/club', oPuntuacion()?.noticia?.club?.id]"
+                        class="text-decoration-none"
+                        >{{ oPuntuacion()?.noticia?.club?.temporadas }}</a
+                      >
+                    } @else {
+                      0
+                    }
+                  </div>
                   <div class="col-5 text-muted small text-uppercase">Noticias</div>
-                  <div class="col-7 fw-semibold small">@if ((oPuntuacion()?.noticia?.club?.noticias ?? 0) > 0) { <a [routerLink]="['/noticia/club', oPuntuacion()?.noticia?.club?.id]" class="text-decoration-none">{{ oPuntuacion()?.noticia?.club?.noticias }}</a> } @else { 0 }</div>
+                  <div class="col-7 fw-semibold small">
+                    @if ((oPuntuacion()?.noticia?.club?.noticias ?? 0) > 0) {
+                      <a
+                        [routerLink]="['/noticia/club', oPuntuacion()?.noticia?.club?.id]"
+                        class="text-decoration-none"
+                        >{{ oPuntuacion()?.noticia?.club?.noticias }}</a
+                      >
+                    } @else {
+                      0
+                    }
+                  </div>
                   <div class="col-5 text-muted small text-uppercase">Tipos artículo</div>
-                  <div class="col-7 fw-semibold small">@if ((oPuntuacion()?.noticia?.club?.tipoarticulos ?? 0) > 0) { <a [routerLink]="['/tipoarticulo/club', oPuntuacion()?.noticia?.club?.id]" class="text-decoration-none">{{ oPuntuacion()?.noticia?.club?.tipoarticulos }}</a> } @else { 0 }</div>
+                  <div class="col-7 fw-semibold small">
+                    @if ((oPuntuacion()?.noticia?.club?.tipoarticulos ?? 0) > 0) {
+                      <a
+                        [routerLink]="['/tipoarticulo/club', oPuntuacion()?.noticia?.club?.id]"
+                        class="text-decoration-none"
+                        >{{ oPuntuacion()?.noticia?.club?.tipoarticulos }}</a
+                      >
+                    } @else {
+                      0
+                    }
+                  </div>
                   <div class="col-5 text-muted small text-uppercase">Usuarios</div>
-                  <div class="col-7 fw-semibold small">@if ((oPuntuacion()?.noticia?.club?.usuarios ?? 0) > 0) { <a [routerLink]="['/usuario/club', oPuntuacion()?.noticia?.club?.id]" class="text-decoration-none">{{ oPuntuacion()?.noticia?.club?.usuarios }}</a> } @else { 0 }</div>
+                  <div class="col-7 fw-semibold small">
+                    @if ((oPuntuacion()?.noticia?.club?.usuarios ?? 0) > 0) {
+                      <a
+                        [routerLink]="['/usuario/club', oPuntuacion()?.noticia?.club?.id]"
+                        class="text-decoration-none"
+                        >{{ oPuntuacion()?.noticia?.club?.usuarios }}</a
+                      >
+                    } @else {
+                      0
+                    }
+                  </div>
                 </div>
               </div>
             </div>
@@ -119,19 +186,89 @@
               <div class="col-5 text-muted small text-uppercase">Género</div>
               <div class="col-7 fw-semibold small">{{ oPuntuacion()?.usuario?.genero === 0 ? 'Hombre' : 'Mujer' }}</div>
               <div class="col-5 text-muted small text-uppercase">Comentarios</div>
-              <div class="col-7 fw-semibold small">@if ((oPuntuacion()?.usuario?.comentarios ?? 0) > 0) { <a [routerLink]="['/comentario/usuario', oPuntuacion()?.usuario?.id]" class="text-decoration-none">{{ oPuntuacion()?.usuario?.comentarios }}</a> } @else { 0 }</div>
+              <div class="col-7 fw-semibold small">
+                @if ((oPuntuacion()?.usuario?.comentarios ?? 0) > 0) {
+                  <a
+                    [routerLink]="['/comentario/usuario', oPuntuacion()?.usuario?.id]"
+                    class="text-decoration-none"
+                    >{{ oPuntuacion()?.usuario?.comentarios }}</a
+                  >
+                } @else {
+                  0
+                }
+              </div>
               <div class="col-5 text-muted small text-uppercase">Puntuaciones</div>
-              <div class="col-7 fw-semibold small">@if ((oPuntuacion()?.usuario?.puntuaciones ?? 0) > 0) { <a [routerLink]="['/puntuacion/usuario', oPuntuacion()?.usuario?.id]" class="text-decoration-none">{{ oPuntuacion()?.usuario?.puntuaciones }}</a> } @else { 0 }</div>
+              <div class="col-7 fw-semibold small">
+                @if ((oPuntuacion()?.usuario?.puntuaciones ?? 0) > 0) {
+                  <a
+                    [routerLink]="['/puntuacion/usuario', oPuntuacion()?.usuario?.id]"
+                    class="text-decoration-none"
+                    >{{ oPuntuacion()?.usuario?.puntuaciones }}</a
+                  >
+                } @else {
+                  0
+                }
+              </div>
               <div class="col-5 text-muted small text-uppercase">Com. artículos</div>
-              <div class="col-7 fw-semibold small">@if ((oPuntuacion()?.usuario?.comentarioarts ?? 0) > 0) { <a [routerLink]="['/comentarioart/usuario', oPuntuacion()?.usuario?.id]" class="text-decoration-none">{{ oPuntuacion()?.usuario?.comentarioarts }}</a> } @else { 0 }</div>
+              <div class="col-7 fw-semibold small">
+                @if ((oPuntuacion()?.usuario?.comentarioarts ?? 0) > 0) {
+                  <a
+                    [routerLink]="['/comentarioart/usuario', oPuntuacion()?.usuario?.id]"
+                    class="text-decoration-none"
+                    >{{ oPuntuacion()?.usuario?.comentarioarts }}</a
+                  >
+                } @else {
+                  0
+                }
+              </div>
               <div class="col-5 text-muted small text-uppercase">Carritos</div>
-              <div class="col-7 fw-semibold small">@if ((oPuntuacion()?.usuario?.carritos ?? 0) > 0) { <a [routerLink]="['/carrito/usuario', oPuntuacion()?.usuario?.id]" class="text-decoration-none">{{ oPuntuacion()?.usuario?.carritos }}</a> } @else { 0 }</div>
+              <div class="col-7 fw-semibold small">
+                @if ((oPuntuacion()?.usuario?.carritos ?? 0) > 0) {
+                  <a
+                    [routerLink]="['/carrito/usuario', oPuntuacion()?.usuario?.id]"
+                    class="text-decoration-none"
+                    >{{ oPuntuacion()?.usuario?.carritos }}</a
+                  >
+                } @else {
+                  0
+                }
+              </div>
               <div class="col-5 text-muted small text-uppercase">Facturas</div>
-              <div class="col-7 fw-semibold small">@if ((oPuntuacion()?.usuario?.facturas ?? 0) > 0) { <a [routerLink]="['/factura/usuario', oPuntuacion()?.usuario?.id]" class="text-decoration-none">{{ oPuntuacion()?.usuario?.facturas }}</a> } @else { 0 }</div>
+              <div class="col-7 fw-semibold small">
+                @if ((oPuntuacion()?.usuario?.facturas ?? 0) > 0) {
+                  <a
+                    [routerLink]="['/factura/usuario', oPuntuacion()?.usuario?.id]"
+                    class="text-decoration-none"
+                    >{{ oPuntuacion()?.usuario?.facturas }}</a
+                  >
+                } @else {
+                  0
+                }
+              </div>
               <div class="col-5 text-muted small text-uppercase">Equipos entren.</div>
-              <div class="col-7 fw-semibold small">@if ((oPuntuacion()?.usuario?.equiposentrenados ?? 0) > 0) { <a [routerLink]="['/equipo/usuario', oPuntuacion()?.usuario?.id]" class="text-decoration-none">{{ oPuntuacion()?.usuario?.equiposentrenados }}</a> } @else { 0 }</div>
+              <div class="col-7 fw-semibold small">
+                @if ((oPuntuacion()?.usuario?.equiposentrenados ?? 0) > 0) {
+                  <a
+                    [routerLink]="['/equipo/usuario', oPuntuacion()?.usuario?.id]"
+                    class="text-decoration-none"
+                    >{{ oPuntuacion()?.usuario?.equiposentrenados }}</a
+                  >
+                } @else {
+                  0
+                }
+              </div>
               <div class="col-5 text-muted small text-uppercase">Jugadores</div>
-              <div class="col-7 fw-semibold small">@if ((oPuntuacion()?.usuario?.jugadores ?? 0) > 0) { <a [routerLink]="['/jugador/usuario', oPuntuacion()?.usuario?.id]" class="text-decoration-none">{{ oPuntuacion()?.usuario?.jugadores }}</a> } @else { 0 }</div>
+              <div class="col-7 fw-semibold small">
+                @if ((oPuntuacion()?.usuario?.jugadores ?? 0) > 0) {
+                  <a
+                    [routerLink]="['/jugador/usuario', oPuntuacion()?.usuario?.id]"
+                    class="text-decoration-none"
+                    >{{ oPuntuacion()?.usuario?.jugadores }}</a
+                  >
+                } @else {
+                  0
+                }
+              </div>
             </div>
             <div class="card border-start border-3 border-success mt-3">
               <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10">
@@ -149,7 +286,17 @@
                   <div class="col-5 text-muted small text-uppercase">Descripción</div>
                   <div class="col-7 fw-semibold small">{{ oPuntuacion()?.usuario?.tipousuario?.descripcion }}</div>
                   <div class="col-5 text-muted small text-uppercase">Usuarios</div>
-                  <div class="col-7 fw-semibold small">@if ((oPuntuacion()?.usuario?.tipousuario?.usuarios ?? 0) > 0) { <a [routerLink]="['/usuario/tipousuario', oPuntuacion()?.usuario?.tipousuario?.id]" class="text-decoration-none">{{ oPuntuacion()?.usuario?.tipousuario?.usuarios }}</a> } @else { 0 }</div>
+                  <div class="col-7 fw-semibold small">
+                    @if ((oPuntuacion()?.usuario?.tipousuario?.usuarios ?? 0) > 0) {
+                      <a
+                        [routerLink]="['/usuario/tipousuario', oPuntuacion()?.usuario?.tipousuario?.id]"
+                        class="text-decoration-none"
+                        >{{ oPuntuacion()?.usuario?.tipousuario?.usuarios }}</a
+                      >
+                    } @else {
+                      0
+                    }
+                  </div>
                 </div>
               </div>
             </div>
@@ -169,7 +316,17 @@
                   <div class="col-5 text-muted small text-uppercase">Descripción</div>
                   <div class="col-7 fw-semibold small">{{ oPuntuacion()?.usuario?.rolusuario?.descripcion }}</div>
                   <div class="col-5 text-muted small text-uppercase">Usuarios</div>
-                  <div class="col-7 fw-semibold small">@if ((oPuntuacion()?.usuario?.rolusuario?.usuarios ?? 0) > 0) { <a [routerLink]="['/usuario/rol', oPuntuacion()?.usuario?.rolusuario?.id]" class="text-decoration-none">{{ oPuntuacion()?.usuario?.rolusuario?.usuarios }}</a> } @else { 0 }</div>
+                  <div class="col-7 fw-semibold small">
+                    @if ((oPuntuacion()?.usuario?.rolusuario?.usuarios ?? 0) > 0) {
+                      <a
+                        [routerLink]="['/usuario/rol', oPuntuacion()?.usuario?.rolusuario?.id]"
+                        class="text-decoration-none"
+                        >{{ oPuntuacion()?.usuario?.rolusuario?.usuarios }}</a
+                      >
+                    } @else {
+                      0
+                    }
+                  </div>
                 </div>
               </div>
             </div>
@@ -195,13 +352,53 @@
                   <div class="col-5 text-muted small text-uppercase">Fecha alta</div>
                   <div class="col-7 fw-semibold small">{{ oPuntuacion()?.usuario?.club?.fechaAlta | datetime }}</div>
                   <div class="col-5 text-muted small text-uppercase">Temporadas</div>
-                  <div class="col-7 fw-semibold small">@if ((oPuntuacion()?.usuario?.club?.temporadas ?? 0) > 0) { <a [routerLink]="['/temporada/club', oPuntuacion()?.usuario?.club?.id]" class="text-decoration-none">{{ oPuntuacion()?.usuario?.club?.temporadas }}</a> } @else { 0 }</div>
+                  <div class="col-7 fw-semibold small">
+                    @if ((oPuntuacion()?.usuario?.club?.temporadas ?? 0) > 0) {
+                      <a
+                        [routerLink]="['/temporada/club', oPuntuacion()?.usuario?.club?.id]"
+                        class="text-decoration-none"
+                        >{{ oPuntuacion()?.usuario?.club?.temporadas }}</a
+                      >
+                    } @else {
+                      0
+                    }
+                  </div>
                   <div class="col-5 text-muted small text-uppercase">Noticias</div>
-                  <div class="col-7 fw-semibold small">@if ((oPuntuacion()?.usuario?.club?.noticias ?? 0) > 0) { <a [routerLink]="['/noticia/club', oPuntuacion()?.usuario?.club?.id]" class="text-decoration-none">{{ oPuntuacion()?.usuario?.club?.noticias }}</a> } @else { 0 }</div>
+                  <div class="col-7 fw-semibold small">
+                    @if ((oPuntuacion()?.usuario?.club?.noticias ?? 0) > 0) {
+                      <a
+                        [routerLink]="['/noticia/club', oPuntuacion()?.usuario?.club?.id]"
+                        class="text-decoration-none"
+                        >{{ oPuntuacion()?.usuario?.club?.noticias }}</a
+                      >
+                    } @else {
+                      0
+                    }
+                  </div>
                   <div class="col-5 text-muted small text-uppercase">Tipos artículo</div>
-                  <div class="col-7 fw-semibold small">@if ((oPuntuacion()?.usuario?.club?.tipoarticulos ?? 0) > 0) { <a [routerLink]="['/tipoarticulo/club', oPuntuacion()?.usuario?.club?.id]" class="text-decoration-none">{{ oPuntuacion()?.usuario?.club?.tipoarticulos }}</a> } @else { 0 }</div>
+                  <div class="col-7 fw-semibold small">
+                    @if ((oPuntuacion()?.usuario?.club?.tipoarticulos ?? 0) > 0) {
+                      <a
+                        [routerLink]="['/tipoarticulo/club', oPuntuacion()?.usuario?.club?.id]"
+                        class="text-decoration-none"
+                        >{{ oPuntuacion()?.usuario?.club?.tipoarticulos }}</a
+                      >
+                    } @else {
+                      0
+                    }
+                  </div>
                   <div class="col-5 text-muted small text-uppercase">Usuarios</div>
-                  <div class="col-7 fw-semibold small">@if ((oPuntuacion()?.usuario?.club?.usuarios ?? 0) > 0) { <a [routerLink]="['/usuario/club', oPuntuacion()?.usuario?.club?.id]" class="text-decoration-none">{{ oPuntuacion()?.usuario?.club?.usuarios }}</a> } @else { 0 }</div>
+                  <div class="col-7 fw-semibold small">
+                    @if ((oPuntuacion()?.usuario?.club?.usuarios ?? 0) > 0) {
+                      <a
+                        [routerLink]="['/usuario/club', oPuntuacion()?.usuario?.club?.id]"
+                        class="text-decoration-none"
+                        >{{ oPuntuacion()?.usuario?.club?.usuarios }}</a
+                      >
+                    } @else {
+                      0
+                    }
+                  </div>
                 </div>
               </div>
             </div>

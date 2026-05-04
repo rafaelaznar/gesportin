@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 border rounded bg-light p-2 mb-3">
     <div>
-      <div class="text-uppercase small text-muted fw-semibold">Artículos</div>
+      <div class="text-uppercase small text-muted fw-semibold fs-2">Artículos</div>
       <div class="fw-bold">Detalle de artículo</div>
       <div class="text-muted small">Panel administrativo</div>
     </div>
@@ -12,7 +12,9 @@
 
   @if (loading()) {
     <div class="text-center py-4">
-      <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Cargando...</span></div>
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando...</span>
+      </div>
       <p class="text-muted small mt-2 mb-0">Cargando detalle...</p>
     </div>
   }
@@ -41,7 +43,49 @@
           <div class="col-5 text-muted small text-uppercase">Descuento</div>
           <div class="col-7 fw-semibold small">{{ oArticulo()?.descuento | number:'1.2-2' }}%</div>
           <div class="col-5 text-muted small text-uppercase">Imagen</div>
-          <div class="col-7 fw-semibold small">@if (oArticulo()?.imagen) { <img [src]="'data:image/jpeg;base64,' + oArticulo()?.imagen" class="img-thumbnail" style="max-height:80px" alt="artículo"/> } @else { Sin imagen }</div>
+          <div class="col-7 fw-semibold small">
+            @if (oArticulo()?.imagen) {
+              <img [src]="'data:image/jpeg;base64,' + oArticulo()?.imagen" class="img-thumbnail" style="max-height: 80px" alt="artículo"/>
+            } @else {
+              Sin imagen
+            }
+          </div>
+          <div class="col-5 text-muted small text-uppercase">Com. artículos</div>
+          <div class="col-7 fw-semibold small">
+            @if ((oArticulo()?.comentarioarts ?? 0) > 0) {
+              <a
+                [routerLink]="['/comentarioart/articulo', oArticulo()?.id]"
+                class="text-decoration-none"
+                >{{ oArticulo()?.comentarioarts }}</a
+              >
+            } @else {
+              0
+            }
+          </div>
+          <div class="col-5 text-muted small text-uppercase">Compras</div>
+          <div class="col-7 fw-semibold small">
+            @if ((oArticulo()?.compras ?? 0) > 0) {
+              <a
+                [routerLink]="['/compra/articulo', oArticulo()?.id]"
+                class="text-decoration-none"
+                >{{ oArticulo()?.compras }}</a
+              >
+            } @else {
+              0
+            }
+          </div>
+          <div class="col-5 text-muted small text-uppercase">Carritos</div>
+          <div class="col-7 fw-semibold small">
+            @if ((oArticulo()?.carritos ?? 0) > 0) {
+              <a
+                [routerLink]="['/carrito/articulo', oArticulo()?.id]"
+                class="text-decoration-none"
+                >{{ oArticulo()?.carritos }}</a
+              >
+            } @else {
+              0
+            }
+          </div>
         </div>
         <div class="card border-start border-3 border-info mt-3">
           <div class="card-header py-1 d-flex align-items-center gap-2 bg-info bg-opacity-10">
@@ -59,7 +103,17 @@
               <div class="col-5 text-muted small text-uppercase">Descripción</div>
               <div class="col-7 fw-semibold small">{{ oArticulo()?.tipoarticulo?.descripcion }}</div>
               <div class="col-5 text-muted small text-uppercase">Artículos</div>
-              <div class="col-7 fw-semibold small">@if ((oArticulo()?.tipoarticulo?.articulos ?? 0) > 0) { <a [routerLink]="['/articulo/tipoarticulo', oArticulo()?.tipoarticulo?.id]" class="text-decoration-none">{{ oArticulo()?.tipoarticulo?.articulos }}</a> } @else { 0 }</div>
+              <div class="col-7 fw-semibold small">
+                @if ((oArticulo()?.tipoarticulo?.articulos ?? 0) > 0) {
+                  <a
+                    [routerLink]="['/articulo/tipoarticulo', oArticulo()?.tipoarticulo?.id]"
+                    class="text-decoration-none"
+                    >{{ oArticulo()?.tipoarticulo?.articulos }}</a
+                  >
+                } @else {
+                  0
+                }
+              </div>
             </div>
             <div class="card border-start border-3 border-success mt-3">
               <div class="card-header py-1 d-flex align-items-center gap-2 bg-success bg-opacity-10">
@@ -83,48 +137,53 @@
                   <div class="col-5 text-muted small text-uppercase">Fecha alta</div>
                   <div class="col-7 fw-semibold small">{{ oArticulo()?.tipoarticulo?.club?.fechaAlta | datetime }}</div>
                   <div class="col-5 text-muted small text-uppercase">Temporadas</div>
-                  <div class="col-7 fw-semibold small">@if ((oArticulo()?.tipoarticulo?.club?.temporadas ?? 0) > 0) { <a [routerLink]="['/temporada/club', oArticulo()?.tipoarticulo?.club?.id]" class="text-decoration-none">{{ oArticulo()?.tipoarticulo?.club?.temporadas }}</a> } @else { 0 }</div>
+                  <div class="col-7 fw-semibold small">
+                    @if ((oArticulo()?.tipoarticulo?.club?.temporadas ?? 0) > 0) {
+                      <a
+                        [routerLink]="['/temporada/club', oArticulo()?.tipoarticulo?.club?.id]"
+                        class="text-decoration-none"
+                        >{{ oArticulo()?.tipoarticulo?.club?.temporadas }}</a
+                      >
+                    } @else {
+                      0
+                    }
+                  </div>
                   <div class="col-5 text-muted small text-uppercase">Noticias</div>
-                  <div class="col-7 fw-semibold small">@if ((oArticulo()?.tipoarticulo?.club?.noticias ?? 0) > 0) { <a [routerLink]="['/noticia/club', oArticulo()?.tipoarticulo?.club?.id]" class="text-decoration-none">{{ oArticulo()?.tipoarticulo?.club?.noticias }}</a> } @else { 0 }</div>
+                  <div class="col-7 fw-semibold small">
+                    @if ((oArticulo()?.tipoarticulo?.club?.noticias ?? 0) > 0) {
+                      <a
+                        [routerLink]="['/noticia/club', oArticulo()?.tipoarticulo?.club?.id]"
+                        class="text-decoration-none"
+                        >{{ oArticulo()?.tipoarticulo?.club?.noticias }}</a
+                      >
+                    } @else {
+                      0
+                    }
+                  </div>
                   <div class="col-5 text-muted small text-uppercase">Tipos artículo</div>
-                  <div class="col-7 fw-semibold small">@if ((oArticulo()?.tipoarticulo?.club?.tipoarticulos ?? 0) > 0) { <a [routerLink]="['/tipoarticulo/club', oArticulo()?.tipoarticulo?.club?.id]" class="text-decoration-none">{{ oArticulo()?.tipoarticulo?.club?.tipoarticulos }}</a> } @else { 0 }</div>
+                  <div class="col-7 fw-semibold small">
+                    @if ((oArticulo()?.tipoarticulo?.club?.tipoarticulos ?? 0) > 0) {
+                      <a
+                        [routerLink]="['/tipoarticulo/club', oArticulo()?.tipoarticulo?.club?.id]"
+                        class="text-decoration-none"
+                        >{{ oArticulo()?.tipoarticulo?.club?.tipoarticulos }}</a
+                      >
+                    } @else {
+                      0
+                    }
+                  </div>
                   <div class="col-5 text-muted small text-uppercase">Usuarios</div>
-                  <div class="col-7 fw-semibold small">@if ((oArticulo()?.tipoarticulo?.club?.usuarios ?? 0) > 0) { <a [routerLink]="['/usuario/club', oArticulo()?.tipoarticulo?.club?.id]" class="text-decoration-none">{{ oArticulo()?.tipoarticulo?.club?.usuarios }}</a> } @else { 0 }</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="border-top mt-3 pt-3">
-          <div class="text-uppercase small text-muted fw-semibold mb-2"><i class="bi bi-bar-chart-fill me-1"></i>Contadores</div>
-          <div class="row g-2">
-            <div class="col-6 col-md-4 col-lg-3">
-              <div class="border rounded p-2 text-center bg-light">
-                <div class="text-muted small text-uppercase">Com. artículos</div>
-                <div class="fw-bold fs-5">
-                  @if ((oArticulo()?.comentarioarts ?? 0) > 0) {
-                    <a [routerLink]="['/comentarioart/articulo', oArticulo()?.id]" class="text-decoration-none">{{ oArticulo()?.comentarioarts }}</a>
-                  } @else { 0 }
-                </div>
-              </div>
-            </div>
-            <div class="col-6 col-md-4 col-lg-3">
-              <div class="border rounded p-2 text-center bg-light">
-                <div class="text-muted small text-uppercase">Compras</div>
-                <div class="fw-bold fs-5">
-                  @if ((oArticulo()?.compras ?? 0) > 0) {
-                    <a [routerLink]="['/compra/articulo', oArticulo()?.id]" class="text-decoration-none">{{ oArticulo()?.compras }}</a>
-                  } @else { 0 }
-                </div>
-              </div>
-            </div>
-            <div class="col-6 col-md-4 col-lg-3">
-              <div class="border rounded p-2 text-center bg-light">
-                <div class="text-muted small text-uppercase">Carritos</div>
-                <div class="fw-bold fs-5">
-                  @if ((oArticulo()?.carritos ?? 0) > 0) {
-                    <a [routerLink]="['/carrito/articulo', oArticulo()?.id]" class="text-decoration-none">{{ oArticulo()?.carritos }}</a>
-                  } @else { 0 }
+                  <div class="col-7 fw-semibold small">
+                    @if ((oArticulo()?.tipoarticulo?.club?.usuarios ?? 0) > 0) {
+                      <a
+                        [routerLink]="['/usuario/club', oArticulo()?.tipoarticulo?.club?.id]"
+                        class="text-decoration-none"
+                        >{{ oArticulo()?.tipoarticulo?.club?.usuarios }}</a
+                      >
+                    } @else {
+                      0
+                    }
+                  </div>
                 </div>
               </div>
             </div>

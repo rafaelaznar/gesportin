@@ -81,15 +81,27 @@ export class LoginComponent implements OnInit {
             this.notificacion.success('Login successful');
             if (this.oSessionService.isUser()) {
               this.router.navigate(['/mi']);
+            } else if (this.oSessionService.isClubAdmin()) {
+              this.router.navigate(['/club/teamadmin']);
             } else {
-              this.router.navigate(['']);
+              this.router.navigate(['/admin']);
             }
           },
           error: (err: HttpErrorResponse) => {
-            // actualizar estado mediante signals
             this.submitting.set(false);
-            this.error.set(err.error?.message || err.statusText || 'Login failed');
-            this.notificacion.error('Login failed: ' + (err.error?.message || err.statusText));
+            if (err.status === 0) {
+              // El interceptor ya muestra la notificación global; solo actualizamos el inline.
+              this.error.set('Backend not alive');
+            } else if (err.status === 503) {
+              // El interceptor ya muestra la notificación global; solo actualizamos el inline.
+              this.error.set("Backend can't access to database");
+            } else if (err.status === 403) {
+              this.error.set('Auth error');
+              this.notificacion.error('Usuario o contraseña incorrectos.', 'Auth error');
+            } else {
+              this.error.set(err.error?.message || err.statusText || 'Login failed');
+              this.notificacion.error(err.error?.message || err.statusText || 'Login failed');
+            }
           },
         });
       })
