@@ -11,6 +11,7 @@ import { CategoriaService } from '../../../../service/categoria';
 import { TemporadaService } from '../../../../service/temporada';
 import { Paginacion } from '../../../shared/paginacion/paginacion';
 import { BotoneraActionsPlist } from '../../../shared/botonera-actions-plist/botonera-actions-plist';
+import { ITemporada } from '../../../../model/temporada';
 
 @Component({
   selector: 'app-categoria-teamadmin-plist',
@@ -39,12 +40,17 @@ export class CategoriaTeamadminPlist {
   private oTemporadaService = inject(TemporadaService);
   private modalRef = inject(MODAL_REF, { optional: true });
 
+  oTemporada: ITemporada | null = null;
+
   ngOnInit(): void {
     if (this.temporada > 0) {
       this.oTemporadaService.get(this.temporada).subscribe({
-        next: (t) => {
+        next: (t: ITemporada | null) => {
+          this.oTemporada = t;
         },
-        error: () => {},
+        error: (e: HttpErrorResponse) => {
+          console.error(e);
+        },
       });
     }
     this.searchSubscription = this.searchSubject
