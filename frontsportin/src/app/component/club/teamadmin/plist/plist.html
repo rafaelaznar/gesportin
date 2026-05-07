@@ -32,103 +32,125 @@
           <strong class="text-truncate">{{ oClub.nombre }}</strong>
         </div>
         <div class="card-body pb-2">
-          <ul class="list-unstyled mb-3">
-            <!-- Espacio para la imagen del club tamaño fijo oClub.imagen -->
-            <li class="mb-1 d-flex justify-content-center">
-              <img
-                src="no-img.jpg"
-                [alt]="oClub.nombre"
-                class="img-fluid"
-                style="height: 200px; width: 200px; object-fit: cover; border-radius: 4px"
-              />
-            </li>
+          <!-- Imagen del club centrada -->
+          <div class="d-flex justify-content-center mb-3">
+            <img
+              src="no-img.jpg"
+              [alt]="oClub.nombre"
+              class="img-fluid"
+              style="height: 180px; width: 180px; object-fit: cover; border-radius: 8px; border: 1px solid #dee2e6"
+            />
+          </div>
 
-            <li class="mb-1">
-              <i class="bi bi-hash text-muted me-1"></i>
-              <span class="text-muted">ID:</span> {{ oClub.id }}
-            </li>
-            <li class="mb-1">
-              <span class="text-muted">Dirección:</span>
-              {{ oClub.direccion }}
-            </li>
-            <li class="mb-1">
-              <span class="text-muted">Teléfono:</span>
-              {{ oClub.telefono }}
-            </li>
-            <li class="mb-1">
-              <span class="text-muted">Fecha de alta:</span>
-              {{ oClub.fechaAlta | date: 'dd/MM/yyyy' }}
-            </li>
-          </ul>
-          <!-- Contadores con enlaces -->
-          <div class="d-flex flex-wrap gap-2">
-            @if (oClub.temporadas === 0) {
-              <a
-                [routerLink]="['/temporada/teamadmin/new']"
-                class="badge big-badge bg-warning text-dark text-decoration-none"
-                title="Crear primera temporada"
-              >
-                <i class="bi bi-plus-circle me-1"></i>0 temporadas
-              </a>
-            } @else {
-              <a
-                [routerLink]="['/temporada/teamadmin/club', oClub.id]"
-                class="badge big-badge bg-primary text-decoration-none"
-              >
-                <i class="bi bi-calendar me-1"></i>{{ oClub.temporadas }} temporadas
-              </a>
-            }
+          <!-- Datos del club en un recuadro centrado -->
+          <div class="p-3 mb-3 bg-light rounded border mx-auto" style="max-width: 350px;">
+            <ul class="list-unstyled mb-0 text-center">
+              <li class="mb-1">
+                <i class="bi bi-hash text-muted me-1"></i>
+                <span class="text-muted">ID:</span> {{ oClub.id }}
+              </li>
+              <li class="mb-1">
+                <span class="text-muted">Dirección:</span>
+                {{ oClub.direccion }}
+              </li>
+              <li class="mb-1">
+                <span class="text-muted">Teléfono:</span>
+                {{ oClub.telefono }}
+              </li>
+              <li class="mb-1">
+                <span class="text-muted">Fecha de alta:</span>
+                {{ oClub.fechaAlta | date: 'dd/MM/yyyy' }}
+              </li>
+            </ul>
+          </div>
 
-            @if (oClub.noticias === 0) {
-              <a
-                [routerLink]="['/noticia/teamadmin/new']"
-                class="badge big-badge bg-warning text-dark text-decoration-none"
-                title="Crear primera noticia"
-              >
-                <i class="bi bi-plus-circle me-1"></i>0 noticias
-              </a>
-            } @else {
-              <a
-                [routerLink]="['/noticia/teamadmin/club', oClub.id]"
-                class="badge big-badge bg-primary text-decoration-none"
-              >
-                <i class="bi bi-newspaper me-1"></i>{{ oClub.noticias }} noticias
-              </a>
-            }
+          <!-- Contadores con enlaces como 4 cuadrados en línea -->
+          <div class="row row-cols-4 g-2 mb-3">
+            
+            <!-- Gestión del club (ROJO) -->
+            <div class="col">
+              @if (oClub.temporadas === 0) {
+                <a [routerLink]="['/temporada/teamadmin/new']" class="d-flex flex-column align-items-center justify-content-center bg-danger text-white text-decoration-none rounded p-1 h-100 text-center shadow-sm" style="min-height: 80px;" title="Crear primera temporada">
+                  <i class="bi bi-calendar mb-1"></i>
+                  <span style="font-size: 0.6rem; font-weight: bold; line-height: 1">Gestión club</span>
+                  <div class="mt-1">
+                    <span class="badge rounded-pill bg-white text-danger" style="font-size: 0.7rem; padding: 0.25em 0.5em;">0</span>
+                  </div>
+                </a>
+              } @else {
+                <a [routerLink]="['/temporada/teamadmin/club', oClub.id]" class="d-flex flex-column align-items-center justify-content-center bg-danger text-white text-decoration-none rounded p-1 h-100 text-center shadow-sm" style="min-height: 80px;">
+                  <i class="bi bi-calendar mb-1"></i>
+                  <span style="font-size: 0.6rem; font-weight: bold; line-height: 1">Gestión club</span>
+                  <div class="mt-1">
+                    <span class="badge rounded-pill bg-white text-danger" style="font-size: 0.7rem; padding: 0.25em 0.5em;">{{ oClub.temporadas }}</span>
+                  </div>
+                </a>
+              }
+            </div>
 
-            @if (oClub.tipoarticulos === 0) {
-              <a
-                [routerLink]="['/tipoarticulo/teamadmin/new']"
-                class="badge big-badge bg-warning text-dark text-decoration-none"
-                title="Crear primer tipo de artículo"
-              >
-                <i class="bi bi-plus-circle me-1"></i>0 tipos art.
-              </a>
-            } @else {
-              <a
-                [routerLink]="['/tipoarticulo/teamadmin/club', oClub.id]"
-                class="badge big-badge bg-primary text-decoration-none"
-              >
-                <i class="bi bi-bookmark-fill me-1"></i>{{ oClub.tipoarticulos }} tipos art.
-              </a>
-            }
+            <!-- Comunicaciones (AZUL) -->
+            <div class="col">
+              @if (oClub.noticias === 0) {
+                <a [routerLink]="['/noticia/teamadmin/new']" class="d-flex flex-column align-items-center justify-content-center bg-primary text-white text-decoration-none rounded p-1 h-100 text-center shadow-sm" style="min-height: 80px;" title="Crear primera noticia">
+                  <i class="bi bi-newspaper mb-1"></i>
+                  <span style="font-size: 0.6rem; font-weight: bold; line-height: 1">Comun.</span>
+                  <div class="mt-1">
+                    <span class="badge rounded-pill bg-white text-primary" style="font-size: 0.7rem; padding: 0.25em 0.5em;">0</span>
+                  </div>
+                </a>
+              } @else {
+                <a [routerLink]="['/noticia/teamadmin/club', oClub.id]" class="d-flex flex-column align-items-center justify-content-center bg-primary text-white text-decoration-none rounded p-1 h-100 text-center shadow-sm" style="min-height: 80px;">
+                  <i class="bi bi-newspaper mb-1"></i>
+                  <span style="font-size: 0.6rem; font-weight: bold; line-height: 1">Comun.</span>
+                  <div class="mt-1">
+                    <span class="badge rounded-pill bg-white text-primary" style="font-size: 0.7rem; padding: 0.25em 0.5em;">{{ oClub.noticias }}</span>
+                  </div>
+                </a>
+              }
+            </div>
 
-            @if (oClub.usuarios === 0) {
-              <a
-                [routerLink]="['/usuario/teamadmin/new']"
-                class="badge big-badge bg-warning text-dark text-decoration-none"
-                title="Crear primer usuario"
-              >
-                <i class="bi bi-plus-circle me-1"></i>0 usuarios
-              </a>
-            } @else {
-              <a
-                [routerLink]="['/usuario/teamadmin/club', oClub.id]"
-                class="badge big-badge bg-primary text-decoration-none"
-              >
-                <i class="bi bi-people me-1"></i>{{ oClub.usuarios }} usuarios
-              </a>
-            }
+            <!-- Tienda (VERDE) -->
+            <div class="col">
+              @if (oClub.tipoarticulos === 0) {
+                <a [routerLink]="['/tipoarticulo/teamadmin/new']" class="d-flex flex-column align-items-center justify-content-center bg-success text-white text-decoration-none rounded p-1 h-100 text-center shadow-sm" style="min-height: 80px;" title="Crear primer tipo de artículo">
+                  <i class="bi bi-cart-fill mb-1"></i>
+                  <span style="font-size: 0.6rem; font-weight: bold; line-height: 1">Tienda</span>
+                  <div class="mt-1">
+                    <span class="badge rounded-pill bg-white text-success" style="font-size: 0.7rem; padding: 0.25em 0.5em;">0</span>
+                  </div>
+                </a>
+              } @else {
+                <a [routerLink]="['/tipoarticulo/teamadmin/club', oClub.id]" class="d-flex flex-column align-items-center justify-content-center bg-success text-white text-decoration-none rounded p-1 h-100 text-center shadow-sm" style="min-height: 80px;">
+                  <i class="bi bi-cart-fill mb-1"></i>
+                  <span style="font-size: 0.6rem; font-weight: bold; line-height: 1">Tienda</span>
+                  <div class="mt-1">
+                    <span class="badge rounded-pill bg-white text-success" style="font-size: 0.7rem; padding: 0.25em 0.5em;">{{ oClub.tipoarticulos }}</span>
+                  </div>
+                </a>
+              }
+            </div>
+
+            <!-- Miembros (AMARILLO) -->
+            <div class="col">
+              @if (oClub.usuarios === 0) {
+                <a [routerLink]="['/usuario/teamadmin/new']" class="d-flex flex-column align-items-center justify-content-center bg-warning text-dark text-decoration-none rounded p-1 h-100 text-center shadow-sm" style="min-height: 80px;" title="Crear primer usuario">
+                  <i class="bi bi-people mb-1"></i>
+                  <span style="font-size: 0.6rem; font-weight: bold; line-height: 1">Miembros</span>
+                  <div class="mt-1">
+                    <span class="badge rounded-pill bg-white text-dark" style="font-size: 0.7rem; padding: 0.25em 0.5em;">0</span>
+                  </div>
+                </a>
+              } @else {
+                <a [routerLink]="['/usuario/teamadmin/club', oClub.id]" class="d-flex flex-column align-items-center justify-content-center bg-warning text-dark text-decoration-none rounded p-1 h-100 text-center shadow-sm" style="min-height: 80px;">
+                  <i class="bi bi-people mb-1"></i>
+                  <span style="font-size: 0.6rem; font-weight: bold; line-height: 1">Miembros</span>
+                  <div class="mt-1">
+                    <span class="badge rounded-pill bg-white text-dark" style="font-size: 0.7rem; padding: 0.25em 0.5em;">{{ oClub.usuarios }}</span>
+                  </div>
+                </a>
+              }
+            </div>
+
           </div>
         </div>
         <!-- Botón para ver detalles del club -->
