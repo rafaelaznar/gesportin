@@ -1,3 +1,0 @@
-# Gestión deportiva
-
-License MIT
