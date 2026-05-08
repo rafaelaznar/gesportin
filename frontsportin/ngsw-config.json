@@ -3,7 +3,7 @@
   "index": "/index.html",
   "assetGroups": [
     {
-      "name": "app",
+      "name": "frontsportin",
       "installMode": "prefetch",
       "resources": {
         "files": [
@@ -28,17 +28,17 @@
     }
   ],
   "dataGroups": [
-  {
-    "name": "springboot-api",
-    "urls": [
-      "http://localhost:8089/api/**"
-    ],
-    "cacheConfig": {
-      "strategy": "freshness",
-      "maxSize": 100,
-      "maxAge": "1h",
-      "timeout": "5s"
+    {
+      "name": "gesportin",
+      "urls": [
+        "http://localhost:8089/**"
+      ],
+      "cacheConfig": {
+        "strategy": "freshness",
+        "maxSize": 100,
+        "maxAge": "1h",
+        "timeout": "5s"
+      }
     }
-  }
-]
+  ]
 }
