@@ -1,6 +1,6 @@
 {
-  "name": "frontsportin",
-  "short_name": "frontsportin",
+  "name": "Gesportin Proyecto DAW",
+  "short_name": "Gesportin",
   "display": "standalone",
   "scope": "./",
   "start_url": "./",
