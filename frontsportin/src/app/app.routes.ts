@@ -208,12 +208,14 @@ import { JugadorUsuarioEquipoPlistPage } from './page/jugador/usuario/equipo-pli
 import { AdminDataToolsPage } from './page/admin/data-tools/data-tools';
 import { UsuarioPerfilPage } from './page/usuario/perfil/perfil';
 import { DownloadApplication } from './page/download/download/download';
+import { Fallback } from './page/fallback/fallback/fallback';
 
 export const publicRoutes: Routes = [
   { path: '', component: LandingPage },
   { path: 'login', component: LoginComponent },
   { path: 'logout', component: Logout },
   { path: 'download', component: DownloadApplication },
+  { path: 'offline', component: Fallback },
 ];
 
 const protectedRoutes: Routes = [

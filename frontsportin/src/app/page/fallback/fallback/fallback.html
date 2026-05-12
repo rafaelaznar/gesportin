@@ -1,0 +1,21 @@
+<div class="fallback-container">
+  <div class="container my-5">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-6 col-lg-5">
+        <div class="card shadow-sm border-0 text-center p-5">
+          <div class="fallback-icon">
+            <i class="bi bi-wifi-off"></i>
+          </div>
+          <h2 class="fw-bold mb-2">Sin conexión</h2>
+          <p class="text-muted mb-4">
+            No hay conexión a Internet en este momento.<br />
+            Comprueba tu red e inténtalo de nuevo.
+          </p>
+          <button class="btn btn-primary btn-lg px-5" (click)="retry()">
+            <i class="bi bi-arrow-clockwise me-2"></i>Reintentar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
