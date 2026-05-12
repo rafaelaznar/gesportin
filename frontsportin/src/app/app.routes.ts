@@ -207,11 +207,13 @@ import { FacturaUsuarioPlistPage } from './page/factura/usuario/plist/plist';
 import { JugadorUsuarioEquipoPlistPage } from './page/jugador/usuario/equipo-plist/plist';
 import { AdminDataToolsPage } from './page/admin/data-tools/data-tools';
 import { UsuarioPerfilPage } from './page/usuario/perfil/perfil';
+import { DownloadApplication } from './page/download/download/download';
 
 export const publicRoutes: Routes = [
   { path: '', component: LandingPage },
   { path: 'login', component: LoginComponent },
   { path: 'logout', component: Logout },
+  { path: 'download', component: DownloadApplication },
 ];
 
 const protectedRoutes: Routes = [
@@ -518,5 +520,5 @@ export const routes: Routes = [
   { path: 'mi/cuotas', component: CuotaUsuarioPlistPage, canActivate: [UsuarioGuard] },
   { path: 'mi/tienda', component: CarritoUsuarioTiendaPage, canActivate: [UsuarioGuard] },
   { path: 'mi/facturas', component: FacturaUsuarioPlistPage, canActivate: [UsuarioGuard] },
-  ...protectedRoutes.map((r) => ({ ...r, canActivate: [AdminGuard] })), 
+  ...protectedRoutes.map((r) => ({ ...r, canActivate: [AdminGuard] })),
 ];

@@ -4,6 +4,7 @@
       <li class="nav-item">
         <a
           class="nav-link"
+          [class.nav-link-highlight]="item.highlight"
           [routerLink]="[item.route]"
           routerLinkActive="active"
           [routerLinkActiveOptions]="{ exact: item.route === '/' }"
