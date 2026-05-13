@@ -39,7 +39,6 @@ export class SidebarComponent {
 
     const items: any[] = [
       { label: 'Home', icon: 'house-fill', route: '/' },
-      { label: 'Descargar App', icon: 'download', route: '/download', highlight: true },
     ];
 
     if (isAdmin) {
