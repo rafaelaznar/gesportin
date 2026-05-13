@@ -1,8 +1,7 @@
-import { Component, DestroyRef, HostListener, inject, signal, WritableSignal } from '@angular/core';
+import { Component, DestroyRef, inject, signal, WritableSignal } from '@angular/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { IJWT } from '../../../model/token';
 import { SessionService } from '../../../service/session';
-import { PwaService } from '../../../service/pwa';
 import { filter } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
@@ -21,36 +20,6 @@ export class Menu {
   userName: WritableSignal<string> = signal('');
   userTypeName: WritableSignal<string> = signal('');
   private destroyRef = inject(DestroyRef);
-  private pwaService = inject(PwaService);
-  showInstallBtn: WritableSignal<boolean> = signal(false);
-  private deferredPrompt: any = null;
-
-  @HostListener('window:beforeinstallprompt', ['$event'])
-  onBeforeInstallPrompt(event: Event): void {
-    event.preventDefault();
-    this.deferredPrompt = event;
-    this.showInstallBtn.set(true);
-    // Guardar en PwaService para que la página /download pueda usarlo
-    this.pwaService.captureInstallPrompt(event);
-  }
-
-  @HostListener('window:appinstalled')
-  onAppInstalled(): void {
-    this.showInstallBtn.set(false);
-    this.deferredPrompt = null;
-    this.pwaService.installed.set(true);
-    this.pwaService.canInstall.set(false);
-  }
-
-  async installApp(): Promise<void> {
-    if (!this.deferredPrompt) return;
-    this.deferredPrompt.prompt();
-    const { outcome } = await this.deferredPrompt.userChoice;
-    if (outcome === 'accepted') {
-      this.showInstallBtn.set(false);
-    }
-    this.deferredPrompt = null;
-  }
 
   constructor(
     private oRouter: Router,
