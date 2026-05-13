@@ -207,7 +207,7 @@ import { FacturaUsuarioPlistPage } from './page/factura/usuario/plist/plist';
 import { JugadorUsuarioEquipoPlistPage } from './page/jugador/usuario/equipo-plist/plist';
 import { AdminDataToolsPage } from './page/admin/data-tools/data-tools';
 import { UsuarioPerfilPage } from './page/usuario/perfil/perfil';
-import { DownloadApplication } from './page/download/download/download';
+import { DownloadApplication } from './page/download/download';
 
 export const publicRoutes: Routes = [
   { path: '', component: LandingPage },

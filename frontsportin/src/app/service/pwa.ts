@@ -3,20 +3,26 @@ import { Injectable, signal } from '@angular/core';
 @Injectable({ providedIn: 'root' })
 export class PwaService {
   private deferredPrompt: any = null;
+  private readonly INSTALLED_KEY = 'pwa_installed';
 
-  /** true cuando el navegador ha disparado beforeinstallprompt (app instalable) */
   canInstall = signal(false);
 
-  /** true una vez que el usuario ha aceptado la instalación */
-  installed = signal(false);
+  installed = signal(
+    window.matchMedia('(display-mode: standalone)').matches ||
+    !!(navigator as any).standalone ||
+    localStorage.getItem('pwa_installed') === 'true'
+  );
 
-  /**
-   * Guardar el evento beforeinstallprompt para usarlo después.
-   * El llamador ya debe haber hecho event.preventDefault().
-   */
   captureInstallPrompt(event: Event): void {
     this.deferredPrompt = event;
     this.canInstall.set(true);
+  }
+
+  onAppInstalled(): void {
+    this.deferredPrompt = null;
+    this.canInstall.set(false);
+    localStorage.setItem(this.INSTALLED_KEY, 'true');
+    this.installed.set(true);
   }
 
   async promptInstall(): Promise<'accepted' | 'dismissed' | 'unavailable'> {
@@ -28,8 +34,10 @@ export class PwaService {
     this.deferredPrompt = null;
     this.canInstall.set(false);
     if (outcome === 'accepted') {
+      localStorage.setItem(this.INSTALLED_KEY, 'true');
       this.installed.set(true);
     }
     return outcome as 'accepted' | 'dismissed';
   }
 }
+

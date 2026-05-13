@@ -34,6 +34,11 @@ export class App {
     this.pwaService.captureInstallPrompt(event);
   }
 
+  @HostListener('window:appinstalled')
+  onAppInstalled(): void {
+    this.pwaService.onAppInstalled();
+  }
+
   constructor() {
     this.session.subjectLogin.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       setTimeout(() => {

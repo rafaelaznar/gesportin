@@ -2,6 +2,7 @@ import { Component, DestroyRef, inject, signal, WritableSignal } from '@angular/
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { IJWT } from '../../../model/token';
 import { SessionService } from '../../../service/session';
+import { PwaService } from '../../../service/pwa';
 import { filter } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
@@ -20,6 +21,7 @@ export class Menu {
   userName: WritableSignal<string> = signal('');
   userTypeName: WritableSignal<string> = signal('');
   private destroyRef = inject(DestroyRef);
+  pwa = inject(PwaService);
 
   constructor(
     private oRouter: Router,

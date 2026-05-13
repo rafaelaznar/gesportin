@@ -1,14 +1,16 @@
 <div class="ms-auto d-flex align-items-center pe-3 top-actions">
-  <div class="d-flex align-items-center ms-3">
+  @if (pwa.canInstall()) {
     <a
       [routerLink]="['/download']"
       class="btn btn-sm btn-outline-light d-inline-flex align-items-center nav-login-btn me-2"
       [class.active]="activeRoute.startsWith('/download')"
-      title="Descargar app"
+      title="Instalar app"
     >
       <i class="bi bi-download me-1"></i>
       <span class="d-none d-lg-inline">Instalar app</span>
     </a>
+  }
+  <div class="d-flex align-items-center ms-3">
     @if (!isSessionActive()) {
       <a
         [routerLink]="['/login']"

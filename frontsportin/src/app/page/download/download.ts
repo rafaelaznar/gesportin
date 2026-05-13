@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { PwaService } from '../../../service/pwa';
+import { PwaService } from '../../service/pwa';
 
 @Component({
   selector: 'app-download',
@@ -15,6 +15,3 @@ export class DownloadApplication {
     this.outcome = await this.pwa.promptInstall();
   }
 }
-
-
-
