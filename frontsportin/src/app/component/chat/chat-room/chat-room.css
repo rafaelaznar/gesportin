@@ -1,0 +1,12 @@
+.chat-room {
+  background: white;
+  border-radius: 8px;
+  height: calc(100vh - 140px);
+  min-height: 300px;
+}
+
+@media (max-width: 576px) {
+  .chat-room {
+    height: calc(100vh - 100px);
+  }
+}

@@ -47,6 +47,11 @@ public class JwtFilter implements Filter {
             String authToken = httpRequest.getHeader("Authorization");
             if (authToken != null && authToken.startsWith("Bearer ")) {
                 authToken = authToken.substring(7);
+            } else {
+                // Fallback para EventSource/SSE: el navegador no puede enviar cabeceras personalizadas
+                authToken = httpRequest.getParameter("token");
+            }
+            if (authToken != null) {
                 // debug
                 System.out.println("Method: " + httpRequest.getMethod());
                 System.out.println("URL: " + httpRequest.getRequestURL().toString());

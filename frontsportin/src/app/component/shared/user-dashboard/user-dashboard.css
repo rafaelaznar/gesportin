@@ -73,6 +73,7 @@
   color: inherit;
 }
 
+.ud-card--chat:hover      { border-color: #0d6efd; }
 .ud-card--news:hover      { border-color: #2e86c1; }
 .ud-card--teams:hover     { border-color: #1e8449; }
 .ud-card--fees:hover      { border-color: #d4ac0d; }
@@ -91,6 +92,7 @@
   font-size: 1.75rem;
 }
 
+.ud-card--chat      .ud-card-icon { background: #e8f0fe; color: #0d6efd; }
 .ud-card--news      .ud-card-icon { background: #eaf4fb; color: #2e86c1; }
 .ud-card--teams     .ud-card-icon { background: #eafaf1; color: #1e8449; }
 .ud-card--fees      .ud-card-icon { background: #fefbd8; color: #b7950b; }

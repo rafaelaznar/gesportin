@@ -1,0 +1,9 @@
+<div class="d-flex mb-2" [class.justify-content-end]="propio">
+  <div class="chat-bubble" [class.chat-bubble--propio]="propio" [class.chat-bubble--ajeno]="!propio">
+    @if (!propio) {
+      <div class="chat-bubble__autor">{{ mensaje.nombreUsuario }} {{ mensaje.apellido1Usuario }}</div>
+    }
+    <div class="chat-bubble__contenido">{{ mensaje.contenido }}</div>
+    <div class="chat-bubble__hora">{{ mensaje.fechaEnvio | date: 'HH:mm' }}</div>
+  </div>
+</div>

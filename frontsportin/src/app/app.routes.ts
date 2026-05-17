@@ -196,6 +196,7 @@ import { AdminGuard } from './guards/admin.guard';
 import { ClubAdminGuard } from './guards/club-admin.guard';
 import { UsuarioGuard } from './guards/usuario.guard';
 import { AuthGuard } from './guards/auth.guard';
+import { ChatClubPage } from './page/chat/club/club';
 import { MiHomePage } from './page/usuario/mi-home/mi-home';
 import { NoticiaUsuarioPlistPage } from './page/noticia/usuario/plist/plist';
 import { NoticiaUsuarioViewPage } from './page/noticia/usuario/view/view';
@@ -506,6 +507,8 @@ export const routes: Routes = [
   { path: 'factura/teamadmin/view/:id', component: FacturaTeamadminViewPage, canActivate: [ClubAdminGuard] },
   { path: 'factura/teamadmin/new', component: FacturaTeamadminNewPage, canActivate: [ClubAdminGuard] },
   { path: 'factura/teamadmin/edit/:id', component: FacturaTeamadminEditPage, canActivate: [ClubAdminGuard] },
+  // Chat (todos los usuarios autenticados)
+  { path: 'chat', component: ChatClubPage, canActivate: [AuthGuard] },
   // Perfil propio (todos los usuarios autenticados)
   { path: 'mi/perfil', component: UsuarioPerfilPage, canActivate: [AuthGuard] },
   // Usuario (perfil 3) routes

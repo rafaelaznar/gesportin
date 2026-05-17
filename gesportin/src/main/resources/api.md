@@ -373,6 +373,41 @@ Endpoints:
 
 ---
 
+## Chat por club (`/chat`)
+
+Módulo de mensajería en tiempo real, aislado por club. Todos los miembros del club pueden enviar y consultar mensajes; el admin global puede operar sobre cualquier club.
+
+### DTO de respuesta
+
+```json
+{
+  "id": 1,
+  "contenido": "Hola equipo",
+  "fechaEnvio": "2026-05-14T21:00:00",
+  "idClub": 3,
+  "idUsuario": 10,
+  "nombreUsuario": "Diego",
+  "apellido1Usuario": "García"
+}
+```
+
+### Endpoints REST
+
+| Método | Ruta | Body / Params | Respuesta |
+|--------|------|---------------|-----------|
+| `POST` | `/chat/mensaje` | `{ "contenido": "..." }` | `MensajeChatDTO` |
+| `GET`  | `/chat/club/{idClub}/mensajes` | `page`, `size`, `sort` (Pageable, default size=50) | `Page<MensajeChatDTO>` ordenada `fechaEnvio DESC` |
+| `GET`  | `/chat/club/{idClub}/count` | — | `Long` |
+| `GET`  | `/chat/club/{idClub}/stream` | — | `text/event-stream` (SSE) — stream continuo de `MensajeChatDTO` |
+
+**Reglas de autorización:**
+- `admin` (tipousuario=1): accede a cualquier club; puede indicar `idClub` en el body del POST.
+- `equipoAdmin`/`usuario` (tipousuario=2/3): solo su propio club; si intenta acceder a otro → `401 Unauthorized`.
+- Sin sesión activa en `POST /chat/mensaje` → `401 Unauthorized`.
+- SSE (`/stream`): el token JWT se pasa como query param `?token=<jwt>` (el navegador no admite cabeceras en `EventSource`).
+
+---
+
 ## Utilidades de datos
 - `POST /{recurso}/fill/{cantidad}`: rellena con datos aleatorios (cuando aplica, `GET /articulo/fill` crea 50 por defecto).
 - `DELETE /{recurso}/empty`: elimina todos los registros del recurso.

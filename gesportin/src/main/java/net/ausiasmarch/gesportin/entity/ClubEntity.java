@@ -68,7 +68,11 @@ public class ClubEntity {
     @OneToMany(mappedBy = "club", fetch = FetchType.LAZY)
     private List<UsuarioEntity> usuarios;
 
-   
+    @Getter(AccessLevel.NONE)
+    @OneToMany(mappedBy = "club", fetch = FetchType.LAZY)
+    private List<MensajeChatEntity> mensajesChat;
+
+
     public int getTemporadas() {
         return temporadas != null ? temporadas.size() : 0;
     }
@@ -83,8 +87,12 @@ public class ClubEntity {
         return tipoarticulos != null ? tipoarticulos.size() : 0;
     }
 
-   
+
     public int getUsuarios() {
         return usuarios != null ? usuarios.size() : 0;
+    }
+
+    public int getMensajesChat() {
+        return mensajesChat != null ? mensajesChat.size() : 0;
     }
 }

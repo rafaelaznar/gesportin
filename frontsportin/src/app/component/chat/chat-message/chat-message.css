@@ -1,0 +1,40 @@
+.chat-bubble {
+  max-width: 70%;
+  padding: 0.5rem 0.75rem;
+  border-radius: 12px;
+  word-break: break-word;
+}
+
+.chat-bubble--propio {
+  background-color: #0d6efd;
+  color: white;
+  border-bottom-right-radius: 2px;
+}
+
+.chat-bubble--ajeno {
+  background-color: #e9ecef;
+  color: #212529;
+  border-bottom-left-radius: 2px;
+}
+
+.chat-bubble__autor {
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-bottom: 2px;
+  color: #6c757d;
+}
+
+.chat-bubble--propio .chat-bubble__autor {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.chat-bubble__contenido {
+  font-size: 0.9rem;
+}
+
+.chat-bubble__hora {
+  font-size: 0.68rem;
+  opacity: 0.65;
+  text-align: right;
+  margin-top: 2px;
+}
