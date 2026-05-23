@@ -12,6 +12,7 @@ import { FacturaService } from '../../../../service/factura-service';
 import { BotoneraRpp } from '../../../shared/botonera-rpp/botonera-rpp';
 import { Paginacion } from '../../../shared/paginacion/paginacion';
 import { BotoneraActionsPlist } from '../../../shared/botonera-actions-plist/botonera-actions-plist';
+import { jsPDF } from "jspdf";
 
 @Component({
   standalone: true,
@@ -124,5 +125,111 @@ export class FacturaAdminPlist {
 
   onSelect(factura: IFactura): void {
     this.modalRef?.close(factura);
+  }
+
+  exportarPDF() {
+    const total = this.totalRecords(); // Cuenta el total de facturas que hay registradas
+    
+    if (total === 0) {
+      alert("No hay facturas disponibles para exportar.");
+      return;
+    }
+
+    this.facturaService
+      .getPage(
+        0,
+        total,
+        this.orderField(),
+        this.orderDirection(),
+        this.id_usuario ?? 0,
+      )
+      .subscribe({
+        next: (data) => {
+          const allFacturas = data.content; // Creamos un array con todas las facturas
+          
+          const doc = new jsPDF({
+            orientation: 'p',
+            unit: 'mm',
+            format: 'a4'
+          });
+
+          // ESTILO
+          doc.setFillColor(33, 37, 41);
+          doc.rect(0, 0, 210, 30, 'F');
+
+          doc.setTextColor(255, 255, 255);
+          doc.setFont("Helvetica", "bold");
+          doc.setFontSize(18);
+          doc.text("GESPORTÍN - CONTROL DE FACTURACIÓN", 14, 20);
+
+          doc.setTextColor(40, 40, 40);
+          doc.setFontSize(10);
+          doc.setFont("Helvetica", "normal");
+          const fechaActual = new Date().toLocaleDateString('es-ES', {
+            year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'
+          });
+          doc.text(`Fecha: ${fechaActual}`, 14, 40);
+          doc.text(`Total de registros exportados: ${total}`, 14, 45);
+
+          doc.setFont("Helvetica", "bold");
+          doc.setFontSize(11);
+          doc.setFillColor(230, 230, 230);
+          doc.rect(14, 52, 182, 8, 'F');
+          
+          doc.text("ID", 18, 57);
+          doc.text("Fecha", 35, 57);
+          doc.text("Usuario", 95, 57);
+
+          doc.setDrawColor(150, 150, 150);
+          doc.line(14, 60, 196, 60);
+
+          doc.setFont("Helvetica", "normal");
+          doc.setFontSize(10);
+          let y = 67;
+
+          allFacturas.forEach((factura, index) => {
+
+            // Aquí controlamos el salto de página
+            if (y > 275) {
+              doc.addPage();
+              y = 25;
+              
+              // Repetimos la cabecera en la nueva página
+              doc.setFont("Helvetica", "bold");
+              doc.setFillColor(230, 230, 230);
+              doc.rect(14, 12, 182, 8, 'F');
+              doc.text("ID", 18, 17);
+              doc.text("Fecha", 35, 17);
+              doc.text("Usuario", 95, 17);
+              doc.setDrawColor(150, 150, 150);
+              doc.line(14, 20, 196, 20);
+              doc.setFont("Helvetica", "normal");
+              y = 27;
+            }
+
+            if (index % 2 === 0) {
+              doc.setFillColor(248, 249, 250);
+              doc.rect(14, y - 5, 182, 8, 'F');
+            }
+
+            doc.text(factura.id.toString(), 18, y);
+            doc.text(factura.fecha || 'Sin fecha', 35, y);
+            
+            // Comprobamos si el objeto existe
+            const nombreCompleto = factura.usuario 
+              ? `${factura.usuario.nombre} ${factura.usuario.apellido1 || ''}` 
+              : 'No asignado';
+            doc.text(nombreCompleto, 95, y);
+
+            y += 8;
+          });
+
+          // Por último, hacemos que se descargue el documento
+          doc.save(`gesportin-facturas-${new Date().getTime()}.pdf`);
+        },
+        error: (err) => {
+          console.error("Error obteniendo datos para el PDF:", err);
+        }
+      });
   }
 }
