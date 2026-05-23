@@ -107,24 +107,48 @@ export class DashboardService {
 
   fetchDashboardData(): Observable<DashboardRawData> {
     const isAdmin = this.security.isAdmin();
-    const isClubAdmin = this.security.isClubAdmin();
-
-    const clubs$ = isClubAdmin
-      ? this.countFromPage(this.clubService.getPage(0, 1))
-      : this.clubService.count().pipe(catchError(() => of(0)));
-    const teams$ = this.equipoService.count().pipe(catchError(() => of(0)));
-    const players$ = this.jugadorService.count().pipe(catchError(() => of(0)));
-    const leagues$ = this.ligaService.count().pipe(catchError(() => of(0)));
-    const matches$ = this.partidoService.count().pipe(catchError(() => of(0)));
-    const payments$ = this.pagoService.count().pipe(catchError(() => of(0)));
-    const cuotas$ = isAdmin ? this.cuotaService.count().pipe(catchError(() => of(0))) : of(0);
-    const noticias$ = isAdmin ? this.noticiaService.count().pipe(catchError(() => of(0))) : of(0);
-    const articulos$ = isAdmin ? this.articuloService.count().pipe(catchError(() => of(0))) : of(0);
-    const facturas$ = isAdmin ? this.facturaService.count().pipe(catchError(() => of(0))) : of(0);
-    const compras$ = isAdmin ? this.compraService.count().pipe(catchError(() => of(0))) : of(0);
-    const puntuaciones$ = this.puntuacionService.count().pipe(catchError(() => of(0)));
-    const comments$ = this.comentarioService.count().pipe(catchError(() => of(0)));
-    const comentarioarts$ = this.comentarioartService.count().pipe(catchError(() => of(0)));
+    const clubs$ = isAdmin
+      ? this.clubService.count().pipe(catchError(() => of(0)))
+      : this.countFromPage(this.clubService.getPage(0, 1));
+    const teams$ = isAdmin
+      ? this.equipoService.count().pipe(catchError(() => of(0)))
+      : this.countFromPage(this.equipoService.getPage(0, 1));
+    const players$ = isAdmin
+      ? this.jugadorService.count().pipe(catchError(() => of(0)))
+      : this.countFromPage(this.jugadorService.getPage(0, 1));
+    const leagues$ = isAdmin
+      ? this.ligaService.count().pipe(catchError(() => of(0)))
+      : this.countFromPage(this.ligaService.getPage(0, 1));
+    const matches$ = isAdmin
+      ? this.partidoService.count().pipe(catchError(() => of(0)))
+      : this.countFromPage(this.partidoService.getPage(0, 1));
+    const payments$ = isAdmin
+      ? this.pagoService.count().pipe(catchError(() => of(0)))
+      : this.countFromPage(this.pagoService.getPage(0, 1));
+    const cuotas$ = isAdmin
+      ? this.cuotaService.count().pipe(catchError(() => of(0)))
+      : this.countFromPage(this.cuotaService.getPage(0, 1));
+    const noticias$ = isAdmin
+      ? this.noticiaService.count().pipe(catchError(() => of(0)))
+      : this.countFromPage(this.noticiaService.getPage(0, 1));
+    const articulos$ = isAdmin
+      ? this.articuloService.count().pipe(catchError(() => of(0)))
+      : this.countFromPage(this.articuloService.getPage(0, 1));
+    const facturas$ = isAdmin
+      ? this.facturaService.count().pipe(catchError(() => of(0)))
+      : this.countFromPage(this.facturaService.getPage(0, 1, 'id', 'desc'));
+    const compras$ = isAdmin
+      ? this.compraService.count().pipe(catchError(() => of(0)))
+      : this.countFromPage(this.compraService.getPage(0, 1, 'id', 'desc'));
+    const puntuaciones$ = isAdmin
+      ? this.puntuacionService.count().pipe(catchError(() => of(0)))
+      : this.countFromPage(this.puntuacionService.getPage(0, 1));
+    const comments$ = isAdmin
+      ? this.comentarioService.count().pipe(catchError(() => of(0)))
+      : this.countFromPage(this.comentarioService.getPage(0, 1));
+    const comentarioarts$ = isAdmin
+      ? this.comentarioartService.count().pipe(catchError(() => of(0)))
+      : this.countFromPage(this.comentarioartService.getPage(0, 1));
 
     const usuariosPage$ = this.usuarioService
       .getPage(0, DashboardService.DASHBOARD_PAGE_SIZE, 'fechaAlta', 'desc')

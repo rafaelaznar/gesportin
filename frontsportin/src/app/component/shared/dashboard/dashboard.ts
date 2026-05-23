@@ -24,14 +24,29 @@ interface QuickAccessCard {
   color: string;
 }
 
+interface ClubInsightCard {
+  title: string;
+  value: number;
+  icon: string;
+  color: string;
+}
+
 interface DashboardViewModel {
+  title: string;
+  subtitle: string;
+  barTitle: string;
+  lineTitle: string;
+  showRolesChart: boolean;
+  showClubInsights: boolean;
   kpiCards: DashboardKpiCard[];
+  clubInsights: ClubInsightCard[];
   quickAccessCards: QuickAccessCard[];
   barChartData: ChartData<'bar'>;
   lineChartData: ChartData<'line'>;
   rolesDoughnutChartData: ChartData<'doughnut'>;
   paymentStatusDoughnutChartData: ChartData<'doughnut'>;
   sportCategoriesDoughnutChartData: ChartData<'doughnut'>;
+  clubCompositionDoughnutChartData: ChartData<'doughnut'>;
 }
 
 @Component({
@@ -51,6 +66,7 @@ export class DashboardComponent implements OnInit {
 
   private readonly dashboardService = inject(DashboardService);
   private readonly security = inject(SecurityService);
+  readonly isClubAdmin = this.security.isClubAdmin();
 
   public readonly barChartOptions: ChartConfiguration<'bar'>['options'] = {
     responsive: true,
@@ -139,16 +155,37 @@ export class DashboardComponent implements OnInit {
   }
 
   private buildQuickAccessCards(): QuickAccessCard[] {
-    const r = this.security.isClubAdmin() ? '/teamadmin' : '';
+    if (this.security.isClubAdmin()) {
+      return [
+        { title: 'Mi Club', icon: 'building', color: 'primary', route: '/club/teamadmin' },
+        { title: 'Equipos', icon: 'people-fill', color: 'success', route: '/equipo/teamadmin' },
+        { title: 'Usuarios', icon: 'person-lines-fill', color: 'info', route: '/usuario/teamadmin' },
+        { title: 'Partidos', icon: 'calendar2-event', color: 'warning', route: '/partido/teamadmin' },
+        { title: 'Noticias', icon: 'megaphone-fill', color: 'danger', route: '/noticia/teamadmin' },
+        { title: 'Tienda', icon: 'bag-fill', color: 'primary', route: '/articulo/teamadmin' },
+        { title: 'Facturas', icon: 'receipt', color: 'secondary', route: '/factura/teamadmin' }
+      ];
+    }
+
+    if (this.security.isUser()) {
+      return [
+        { title: 'Noticias', icon: 'newspaper', color: 'primary', route: '/mi/noticias' },
+        { title: 'Mis Equipos', icon: 'people-fill', color: 'success', route: '/mi/equipos' },
+        { title: 'Cuotas', icon: 'cash-coin', color: 'warning', route: '/mi/cuotas' },
+        { title: 'Tienda', icon: 'bag-fill', color: 'info', route: '/mi/tienda' },
+        { title: 'Facturas', icon: 'receipt', color: 'secondary', route: '/mi/facturas' },
+        { title: 'Mi Perfil', icon: 'person-circle', color: 'danger', route: '/mi/perfil' }
+      ];
+    }
 
     return [
-      { title: 'Clubes', icon: 'building', color: 'primary', route: r ? '/club/teamadmin' : '/club' },
-      { title: 'Equipos', icon: 'people-fill', color: 'success', route: '/equipo' + r },
-      { title: 'Ligas', icon: 'trophy-fill', color: 'warning', route: '/liga' + r },
-      { title: 'Partidos', icon: 'calendar2-event', color: 'info', route: '/partido' + r },
-      { title: 'Comentarios', icon: 'chat-left-text-fill', color: 'secondary', route: '/comentario' + r },
-      { title: 'Eventos', icon: 'megaphone-fill', color: 'danger', route: '/noticia' + r },
-      { title: 'Tienda', icon: 'bag-fill', color: 'primary', route: '/articulo' + r }
+      { title: 'Clubes', icon: 'building', color: 'primary', route: '/club' },
+      { title: 'Equipos', icon: 'people-fill', color: 'success', route: '/equipo' },
+      { title: 'Ligas', icon: 'trophy-fill', color: 'warning', route: '/liga' },
+      { title: 'Partidos', icon: 'calendar2-event', color: 'info', route: '/partido' },
+      { title: 'Comentarios', icon: 'chat-left-text-fill', color: 'secondary', route: '/comentario' },
+      { title: 'Eventos', icon: 'megaphone-fill', color: 'danger', route: '/noticia' },
+      { title: 'Tienda', icon: 'bag-fill', color: 'primary', route: '/articulo' }
     ];
   }
 
@@ -157,6 +194,9 @@ export class DashboardComponent implements OnInit {
   private buildViewModel(data: DashboardRawData): DashboardViewModel {
     const monthKeys = this.getMonthKeys(6);
     const monthLabels = monthKeys.map((item) => item.label);
+    const isAdmin = this.security.isAdmin();
+    const isClubAdmin = this.security.isClubAdmin();
+    const isUser = this.security.isUser();
 
     const paymentsMonthly = this.countByMonth(data.pagosPage.content, monthKeys, (item) => item.fecha);
     const matchesMonthly = this.countByMonth(data.partidosPage.content, monthKeys, (item) => item.fecha ?? null);
@@ -190,14 +230,19 @@ export class DashboardComponent implements OnInit {
       .slice(0, 6);
     const categoryLabels = categoryPairs.map(([label]) => label);
     const categoryValues = categoryPairs.map(([, value]) => value);
+    const categoryTotal = categoryValues.reduce((acc, value) => acc + value, 0);
+    const topCategoryValue = categoryValues[0] ?? 0;
 
-    const isAdmin = this.security.isAdmin();
+    const purchaseConversionPct = this.toPercentage(data.compras, data.facturas);
+    const paymentsCoveragePct = this.toPercentage(data.pagos, data.cuotas);
+    const topCategoryPct = this.toPercentage(topCategoryValue, categoryTotal);
+
     const kpiCards: DashboardKpiCard[] = [
-      { title: 'Clubes Activos', icon: 'building-fill', count: data.clubes, color: 'primary' },
+      { title: isClubAdmin ? 'Mi Club' : 'Clubes Activos', icon: 'building-fill', count: data.clubes, color: 'primary' },
       { title: 'Equipos', icon: 'people-fill', count: data.equipos, color: 'success' },
       { title: 'Jugadores', icon: 'person-bounding-box', count: data.jugadores, color: 'info' },
       { title: 'Partidos', icon: 'calendar2-check-fill', count: data.partidos, color: 'warning' },
-      ...(isAdmin ? [
+      ...((isAdmin || isClubAdmin) ? [
         { title: 'Noticias', icon: 'newspaper', count: data.noticias, color: 'primary' },
         { title: 'Artículos', icon: 'bag-fill', count: data.articulos, color: 'success' },
         { title: 'Cuotas', icon: 'cash-coin', count: data.cuotas, color: 'info' },
@@ -209,15 +254,106 @@ export class DashboardComponent implements OnInit {
       { title: 'Puntuaciones', icon: 'star-fill', count: data.puntuaciones, color: 'danger' }
     ];
 
+    const lineDatasets: ChartData<'line'>['datasets'] = isClubAdmin
+      ? [
+        {
+          label: 'Pagos mensuales',
+          data: paymentsMonthly,
+          borderColor: '#13b980',
+          backgroundColor: 'rgba(19, 185, 128, 0.14)',
+          pointRadius: 3,
+          tension: 0.35,
+          fill: true
+        },
+        {
+          label: 'Actividad partidos',
+          data: matchesMonthly,
+          borderColor: '#0ca6b8',
+          backgroundColor: 'rgba(12, 166, 184, 0.08)',
+          pointRadius: 3,
+          tension: 0.3,
+          fill: false
+        }
+      ]
+      : [
+        {
+          label: 'Evolución mensual (pagos)',
+          data: paymentsMonthly,
+          borderColor: '#13b980',
+          backgroundColor: 'rgba(19, 185, 128, 0.14)',
+          pointRadius: 3,
+          tension: 0.35,
+          fill: true
+        },
+        {
+          label: 'Crecimiento usuarios',
+          data: usersCumulative,
+          borderColor: '#2056e0',
+          backgroundColor: 'rgba(32, 86, 224, 0.08)',
+          pointRadius: 3,
+          tension: 0.32,
+          fill: false
+        },
+        {
+          label: 'Estadísticas actividad (partidos)',
+          data: matchesMonthly,
+          borderColor: '#0ca6b8',
+          backgroundColor: 'rgba(12, 166, 184, 0.08)',
+          pointRadius: 3,
+          tension: 0.3,
+          fill: false
+        }
+      ];
+
+    const clubInsights: ClubInsightCard[] = isClubAdmin
+      ? [
+        {
+          title: 'Conversión compras/facturas',
+          value: purchaseConversionPct,
+          icon: 'cart-check',
+          color: 'success'
+        },
+        {
+          title: 'Cobertura pagos/cuotas',
+          value: paymentsCoveragePct,
+          icon: 'cash-coin',
+          color: 'warning'
+        },
+        {
+          title: 'Peso categoría líder',
+          value: topCategoryPct,
+          icon: 'pie-chart',
+          color: 'info'
+        }
+      ]
+      : [];
+
     return {
+      title: isClubAdmin ? 'Dashboard de Club' : (isUser ? 'Mi Dashboard' : 'Dashboard'),
+      subtitle: isClubAdmin
+        ? 'Indicadores y actividad de tu club'
+        : (isUser ? 'Resumen de tu actividad deportiva sin permisos de administración' : 'Analytics deportivo en tiempo real de Gesportín'),
+      barTitle: isClubAdmin
+        ? 'Actividad de Equipos, Jugadores y Partidos'
+        : (isUser ? 'Mi Actividad: Equipos, Pagos y Facturas' : 'Actividad de Clubes, Partidos y Pagos'),
+      lineTitle: isClubAdmin
+        ? 'Evolución Mensual del Club'
+        : (isUser ? 'Evolución de tu Actividad' : 'Evolución Mensual y Actividad'),
+      showRolesChart: !isClubAdmin && !isUser,
+      showClubInsights: isClubAdmin,
       kpiCards,
+      clubInsights,
       quickAccessCards: this.buildQuickAccessCards(),
       barChartData: {
-        labels: ['Actividad Clubes', 'Partidos', 'Pagos'],
+        labels: isClubAdmin
+          ? ['Equipos', 'Jugadores', 'Partidos']
+          : (isUser ? ['Mis Equipos', 'Mis Pagos', 'Mis Facturas'] : ['Actividad Clubes', 'Partidos', 'Pagos']),
         datasets: [
           {
             label: 'Actividad actual',
-            data: [data.clubes, data.partidos, data.pagos],
+            data: isClubAdmin
+              ? [data.equipos, data.jugadores, data.partidos]
+              : (isUser ? [data.equipos, data.pagos, data.facturas] : [data.clubes, data.partidos, data.pagos]),
             backgroundColor: ['#2056e0', '#e8a700', '#13b980'],
             borderRadius: 10,
             maxBarThickness: 54
@@ -226,35 +362,7 @@ export class DashboardComponent implements OnInit {
       },
       lineChartData: {
         labels: monthLabels,
-        datasets: [
-          {
-            label: 'Evolución mensual (pagos)',
-            data: paymentsMonthly,
-            borderColor: '#13b980',
-            backgroundColor: 'rgba(19, 185, 128, 0.14)',
-            pointRadius: 3,
-            tension: 0.35,
-            fill: true
-          },
-          {
-            label: 'Crecimiento usuarios',
-            data: usersCumulative,
-            borderColor: '#2056e0',
-            backgroundColor: 'rgba(32, 86, 224, 0.08)',
-            pointRadius: 3,
-            tension: 0.32,
-            fill: false
-          },
-          {
-            label: 'Estadísticas actividad (partidos)',
-            data: matchesMonthly,
-            borderColor: '#0ca6b8',
-            backgroundColor: 'rgba(12, 166, 184, 0.08)',
-            pointRadius: 3,
-            tension: 0.3,
-            fill: false
-          }
-        ]
+        datasets: lineDatasets
       },
       rolesDoughnutChartData: {
         labels: roleLabels,
@@ -280,6 +388,22 @@ export class DashboardComponent implements OnInit {
           {
             data: categoryValues,
             backgroundColor: ['#2056e0', '#0ca6b8', '#13b980', '#e8a700', '#6d76f6', '#f1765b']
+          }
+        ]
+      },
+      clubCompositionDoughnutChartData: {
+        labels: ['Equipos', 'Jugadores', 'Partidos', 'Pagos', 'Comentarios', 'Puntuaciones'],
+        datasets: [
+          {
+            data: [
+              data.equipos,
+              data.jugadores,
+              data.partidos,
+              data.pagos,
+              data.comentarios + data.comentarioarts,
+              data.puntuaciones
+            ],
+            backgroundColor: ['#2056e0', '#13b980', '#0ca6b8', '#e8a700', '#dc4f59', '#6d76f6']
           }
         ]
       }
@@ -366,6 +490,14 @@ export class DashboardComponent implements OnInit {
       return value;
     }
     return value === 1;
+  }
+
+  private toPercentage(value: number, total: number): number {
+    if (total <= 0) {
+      return 0;
+    }
+    const ratio = (value / total) * 100;
+    return Math.min(100, Math.round(ratio * 10) / 10);
   }
 
   private emptyPage<T>(): IPage<T> {

@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DashboardComponent } from '../../../../component/shared/dashboard/dashboard';
+import { UserDashboardComponent } from '../../../../component/shared/user-dashboard/user-dashboard';
 
 @Component({
-  selector: 'app-user-dashboard',
+  selector: 'app-user-dashboard-page',
   standalone: true,
-  imports: [CommonModule, DashboardComponent],
+  imports: [CommonModule, UserDashboardComponent],
   template: `
     <div class="user-dashboard-wrapper">
-      <app-dashboard></app-dashboard>
+      <app-user-dashboard></app-user-dashboard>
     </div>
   `,
   styles: [`

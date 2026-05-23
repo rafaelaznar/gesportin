@@ -1,8 +1,10 @@
-<div class="dashboard-wrapper" [class.loading]="loading()">
+<div class="dashboard-wrapper" [class.loading]="loading()" [class.mode-teamadmin]="isClubAdmin"
+  [class.mode-admin]="!isClubAdmin">
+  @if (vm$ | async; as vm) {
   <header class="dashboard-header">
     <div class="header-copy">
-      <h1>Dashboard</h1>
-      <p>Analytics deportivo en tiempo real de Gesportín</p>
+      <h1>{{ vm.title }}</h1>
+      <p>{{ vm.subtitle }}</p>
     </div>
     <div class="header-date">
       <i class="bi bi-calendar3"></i>
@@ -10,7 +12,6 @@
     </div>
   </header>
 
-  @if (vm$ | async; as vm) {
   <section class="kpi-section" aria-label="Indicadores principales">
     <div class="kpi-grid">
       @for (kpi of vm.kpiCards; track kpi.title) {
@@ -31,11 +32,29 @@
     </div>
   </section>
 
+  @if (vm.showClubInsights) {
+  <section class="club-insights" aria-label="Métricas de rendimiento del club">
+    <div class="club-insights-grid">
+      @for (insight of vm.clubInsights; track insight.title) {
+      <article class="insight-card" [ngClass]="'insight-' + insight.color">
+        <div class="insight-meta">
+          <span class="insight-label">{{ insight.title }}</span>
+          <span class="insight-value">{{ insight.value | number:'1.0-1' }}%</span>
+        </div>
+        <span class="insight-icon" aria-hidden="true">
+          <i class="bi" [ngClass]="'bi-' + insight.icon"></i>
+        </span>
+      </article>
+      }
+    </div>
+  </section>
+  }
+
   <section class="charts-section" aria-label="Analítica visual deportiva">
     <div class="dashboard-grid">
       <article class="chart-card chart-card-wide">
         <header>
-          <h2>Actividad de Clubes, Partidos y Pagos</h2>
+          <h2>{{ vm.barTitle }}</h2>
           <i class="bi bi-bar-chart"></i>
         </header>
         <div class="chart-container">
@@ -46,7 +65,7 @@
 
       <article class="chart-card chart-card-wide">
         <header>
-          <h2>Evolución Mensual y Actividad</h2>
+          <h2>{{ vm.lineTitle }}</h2>
           <i class="bi bi-graph-up-arrow"></i>
         </header>
         <div class="chart-container chart-container-large">
@@ -55,6 +74,7 @@
         </div>
       </article>
 
+      @if (vm.showRolesChart) {
       <article class="chart-card">
         <header>
           <h2>Distribución de Roles</h2>
@@ -65,6 +85,7 @@
           </canvas>
         </div>
       </article>
+      }
 
       <article class="chart-card">
         <header>
@@ -89,6 +110,20 @@
           </canvas>
         </div>
       </article>
+
+      @if (vm.showClubInsights) {
+      <article class="chart-card">
+        <header>
+          <h2>Composición de Actividad del Club</h2>
+          <i class="bi bi-pie-chart-fill"></i>
+        </header>
+        <div class="chart-container chart-container-compact">
+          <canvas baseChart [data]="vm.clubCompositionDoughnutChartData" [options]="doughnutChartOptions"
+            [type]="'doughnut'">
+          </canvas>
+        </div>
+      </article>
+      }
     </div>
   </section>
 

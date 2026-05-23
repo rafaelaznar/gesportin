@@ -44,7 +44,7 @@ const COLORES: Record<NotificacionTipo, { bg: string; icon: string; btn: string 
         class="swal-btn"
         [style.background]="color.btn"
         (click)="close()"
-      >{{ data.confirmLabel ?? 'Aceptar' }}</button>
+      >{{ confirmLabel() ?? data.confirmLabel ?? 'Aceptar' }}</button>
     </div>
   `,
   styles: [`
@@ -115,6 +115,8 @@ export class NotificacionComponent implements OnInit {
   protected readonly tipo   = input<NotificacionTipo>('success');
   protected readonly titulo = input<string | undefined>(undefined);
   protected readonly mensaje = input<string>('');
+  protected readonly autoCierre = input<number | undefined>(undefined);
+  protected readonly confirmLabel = input<string | undefined>(undefined);
 
   protected get icono()  { return ICONOS[(this.data.tipo  ?? 'success')]; }
   protected get color()  { return COLORES[(this.data.tipo ?? 'success')]; }
@@ -122,7 +124,7 @@ export class NotificacionComponent implements OnInit {
   private _timer?: ReturnType<typeof setTimeout>;
 
   ngOnInit(): void {
-    const delay = this.data.autoCierre ?? 2500;
+    const delay = this.autoCierre() ?? this.data.autoCierre ?? 2500;
     if (delay > 0) {
       this._timer = setTimeout(() => this.close(), delay);
     }

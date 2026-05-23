@@ -17,9 +17,9 @@ export class LandingPage {
     if (this.session.isAdmin()) {
       this.router.navigate(['/admin']);
     } else if (this.session.isClubAdmin()) {
-      this.router.navigate(['/club/teamadmin']);
+      this.router.navigate(['/dashboard/teamadmin']);
     } else if (this.session.isUser()) {
-      this.router.navigate(['/mi']);
+      this.router.navigate(['/mi/dashboard']);
     }
   }
 }

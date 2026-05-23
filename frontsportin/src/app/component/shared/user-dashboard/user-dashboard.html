@@ -5,11 +5,50 @@
         <i class="bi bi-person-circle"></i>
       </div>
       <div class="ud-welcome">
-        <h1>Bienvenido, <span class="ud-username">{{ userName() }}</span></h1>
+        <h1>Mi Dashboard, <span class="ud-username">{{ userName() }}</span></h1>
         <p>Área personal de tu club</p>
       </div>
     </div>
   </header>
+
+  <section class="ud-kpis" aria-label="Indicadores personales">
+    <article class="ud-kpi">
+      <span class="ud-kpi-label">Mi carrito</span>
+      <span class="ud-kpi-value">{{ carritoCount() }}</span>
+    </article>
+    <article class="ud-kpi">
+      <span class="ud-kpi-label">Mis facturas</span>
+      <span class="ud-kpi-value">{{ facturasCount() }}</span>
+    </article>
+    <article class="ud-kpi">
+      <span class="ud-kpi-label">Mis equipos</span>
+      <span class="ud-kpi-value">{{ equiposCount() }}</span>
+    </article>
+  </section>
+
+  <section class="ud-charts" aria-label="Gráficas personales">
+    <article class="ud-chart-card ud-chart-wide">
+      <header>
+        <h2>Actividad Personal</h2>
+        <i class="bi bi-bar-chart"></i>
+      </header>
+      <div class="ud-chart-container">
+        <canvas baseChart [data]="activityBarChartData()" [options]="activityBarOptions" [type]="'bar'">
+        </canvas>
+      </div>
+    </article>
+
+    <article class="ud-chart-card">
+      <header>
+        <h2>Distribución de Mi Actividad</h2>
+        <i class="bi bi-pie-chart"></i>
+      </header>
+      <div class="ud-chart-container ud-chart-compact">
+        <canvas baseChart [data]="activityDoughnutChartData()" [options]="activityDoughnutOptions" [type]="'doughnut'">
+        </canvas>
+      </div>
+    </article>
+  </section>
 
   <div class="ud-grid">
 
@@ -35,9 +74,9 @@
       <div class="ud-card-body">
         <h3>Mis Equipos</h3>
         @if (equiposCount() > 0) {
-          <p>Estás inscrito en <strong>{{ equiposCount() }}</strong> equipo{{ equiposCount() > 1 ? 's' : '' }}</p>
+        <p>Estás inscrito en <strong>{{ equiposCount() }}</strong> equipo{{ equiposCount() > 1 ? 's' : '' }}</p>
         } @else {
-          <p>Consulta las temporadas, categorías y resultados</p>
+        <p>Consulta las temporadas, categorías y resultados</p>
         }
       </div>
       <div class="ud-card-arrow">
@@ -64,15 +103,15 @@
       <div class="ud-card-icon">
         <i class="bi bi-bag-heart"></i>
         @if (carritoCount() > 0) {
-          <span class="ud-badge">{{ carritoCount() }}</span>
+        <span class="ud-badge">{{ carritoCount() }}</span>
         }
       </div>
       <div class="ud-card-body">
         <h3>Tienda Virtual</h3>
         @if (carritoCount() > 0) {
-          <p>Tienes <strong>{{ carritoCount() }}</strong> artículo{{ carritoCount() > 1 ? 's' : '' }} en el carrito</p>
+        <p>Tienes <strong>{{ carritoCount() }}</strong> artículo{{ carritoCount() > 1 ? 's' : '' }} en el carrito</p>
         } @else {
-          <p>Productos oficiales de tu club, organizado por categorías</p>
+        <p>Productos oficiales de tu club, organizado por categorías</p>
         }
       </div>
       <div class="ud-card-arrow">
@@ -85,15 +124,15 @@
       <div class="ud-card-icon">
         <i class="bi bi-receipt"></i>
         @if (facturasCount() > 0) {
-          <span class="ud-badge">{{ facturasCount() }}</span>
+        <span class="ud-badge">{{ facturasCount() }}</span>
         }
       </div>
       <div class="ud-card-body">
         <h3>Mis Facturas</h3>
         @if (facturasCount() > 0) {
-          <p>Tienes <strong>{{ facturasCount() }}</strong> factura{{ facturasCount() > 1 ? 's' : '' }} de compras</p>
+        <p>Tienes <strong>{{ facturasCount() }}</strong> factura{{ facturasCount() > 1 ? 's' : '' }} de compras</p>
         } @else {
-          <p>Historial completo de tus compras en la tienda</p>
+        <p>Historial completo de tus compras en la tienda</p>
         }
       </div>
       <div class="ud-card-arrow">

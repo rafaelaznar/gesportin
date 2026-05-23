@@ -25,14 +25,13 @@ export class UsuarioTeamadminPlistPage {
     const idParam = this.route.snapshot.paramMap.get('id_club');
     if (idParam) {
       this.id_club.set(Number(idParam));
+      this.clubService.get(this.id_club()).subscribe(club => {
+        this.breadcrumbItems.set([
+          { label: 'Mis Clubes', route: '/club/teamadmin' },
+          { label: club.nombre, route: '/club/teamadmin/' + this.id_club() },
+          { label: 'Usuarios' }]);
+      });
     }
-    // inject ClubService to get club from id_club 
-    this.clubService.get(this.id_club()).subscribe(club => {
-      this.breadcrumbItems.set([
-        { label: 'Mis Clubes', route: '/club/teamadmin' },
-        { label: club.nombre, route: '/club/teamadmin/' + this.id_club() },
-        { label: 'Usuarios' }]);
-    });
   }
    
 }
