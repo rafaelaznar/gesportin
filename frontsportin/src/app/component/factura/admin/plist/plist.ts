@@ -232,4 +232,26 @@ export class FacturaAdminPlist {
         }
       });
   }
+
+  exportarCSV() {
+    this.facturaService.exportCsv().subscribe({
+      next: (blob: Blob) => {
+
+        // Creamos una URL temporal para el archivo binario
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        
+        // Le asignamos un nombre dinámico al archivo con la fecha actual
+        a.download = `gesportin-facturas-${new Date().getTime()}.csv`;
+        document.body.appendChild(a);
+        a.click(); // Forzamos el clic invisible para que se descargue
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url); // Liberamos la memoria asignada
+      },
+      error: (err) => {
+        console.error('Error al descargar el archivo CSV:', err);
+      }
+    });
+  }
 }

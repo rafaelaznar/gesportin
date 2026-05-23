@@ -56,4 +56,8 @@ export class FacturaService {
     const body = this.sanitizer.sanitize(factura, { nestedIdFields: ['usuario'], removeFields: ['compras'] });
     return this.oHttp.post<number>(serverURL + '/factura', body);
   }
+
+  exportCsv(): Observable<Blob> {
+    return this.oHttp.get(`${serverURL}/factura/export/csv`, { responseType: 'blob' });
+  }
 }
