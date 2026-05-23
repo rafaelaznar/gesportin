@@ -1,10 +1,12 @@
 package net.ausiasmarch.gesportin.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import net.ausiasmarch.gesportin.entity.FacturaEntity;
@@ -68,6 +70,41 @@ public class FacturaService {
         } else {
             return oFacturaRepository.findAll(pageable);
         }
+    }
+
+    public String exportCsv() {
+        oSessionService.requireAdmin();
+        List<FacturaEntity> facturas = oFacturaRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
+
+        StringBuilder csvBuilder = new StringBuilder();
+        csvBuilder.append("ID,Fecha,Usuario,Compras\n");
+
+        for (FacturaEntity factura : facturas) {
+            String id = factura.getId() != null ? factura.getId().toString() : "";
+            String fecha = factura.getFecha() != null ? factura.getFecha().toString() : "";
+            String usuario = "";
+            if (factura.getUsuario() != null) {
+                if (factura.getUsuario().getUsername() != null) {
+                    usuario = factura.getUsuario().getUsername();
+                } else if (factura.getUsuario().getId() != null) {
+                    usuario = factura.getUsuario().getId().toString();
+                }
+            }
+            String compras = String.valueOf(factura.getCompras());
+
+            csvBuilder.append(escapeCsv(id)).append(',')
+                    .append(escapeCsv(fecha)).append(',')
+                    .append(escapeCsv(usuario)).append(',')
+                    .append(escapeCsv(compras)).append('\n');
+        }
+
+        return csvBuilder.toString();
+    }
+
+    private String escapeCsv(String value) {
+        String safeValue = value == null ? "" : value;
+        String escaped = safeValue.replace("\"", "\"\"");
+        return '"' + escaped + '"';
     }
 
     public FacturaEntity create(FacturaEntity oFacturaEntity) {
