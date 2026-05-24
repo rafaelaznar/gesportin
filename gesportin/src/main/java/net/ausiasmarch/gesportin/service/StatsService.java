@@ -185,12 +185,12 @@ public class StatsService {
         verificarAcceso(idClub, idTemporada);
 
         Query query = oEntityManager.createNativeQuery("""
-                SELECT c.descripcion AS categoria, COUNT(e.id) AS totalEquipos
+                SELECT c.nombre AS categoria, COUNT(e.id) AS totalEquipos
                 FROM equipo e
                 JOIN categoria c ON e.id_categoria = c.id
                 WHERE c.id_temporada = :idTemporada
-                GROUP BY c.id, c.descripcion
-                ORDER BY c.descripcion
+                GROUP BY c.id, c.nombre
+                ORDER BY c.nombre
                 """)
                 .setParameter("idTemporada", idTemporada);
 
@@ -309,7 +309,7 @@ public class StatsService {
 
         Query query = oEntityManager.createNativeQuery("""
                 SELECT e.nombre AS equipo,
-                       c.descripcion AS categoria,
+                       c.nombre AS categoria,
                        (SELECT COUNT(j.id) FROM jugador j WHERE j.id_equipo = e.id) AS numJugadores,
                        (SELECT COUNT(pa.id) FROM partido pa
                           JOIN liga li ON pa.id_liga = li.id
