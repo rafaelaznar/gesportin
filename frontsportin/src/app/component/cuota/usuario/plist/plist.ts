@@ -129,7 +129,9 @@ export class CuotaUsuarioPlist implements OnInit {
     this.paymentService.iniciarCuota(jugadorId, cuotaId).subscribe({
       next: (session) => {
         this.pagando.update((s) => { s.delete(cuotaId); return new Set(s); });
-        this.router.navigate(['/payment/checkout', session.sessionToken]);
+        this.router.navigate(['/payment/checkout'], {
+          state: { sessionToken: session.sessionToken },
+        });
       },
       error: (err) => {
         this.pagando.update((s) => { s.delete(cuotaId); return new Set(s); });

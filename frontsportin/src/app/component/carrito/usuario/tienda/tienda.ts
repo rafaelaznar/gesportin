@@ -168,7 +168,9 @@ export class CarritoUsuarioTienda implements OnInit {
     this.paymentService.iniciarTienda().subscribe({
       next: (session) => {
         this.comprando.set(false);
-        this.router.navigate(['/payment/checkout', session.sessionToken]);
+        this.router.navigate(['/payment/checkout'], {
+          state: { sessionToken: session.sessionToken },
+        });
       },
       error: (err) => {
         this.comprando.set(false);

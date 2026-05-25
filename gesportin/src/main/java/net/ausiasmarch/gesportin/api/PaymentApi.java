@@ -3,15 +3,15 @@ package net.ausiasmarch.gesportin.api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import net.ausiasmarch.gesportin.bean.PaymentConfirmRequestBean;
 import net.ausiasmarch.gesportin.bean.PaymentConfirmBean;
 import net.ausiasmarch.gesportin.bean.PaymentSessionBean;
+import net.ausiasmarch.gesportin.bean.PaymentSessionTokenBean;
 import net.ausiasmarch.gesportin.service.PaymentService;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 3600)
@@ -43,31 +43,34 @@ public class PaymentApi {
     }
 
     /**
-     * Obtiene los datos de una sesión de pago por su token.
-     * GET /payment/sesion/{sessionToken}
+     * Obtiene los datos de una sesión de pago por su token sin exponerlo en la URL.
+     * POST /payment/sesion
      */
-    @GetMapping("/sesion/{sessionToken}")
-    public ResponseEntity<PaymentSessionBean> getSesion(@PathVariable String sessionToken) {
-        return ResponseEntity.ok(oPaymentService.getSesion(sessionToken));
+    @PostMapping("/sesion")
+    public ResponseEntity<PaymentSessionBean> getSesion(@RequestBody PaymentSessionTokenBean request) {
+        return ResponseEntity.ok(oPaymentService.getSesion(request.getSessionToken()));
     }
 
     /**
      * Confirma el pago enviando los datos de la tarjeta (simulados).
-     * POST /payment/confirmar/{sessionToken}
+     * POST /payment/confirmar
      */
-    @PostMapping("/confirmar/{sessionToken}")
-    public ResponseEntity<PaymentSessionBean> confirmar(
-            @PathVariable String sessionToken,
-            @RequestBody PaymentConfirmBean confirmBean) {
-        return ResponseEntity.ok(oPaymentService.confirmarPago(sessionToken, confirmBean));
+    @PostMapping("/confirmar")
+    public ResponseEntity<PaymentSessionBean> confirmar(@RequestBody PaymentConfirmRequestBean request) {
+        PaymentConfirmBean confirmBean = new PaymentConfirmBean(
+                request.getTitular(),
+                request.getNumeroTarjeta(),
+                request.getCaducidad(),
+                request.getCvv());
+        return ResponseEntity.ok(oPaymentService.confirmarPago(request.getSessionToken(), confirmBean));
     }
 
     /**
      * Cancela una sesión de pago pendiente.
-     * POST /payment/cancelar/{sessionToken}
+     * POST /payment/cancelar
      */
-    @PostMapping("/cancelar/{sessionToken}")
-    public ResponseEntity<PaymentSessionBean> cancelar(@PathVariable String sessionToken) {
-        return ResponseEntity.ok(oPaymentService.cancelarPago(sessionToken));
+    @PostMapping("/cancelar")
+    public ResponseEntity<PaymentSessionBean> cancelar(@RequestBody PaymentSessionTokenBean request) {
+        return ResponseEntity.ok(oPaymentService.cancelarPago(request.getSessionToken()));
     }
 }

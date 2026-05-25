@@ -12,3 +12,7 @@ export interface IPaymentConfirm {
   caducidad: string;
   cvv: string;
 }
+
+export interface IPaymentSessionToken {
+  sessionToken: string;
+}

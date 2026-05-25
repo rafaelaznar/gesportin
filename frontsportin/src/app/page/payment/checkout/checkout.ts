@@ -1,6 +1,6 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { PaymentService } from '../../../service/payment.service';
 import { IPaymentSession, IPaymentConfirm } from '../../../model/payment-session';
@@ -13,9 +13,9 @@ import { IPaymentSession, IPaymentConfirm } from '../../../model/payment-session
   styleUrl: './checkout.css',
 })
 export class PaymentCheckoutPage implements OnInit {
-  private route = inject(ActivatedRoute);
   private router = inject(Router);
   private paymentService = inject(PaymentService);
+  private sessionToken: string | null = null;
 
   session = signal<IPaymentSession | null>(null);
   loading = signal(true);
@@ -30,7 +30,10 @@ export class PaymentCheckoutPage implements OnInit {
   };
 
   ngOnInit(): void {
-    const token = this.route.snapshot.paramMap.get('token');
+    const navigationState = this.router.getCurrentNavigation()?.extras.state as { sessionToken?: string } | undefined;
+    const historyState = history.state as { sessionToken?: string } | undefined;
+    this.sessionToken = navigationState?.sessionToken ?? historyState?.sessionToken ?? null;
+    const token = this.sessionToken;
     if (!token) {
       this.error.set('Token de sesión no encontrado');
       this.loading.set(false);
@@ -72,7 +75,11 @@ export class PaymentCheckoutPage implements OnInit {
   }
 
   confirmar(): void {
-    const token = this.route.snapshot.paramMap.get('token')!;
+    const token = this.sessionToken;
+    if (!token) {
+      this.error.set('Token de sesión no encontrado');
+      return;
+    }
     this.procesando.set(true);
     this.error.set(null);
     this.paymentService.confirmar(token, this.form).subscribe({
@@ -90,7 +97,11 @@ export class PaymentCheckoutPage implements OnInit {
   }
 
   cancelar(): void {
-    const token = this.route.snapshot.paramMap.get('token')!;
+    const token = this.sessionToken;
+    if (!token) {
+      this.router.navigate(['/payment/cancel']);
+      return;
+    }
     this.paymentService.cancelar(token).subscribe({
       next: () => this.router.navigate(['/payment/cancel']),
       error: () => this.router.navigate(['/payment/cancel']),

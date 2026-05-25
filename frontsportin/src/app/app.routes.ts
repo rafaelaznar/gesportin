@@ -522,7 +522,7 @@ export const routes: Routes = [
   { path: 'mi/tienda', component: CarritoUsuarioTiendaPage, canActivate: [UsuarioGuard] },
   { path: 'mi/facturas', component: FacturaUsuarioPlistPage, canActivate: [UsuarioGuard] },
   // Pasarela de pagos (perfil usuario)
-  { path: 'payment/checkout/:token', component: PaymentCheckoutPage, canActivate: [UsuarioGuard] },
+  { path: 'payment/checkout', component: PaymentCheckoutPage, canActivate: [UsuarioGuard] },
   { path: 'payment/success', component: PaymentSuccessPage, canActivate: [UsuarioGuard] },
   { path: 'payment/cancel', component: PaymentCancelPage, canActivate: [UsuarioGuard] },
   ...protectedRoutes.map((r) => ({ ...r, canActivate: [AdminGuard] })), 

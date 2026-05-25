@@ -21,14 +21,14 @@ export class PaymentService {
   }
 
   getSesion(sessionToken: string): Observable<IPaymentSession> {
-    return this.http.get<IPaymentSession>(`${this.url}/sesion/${sessionToken}`);
+    return this.http.post<IPaymentSession>(`${this.url}/sesion`, { sessionToken });
   }
 
   confirmar(sessionToken: string, datos: IPaymentConfirm): Observable<IPaymentSession> {
-    return this.http.post<IPaymentSession>(`${this.url}/confirmar/${sessionToken}`, datos);
+    return this.http.post<IPaymentSession>(`${this.url}/confirmar`, { sessionToken, ...datos });
   }
 
   cancelar(sessionToken: string): Observable<IPaymentSession> {
-    return this.http.post<IPaymentSession>(`${this.url}/cancelar/${sessionToken}`, {});
+    return this.http.post<IPaymentSession>(`${this.url}/cancelar`, { sessionToken });
   }
 }
