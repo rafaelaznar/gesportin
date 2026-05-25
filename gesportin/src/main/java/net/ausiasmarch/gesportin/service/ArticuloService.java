@@ -1,5 +1,6 @@
 package net.ausiasmarch.gesportin.service;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Random;
@@ -10,9 +11,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import net.ausiasmarch.gesportin.entity.ArticuloEntity;
+import net.ausiasmarch.gesportin.exception.ResourceNotAllowedException;
 import net.ausiasmarch.gesportin.exception.ResourceNotFoundException;
 import net.ausiasmarch.gesportin.exception.UnauthorizedException;
 import net.ausiasmarch.gesportin.repository.ArticuloRepository;
+import static net.ausiasmarch.gesportin.util.ImageValidator.isValidPicture;
 
 @Service
 public class ArticuloService {
@@ -119,6 +122,25 @@ public class ArticuloService {
         oArticuloExistente.setImagen(oArticuloEntity.getImagen());
         oArticuloExistente.setTipoarticulo(oTipoarticuloService.get(oArticuloEntity.getTipoarticulo().getId()));
         return oArticuloRepository.save(oArticuloExistente);
+    }
+
+    public void updatePicture(ArticuloEntity oArticuloEntity, byte[] newImage) throws IOException {
+        // regular usuarios cannot modify articulos
+        oSessionService.denyUsuario();
+        ArticuloEntity oArticuloExistente = oArticuloRepository.findById(oArticuloEntity.getId())
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Articulo no encontrado con id: " + oArticuloEntity.getId()));
+        if (oSessionService.isEquipoAdmin()) {
+            Long clubOld = oArticuloExistente.getTipoarticulo().getClub().getId();
+            Long clubNew = oTipoarticuloService.get(oArticuloEntity.getTipoarticulo().getId())
+                    .getClub().getId();
+            oSessionService.checkSameClub(clubOld);
+            oSessionService.checkSameClub(clubNew);
+        }
+
+        if(!isValidPicture(newImage)) throw new ResourceNotAllowedException("This image is not allowed");
+        oArticuloExistente.setImagen(newImage);
+        oArticuloRepository.save(oArticuloExistente);
     }
 
     public Long delete(Long id) {

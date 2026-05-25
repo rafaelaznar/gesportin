@@ -1,5 +1,6 @@
 package net.ausiasmarch.gesportin.service;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
@@ -22,6 +23,7 @@ import net.ausiasmarch.gesportin.entity.PuntuacionEntity;
 import net.ausiasmarch.gesportin.entity.TemporadaEntity;
 import net.ausiasmarch.gesportin.entity.TipoarticuloEntity;
 import net.ausiasmarch.gesportin.entity.UsuarioEntity;
+import net.ausiasmarch.gesportin.exception.ResourceNotAllowedException;
 import net.ausiasmarch.gesportin.exception.ResourceNotFoundException;
 import net.ausiasmarch.gesportin.repository.ArticuloRepository;
 import net.ausiasmarch.gesportin.repository.CategoriaRepository;
@@ -38,6 +40,7 @@ import net.ausiasmarch.gesportin.repository.TemporadaRepository;
 import net.ausiasmarch.gesportin.repository.TipoarticuloRepository;
 import net.ausiasmarch.gesportin.repository.TipousuarioRepository;
 import net.ausiasmarch.gesportin.repository.UsuarioRepository;
+import static net.ausiasmarch.gesportin.util.ImageValidator.isValidPicture;
 
 @Service
 public class ClubService {
@@ -167,6 +170,18 @@ public class ClubService {
         oClubExistente.setFechaAlta(oClubEntity.getFechaAlta());
         oClubExistente.setImagen(oClubEntity.getImagen());
         return oClubRepository.save(oClubExistente);
+    }
+
+    public void updatePicture(Long id, byte[] newImage) throws IOException {
+        // equipo admins and regular usuarios are not allowed to modify club data
+        oSessionService.denyEquipoAdmin();
+        oSessionService.denyUsuario();
+        ClubEntity oClubExistente = oClubRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Club no encontrado con id: " + id));
+                
+        if(!isValidPicture(newImage)) throw new ResourceNotAllowedException("This image is not allowed");
+        oClubExistente.setImagen(newImage);
+        oClubRepository.save(oClubExistente);
     }
 
     public Long delete(Long id) {

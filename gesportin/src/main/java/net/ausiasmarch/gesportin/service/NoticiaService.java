@@ -1,5 +1,6 @@
 package net.ausiasmarch.gesportin.service;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -9,9 +10,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import net.ausiasmarch.gesportin.entity.NoticiaEntity;
+import net.ausiasmarch.gesportin.exception.ResourceNotAllowedException;
 import net.ausiasmarch.gesportin.exception.ResourceNotFoundException;
 import net.ausiasmarch.gesportin.exception.UnauthorizedException;
 import net.ausiasmarch.gesportin.repository.NoticiaRepository;
+import static net.ausiasmarch.gesportin.util.ImageValidator.isValidPicture;
 
 @Service
 public class NoticiaService {
@@ -108,6 +111,22 @@ public class NoticiaService {
         oNoticiaExistente.setImagen(oNoticiaEntity.getImagen());
         oNoticiaExistente.setClub(oClubService.get(oNoticiaEntity.getClub().getId()));
         return oNoticiaRepository.save(oNoticiaExistente);
+    }
+
+    public void updatePicture(NoticiaEntity oNoticiaEntity, byte[] newImage) throws IOException {
+        // regular usuarios cannot modify noticias
+        oSessionService.denyUsuario();
+        NoticiaEntity oNoticiaExistente = oNoticiaRepository.findById(oNoticiaEntity.getId())
+                .orElseThrow(
+                        () -> new ResourceNotFoundException("Noticia no encontrado con id: " + oNoticiaEntity.getId()));
+        if (oSessionService.isEquipoAdmin()) {
+            oSessionService.checkSameClub(oNoticiaExistente.getClub().getId());
+            oSessionService.checkSameClub(oNoticiaEntity.getClub().getId());
+        }
+
+        if(!isValidPicture(newImage)) throw new ResourceNotAllowedException("This image is not allowed");
+        oNoticiaExistente.setImagen(oNoticiaEntity.getImagen());
+        oNoticiaRepository.save(oNoticiaExistente);
     }
 
     public Long delete(Long id) {
