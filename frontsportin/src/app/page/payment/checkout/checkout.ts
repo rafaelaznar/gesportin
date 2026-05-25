@@ -30,7 +30,9 @@ export class PaymentCheckoutPage implements OnInit {
   };
 
   ngOnInit(): void {
-    const navigationState = this.router.getCurrentNavigation()?.extras.state as { sessionToken?: string } | undefined;
+    const navigationState = this.router.getCurrentNavigation()?.extras.state as
+      | { sessionToken?: string }
+      | undefined;
     const historyState = history.state as { sessionToken?: string } | undefined;
     this.sessionToken = navigationState?.sessionToken ?? historyState?.sessionToken ?? null;
     const token = this.sessionToken;
@@ -91,7 +93,9 @@ export class PaymentCheckoutPage implements OnInit {
       },
       error: (err) => {
         this.procesando.set(false);
-        this.error.set(err?.error?.message ?? 'Error al procesar el pago. Revisa los datos de tu tarjeta.');
+        this.error.set(
+          err?.error?.message ?? 'Error al procesar el pago. Revisa los datos de tu tarjeta.',
+        );
       },
     });
   }

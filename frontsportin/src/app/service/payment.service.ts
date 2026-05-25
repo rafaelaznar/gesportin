@@ -10,10 +10,7 @@ export class PaymentService {
   private readonly url = `${serverURL}/payment`;
 
   iniciarCuota(jugadorId: number, cuotaId: number): Observable<IPaymentSession> {
-    return this.http.post<IPaymentSession>(
-      `${this.url}/iniciar/cuota/${jugadorId}/${cuotaId}`,
-      {}
-    );
+    return this.http.post<IPaymentSession>(`${this.url}/iniciar/cuota/${jugadorId}/${cuotaId}`, {});
   }
 
   iniciarTienda(): Observable<IPaymentSession> {

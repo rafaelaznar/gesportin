@@ -79,9 +79,11 @@ export class CuotaUsuarioPlist implements OnInit {
                   }
                   return forkJoin(
                     cuotas.map((c) =>
-                      this.pagoService.getPage(0, 1000, 'id', 'asc', c.id, j.id).pipe(
-                        map((pagoPage) => ({ cuota: c, pagos: pagoPage.content } as CuotaRow)),
-                      ),
+                      this.pagoService
+                        .getPage(0, 1000, 'id', 'asc', c.id, j.id)
+                        .pipe(
+                          map((pagoPage) => ({ cuota: c, pagos: pagoPage.content }) as CuotaRow),
+                        ),
                     ),
                   ).pipe(
                     map(
@@ -125,16 +127,25 @@ export class CuotaUsuarioPlist implements OnInit {
 
   pagar(equipoId: number, jugadorId: number, cuota: ICuota): void {
     const cuotaId = cuota.id;
-    this.pagando.update((s) => { s.add(cuotaId); return new Set(s); });
+    this.pagando.update((s) => {
+      s.add(cuotaId);
+      return new Set(s);
+    });
     this.paymentService.iniciarCuota(jugadorId, cuotaId).subscribe({
       next: (session) => {
-        this.pagando.update((s) => { s.delete(cuotaId); return new Set(s); });
+        this.pagando.update((s) => {
+          s.delete(cuotaId);
+          return new Set(s);
+        });
         this.router.navigate(['/payment/checkout'], {
           state: { sessionToken: session.sessionToken },
         });
       },
       error: (err) => {
-        this.pagando.update((s) => { s.delete(cuotaId); return new Set(s); });
+        this.pagando.update((s) => {
+          s.delete(cuotaId);
+          return new Set(s);
+        });
         this.notificacion.error(err?.error?.message ?? 'Error al iniciar el pago');
       },
     });
