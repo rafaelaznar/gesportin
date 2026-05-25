@@ -6,6 +6,7 @@ import { NotificacionService } from '../../../../service/notificacion';;
 import { ModalService } from '../../../shared/modal/modal.service';
 import { ArticuloService } from '../../../../service/articulo';
 import { TipoarticuloService } from '../../../../service/tipoarticulo';
+import { ImageUploadService } from '../../../../service/image-upload';
 import { IArticulo } from '../../../../model/articulo';
 import { ITipoarticulo } from '../../../../model/tipoarticulo';
 import { SessionService } from '../../../../service/session';
@@ -30,6 +31,7 @@ export class ArticuloAdminForm implements OnInit {
   private oTipoarticuloService = inject(TipoarticuloService);
   private modalService = inject(ModalService);
   private sessionService = inject(SessionService);
+  public imageUpload = inject(ImageUploadService);
 
   articuloForm!: FormGroup;
   error = signal<string | null>(null);
@@ -59,6 +61,7 @@ export class ArticuloAdminForm implements OnInit {
       descripcion: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(255)]],
       precio: [0, [Validators.required, Validators.min(0)]],
       descuento: [0, [Validators.min(0), Validators.max(100)]],
+      imagen: [null],
       id_tipoarticulo: [null, Validators.required],
     });
   }
@@ -69,6 +72,7 @@ export class ArticuloAdminForm implements OnInit {
       descripcion: articulo.descripcion,
       precio: articulo.precio,
       descuento: articulo.descuento,
+      imagen: articulo.imagen || null,
       id_tipoarticulo: articulo.tipoarticulo?.id,
     });
     if (articulo.tipoarticulo?.id) this.loadTipoarticulo(articulo.tipoarticulo.id);
@@ -120,6 +124,7 @@ export class ArticuloAdminForm implements OnInit {
       descripcion: this.articuloForm.value.descripcion,
       precio: Number(this.articuloForm.value.precio),
       descuento: Number(this.articuloForm.value.descuento),
+      imagen: this.articuloForm.value.imagen || null,
       tipoarticulo: { id: Number(this.articuloForm.value.id_tipoarticulo) },
     };
 
@@ -152,6 +157,29 @@ export class ArticuloAdminForm implements OnInit {
           this.submitting.set(false);
         },
       });
+    }
+  }
+
+  async onImageSelected(event: Event): Promise<void> {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    if (!file.type.startsWith('image/')) {
+      this.notificacion.error('Selecciona una imagen válida');
+      input.value = '';
+      return;
+    }
+
+    try {
+      const base64 = await this.imageUpload.fileToBase64(file);
+      this.articuloForm.patchValue({ imagen: base64 });
+    } catch {
+      this.notificacion.error('No se pudo procesar la imagen');
+      input.value = '';
     }
   }
 

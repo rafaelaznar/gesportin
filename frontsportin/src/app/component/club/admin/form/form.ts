@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { NotificacionService } from '../../../../service/notificacion';;
 import { toIsoDateTime } from '../../../../utils/date-utils';
 import { ClubService } from '../../../../service/club';
+import { ImageUploadService } from '../../../../service/image-upload';
 import { IClub } from '../../../../model/club';
 
 @Component({
@@ -22,6 +23,7 @@ export class ClubAdminForm implements OnInit {
   private fb = inject(FormBuilder);
   private notificacion = inject(NotificacionService);
   private clubService = inject(ClubService);
+  public imageUpload = inject(ImageUploadService);
 
   clubForm!: FormGroup;
   loading = signal(false);
@@ -149,6 +151,29 @@ export class ClubAdminForm implements OnInit {
     }
     const text = String(value);
     return text.includes('T') ? text.split('T')[0] : text.split(' ')[0];
+  }
+
+  async onImageSelected(event: Event): Promise<void> {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    if (!file.type.startsWith('image/')) {
+      this.notificacion.error('Selecciona una imagen válida');
+      input.value = '';
+      return;
+    }
+
+    try {
+      const base64 = await this.imageUpload.fileToBase64(file);
+      this.clubForm.patchValue({ imagen: base64 });
+    } catch {
+      this.notificacion.error('No se pudo procesar la imagen');
+      input.value = '';
+    }
   }
 
   onCancel(): void {

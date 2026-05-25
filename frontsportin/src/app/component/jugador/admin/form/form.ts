@@ -7,6 +7,7 @@ import { ModalService } from '../../../shared/modal/modal.service';
 import { JugadorService } from '../../../../service/jugador-service';
 import { EquipoService } from '../../../../service/equipo';
 import { UsuarioService } from '../../../../service/usuarioService';
+import { ImageUploadService } from '../../../../service/image-upload';
 import { IJugador } from '../../../../model/jugador';
 import { IEquipo } from '../../../../model/equipo';
 import { IUsuario } from '../../../../model/usuario';
@@ -34,6 +35,7 @@ export class JugadorAdminForm implements OnInit {
   private oUsuarioService = inject(UsuarioService);
   private modalService = inject(ModalService);
   private sessionService = inject(SessionService);
+  public imageUpload = inject(ImageUploadService);
 
   jugadorForm!: FormGroup;
   error = signal<string | null>(null);
@@ -64,6 +66,7 @@ export class JugadorAdminForm implements OnInit {
       dorsal: [0, [Validators.required, Validators.min(1)]],
       posicion: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
       capitan: [false, Validators.required],
+      imagen: [null],
       id_equipo: [null, Validators.required],
       id_usuario: [null, Validators.required],
     });
@@ -75,6 +78,7 @@ export class JugadorAdminForm implements OnInit {
       dorsal: jugador.dorsal,
       posicion: jugador.posicion,
       capitan: jugador.capitan,
+      imagen: jugador.imagen || null,
       id_equipo: jugador.equipo?.id,
       id_usuario: jugador.usuario?.id,
     });
@@ -150,6 +154,7 @@ export class JugadorAdminForm implements OnInit {
       dorsal: Number(this.jugadorForm.value.dorsal),
       posicion: this.jugadorForm.value.posicion,
       capitan: Boolean(this.jugadorForm.value.capitan),
+      imagen: this.jugadorForm.value.imagen || null,
       equipo: { id: Number(this.jugadorForm.value.id_equipo) },
       usuario: { id: Number(this.jugadorForm.value.id_usuario) },
     };
@@ -183,6 +188,29 @@ export class JugadorAdminForm implements OnInit {
           this.submitting.set(false);
         },
       });
+    }
+  }
+
+  async onImageSelected(event: Event): Promise<void> {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    if (!file.type.startsWith('image/')) {
+      this.notificacion.error('Selecciona una imagen válida');
+      input.value = '';
+      return;
+    }
+
+    try {
+      const base64 = await this.imageUpload.fileToBase64(file);
+      this.jugadorForm.patchValue({ imagen: base64 });
+    } catch {
+      this.notificacion.error('No se pudo procesar la imagen');
+      input.value = '';
     }
   }
 

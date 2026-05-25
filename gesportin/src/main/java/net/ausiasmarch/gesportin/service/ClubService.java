@@ -165,6 +165,7 @@ public class ClubService {
         oClubExistente.setDireccion(oClubEntity.getDireccion());
         oClubExistente.setTelefono(oClubEntity.getTelefono());
         oClubExistente.setFechaAlta(oClubEntity.getFechaAlta());
+        oClubExistente.setImagen(oClubEntity.getImagen());
         return oClubRepository.save(oClubExistente);
     }
 

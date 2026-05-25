@@ -10,6 +10,7 @@ import { ModalService } from '../../../shared/modal/modal.service';
 import { INoticia } from '../../../../model/noticia';
 import { IClub } from '../../../../model/club';
 import { ClubService } from '../../../../service/club';
+import { ImageUploadService } from '../../../../service/image-upload';
 import { NoticiaService } from '../../../../service/noticia';
 import { ClubAdminPlist } from '../../../club/admin/plist/plist';
 
@@ -28,6 +29,7 @@ export class NoticiaTeamadminForm implements OnInit {
   private oClubService = inject(ClubService);
   private oNoticiaService = inject(NoticiaService);
   private notificacion = inject(NotificacionService);
+  public imageUpload = inject(ImageUploadService);
   session: SessionService = inject(SessionService);
 
   noticiaForm!: FormGroup;
@@ -198,6 +200,29 @@ export class NoticiaTeamadminForm implements OnInit {
           this.submitting.set(false);
         },
       });
+    }
+  }
+
+  async onImageSelected(event: Event): Promise<void> {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    if (!file.type.startsWith('image/')) {
+      this.notificacion.error('Selecciona una imagen válida');
+      input.value = '';
+      return;
+    }
+
+    try {
+      const base64 = await this.imageUpload.fileToBase64(file);
+      this.noticiaForm.patchValue({ imagen: base64 });
+    } catch {
+      this.notificacion.error('No se pudo procesar la imagen');
+      input.value = '';
     }
   }
 

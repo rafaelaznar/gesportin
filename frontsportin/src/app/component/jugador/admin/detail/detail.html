@@ -54,7 +54,7 @@
           <div class="col-7 fw-semibold small">
             @if (oJugador()?.imagen) {
               <img
-                [src]="oJugador()?.imagen"
+                [src]="imageUpload.toPreviewSrc(oJugador()?.imagen)"
                 class="img-thumbnail"
                 style="max-height: 80px"
                 alt="jugador"

@@ -31,7 +31,7 @@
           <div class="col-5 text-muted small text-uppercase">Capitán</div>
           <div class="col-7 fw-semibold small">{{ oJugador()?.capitan ? 'Sí' : 'No' }}</div>
           <div class="col-5 text-muted small text-uppercase">Imagen</div>
-          <div class="col-7 fw-semibold small">@if (oJugador()?.imagen) { <img [src]="oJugador()?.imagen" class="img-thumbnail" style="max-height:80px" alt="jugador"/> } @else { Sin imagen }</div>
+          <div class="col-7 fw-semibold small">@if (oJugador()?.imagen) { <img [src]="imageUpload.toPreviewSrc(oJugador()?.imagen)" class="img-thumbnail" style="max-height:80px" alt="jugador"/> } @else { Sin imagen }</div>
         </div>
         <div class="card border-start border-3 border-info mt-3">
           <div class="card-header py-1 d-flex align-items-center gap-2 bg-info bg-opacity-10" style="cursor:pointer" (click)="showUsuario.set(!showUsuario())">
