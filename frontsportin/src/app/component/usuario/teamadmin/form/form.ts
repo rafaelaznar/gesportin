@@ -75,6 +75,7 @@ export class UsuarioTeamadminForm implements OnInit {
       apellido1: ['', [Validators.maxLength(100)]],
       apellido2: ['', [Validators.maxLength(100)]],
       username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
+      email: ['', [Validators.required, Validators.email, Validators.maxLength(255)]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       id_tipousuario: [null, Validators.required],
       id_rolusuario: [null, Validators.required],
@@ -111,6 +112,7 @@ export class UsuarioTeamadminForm implements OnInit {
       apellido1: usuario.apellido1,
       apellido2: usuario.apellido2,
       username: usuario.username,
+      email: usuario.email,
       id_tipousuario: usuario.tipousuario?.id,
       id_rolusuario: usuario.rolusuario?.id,
       id_club: usuario.club?.id,
@@ -155,6 +157,10 @@ export class UsuarioTeamadminForm implements OnInit {
 
   get username() {
     return this.usuarioForm.get('username');
+  }
+
+  get email() {
+    return this.usuarioForm.get('email');
   }
 
   get password() {
@@ -219,6 +225,7 @@ export class UsuarioTeamadminForm implements OnInit {
       apellido1: this.usuarioForm.value.apellido1,
       apellido2: this.usuarioForm.value.apellido2,
       username: this.usuarioForm.value.username,
+      email: this.usuarioForm.value.email,
       tipousuario: { id: Number(this.usuarioForm.value.id_tipousuario) },
       rolusuario: { id: Number(this.usuarioForm.value.id_rolusuario) },
       club: { id: Number(this.usuarioForm.value.id_club) },

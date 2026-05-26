@@ -1,6 +1,7 @@
 package net.ausiasmarch.gesportin.exception;
 
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -11,6 +12,18 @@ import net.ausiasmarch.gesportin.bean.ExceptionBean;
 
 @ControllerAdvice
 public class ApplicationExceptionHandler {
+
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<ExceptionBean> handleConflictException(ConflictException ex) {
+        ExceptionBean oExceptionBean = new ExceptionBean(409, ex.getMessage(), System.currentTimeMillis());
+        return new ResponseEntity<>(oExceptionBean, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ExceptionBean> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+        ExceptionBean oExceptionBean = new ExceptionBean(409, "Ya existe un registro con esos datos", System.currentTimeMillis());
+        return new ResponseEntity<>(oExceptionBean, HttpStatus.CONFLICT);
+    }
 
     @ExceptionHandler(DataAccessException.class)
     public ResponseEntity<ExceptionBean> handleDataAccessException(DataAccessException ex) {

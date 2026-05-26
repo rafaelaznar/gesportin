@@ -64,8 +64,8 @@ CREATE TABLE `categoria` (
 CREATE TABLE `club` (
   `id` bigint NOT NULL,
   `nombre` varchar(255) CHARACTER SET utf32 COLLATE utf32_unicode_ci NOT NULL,
-  `dirección` varchar(255) CHARACTER SET utf32 COLLATE utf32_unicode_ci NOT NULL,
-  `teléfono` varchar(255) CHARACTER SET utf32 COLLATE utf32_unicode_ci NOT NULL,
+  `direccion` varchar(255) CHARACTER SET utf32 COLLATE utf32_unicode_ci NOT NULL,
+  `telefono` varchar(255) CHARACTER SET utf32 COLLATE utf32_unicode_ci NOT NULL,
   `fecha_alta` datetime NOT NULL,
   `imagen` longblob
 ) ENGINE=InnoDB DEFAULT CHARSET=utf32 COLLATE=utf32_unicode_ci;
@@ -74,7 +74,7 @@ CREATE TABLE `club` (
 -- Volcado de datos para la tabla `club`
 --
 
-INSERT INTO `club` (`id`, `nombre`, `dirección`, `teléfono`, `fecha_alta`, `imagen`) VALUES
+INSERT INTO `club` (`id`, `nombre`, `direccion`, `telefono`, `fecha_alta`, `imagen`) VALUES
 (1, 'Gesportin', '', '', '2026-04-16 09:41:26', NULL);
 
 -- --------------------------------------------------------
@@ -353,7 +353,9 @@ CREATE TABLE `usuario` (
   `apellido1` varchar(255) CHARACTER SET utf32 COLLATE utf32_unicode_ci NOT NULL,
   `apellido2` varchar(255) CHARACTER SET utf32 COLLATE utf32_unicode_ci NOT NULL,
   `username` varchar(255) CHARACTER SET utf32 COLLATE utf32_unicode_ci NOT NULL,
+  `email` varchar(255) CHARACTER SET utf32 COLLATE utf32_unicode_ci DEFAULT NULL,
   `password` varchar(255) CHARACTER SET utf32 COLLATE utf32_unicode_ci NOT NULL,
+  `token_password` varchar(64) CHARACTER SET utf32 COLLATE utf32_unicode_ci DEFAULT NULL,
   `fecha_alta` datetime NOT NULL,
   `genero` int NOT NULL,
   `id_tipousuario` bigint NOT NULL,
@@ -365,10 +367,10 @@ CREATE TABLE `usuario` (
 -- Volcado de datos para la tabla `usuario`
 --
 
-INSERT INTO `usuario` (`id`, `nombre`, `apellido1`, `apellido2`, `username`, `password`, `fecha_alta`, `genero`, `id_tipousuario`, `id_club`, `id_rolusuario`) VALUES
-(1, 'Jose', 'Gutiérrez', 'Cruz', 'admin', '7e4b4f5529e084ecafb996c891cfbd5b5284f5b00dc155c37bbb62a9f161a72e', '2026-03-30 15:57:44', 0, 1, 1, 1),
-(2, 'Maria', 'García', 'López', 'clubadmin', '7e4b4f5529e084ecafb996c891cfbd5b5284f5b00dc155c37bbb62a9f161a72e', '2026-03-30 15:57:44', 1, 2, 1, 1),
-(3, 'Carla', 'Sánchez', 'Martínez', 'usuario', '7e4b4f5529e084ecafb996c891cfbd5b5284f5b00dc155c37bbb62a9f161a72e', '2026-03-30 15:57:44', 1, 3, 1, 1);
+INSERT INTO `usuario` (`id`, `nombre`, `apellido1`, `apellido2`, `username`, `email`, `password`, `token_password`, `fecha_alta`, `genero`, `id_tipousuario`, `id_club`, `id_rolusuario`) VALUES
+(1, 'Jose', 'Gutiérrez', 'Cruz', 'admin', 'admin@gesportin.local', '7e4b4f5529e084ecafb996c891cfbd5b5284f5b00dc155c37bbb62a9f161a72e', NULL, '2026-03-30 15:57:44', 0, 1, 1, 1),
+(2, 'Maria', 'García', 'López', 'clubadmin', 'clubadmin@gesportin.local', '7e4b4f5529e084ecafb996c891cfbd5b5284f5b00dc155c37bbb62a9f161a72e', NULL, '2026-03-30 15:57:44', 1, 2, 1, 1),
+(3, 'Carla', 'Sánchez', 'Martínez', 'usuario', 'usuario@gesportin.local', '7e4b4f5529e084ecafb996c891cfbd5b5284f5b00dc155c37bbb62a9f161a72e', NULL, '2026-03-30 15:57:44', 1, 3, 1, 1);
 
 --
 -- Índices para tablas volcadas
@@ -538,6 +540,8 @@ ALTER TABLE `tipousuario`
 --
 ALTER TABLE `usuario`
   ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uk_usuario_email` (`email`),
+  ADD UNIQUE KEY `uk_usuario_token_password` (`token_password`),
   ADD KEY `FKfwlv0l9is3cqh8svkypwbswlg` (`id_club`),
   ADD KEY `FKbv8uo5bh4gauhgjh4vycu2a5e` (`id_rolusuario`),
   ADD KEY `FK142plrytoogsme2hd0d9xm7c0` (`id_tipousuario`);

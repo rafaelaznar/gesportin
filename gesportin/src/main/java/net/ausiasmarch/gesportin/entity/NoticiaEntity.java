@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.annotation.Nullable;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -40,6 +41,7 @@ public class NoticiaEntity {
 
     @NotNull
     @Size(min = 3)
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String contenido;
 
     @NotNull

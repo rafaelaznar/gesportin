@@ -138,19 +138,18 @@ public class SeedService {
                 "INSERT INTO rolusuario (id, descripcion) VALUES (1, 'Presidente')")
                 .executeUpdate();
 
-        // club columns dirección / teléfono have accented names — backtick-escaping
         entityManager.createNativeQuery(
-                "INSERT INTO club (id, nombre, `dirección`, `teléfono`, fecha_alta, imagen) " +
+                "INSERT INTO club (id, nombre, direccion, telefono, fecha_alta, imagen) " +
                 "VALUES (1, 'Gesportin', 'Calle Principal, 1', '600000001', NOW(), '')")
                 .executeUpdate();
 
         entityManager.createNativeQuery(
                 "INSERT INTO usuario " +
-                "(id, nombre, apellido1, apellido2, username, password, fecha_alta, genero, " +
+                "(id, nombre, apellido1, apellido2, username, email, password, fecha_alta, genero, " +
                 " id_tipousuario, id_rolusuario, id_club) VALUES " +
-                "(1, 'Jose',  'Gutiérrez', 'Cruz',     'admin',     :pwd, NOW(), 0, 1, 1, 1), " +
-                "(2, 'Maria', 'García',    'López',    'clubadmin', :pwd, NOW(), 1, 2, 1, 1), " +
-                "(3, 'Carla', 'Sánchez',   'Martínez', 'usuario',   :pwd, NOW(), 1, 3, 1, 1)")
+                "(1, 'Jose',  'Gutiérrez', 'Cruz',     'admin',     'admin@gesportin.local',     :pwd, NOW(), 0, 1, 1, 1), " +
+                "(2, 'Maria', 'García',    'López',    'clubadmin', 'clubadmin@gesportin.local', :pwd, NOW(), 1, 2, 1, 1), " +
+                "(3, 'Carla', 'Sánchez',   'Martínez', 'usuario',   'usuario@gesportin.local',   :pwd, NOW(), 1, 3, 1, 1)")
                 .setParameter("pwd", PASSWORD_AUSIAS)
                 .executeUpdate();
 
@@ -227,7 +226,7 @@ public class SeedService {
         if (oUsuarioRepository.count() == 0) {
             UsuarioEntity u1 = new UsuarioEntity();
             u1.setNombre("Jose"); u1.setApellido1("Gutiérrez"); u1.setApellido2("Cruz");
-            u1.setUsername("admin"); u1.setPassword(PASSWORD_AUSIAS);
+            u1.setUsername("admin"); u1.setEmail("admin@gesportin.local"); u1.setPassword(PASSWORD_AUSIAS);
             u1.setFechaAlta(LocalDateTime.now()); u1.setGenero(0);
             u1.setTipousuario(tipo1); u1.setRolusuario(rol1); u1.setClub(club1);
             oUsuarioRepository.save(u1);
@@ -235,7 +234,7 @@ public class SeedService {
 
             UsuarioEntity u2 = new UsuarioEntity();
             u2.setNombre("Maria"); u2.setApellido1("García"); u2.setApellido2("López");
-            u2.setUsername("clubadmin"); u2.setPassword(PASSWORD_AUSIAS);
+            u2.setUsername("clubadmin"); u2.setEmail("clubadmin@gesportin.local"); u2.setPassword(PASSWORD_AUSIAS);
             u2.setFechaAlta(LocalDateTime.now()); u2.setGenero(1);
             u2.setTipousuario(tipo2); u2.setRolusuario(rol1); u2.setClub(club1);
             oUsuarioRepository.save(u2);
@@ -243,7 +242,7 @@ public class SeedService {
 
             UsuarioEntity u3 = new UsuarioEntity();
             u3.setNombre("Carla"); u3.setApellido1("Sánchez"); u3.setApellido2("Martínez");
-            u3.setUsername("usuario"); u3.setPassword(PASSWORD_AUSIAS);
+            u3.setUsername("usuario"); u3.setEmail("usuario@gesportin.local"); u3.setPassword(PASSWORD_AUSIAS);
             u3.setFechaAlta(LocalDateTime.now()); u3.setGenero(1);
             u3.setTipousuario(tipo3); u3.setRolusuario(rol1); u3.setClub(club1);
             oUsuarioRepository.save(u3);

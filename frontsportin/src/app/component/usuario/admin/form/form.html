@@ -60,6 +60,23 @@
     </div>
 
     <div class="mb-3">
+      <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+      <input
+        id="email"
+        type="email"
+        class="form-control"
+        formControlName="email"
+        [class.is-invalid]="email?.invalid && email?.touched"
+      />
+      @if (email?.invalid && email?.touched) {
+        <div class="invalid-feedback">
+          @if (email?.errors?.['required']) { <span>Email es obligatorio.</span> }
+          @if (email?.errors?.['email']) { <span>Introduce un email válido.</span> }
+        </div>
+      }
+    </div>
+
+    <div class="mb-3">
       <label for="genero" class="form-label">Género <span class="text-danger">*</span></label>
       <select
         id="genero"
