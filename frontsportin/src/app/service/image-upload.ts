@@ -4,9 +4,15 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class ImageUploadService {
+  private readonly maxImageSizeBytes = 100 * 1024;
+
   async fileToBase64(file: File): Promise<string> {
     if (!file.type.startsWith('image/')) {
       throw new Error('El archivo seleccionado no es una imagen válida');
+    }
+
+    if (file.size > this.maxImageSizeBytes) {
+      throw new Error('La imagen es demasiado pesada. Elige una imagen de menos de 100 KB');
     }
 
     return new Promise((resolve, reject) => {

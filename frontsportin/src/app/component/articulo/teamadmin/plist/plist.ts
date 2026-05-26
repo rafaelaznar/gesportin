@@ -8,6 +8,7 @@ import { debounceTimeSearch } from '../../../../environment/environment';
 import { IArticulo } from '../../../../model/articulo';
 import { IPage } from '../../../../model/plist';
 import { ArticuloService } from '../../../../service/articulo';
+import { ImageUploadService } from '../../../../service/image-upload';
 import { Paginacion } from '../../../shared/paginacion/paginacion';
 import { BotoneraRpp } from '../../../shared/botonera-rpp/botonera-rpp';
 import { BotoneraActionsPlist } from '../../../shared/botonera-actions-plist/botonera-actions-plist';
@@ -33,6 +34,7 @@ export class ArticuloTeamadminPlist implements OnInit, OnDestroy {
   private searchSubject = new Subject<string>();
   private searchSubscription?: Subscription;
 
+  public imageUpload = inject(ImageUploadService);
   private articuloService = inject(ArticuloService);
   private modalRef = inject(MODAL_REF, { optional: true });
 

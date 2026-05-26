@@ -231,8 +231,9 @@ export class JugadorTeamadminForm implements OnInit {
     try {
       const base64 = await this.imageUpload.fileToBase64(file);
       this.jugadorForm.patchValue({ imagen: base64 });
-    } catch {
-      this.notificacion.error('No se pudo procesar la imagen');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'No se pudo procesar la imagen';
+      this.notificacion.error(message);
       input.value = '';
     }
   }
