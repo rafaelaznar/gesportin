@@ -101,3 +101,15 @@
   color: #1e293b;
 }
 .fv-total-row { color: #059669; font-size: 1rem; }
+
+.fv-export-btns {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.fv-export-btn {
+  padding: 0.15rem 0.4rem;
+  font-size: 0.8rem;
+  line-height: 1.2;
+  border-radius: 6px;
+}

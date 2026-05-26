@@ -11,6 +11,17 @@
     <p>Aún no tienes facturas. ¡Visita la tienda y realiza tu primera compra!</p>
   </div>
 } @else {
+  <div class="d-flex justify-content-end gap-2 px-3 pt-3 pb-1">
+    <button class="btn btn-danger btn-sm" (click)="exportarPDF()">
+      <i class="bi bi-file-earmark-pdf me-1" aria-hidden="true"></i><span class="d-none d-sm-inline">Exportar PDF</span>
+    </button>
+    <button class="btn btn-success btn-sm" (click)="exportarCSV()">
+      <i class="bi bi-filetype-csv me-1" aria-hidden="true"></i><span class="d-none d-sm-inline">Exportar CSV</span>
+    </button>
+    <button class="btn btn-secondary btn-sm" (click)="exportarExcel()">
+      <i class="bi bi-file-earmark-spreadsheet me-1" aria-hidden="true"></i><span class="d-none d-sm-inline">Exportar Excel</span>
+    </button>
+  </div>
   <div class="fv-list">
     @for (row of rows(); track row.factura.id) {
       <div class="fv-card" [class.fv-card--expanded]="row.expanded">
@@ -22,6 +33,17 @@
           <div class="fv-card-header-right">
             <span class="fv-items-count">{{ row.compras.length }} artículo{{ row.compras.length !== 1 ? 's' : '' }}</span>
             <span class="fv-total">{{ row.total | currency:'EUR':'symbol':'1.2-2' }}</span>
+            <div class="fv-export-btns" (click)="$event.stopPropagation()">
+              <button class="btn btn-outline-danger btn-xs fv-export-btn" title="Exportar PDF" (click)="exportarPDFFactura(row, $event)">
+                <i class="bi bi-file-earmark-pdf" aria-hidden="true"></i>
+              </button>
+              <button class="btn btn-outline-success btn-xs fv-export-btn" title="Exportar CSV" (click)="exportarCSVFactura(row, $event)">
+                <i class="bi bi-filetype-csv" aria-hidden="true"></i>
+              </button>
+              <button class="btn btn-outline-secondary btn-xs fv-export-btn" title="Exportar Excel" (click)="exportarExcelFactura(row, $event)">
+                <i class="bi bi-file-earmark-spreadsheet" aria-hidden="true"></i>
+              </button>
+            </div>
             <i class="bi" [class.bi-chevron-down]="!row.expanded" [class.bi-chevron-up]="row.expanded"></i>
           </div>
         </div>
