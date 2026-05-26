@@ -37,6 +37,7 @@ export class ArticuloAdminForm implements OnInit {
   error = signal<string | null>(null);
   submitting = signal(false);
   selectedTipoarticulo = signal<ITipoarticulo | null>(null);
+  imagePreview = signal<string | null>(null);
 
   constructor() {
     effect(() => {
@@ -76,6 +77,7 @@ export class ArticuloAdminForm implements OnInit {
       id_tipoarticulo: articulo.tipoarticulo?.id,
     });
     if (articulo.tipoarticulo?.id) this.loadTipoarticulo(articulo.tipoarticulo.id);
+    if (articulo.imagen) this.imagePreview.set(this.imageUpload.toPreviewSrc(articulo.imagen));
   }
 
   private loadTipoarticulo(idTipoarticulo: number): void {
@@ -168,18 +170,14 @@ export class ArticuloAdminForm implements OnInit {
       return;
     }
 
-    if (!file.type.startsWith('image/')) {
-      this.notificacion.error('Selecciona una imagen válida');
-      input.value = '';
-      return;
-    }
-
     try {
       const base64 = await this.imageUpload.fileToBase64(file);
       this.articuloForm.patchValue({ imagen: base64 });
+      this.imagePreview.set(this.imageUpload.toPreviewSrc(base64));
     } catch (error) {
       const message = error instanceof Error ? error.message : 'No se pudo procesar la imagen';
       this.notificacion.error(message);
+      this.imagePreview.set(null);
       input.value = '';
     }
   }

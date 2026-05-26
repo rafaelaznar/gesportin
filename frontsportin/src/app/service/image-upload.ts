@@ -8,7 +8,7 @@ export class ImageUploadService {
 
   async fileToBase64(file: File): Promise<string> {
     if (!file.type.startsWith('image/')) {
-      throw new Error('El archivo seleccionado no es una imagen válida');
+      throw new Error('Selecciona una imagen válida');
     }
 
     if (file.size > this.maxImageSizeBytes) {

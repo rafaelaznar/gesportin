@@ -42,6 +42,7 @@ export class JugadorAdminForm implements OnInit {
   submitting = signal(false);
   selectedEquipo = signal<IEquipo | null>(null);
   selectedUsuario = signal<IUsuario | null>(null);
+  imagePreview = signal<string | null>(null);
 
   constructor() {
     effect(() => {
@@ -84,6 +85,7 @@ export class JugadorAdminForm implements OnInit {
     });
     if (jugador.equipo?.id) this.loadEquipo(jugador.equipo.id);
     if (jugador.usuario?.id) this.loadUsuario(jugador.usuario.id);
+    if (jugador.imagen) this.imagePreview.set(this.imageUpload.toPreviewSrc(jugador.imagen));
   }
 
   private loadEquipo(idEquipo: number): void {
@@ -199,18 +201,14 @@ export class JugadorAdminForm implements OnInit {
       return;
     }
 
-    if (!file.type.startsWith('image/')) {
-      this.notificacion.error('Selecciona una imagen válida');
-      input.value = '';
-      return;
-    }
-
     try {
       const base64 = await this.imageUpload.fileToBase64(file);
       this.jugadorForm.patchValue({ imagen: base64 });
+      this.imagePreview.set(this.imageUpload.toPreviewSrc(base64));
     } catch (error) {
       const message = error instanceof Error ? error.message : 'No se pudo procesar la imagen';
       this.notificacion.error(message);
+      this.imagePreview.set(null);
       input.value = '';
     }
   }

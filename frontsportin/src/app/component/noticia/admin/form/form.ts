@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, inject, signal } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, inject, signal, effect } from '@angular/core';
 import { toIsoDateTime } from '../../../../utils/date-utils';
 import { SessionService } from '../../../../service/session';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -37,14 +37,24 @@ export class NoticiaAdminForm implements OnInit {
   submitting = signal(false);
   selectedClub = signal<IClub | null>(null);
   displayIdClub = signal<number | null>(null);
+  imagePreview = signal<string | null>(null);
 
   private modalService = inject(ModalService);
+
+  constructor() {
+    effect(() => {
+      const n = this.noticia;
+      if (n && this.noticiaForm) {
+        this.loadNoticiaData(n);
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.initForm();
 
     if (this.noticia) {
-      this.loadNoticiaData();
+      this.loadNoticiaData(this.noticia);
     }
   }
 
@@ -78,7 +88,7 @@ export class NoticiaAdminForm implements OnInit {
     });
   }
 
-  private loadNoticiaData(): void {
+  private loadNoticiaData(noticia: INoticia): void {
     if (!this.noticia) return;
 
     const fechaIso = toIsoDateTime(this.noticia.fecha);
@@ -92,10 +102,8 @@ export class NoticiaAdminForm implements OnInit {
       imagen: this.noticia.imagen || null,
       id_club: this.noticia.club?.id,
     });
-
-    if (this.noticia.club) {
-      this.syncClub(this.noticia.club.id);
-    }
+    if (this.noticia.club) this.syncClub(this.noticia.club.id);
+    if (noticia.imagen) this.imagePreview.set(this.imageUpload.toPreviewSrc(noticia.imagen));
   }
 
   private loadClub(idClub: number): void {
@@ -197,18 +205,14 @@ export class NoticiaAdminForm implements OnInit {
       return;
     }
 
-    if (!file.type.startsWith('image/')) {
-      this.notificacion.error('Selecciona una imagen válida');
-      input.value = '';
-      return;
-    }
-
     try {
       const base64 = await this.imageUpload.fileToBase64(file);
       this.noticiaForm.patchValue({ imagen: base64 });
+      this.imagePreview.set(this.imageUpload.toPreviewSrc(base64));
     } catch (error) {
       const message = error instanceof Error ? error.message : 'No se pudo procesar la imagen';
       this.notificacion.error(message);
+      this.imagePreview.set(null);
       input.value = '';
     }
   }
