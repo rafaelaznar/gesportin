@@ -7,10 +7,11 @@ import { IClub } from '../../../../model/club';
 import { ClubService } from '../../../../service/club';
 import { SessionService } from '../../../../service/session';
 import { DatePipe } from '@angular/common';
+import { ClubTeamadminMap } from '../map/map';
 
 @Component({
   selector: 'app-club-teamadmin-plist',
-  imports: [Paginacion, RouterLink, DatePipe],
+  imports: [Paginacion, RouterLink, DatePipe, ClubTeamadminMap],
   templateUrl: './plist.html',
   styleUrl: './plist.css',
 })

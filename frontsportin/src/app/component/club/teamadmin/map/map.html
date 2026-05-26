@@ -1,0 +1,10 @@
+<div class="club-map-card">
+  @if (club && club.latitud != null && club.longitud != null) {
+    <div id="{{ mapId }}" class="club-map-container"></div>
+  } @else {
+    <div class="text-muted small">Sin coordenadas para este club.</div>
+  }
+  @if (error()) {
+    <div class="alert alert-danger small mb-0 mt-1">{{ error() }}</div>
+  }
+</div>
