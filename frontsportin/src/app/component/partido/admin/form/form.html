@@ -43,7 +43,7 @@
           <input type="text" class="form-control" [value]="id_liga?.value || ''" readonly />
         </div>
         @if (selectedLiga()) {
-          <div class="flex-grow-1">
+          <div class="grow">
             <label class="form-label">Nombre</label>
             <p class="form-control-plaintext fw-semibold mb-0">{{ selectedLiga()?.nombre }}</p>
           </div>
