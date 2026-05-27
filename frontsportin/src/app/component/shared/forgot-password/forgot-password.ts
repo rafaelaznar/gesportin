@@ -42,12 +42,13 @@ export class ForgotPasswordComponent {
       next: () => {
         this.submitting.set(false);
         this.sent.set(true);
-        this.notificacion.success('Si existe una cuenta con ese email, recibirás un enlace de recuperación.');
+        this.notificacion.success('Si existe una cuenta con ese email, recibiras un enlace de recuperacion.');
       },
-      error: () => {
+      error: (err) => {
+        const message = err?.error?.message ?? 'No se pudo solicitar la recuperacion.';
         this.submitting.set(false);
-        this.error.set('No se pudo solicitar la recuperación.');
-        this.notificacion.error('No se pudo solicitar la recuperación.');
+        this.error.set(message);
+        this.notificacion.error(message);
       },
     });
   }
