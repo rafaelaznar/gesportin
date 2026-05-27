@@ -134,8 +134,8 @@
                         </td>
                         <td class="py-1" style="font-size: 0.75rem">{{ pago.fecha }}</td>
                         <td class="text-end pe-0 py-1">
-                          @if (pago.abonado) {
-                            <i class="bi bi-check-circle-fill text-success" title="Abonado"></i>
+                          @if (pago.paymentSession) {
+                            <i class="bi bi-check-circle-fill text-success" title="Pagado"></i>
                           } @else {
                             <i class="bi bi-x-circle-fill text-danger" title="Pendiente"></i>
                           }

@@ -118,7 +118,7 @@ export class CuotaUsuarioPlist implements OnInit {
   }
 
   estaPagado(cuotaRow: CuotaRow): boolean {
-    return cuotaRow.pagos.some((p) => p.abonado);
+    return cuotaRow.pagos.some((p) => p.paymentSession != null);
   }
 
   isPagando(cuotaId: number): boolean {

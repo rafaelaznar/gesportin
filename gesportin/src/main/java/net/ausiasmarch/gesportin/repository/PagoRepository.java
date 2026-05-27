@@ -11,11 +11,11 @@ import net.ausiasmarch.gesportin.entity.PagoEntity;
 
 public interface PagoRepository extends JpaRepository<PagoEntity, Long> {
     
-    Page<PagoEntity> findByAbonadoTrue(Pageable oPageable);
+    Page<PagoEntity> findByPaymentSessionIsNotNull(Pageable oPageable);
 
-    Page<PagoEntity> findByAbonadoFalse(Pageable oPageable);
+    Page<PagoEntity> findByPaymentSessionIsNull(Pageable oPageable);
 
-    PagoEntity findByIdAndAbonadoTrue(Long id);
+    PagoEntity findByIdAndPaymentSessionIsNotNull(Long id);
 
     Page<PagoEntity> findByCuotaId(Long idCuota, Pageable oPageable);
 
@@ -28,9 +28,9 @@ public interface PagoRepository extends JpaRepository<PagoEntity, Long> {
     // unicidad: un jugador no puede pagar la misma cuota dos veces
     boolean existsByCuotaIdAndJugadorId(Long cuotaId, Long jugadorId);
 
-    // comprobación de pago ya abonado (para la pasarela de pagos)
-    boolean existsByCuotaIdAndJugadorIdAndAbonadoTrue(Long cuotaId, Long jugadorId);
+    // comprobación de pago ya confirmado por pasarela
+    boolean existsByCuotaIdAndJugadorIdAndPaymentSessionIsNotNull(Long cuotaId, Long jugadorId);
 
-    // pago pendiente para reutilizarlo al confirmar la pasarela
-    Optional<PagoEntity> findFirstByCuotaIdAndJugadorIdAndAbonadoFalseOrderByIdDesc(Long cuotaId, Long jugadorId);
+    // pago pendiente (sin sesión de pago) para reutilizarlo al confirmar la pasarela
+    Optional<PagoEntity> findFirstByCuotaIdAndJugadorIdAndPaymentSessionIsNullOrderByIdDesc(Long cuotaId, Long jugadorId);
 }

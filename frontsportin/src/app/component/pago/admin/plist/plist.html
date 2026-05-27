@@ -94,16 +94,18 @@
                           <span>Jugador</span>
                         </div>
                       </th>
-                      <th scope="col" (click)="onOrder('abonado')" style="cursor: pointer; width: 12%">
+                      <th scope="col" style="width: 12%">
                         <div class="header-stacked">
                           <div class="header-top">
                             <i class="bi bi-credit-card" aria-hidden="true"></i>
-                            @if (orderField() === 'abonado') {
-                              @if (orderDirection() === 'asc') { <i class="bi bi-caret-up-fill" aria-hidden="true"></i> }
-                              @if (orderDirection() === 'desc') { <i class="bi bi-caret-down-fill" aria-hidden="true"></i> }
-                            }
                           </div>
-                          <span>Abonado</span>
+                          <span>Estado</span>
+                        </div>
+                      </th>
+                      <th scope="col" style="width: 9%">
+                        <div class="header-stacked">
+                          <div class="header-top"><i class="bi bi-receipt" aria-hidden="true"></i></div>
+                          <span>Session ID</span>
                         </div>
                       </th>
                       <th scope="col" (click)="onOrder('fecha')" style="cursor: pointer; width: 15%">
@@ -146,7 +148,20 @@
                             <a class="btn btn-warning btn-sm ms-2 float-end" [routerLink]="strRole ? ['/pago', strRole, 'jugador', oPago.jugador.id] : ['/pago/jugador', oPago.jugador.id]" role="button" title="Filtrar por jugador"><i class="bi bi-funnel-fill" aria-hidden="true"></i></a>
                           }
                         </td>
-                        <td class="text-end">{{ oPago.abonado }}</td>
+                        <td class="text-center">
+                          @if (oPago.paymentSession) {
+                            <span class="badge bg-success">Pagado</span>
+                          } @else {
+                            <span class="badge bg-secondary">Pendiente</span>
+                          }
+                        </td>
+                        <td class="text-center text-muted small">
+                          @if (oPago.paymentSession) {
+                            <a [routerLink]="strRole ? ['/payment-session', strRole, 'view', oPago.paymentSession.id] : ['/payment-session/view', oPago.paymentSession.id]">#{{ oPago.paymentSession.id }}</a>
+                          } @else {
+                            &mdash;
+                          }
+                        </td>
                         <td>{{ oPago.fecha }}</td>
                         <td class="text-center">
                           <app-botonera-actions-plist [id]="oPago.id" strEntity="pago" [strRole]="strRole"></app-botonera-actions-plist>

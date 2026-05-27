@@ -231,7 +231,7 @@ CREATE TABLE `pago` (
   `id` bigint NOT NULL,
   `id_cuota` bigint NOT NULL,
   `id_jugador` bigint NOT NULL,
-  `abonado` bit(1) NOT NULL,
+  `id_payment_session` bigint DEFAULT NULL,
   `fecha` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf32 COLLATE=utf32_unicode_ci;
 
@@ -501,7 +501,8 @@ ALTER TABLE `noticia`
 ALTER TABLE `pago`
   ADD PRIMARY KEY (`id`),
   ADD KEY `FKonch4hy8el3uyqxm2497mdal4` (`id_cuota`),
-  ADD KEY `FKlj1d0yxpgf7kh9ykelhqrqs53` (`id_jugador`);
+  ADD KEY `FKlj1d0yxpgf7kh9ykelhqrqs53` (`id_jugador`),
+  ADD KEY `FK_pago_payment_session` (`id_payment_session`);
 
 --
 -- Indices de la tabla `payment_session`

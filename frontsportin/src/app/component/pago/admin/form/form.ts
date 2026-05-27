@@ -63,7 +63,6 @@ export class PagoAdminForm implements OnInit {
       id: [{ value: 0, disabled: true }],
       id_cuota: [null, Validators.required],
       id_jugador: [null, Validators.required],
-      abonado: [false],
       fecha: ['', Validators.required],
     });
   }
@@ -73,7 +72,6 @@ export class PagoAdminForm implements OnInit {
       id: pago.id,
       id_cuota: pago.cuota?.id,
       id_jugador: pago.jugador?.id,
-      abonado: Boolean(pago.abonado),
       fecha: pago.fecha,
     });
     if (pago.cuota?.id) this.loadCuota(pago.cuota.id);
@@ -100,10 +98,6 @@ export class PagoAdminForm implements OnInit {
 
   get id_jugador() {
     return this.pagoForm.get('id_jugador');
-  }
-
-  get abonado() {
-    return this.pagoForm.get('abonado');
   }
 
   get fecha() {
@@ -143,7 +137,6 @@ export class PagoAdminForm implements OnInit {
     const pagoData: any = {
       cuota: { id: Number(this.pagoForm.value.id_cuota) },
       jugador: { id: Number(this.pagoForm.value.id_jugador) },
-      abonado: Boolean(this.pagoForm.value.abonado),
       fecha: this.pagoForm.value.fecha?.length === 10
         ? `${this.pagoForm.value.fecha}T00:00:00`
         : this.pagoForm.value.fecha,

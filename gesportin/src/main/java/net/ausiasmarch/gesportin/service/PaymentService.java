@@ -120,18 +120,17 @@ public class PaymentService {
         }
 
         // Verificar que la cuota no está ya pagada por este jugador
-        boolean yaPagado = oPagoRepository.existsByCuotaIdAndJugadorIdAndAbonadoTrue(cuotaId, jugadorId);
+        boolean yaPagado = oPagoRepository.existsByCuotaIdAndJugadorIdAndPaymentSessionIsNotNull(cuotaId, jugadorId);
         if (yaPagado) {
             throw new GeneralException("Esta cuota ya está abonada");
         }
 
-        // Garantiza que existe un registro pendiente (abonado=false) para luego actualizarlo a true.
-        oPagoRepository.findFirstByCuotaIdAndJugadorIdAndAbonadoFalseOrderByIdDesc(cuotaId, jugadorId)
+        // Garantiza que existe un registro pendiente (sin sesión) para luego vincularlo al confirmar.
+        oPagoRepository.findFirstByCuotaIdAndJugadorIdAndPaymentSessionIsNullOrderByIdDesc(cuotaId, jugadorId)
                 .orElseGet(() -> {
                     PagoEntity pagoPendiente = new PagoEntity();
                     pagoPendiente.setCuota(cuota);
                     pagoPendiente.setJugador(jugador);
-                    pagoPendiente.setAbonado(false);
                     pagoPendiente.setFecha(LocalDateTime.now());
                     return oPagoRepository.save(pagoPendiente);
                 });
@@ -296,18 +295,18 @@ public class PaymentService {
     // MÉTODOS PRIVADOS
     // ---------------------------------------------------------------
 
-    /** Procesa el pago de una cuota: actualiza el pago pendiente a abonado=true. */
+    /** Procesa el pago de una cuota: asocia la payment_session al pago pendiente. */
     private Long procesarPagoCuota(PaymentSessionEntity session) {
         Long jugadorId = session.getIdReferencia();
         Long cuotaId = session.getIdCuota();
 
-        // Doble comprobación: no crear pago duplicado
-        if (oPagoRepository.existsByCuotaIdAndJugadorIdAndAbonadoTrue(cuotaId, jugadorId)) {
+        // Doble comprobación: no vincular pago duplicado
+        if (oPagoRepository.existsByCuotaIdAndJugadorIdAndPaymentSessionIsNotNull(cuotaId, jugadorId)) {
             throw new GeneralException("Esta cuota ya está abonada");
         }
 
         PagoEntity pagoPendiente = oPagoRepository
-            .findFirstByCuotaIdAndJugadorIdAndAbonadoFalseOrderByIdDesc(cuotaId, jugadorId)
+            .findFirstByCuotaIdAndJugadorIdAndPaymentSessionIsNullOrderByIdDesc(cuotaId, jugadorId)
             .orElseGet(() -> {
                 // Compatibilidad con sesiones antiguas sin pago pendiente previo.
                 JugadorEntity jugador = oJugadorRepository.findById(jugadorId)
@@ -317,12 +316,11 @@ public class PaymentService {
                 PagoEntity nuevoPago = new PagoEntity();
                 nuevoPago.setCuota(cuota);
                 nuevoPago.setJugador(jugador);
-                nuevoPago.setAbonado(false);
                 nuevoPago.setFecha(LocalDateTime.now());
                 return oPagoRepository.save(nuevoPago);
             });
 
-        pagoPendiente.setAbonado(true);
+        pagoPendiente.setPaymentSession(session);
         pagoPendiente.setFecha(LocalDateTime.now());
         pagoPendiente = oPagoRepository.save(pagoPendiente);
         return pagoPendiente.getId();
