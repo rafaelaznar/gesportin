@@ -5,7 +5,7 @@
       @if (entityType() === 'club') {
         <p class="text-muted mb-1">Club: {{ oEntity()?.id }}</p>
       } @else if (entityType() === 'partido') {
-        <p class="text-muted mb-1">Partido: {{ oEntity()?.longitud || 'N/A' }}</p>
+        <p class="text-muted mb-1">Partido: {{ oEntity()?.id || 'N/A' }}</p>
       }
       @if (currentCoordinates()) {
         <p class="text-muted mb-0">Coordenadas: {{ currentCoordinates() }}</p>
