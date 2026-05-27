@@ -121,28 +121,56 @@ export class FacturaUsuarioPlist implements OnInit {
     if (user?.username) doc.text(user.username, 115, 54);
 
     // --- TABLA ---
-    let y = 70;
     const cDesc = mL, cCant = 118, cPrecio = 148, cSuma = mR;
+    const maxRowsFirstPage = 20;
+    const maxRowsFollowingPages = 24;
+    let y = 70;
+    let rowsOnPage = 0;
+    let maxRowsCurrentPage = maxRowsFirstPage;
+
+    const pintarCabeceraTabla = (top: number) => {
+      doc.setFillColor(...gold);
+      doc.rect(mL, top - 5, mR - mL, 9, 'F');
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(8);
+      doc.setTextColor(255, 255, 255);
+      doc.text('DESCRIPCIÓN', cDesc + 2, top);
+      doc.text('CANTIDAD', cCant, top);
+      doc.text('PRECIO', cPrecio, top);
+      doc.text('SUMA', cSuma, top, { align: 'right' });
+      return top + 7;
+    };
+
+    const pintarPie = () => {
+      doc.setDrawColor(...gold);
+      doc.line(mL, 260, mR, 260);
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.setTextColor(...dark);
+      doc.text('GESPORTÍN', mL, 268);
+      doc.setFont('Helvetica', 'normal');
+      doc.setFontSize(8);
+      doc.setTextColor(100, 100, 100);
+      doc.text('Plataforma de gestión deportiva', mL, 273);
+    };
 
     // Cabecera de tabla
-    doc.setFillColor(...gold);
-    doc.rect(mL, y - 5, mR - mL, 9, 'F');
-    doc.setFont('Helvetica', 'bold');
-    doc.setFontSize(8);
-    doc.setTextColor(255, 255, 255);
-    doc.text('DESCRIPCIÓN', cDesc + 2, y);
-    doc.text('CANTIDAD', cCant, y);
-    doc.text('PRECIO', cPrecio, y);
-    doc.text('SUMA', cSuma, y, { align: 'right' });
-    y += 7;
+    y = pintarCabeceraTabla(y);
 
     doc.setFont('Helvetica', 'normal');
     doc.setTextColor(...dark);
-    let sumTotal = 0;
     for (let i = 0; i < row.compras.length; i++) {
+      if (rowsOnPage >= maxRowsCurrentPage) {
+        doc.addPage();
+        y = pintarCabeceraTabla(25);
+        rowsOnPage = 0;
+        maxRowsCurrentPage = maxRowsFollowingPages;
+        doc.setFont('Helvetica', 'normal');
+        doc.setTextColor(...dark);
+      }
+
       const c = row.compras[i];
       const sub = c.precio * c.cantidad;
-      sumTotal += sub;
       if (i % 2 === 0) {
         doc.setFillColor(248, 246, 240);
         doc.rect(mL, y - 4, mR - mL, 7, 'F');
@@ -153,6 +181,12 @@ export class FacturaUsuarioPlist implements OnInit {
       doc.text(c.precio.toLocaleString('es-ES', { minimumFractionDigits: 2 }) + ' €', cPrecio, y);
       doc.text(sub.toLocaleString('es-ES', { minimumFractionDigits: 2 }) + ' €', cSuma, y, { align: 'right' });
       y += 7;
+      rowsOnPage++;
+    }
+
+    if (y > 238) {
+      doc.addPage();
+      y = 30;
     }
 
     // Borde inferior tabla
@@ -168,16 +202,7 @@ export class FacturaUsuarioPlist implements OnInit {
     doc.text(row.total.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' }), cSuma, y + 2, { align: 'right' });
 
     // --- PIE ---
-    doc.setDrawColor(...gold);
-    doc.line(mL, 260, mR, 260);
-    doc.setFont('Helvetica', 'bold');
-    doc.setFontSize(9);
-    doc.setTextColor(...dark);
-    doc.text('GESPORTÍN', mL, 268);
-    doc.setFont('Helvetica', 'normal');
-    doc.setFontSize(8);
-    doc.setTextColor(100, 100, 100);
-    doc.text('Plataforma de gestión deportiva', mL, 273);
+    pintarPie();
 
     doc.save(`factura-${row.factura.id}.pdf`);
   }
