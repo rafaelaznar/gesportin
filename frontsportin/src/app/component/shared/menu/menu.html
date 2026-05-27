@@ -2,7 +2,7 @@
   @if (pwa.canInstall()) {
     <a
       [routerLink]="['/download']"
-      class="btn btn-sm btn-outline-light d-inline-flex align-items-center nav-login-btn me-2"
+      class="btn btn-sm btn-outline-light d-inline-flex d-md-none align-items-center nav-login-btn me-2"
       [class.active]="activeRoute.startsWith('/download')"
       title="Instalar app"
     >
