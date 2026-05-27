@@ -1,3 +1,8 @@
+@if (isOffline()) {
+  <div class="bg-danger text-white text-center py-1 fw-semibold" style="position:sticky;top:0;z-index:1100;font-size:.9rem">
+    <i class="bi bi-wifi-off me-2"></i>Sin conexión — navegando en modo sin conexión
+  </div>
+}
 <header class="navbar navbar-dark sticky-top flex-md-nowrap p-0 shadow app-header" style="background-color: #1a1a1a;">
   <button
     class="navbar-toggler d-md-none collapsed ms-2"
