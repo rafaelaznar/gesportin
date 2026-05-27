@@ -1,0 +1,21 @@
+<div class="kpi-card" [class]="'kpi-card--' + claseColor">
+  <div class="kpi-card__top">
+    <div class="kpi-card__icon">
+      <i class="bi" [class]="'bi-' + icono" aria-hidden="true"></i>
+    </div>
+    <div class="kpi-card__text">
+      <h3 class="kpi-card__title">{{ titulo }}</h3>
+      <p class="kpi-card__value">
+        {{ valor }}<span *ngIf="sufijo" class="kpi-card__sufijo">{{ sufijo }}</span>
+      </p>
+    </div>
+  </div>
+  <div class="kpi-card__sparkline" *ngIf="tieneSparkline()">
+    <canvas
+      baseChart
+      [data]="sparklineChartData()"
+      [options]="sparklineChartOptions"
+      [type]="sparklineChartType">
+    </canvas>
+  </div>
+</div>

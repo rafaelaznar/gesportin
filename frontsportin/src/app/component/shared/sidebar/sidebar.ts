@@ -36,14 +36,37 @@ export class SidebarComponent {
   private buildMenuItems(): any[] {
     const isAdmin = this.session.isAdmin();
     const isClubAdmin = this.session.isClubAdmin();
+    const isUser = this.session.isUser();
+
+    const homeRoute = isAdmin
+      ? '/admin/dashboard'
+      : isClubAdmin
+        ? '/dashboard/teamadmin'
+        : isUser
+          ? '/mi/dashboard'
+          : '/';
 
     const items: any[] = [
-      { label: 'Home', icon: 'house-fill', route: '/' },
+      { label: 'Home', icon: 'house-fill', route: homeRoute },
     ];
 
+    if (isUser) {
+      items.push(
+        { label: 'Noticias', icon: 'newspaper', route: '/mi/noticias' },
+        { label: 'Mis Equipos', icon: 'people-fill', route: '/mi/equipos' },
+        { label: 'Cuotas', icon: 'credit-card', route: '/mi/cuotas' },
+        { label: 'Tienda', icon: 'shop', route: '/mi/tienda' },
+        { label: 'Facturas', icon: 'receipt', route: '/mi/facturas' },
+        { label: 'Mi Perfil', icon: 'person-circle', route: '/mi/perfil' },
+      );
+      return items;
+    }
+
     if (isAdmin) {
+      items.push({ label: 'Dashboard', icon: 'speedometer2', route: '/dashboard/admin' });
       items.push({ label: 'Clubes', icon: 'building', route: '/club' });
     } else if (isClubAdmin) {
+      items.push({ label: 'Dashboard', icon: 'speedometer2', route: '/dashboard/teamadmin' });
       items.push({ label: 'Mi Club', icon: 'building', route: '/club/teamadmin' });
     }
 

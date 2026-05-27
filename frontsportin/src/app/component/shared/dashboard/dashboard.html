@@ -1,46 +1,434 @@
-<div class="dashboard-container">
-  <div class="dashboard-header">
-    <h1 class="mb-4">
-      <i class="bi bi-speedometer2"></i>
-      Dashboard
-    </h1>
-    <p class="text-muted">Bienvenido a Gesportín - Sistema de Gestión Deportiva</p>
-  </div>
+<div class="dashboard-wrapper" [class.loading]="loading()" [class.mode-teamadmin]="isClubAdmin"
+  [class.mode-admin]="!isClubAdmin">
+  @if (vm$ | async; as vm) {
+  <header class="dashboard-header">
+    <div class="header-copy">
+      <h1>{{ vm.title }}</h1>
+      <p>{{ vm.subtitle }}</p>
+    </div>
+    <div class="header-date">
+      <i class="bi bi-calendar3"></i>
+      <span>{{ today | date:'dd MMM, yyyy' }}</span>
+    </div>
+  </header>
 
-  <div class="row g-4">
-    @for (card of cards; track card.title) {
-      <div class="col-md-6 col-lg-4 col-xl-3">
-        <a [routerLink]="card.route" class="card-link">
-          <div class="dashboard-card" [class]="'card-' + card.color">
-            <div class="card-icon">
-              <i [class]="'bi bi-' + card.icon"></i>
-            </div>
-            <div class="card-content">
-              <h5>{{ card.title }}</h5>
-              <p class="card-count">{{ card.count }}</p>
-            </div>
-          </div>
-        </a>
+  <section class="filter-section" aria-label="Filtros del dashboard deportivo">
+    <div class="filter-panel filter-panel-hero">
+      <div class="filter-copy">
+        <h2>Control de competición</h2>
+        <p>{{ vm.filterSummary }}</p>
       </div>
-    }
-  </div>
 
-  <div class="row mt-5">
-    <div class="col-12">
-      <div class="info-section">
-        <h3>
-          <i class="bi bi-info-circle"></i>
-          Acerca de Gesportin
-        </h3>
-        <p>
-          Gesportin es un sistema integral de gestión deportiva que permite administrar clubes, usuarios,
-          equipos, partidos, noticias, artículos y más. Diseñado para facilitar la administración de todas
-          las operaciones de un club deportivo.
-        </p>
-        <p class="text-muted mb-0">
-          <small>Versión 2026 - Desarrollado por Rafael Aznar & DAW students</small>
-        </p>
+      <span aria-hidden="true" style="flex-basis:100%;height:0"></span>
+
+      <div class="filter-grid filter-grid-main" [class.filter-grid-main-user]="isUser"
+        style="grid-template-columns:1fr 1fr .9fr 1.35fr;column-gap:.95rem;">
+        @if (!isUser) {
+        <label class="filter-field">
+          <span>Club</span>
+          <select [value]="selectedClubId()" (change)="onClubChange($any($event.target).value)"
+            [disabled]="isClubAdmin">
+            @for (club of vm.clubOptions; track club.id) {
+            @if (!(isClubAdmin && club.id === 0)) {
+            <option [value]="club.id">{{ club.label }}</option>
+            }
+            }
+          </select>
+        </label>
+
+        <label class="filter-field">
+          <span>Temporada</span>
+          <select [value]="selectedTemporadaId()" (change)="onTemporadaChange($any($event.target).value)">
+            @for (temporada of vm.temporadaOptions; track temporada.id) {
+            <option [value]="temporada.id">{{ temporada.label }}</option>
+            }
+          </select>
+        </label>
+        }
+
+        <label class="filter-field filter-field-period">
+          <span>Periodo</span>
+          <select [value]="selectedPeriod()" (change)="onPeriodChange($any($event.target).value)">
+            @for (period of vm.periodOptions; track period.value) {
+            <option [value]="period.value">{{ period.label }}</option>
+            }
+          </select>
+        </label>
+
+        <label class="filter-field"
+          [style.display]="selectedPeriod() === 'last7' || selectedPeriod() === 'last30' ? 'none' : 'flex'">
+          <span>Rango de fechas <small style="font-size:.67rem;color:#6b7ba2;">Desde - Hasta</small></span>
+          <div
+            style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:.28rem;padding:.14rem .24rem;border:1px solid #cfdaf8;border-radius:.72rem;background:#fff;box-shadow:0 2px 8px rgba(32,86,224,.08);">
+            <input type="date" [value]="fromDate()" (change)="onFromDateChange($any($event.target).value)"
+              style="padding:.43rem .5rem;border:0;box-shadow:none;">
+            <span aria-hidden="true" style="font-weight:800;color:#7a88aa;">-</span>
+            <input type="date" [value]="toDate()" (change)="onToDateChange($any($event.target).value)"
+              style="padding:.43rem .5rem;border:0;box-shadow:none;">
+          </div>
+        </label>
+      </div>
+
+      <span aria-hidden="true" style="flex-basis:100%;height:0"></span>
+
+      <div class="filter-actions">
+        <button type="button" class="filter-button" (click)="clearDateFilters()">Limpiar filtros</button>
       </div>
     </div>
-  </div>
+  </section>
+
+  @if (!vm.hasScopedData && vm.scopedDataMessage) {
+  <section class="action-section" aria-label="Estado de filtros">
+    <article class="action-empty">
+      <i class="bi bi-info-circle" aria-hidden="true"></i>
+      <p>{{ vm.scopedDataMessage }}</p>
+    </article>
+  </section>
+  }
+
+  <section class="kpi-section" aria-label="Indicadores principales">
+    <div class="kpi-grid">
+      @for (kpi of vm.kpiCards; track kpi.title) {
+      <article class="kpi-card" [ngClass]="'kpi-' + kpi.color">
+        <div class="kpi-meta">
+          <span class="kpi-label">{{ kpi.title }}</span>
+          <span class="kpi-value">{{ kpi.count }}</span>
+        </div>
+        <span class="kpi-icon" aria-hidden="true">
+          <i class="bi" [ngClass]="'bi-' + kpi.icon"></i>
+        </span>
+      </article>
+      }
+    </div>
+  </section>
+
+  @if (vm.showClubInsights) {
+  <section class="club-insights" aria-label="Métricas de rendimiento del club">
+    <div class="club-insights-grid">
+      @for (insight of vm.clubInsights; track insight.title) {
+      <article class="insight-card" [ngClass]="'insight-' + insight.color">
+        <div class="insight-meta">
+          <span class="insight-label">{{ insight.title }}</span>
+          <span class="insight-value">{{ insight.value | number:'1.0-1' }}%</span>
+        </div>
+        <span class="insight-icon" aria-hidden="true">
+          <i class="bi" [ngClass]="'bi-' + insight.icon"></i>
+        </span>
+      </article>
+      }
+    </div>
+  </section>
+  }
+
+  @if (vm.showAdminDeepDive) {
+  <section class="detail-section" aria-label="Análisis detallado de administración global">
+    <header class="detail-header">
+      <h2>Detalle Global</h2>
+      <p>Métricas comparativas para seguimiento ejecutivo mensual</p>
+    </header>
+
+    <div class="detail-grid">
+      @for (detail of vm.detailCards; track detail.title) {
+      <article class="detail-card" [ngClass]="'detail-' + detail.color">
+        <span class="detail-icon" aria-hidden="true">
+          <i class="bi" [ngClass]="'bi-' + detail.icon"></i>
+        </span>
+        <div class="detail-meta">
+          <span class="detail-title">{{ detail.title }}</span>
+          <span class="detail-value">{{ detail.value }}</span>
+          <span class="detail-helper">{{ detail.helper }}</span>
+        </div>
+      </article>
+      }
+    </div>
+  </section>
+  }
+
+  <section class="action-section" aria-label="Acciones operativas recomendadas">
+    <header class="action-header">
+      <h2>Acciones Prioritarias</h2>
+      <p>Tareas accionables para mantener salud operativa y financiera</p>
+    </header>
+
+    @if (vm.actionItems.length > 0) {
+    <div class="action-grid">
+      @for (action of vm.actionItems; track action.title) {
+      <a [routerLink]="action.route" class="action-card" [ngClass]="'action-' + action.severity"
+        style="align-items:center;justify-content:flex-start;gap:.62rem;">
+        <span class="action-icon" aria-hidden="true">
+          <i class="bi" [ngClass]="'bi-' + action.icon"></i>
+        </span>
+        <div class="action-meta" style="flex:1;">
+          <span class="action-title">{{ action.title }}</span>
+          <span class="action-description">{{ action.description }}</span>
+          <span class="action-value">{{ action.value }}</span>
+          <span class="action-cta">
+            {{ action.cta }}
+            <i class="bi bi-arrow-right-short"></i>
+          </span>
+        </div>
+      </a>
+      }
+    </div>
+    } @else {
+    <article class="action-empty">
+      <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
+      <p>No hay acciones críticas pendientes en este momento.</p>
+    </article>
+    }
+  </section>
+
+  <section class="charts-section" aria-label="Analítica visual deportiva">
+    <div class="dashboard-grid">
+      <article class="chart-card chart-card-wide">
+        <header>
+          <h2>{{ vm.barTitle }}</h2>
+          <i class="bi bi-bar-chart"></i>
+        </header>
+        <div class="chart-container">
+          @if (hasBarData(vm.barChartData)) {
+          <canvas baseChart [data]="vm.barChartData" [options]="barChartOptions" [type]="'bar'">
+          </canvas>
+          } @else {
+          <div class="chart-empty">
+            <i class="bi bi-bar-chart"></i>
+            <span>Sin datos suficientes para este gráfico</span>
+          </div>
+          }
+        </div>
+      </article>
+
+      <article class="chart-card chart-card-wide">
+        <header>
+          <h2>{{ vm.lineTitle }}</h2>
+          <i class="bi bi-graph-up-arrow"></i>
+        </header>
+        <div class="chart-container chart-container-large">
+          @if (hasLineData(vm.lineChartData)) {
+          <canvas baseChart [data]="vm.lineChartData" [options]="lineChartOptions" [type]="'line'">
+          </canvas>
+          } @else {
+          <div class="chart-empty">
+            <i class="bi bi-graph-up"></i>
+            <span>Sin datos suficientes para este gráfico</span>
+          </div>
+          }
+        </div>
+      </article>
+
+      @if (vm.showAdminAlertsChart) {
+      <article class="chart-card chart-card-alert">
+        <header>
+          <h2>Alertas Operativas por Módulo</h2>
+          <i class="bi bi-exclamation-triangle"></i>
+        </header>
+        <div class="chart-container">
+          @if (hasBarData(vm.adminAlertsBarChartData)) {
+          <canvas baseChart [data]="vm.adminAlertsBarChartData" [options]="barChartOptions" [type]="'bar'">
+          </canvas>
+          } @else {
+          <div class="chart-empty">
+            <i class="bi bi-exclamation-triangle"></i>
+            <span>Sin alertas operativas en este momento</span>
+          </div>
+          }
+        </div>
+
+        @if (vm.adminAlertsLegend.length > 0) {
+        <div class="action-grid" aria-label="Leyenda de alertas con enlaces" style="padding:0 .62rem .62rem;">
+          @for (alert of vm.adminAlertsLegend; track alert.title) {
+          <a [routerLink]="alert.route" class="action-card" style="align-items:center;padding:.48rem .55rem;">
+            <span [style.backgroundColor]="alert.color" aria-hidden="true"
+              style="width:.55rem;height:.55rem;border-radius:50%;display:inline-block;flex-shrink:0;"></span>
+            <span style="font-size:.78rem;font-weight:700;flex:1;min-width:0;">{{ alert.title }}</span>
+            <span style="font-size:.82rem;font-weight:800;color:#2056e0;">{{ alert.value }}</span>
+          </a>
+          }
+        </div>
+        }
+      </article>
+      }
+
+      @if (vm.showRolesChart) {
+      <article class="chart-card chart-card-side">
+        <header>
+          <h2>Distribución de Roles</h2>
+          <i class="bi bi-pie-chart"></i>
+        </header>
+        <div class="chart-container chart-container-compact">
+          @if (hasDoughnutData(vm.rolesDoughnutChartData)) {
+          <canvas baseChart [data]="vm.rolesDoughnutChartData" [options]="doughnutChartOptions" [type]="'doughnut'">
+          </canvas>
+          } @else {
+          <div class="chart-empty">
+            <i class="bi bi-pie-chart"></i>
+            <span>Sin datos suficientes para este gráfico</span>
+          </div>
+          }
+        </div>
+      </article>
+      }
+
+      <article class="chart-card chart-card-pair">
+        <header>
+          <h2>Categorías Deportivas</h2>
+          <i class="bi bi-diagram-3"></i>
+        </header>
+        <div class="chart-container chart-container-compact">
+          @if (hasDoughnutData(vm.sportCategoriesDoughnutChartData)) {
+          <canvas baseChart [data]="vm.sportCategoriesDoughnutChartData" [options]="doughnutChartOptions"
+            [type]="'doughnut'">
+          </canvas>
+          } @else {
+          <div class="chart-empty">
+            <i class="bi bi-diagram-3"></i>
+            <span>Sin datos suficientes para este gráfico</span>
+          </div>
+          }
+        </div>
+      </article>
+
+      <article class="chart-card chart-card-pair">
+        <header>
+          <h2>Estado de Pagos</h2>
+          <i class="bi bi-cash-coin"></i>
+        </header>
+        <div class="chart-container chart-container-compact">
+          @if (hasDoughnutData(vm.paymentStatusDoughnutChartData)) {
+          <canvas baseChart [data]="vm.paymentStatusDoughnutChartData" [options]="doughnutChartOptions"
+            [type]="'doughnut'">
+          </canvas>
+          } @else {
+          <div class="chart-empty">
+            <i class="bi bi-cash-coin"></i>
+            <span>Sin datos suficientes para este gráfico</span>
+          </div>
+          }
+        </div>
+      </article>
+
+      @if (vm.showPendingDebtByTeamChart) {
+      <article class="chart-card chart-card-full">
+        <header>
+          <h2>Deudas Pendientes por Equipo</h2>
+          <i class="bi bi-exclamation-diamond"></i>
+        </header>
+        <div class="chart-container chart-container-compact">
+          @if (hasDoughnutData(vm.pendingDebtByTeamDoughnutChartData)) {
+          <canvas baseChart [data]="vm.pendingDebtByTeamDoughnutChartData" [options]="pendingDebtDoughnutChartOptions"
+            [type]="'doughnut'">
+          </canvas>
+          } @else {
+          <div class="chart-empty">
+            <i class="bi bi-exclamation-diamond"></i>
+            <span>Sin deudas pendientes por equipo en el rango seleccionado</span>
+          </div>
+          }
+        </div>
+
+        @if (hasDoughnutData(vm.pendingDebtByTeamDoughnutChartData)) {
+        <div class="action-grid" aria-label="Leyenda de deudas pendientes por equipo" style="padding:0 .62rem .62rem;">
+          @for (item of getDoughnutLegendItems(vm.pendingDebtByTeamDoughnutChartData); track item.label) {
+          <div class="action-card" style="align-items:center;padding:.48rem .55rem;">
+            <span [style.backgroundColor]="item.color" aria-hidden="true"
+              style="width:.55rem;height:.55rem;border-radius:50%;display:inline-block;flex-shrink:0;"></span>
+            <span style="font-size:.78rem;font-weight:700;flex:1;min-width:0;">{{ item.label }}</span>
+            <span style="font-size:.82rem;font-weight:800;color:#2056e0;">{{ item.value }}</span>
+          </div>
+          }
+        </div>
+        }
+      </article>
+      }
+
+      <article class="chart-card chart-card-pair">
+        <header>
+          <h2>{{ vm.radarTitle }}</h2>
+          <i class="bi bi-bullseye"></i>
+        </header>
+        <div class="chart-container chart-container-compact">
+          @if (hasRadarData(vm.radarPerformanceChartData)) {
+          <canvas baseChart [data]="vm.radarPerformanceChartData" [options]="radarChartOptions" [type]="'radar'">
+          </canvas>
+          } @else {
+          <div class="chart-empty">
+            <i class="bi bi-bar-chart"></i>
+            <span>Sin datos suficientes para el radar</span>
+          </div>
+          }
+        </div>
+      </article>
+
+      <article class="chart-card chart-card-pair">
+        <header>
+          <h2>{{ vm.polarTitle }}</h2>
+          <i class="bi bi-pie-chart-fill"></i>
+        </header>
+        <div class="chart-container chart-container-compact">
+          @if (hasPolarData(vm.polarPriorityChartData)) {
+          <canvas baseChart [data]="vm.polarPriorityChartData" [options]="polarChartOptions" [type]="'polarArea'">
+          </canvas>
+          } @else {
+          <div class="chart-empty">
+            <i class="bi bi-pie-chart"></i>
+            <span>Sin datos suficientes para el polar</span>
+          </div>
+          }
+        </div>
+      </article>
+
+      @if (vm.showClubInsights) {
+      <article class="chart-card">
+        <header>
+          <h2>Composición de Actividad del Club</h2>
+          <i class="bi bi-pie-chart-fill"></i>
+        </header>
+        <div class="chart-container chart-container-compact">
+          @if (hasDoughnutData(vm.clubCompositionDoughnutChartData)) {
+          <canvas baseChart [data]="vm.clubCompositionDoughnutChartData" [options]="doughnutChartOptions"
+            [type]="'doughnut'">
+          </canvas>
+          } @else {
+          <div class="chart-empty">
+            <i class="bi bi-pie-chart-fill"></i>
+            <span>Sin datos suficientes para este gráfico</span>
+          </div>
+          }
+        </div>
+      </article>
+      }
+    </div>
+  </section>
+
+  @if (vm.showQuickAccess) {
+  <section class="quick-access-section" aria-label="Accesos rápidos">
+    <header class="quick-access-header">
+      <h2>Accesos Rápidos</h2>
+      <p>Navegación directa a módulos principales</p>
+    </header>
+
+    @if (vm.quickAccessCards.length > 0) {
+    <div class="quick-access-grid">
+      @for (access of vm.quickAccessCards; track access.title) {
+      <a [routerLink]="access.route" class="quick-access-card" [ngClass]="'quick-' + access.color">
+        <span class="quick-band" aria-hidden="true">
+          <i class="bi" [ngClass]="'bi-' + access.icon"></i>
+        </span>
+        <span class="quick-title">{{ access.title }}</span>
+        <span class="quick-cta">
+          Abrir
+          <i class="bi bi-arrow-right-short"></i>
+        </span>
+      </a>
+      }
+    </div>
+    } @else {
+    <article class="action-empty">
+      <i class="bi bi-info-circle" aria-hidden="true"></i>
+      <p>No hay accesos configurados para este perfil.</p>
+    </article>
+    }
+  </section>
+  }
+  }
 </div>

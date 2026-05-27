@@ -1,0 +1,246 @@
+<div class="container-fluid dashboard-page py-3">
+  <div class="dashboard-header d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+    <h1 class="mb-0">
+      <i class="bi bi-speedometer2 me-2" aria-hidden="true"></i>
+      Dashboard del Club
+    </h1>
+    <div class="dashboard-filtros d-flex align-items-center gap-2">
+      <label for="selTemporada" class="form-label mb-0">Temporada:</label>
+      <select
+        id="selTemporada"
+        class="form-select"
+        [ngModel]="temporadaSel()"
+        (ngModelChange)="alCambiarTemporada($event)"
+        [disabled]="temporadas().length === 0">
+        @for (t of temporadas(); track t.id) {
+          <option [ngValue]="t.id">{{ t.descripcion }}</option>
+        }
+      </select>
+    </div>
+  </div>
+
+  @if (cargando()) {
+    <div class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando…</span>
+      </div>
+      <p class="text-muted mt-3 mb-0">Cargando estadísticas…</p>
+    </div>
+  } @else if (error()) {
+    <div class="alert alert-warning" role="alert">
+      <i class="bi bi-exclamation-triangle me-2" aria-hidden="true"></i>{{ error() }}
+    </div>
+  } @else if (stats(); as s) {
+
+    <!-- Fila KPI -->
+    <div class="row g-3 mb-4">
+      <div class="col-12 col-md-6 col-xl-3">
+        <app-kpi-card
+          titulo="Jugadores"
+          [valor]="s.resumen.totalJugadores"
+          icono="person-fill"
+          claseColor="primary">
+        </app-kpi-card>
+      </div>
+      <div class="col-12 col-md-6 col-xl-3">
+        <app-kpi-card
+          titulo="Equipos"
+          [valor]="s.resumen.totalEquipos"
+          icono="people-fill"
+          claseColor="info">
+        </app-kpi-card>
+      </div>
+      <div class="col-12 col-md-6 col-xl-3">
+        <app-kpi-card
+          titulo="Partidos"
+          [valor]="s.resumen.totalPartidos"
+          icono="play-fill"
+          claseColor="warning">
+        </app-kpi-card>
+      </div>
+      <div class="col-12 col-md-6 col-xl-3">
+        <app-kpi-card
+          titulo="Noticias"
+          [valor]="s.resumen.totalNoticias"
+          icono="newspaper"
+          claseColor="secondary">
+        </app-kpi-card>
+      </div>
+      <div class="col-12 col-md-6 col-xl-3">
+        <app-kpi-card
+          titulo="Pagos"
+          [valor]="s.resumen.totalPagos"
+          icono="credit-card"
+          claseColor="dark">
+        </app-kpi-card>
+      </div>
+      <div class="col-12 col-md-6 col-xl-3">
+        <app-kpi-card
+          titulo="Pagos recibidos"
+          [valor]="s.resumen.totalPagosRecibidos"
+          sufijo=" €"
+          icono="cash-coin"
+          claseColor="success"
+          [sparklineData]="ingresosSparkline()">
+        </app-kpi-card>
+      </div>
+      <div class="col-12 col-md-6 col-xl-3">
+        <app-kpi-card
+          titulo="Deudas pendientes"
+          [valor]="s.resumen.totalDeudas"
+          sufijo=" €"
+          icono="exclamation-octagon"
+          claseColor="danger"
+          [sparklineData]="deudaSparkline()">
+        </app-kpi-card>
+      </div>
+      <div class="col-12 col-md-6 col-xl-3">
+        <app-kpi-card
+          titulo="Partidos jugados"
+          [valor]="s.resumen.partidosJugados"
+          icono="check2-circle"
+          claseColor="info">
+        </app-kpi-card>
+      </div>
+    </div>
+
+    <!-- Fila gráficos: G1 y G2 -->
+    <div class="row g-3 mb-4">
+      <div class="col-12 col-md-6">
+        <div class="chart-card">
+          <h5 class="chart-title">Equipos por categoría</h5>
+          <div class="chart-canvas-wrapper">
+            <canvas
+              baseChart
+              [type]="chartEquiposCategoriaType"
+              [data]="chartEquiposCategoriaData()"
+              [options]="chartEquiposCategoriaOptions">
+            </canvas>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="chart-card">
+          <h5 class="chart-title">Estado de los pagos</h5>
+          <div class="chart-canvas-wrapper">
+            <canvas
+              baseChart
+              [type]="chartPagosEstadoType"
+              [data]="chartPagosEstadoData()"
+              [options]="chartPagosEstadoOptions">
+            </canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fila gráficos: G3 y G4 -->
+    <div class="row g-3 mb-4">
+      <div class="col-12 col-md-6">
+        <div class="chart-card">
+          <h5 class="chart-title">Rendimiento por equipo</h5>
+          <div class="chart-canvas-wrapper">
+            <canvas
+              baseChart
+              [type]="chartRendimientoType"
+              [data]="chartRendimientoData()"
+              [options]="chartRendimientoOptions">
+            </canvas>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="chart-card">
+          <h5 class="chart-title">Pagos recibidos vs. Deuda</h5>
+          <div class="chart-canvas-wrapper">
+            <canvas
+              baseChart
+              [type]="chartPagosResumenType"
+              [data]="chartPagosResumenData()"
+              [options]="chartPagosResumenOptions">
+            </canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fila gráficos: G5 cobranza -->
+    <div class="row g-3 mb-4">
+      <div class="col-12 col-md-4">
+        <div class="chart-card chart-card--gauge">
+          <h5 class="chart-title">% de cobranza</h5>
+          <div class="gauge-wrapper">
+            <canvas
+              baseChart
+              [type]="chartCobranzaType"
+              [data]="chartCobranzaData()"
+              [options]="chartCobranzaOptions">
+            </canvas>
+            <div class="gauge-value">{{ porcentajeCobranza() }}%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fila gráfico: G6 treemap -->
+    <div class="row g-3 mb-4">
+      <div class="col-12">
+        <div class="chart-card">
+          <h5 class="chart-title">Deuda pendiente por equipo</h5>
+          <div class="chart-canvas-wrapper chart-canvas-wrapper--tall">
+            @if (s.deudaEquipo.length > 0) {
+              <canvas
+                baseChart
+                [type]="chartDeudaEquipoType"
+                [data]="chartDeudaEquipoData()"
+                [options]="chartDeudaEquipoOptions">
+              </canvas>
+            } @else {
+              <p class="text-muted text-center my-5">Sin deuda pendiente registrada.</p>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fila tabla: T1 equipos detalle -->
+    <div class="row g-3 mb-4">
+      <div class="col-12">
+        <div class="chart-card">
+          <h5 class="chart-title">Detalle de equipos</h5>
+          <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle">
+              <thead>
+                <tr>
+                  <th>Equipo</th>
+                  <th>Categoría</th>
+                  <th class="text-end">Jugadores</th>
+                  <th class="text-end">Partidos jugados</th>
+                  <th class="text-end">Victorias</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (eq of s.equiposDetalle; track eq.equipo) {
+                  <tr>
+                    <td>{{ eq.equipo }}</td>
+                    <td>{{ eq.categoria }}</td>
+                    <td class="text-end">{{ eq.numJugadores }}</td>
+                    <td class="text-end">{{ eq.partidosJugados }}</td>
+                    <td class="text-end">{{ eq.victorias }}</td>
+                  </tr>
+                } @empty {
+                  <tr>
+                    <td colspan="5" class="text-center text-muted py-4">
+                      Sin equipos en esta temporada.
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  }
+</div>

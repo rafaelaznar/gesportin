@@ -158,11 +158,15 @@ rama `if (isClubAdmin)` siguiendo el mismo patrón que el resto.
 ```
 
 Todo el trabajo es **solo aditivo**: archivos nuevos + nuevas rutas en `app.routes.ts` +
-un único item nuevo en el sidebar.
+items nuevos en el sidebar y el home del usuario.
 
-> Excepción mínima permitida: añadir 1 item al menú en `component/shared/sidebar/sidebar.ts`
-> dentro de la rama `if (isClubAdmin)` **y otro dentro de la rama `if (isAdmin)`**.
-> Es la única forma de exponer la feature a cada rol.
+> Excepciones mínimas permitidas:
+> 1. Añadir 1 item al menú en `component/shared/sidebar/sidebar.ts` dentro de la rama
+>    `if (isClubAdmin)` **y otro dentro de la rama `if (isAdmin)`** (necesario para
+>    exponer la feature a esos roles, que sí usan el sidebar).
+> 2. Añadir 1 tarjeta en `component/shared/user-dashboard/user-dashboard.html` que
+>    enlace a `/mi/dashboard` (el rol usuario no tiene sidebar, navega por tiles desde
+>    `MiHomePage`).
 
 ---
 
@@ -171,18 +175,24 @@ un único item nuevo en el sidebar.
 Ver especificación completa, tabla de datos y plan de dos fases en `MAIN_TASK.md`.
 
 Resumen ejecutivo:
-- Dashboard **nuevo y separado** disponible para dos roles, con el **mismo contenido**:
-  - `Administrador de Club` (`tipousuario.id = 2`) → `/dashboard/teamadmin` con `ClubAdminGuard`
-  - `Administrador global` (`tipousuario.id = 1`) → `/dashboard/admin` con `AdminGuard`
-- **Dropdown de temporada** en la cabecera (el schema no tiene flag de «activa», así que el
-  usuario elige; por defecto la primera devuelta por `TemporadaService.getPage`)
+- Dashboard **nuevo y separado** disponible para **tres roles**, con dos variantes:
+  - `Administrador global` (`tipousuario.id = 1`) → `/dashboard/admin` con `AdminGuard` (dashboard completo + dropdown extra de club)
+  - `Administrador de Club` (`tipousuario.id = 2`) → `/dashboard/teamadmin` con `ClubAdminGuard` (dashboard completo, scope a su club)
+  - `Usuario / Jugador` (`tipousuario.id = 3`) → `/mi/dashboard` con `UsuarioGuard` (dashboard reducido y personal, sin datos financieros del club)
+- **Dropdown de temporada** en la cabecera del dashboard admin/teamadmin (por defecto la
+  primera devuelta por `TemporadaService.getPage`). El dashboard del rol usuario **no
+  tiene dropdowns**: muestra agregados sobre todos sus equipos.
 - **Dropdown extra de club** solo para el admin global (el teamadmin toma el `idClub` del
   JWT; el admin lo elige). Por defecto el primer club devuelto por `ClubService.getPage`.
 - Librería de gráficos: **`chart.js`** + wrapper Angular **`ng2-charts`** + controller **`chartjs-chart-treemap`** (para G6)
-- Tarjetas KPI reutilizables (`KpiCardComponent`)
+- Tarjetas KPI reutilizables (`KpiCardComponent`) compartidas entre las tres variantes
 - 6 gráficos (bar, doughnut, mixed bar+line, line/area, gauge a partir de doughnut, treemap)
-- Tabla resumen de equipos de la temporada seleccionada
-- 8 endpoints GET nuevos en el backend (`/api/stats/club/{id}/...?temporada=X`) en un `StatsApi.java`
+  en admin/teamadmin + 1 donut propio en usuario (estado de sus cuotas)
+- Tabla resumen de equipos de la temporada seleccionada (solo admin/teamadmin)
+- 8 endpoints GET en el backend (`/api/stats/club/{id}/...?temporada=X`) en `StatsApi.java`
+  — **ya implementados**. El dashboard usuario usa los servicios existentes filtrando por
+  `userId` (no necesita backend nuevo, y de hecho `StatsService.verificarAcceso` rechaza
+  al rol usuario).
 
 ### Plan de dos fases (ver detalle en `MAIN_TASK.md`)
 
@@ -206,10 +216,12 @@ Ver lista detallada de 12 pasos al final de `MAIN_TASK.md`.
 - [ ] Rama: `feature/dashboard` o `feature/vlad/dashboard` (nunca desde `main` ni `master`)
 - [ ] `npm run build` sin errores
 - [ ] Dashboard accesible desde el menú de navegación de teamadmin **y de admin**
+- [ ] Dashboard usuario accesible desde una tarjeta en `MiHomePage` (rol 3)
 - [ ] En la página admin, el dropdown extra de club funciona y al cambiar recarga todo
 - [ ] Todas las tarjetas KPI con datos reales de la API (o mocks claramente marcados con TODO)
-- [ ] Al menos 2 gráficos renderizando
+- [ ] Al menos 2 gráficos renderizando en admin/teamadmin + 1 donut en usuario
 - [ ] Layout responsivo (verificar en 375px de ancho)
 - [ ] Sin `console.log` en el código
 - [ ] Sin imports sin usar
-- [ ] Naming consistente con el proyecto: `IDashboardResumen`, `DashboardService`, `DashboardTeamadminPlistPage`, `DashboardAdminPlistPage`
+- [ ] Naming consistente con el proyecto: `IDashboardResumen`, `DashboardService`,
+      `DashboardTeamadminPlistPage`, `DashboardAdminPlistPage`, `DashboardUsuarioPlistPage`

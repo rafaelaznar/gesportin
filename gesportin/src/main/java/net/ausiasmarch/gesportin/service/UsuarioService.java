@@ -1,5 +1,8 @@
 package net.ausiasmarch.gesportin.service;
 
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -16,6 +19,26 @@ import net.ausiasmarch.gesportin.repository.UsuarioRepository;
 
 @Service
 public class UsuarioService {
+
+
+
+    // Función para hashear contraseñas con SHA-256
+    private String hashPassword(String password) {
+        if (password == null) return null;
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(password.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hash) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) hexString.append('0');
+                hexString.append(hex);
+            }
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("Error al hashear la contraseña", e);
+        }
+    }
 
     @Autowired
     private UsuarioRepository oUsuarioRepository;
@@ -146,6 +169,10 @@ public class UsuarioService {
         oUsuarioEntity.setFechaAlta(LocalDateTime.now());
         oUsuarioEntity.setTipousuario(oTipousuarioService.get(oUsuarioEntity.getTipousuario().getId()));
         oUsuarioEntity.setRolusuario(oRolusuarioService.get(oUsuarioEntity.getRolusuario().getId()));
+        // Hashear la contraseña antes de guardar
+        if (oUsuarioEntity.getPassword() != null && oUsuarioEntity.getPassword().length() != 64) {
+            oUsuarioEntity.setPassword(hashPassword(oUsuarioEntity.getPassword()));
+        }
         return oUsuarioRepository.save(oUsuarioEntity);
     }
 
@@ -185,7 +212,12 @@ public class UsuarioService {
         oUsuarioExistente.setApellido1(oUsuarioEntity.getApellido1());
         oUsuarioExistente.setApellido2(oUsuarioEntity.getApellido2());
         oUsuarioExistente.setUsername(oUsuarioEntity.getUsername());
-        oUsuarioExistente.setPassword(oUsuarioEntity.getPassword());
+        // Hashear la contraseña solo si cambia y no está ya hasheada
+        if (oUsuarioEntity.getPassword() != null && oUsuarioEntity.getPassword().length() != 64) {
+            oUsuarioExistente.setPassword(hashPassword(oUsuarioEntity.getPassword()));
+        } else if (oUsuarioEntity.getPassword() != null) {
+            oUsuarioExistente.setPassword(oUsuarioEntity.getPassword());
+        }
         oUsuarioExistente.setFechaAlta(oUsuarioEntity.getFechaAlta());
         oUsuarioExistente.setGenero(oUsuarioEntity.getGenero());
         oUsuarioExistente.setTipousuario(oTipousuarioService.get(oUsuarioEntity.getTipousuario().getId()));

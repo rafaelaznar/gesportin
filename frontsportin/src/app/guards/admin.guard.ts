@@ -30,7 +30,7 @@ export class AdminGuard implements CanActivate {
 
         // Important: avoid redirecting to '/' because it is also guarded and can loop.
         if (this.oSessionService.isClubAdmin()) {
-            return of(this.oRouter.createUrlTree(['/club/teamadmin']));
+            return of(this.oRouter.createUrlTree(['/dashboard/teamadmin']));
         }
 
         return of(this.oRouter.createUrlTree(['/login']));

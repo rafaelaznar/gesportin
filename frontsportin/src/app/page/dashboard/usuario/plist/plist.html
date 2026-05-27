@@ -1,0 +1,106 @@
+<div class="container-fluid dashboard-page py-3">
+  <div class="dashboard-header mb-4">
+    <h1 class="mb-1">
+      <i class="bi bi-speedometer2 me-2" aria-hidden="true"></i>
+      Mi Dashboard
+    </h1>
+    <p class="text-muted mb-0">
+      Resumen personal de tu actividad{{ username() ? ', ' + username() : '' }}
+    </p>
+  </div>
+
+  @if (cargando()) {
+    <div class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando…</span>
+      </div>
+      <p class="text-muted mt-3 mb-0">Cargando tu información…</p>
+    </div>
+  } @else if (error()) {
+    <div class="alert alert-warning" role="alert">
+      <i class="bi bi-exclamation-triangle me-2" aria-hidden="true"></i>{{ error() }}
+    </div>
+  } @else if (resumen(); as r) {
+
+    <div class="row g-3 mb-4">
+      <div class="col-12 col-md-6 col-xl-3">
+        <app-kpi-card
+          titulo="Mis Equipos"
+          [valor]="r.totalEquipos"
+          icono="people-fill"
+          claseColor="primary">
+        </app-kpi-card>
+      </div>
+      <div class="col-12 col-md-6 col-xl-3">
+        <app-kpi-card
+          titulo="Cuotas Pagadas"
+          [valor]="r.cuotasPagadas"
+          icono="check2-circle"
+          claseColor="success">
+        </app-kpi-card>
+      </div>
+      <div class="col-12 col-md-6 col-xl-3">
+        <app-kpi-card
+          titulo="Cuotas Pendientes"
+          [valor]="r.cuotasPendientes"
+          icono="exclamation-octagon"
+          claseColor="danger">
+        </app-kpi-card>
+      </div>
+      <div class="col-12 col-md-6 col-xl-3">
+        <app-kpi-card
+          titulo="Noticias del Club"
+          [valor]="r.totalNoticiasClub"
+          icono="newspaper"
+          claseColor="info">
+        </app-kpi-card>
+      </div>
+    </div>
+
+    <div class="row g-3 mb-4">
+      <div class="col-12 col-md-6">
+        <div class="chart-card">
+          <h5 class="chart-title">Estado de mis cuotas</h5>
+          @if (r.cuotasPagadas + r.cuotasPendientes > 0) {
+            <div class="chart-canvas-wrapper">
+              <canvas
+                baseChart
+                [type]="chartCuotasType"
+                [data]="chartCuotasData()"
+                [options]="chartCuotasOptions">
+              </canvas>
+            </div>
+            <p class="text-center text-muted mt-2 mb-0">
+              Has pagado el <strong>{{ porcentajePagadas() }}%</strong> de tus cuotas.
+            </p>
+          } @else {
+            <p class="text-muted text-center my-5">
+              Aún no tienes cuotas registradas.
+            </p>
+          }
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <div class="chart-card">
+          <h5 class="chart-title">Accesos rápidos</h5>
+          <div class="d-flex flex-column gap-2">
+            <a routerLink="/mi/equipos" class="quick-link">
+              <i class="bi bi-trophy me-2" aria-hidden="true"></i>Ver mis equipos
+            </a>
+            <a routerLink="/mi/cuotas" class="quick-link">
+              <i class="bi bi-cash-coin me-2" aria-hidden="true"></i>Gestionar mis cuotas
+            </a>
+            <a routerLink="/mi/noticias" class="quick-link">
+              <i class="bi bi-newspaper me-2" aria-hidden="true"></i>Leer noticias del club
+            </a>
+            <a routerLink="/mi/facturas" class="quick-link">
+              <i class="bi bi-receipt me-2" aria-hidden="true"></i>Consultar mis facturas
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  }
+</div>

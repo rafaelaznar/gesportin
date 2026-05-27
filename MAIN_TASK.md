@@ -23,18 +23,24 @@
 
 ## Descripción de la feature
 
-Página Dashboard **nueva** disponible para dos roles, con el **mismo contenido**
-(KPIs, gráficas y tabla resumen), variando solo el ámbito de los datos:
+Página Dashboard **nueva** disponible para **tres roles**, con dos variantes de
+contenido:
 
-- **Administrador de Club** (`tipousuario.id = 2`) — ve los datos **de su club**,
-  con dropdown de **temporada** en la cabecera.
-- **Administrador global** (`tipousuario.id = 1`) — ve los datos del **club que él
-  selecciona**, con un dropdown adicional de **club** en la cabecera (justo antes
-  del de temporada). El contenido del dashboard es idéntico al del teamadmin.
+- **Administrador global** (`tipousuario.id = 1`) y **Administrador de Club**
+  (`tipousuario.id = 2`) — comparten el **mismo dashboard completo** (KPIs financieros,
+  6 gráficas y tabla resumen). El teamadmin ve los datos de su club; el admin global
+  elige club mediante un dropdown adicional. Ambos eligen temporada con un dropdown.
+- **Usuario / Jugador** (`tipousuario.id = 3`) — ve un dashboard **reducido y personal**
+  con los datos básicos relacionados con su actividad y club. **No tiene acceso a datos
+  financieros del club** (€ ingresos / € deudas globales) ni a estadísticas internas
+  (estado de pagos por equipo, ingresos mensuales, deuda por equipo, etc.). Solo ve
+  datos *públicos del club* + datos *propios del usuario*.
 
 Rutas:
-- `/dashboard/teamadmin` protegida por `ClubAdminGuard`
 - `/dashboard/admin` protegida por `AdminGuard`
+- `/dashboard/teamadmin` protegida por `ClubAdminGuard`
+- `/mi/dashboard` protegida por `UsuarioGuard` (usa el patrón existente `/mi/*` del
+  rol usuario)
 
 Convive con (no reemplaza) el `DashboardComponent` antiguo en `component/shared/dashboard/`,
 que sigue siendo el dashboard de contadores genérico.
@@ -106,6 +112,56 @@ primer club devuelto por `clubService.getPage(0, 100)` y luego su primera tempor
 
 ---
 
+## Contenido visual del dashboard — variante Usuario (rol jugador)
+
+El usuario (rol 3) **no usa los endpoints `/api/stats/...`** porque el backend ya
+los protege (`StatsService.verificarAcceso` lanza `UnauthorizedException` cuando
+`isUsuario()` es true). En su lugar usa los servicios estándar existentes filtrando
+por su `userId` (vía JWT) y su `clubId`. No necesita backend nuevo.
+
+### KPIs (4 tarjetas, sin importes en €)
+
+| # | Título | Valor | Fuente (servicios existentes) |
+|---|---|---|---|
+| U1 | Mis Equipos | total | `equipoService.getPage(0, 1, 'id', 'asc', '', 0, userId).totalElements` |
+| U2 | Cuotas Pagadas | total | `pagoService.getPage(0, 1, 'id', 'asc', 0, jugadorId)` filtrado por `abonado=1` en frontend |
+| U3 | Cuotas Pendientes | total | derivado de la misma carga: pagos con `abonado=0` |
+| U4 | Noticias del Club | total | `noticiaService.getPage(0, 1, 'id', 'asc', '', clubId).totalElements` |
+
+> U2/U3 implican cargar los `jugador` del usuario primero (`jugadorService.getPage(... id_usuario=uid)`)
+> y después los `pago` por cada `jugador.id` (forkJoin). El total de cuotas pagadas/pendientes
+> se calcula en el componente, **no en el HTML**.
+
+### Gráfica (1 mínima)
+
+| # | Tipo Chart | Título | Fuente |
+|---|---|---|---|
+| GU1 | Donut | Estado de mis cuotas (pagadas vs pendientes) | derivado en frontend de los `pagos` cargados para U2/U3 |
+
+### Lista (1)
+
+| # | Tipo | Título | Fuente |
+|---|---|---|---|
+| LU1 | Lista simple | Mis próximos partidos | derivado de los equipos del usuario + `partidoService.getPage` filtrado por `id_liga` de cada equipo, mostrando los partidos con `id_estadopartido IN (1, 2)` (no jugado / aplazado). Máximo 5 entradas. |
+
+### Layout sugerido
+
+```
+Cabecera: "Mi Dashboard" + saludo con el username del JWT
+Fila 1 (KPI):    col-12 col-md-6 col-xl-3  → 4 cards
+Fila 2 (chart):  GU1 col-12 col-md-6   |   LU1 col-12 col-md-6
+```
+
+### Qué NO ve el usuario
+
+- Ningún importe en € (ni ingresos, ni deudas, ni totalPagosRecibidos)
+- Ninguna gráfica del dashboard admin/teamadmin (G1–G6) salvo GU1 (donut propio)
+- Ningún dato de otros usuarios o equipos en los que no esté inscrito
+- Sin tabla `equipos-detalle` (información agregada del club)
+- Sin dropdowns de temporada/club (vería todos sus equipos a la vez)
+
+---
+
 ## Datos: disponibles ahora vs requieren backend nuevo
 
 > Los servicios marcados como "disponibles ahora" ya están en `src/app/service/*.ts`,
@@ -172,7 +228,7 @@ frontsportin/src/app/
 ├── model/
 │   └── dashboard-stats.ts            # interfaces I... (ver más abajo)
 ├── service/
-│   └── dashboard.ts                  # exporta class DashboardService
+│   └── dashboard.ts                  # exporta class DashboardService (solo admin/teamadmin)
 ├── page/
 │   └── dashboard/
 │       ├── teamadmin/
@@ -180,9 +236,14 @@ frontsportin/src/app/
 │       │       ├── plist.ts          # exporta DashboardTeamadminPlistPage
 │       │       ├── plist.html
 │       │       └── plist.css
-│       └── admin/
+│       ├── admin/
+│       │   └── plist/
+│       │       ├── plist.ts          # exporta DashboardAdminPlistPage
+│       │       ├── plist.html
+│       │       └── plist.css
+│       └── usuario/
 │           └── plist/
-│               ├── plist.ts          # exporta DashboardAdminPlistPage
+│               ├── plist.ts          # exporta DashboardUsuarioPlistPage
 │               ├── plist.html
 │               └── plist.css
 └── component/
@@ -195,25 +256,28 @@ frontsportin/src/app/
 
 ---
 
-### Ruta nueva
+### Rutas nuevas
 
 Añadir a `src/app/app.routes.ts` (NO crear `*.routes.ts` por feature — no es el patrón):
 
 ```typescript
 import { DashboardTeamadminPlistPage } from './page/dashboard/teamadmin/plist/plist';
 import { DashboardAdminPlistPage } from './page/dashboard/admin/plist/plist';
+import { DashboardUsuarioPlistPage } from './page/dashboard/usuario/plist/plist';
 // ...
 // Dentro del array `routes` (NO en `protectedRoutes`):
 { path: 'dashboard/teamadmin', component: DashboardTeamadminPlistPage, canActivate: [ClubAdminGuard] },
+{ path: 'mi/dashboard',        component: DashboardUsuarioPlistPage,   canActivate: [UsuarioGuard] },
 // Y en `protectedRoutes` (protegidas globalmente por AdminGuard):
-{ path: 'dashboard/admin', component: DashboardAdminPlistPage },
+{ path: 'dashboard/admin',     component: DashboardAdminPlistPage },
 ```
 
 ---
 
-### Enlace en el sidebar
+### Enlaces de navegación
 
-Editar `component/shared/sidebar/sidebar.ts` y añadir un item en **cada rama** de rol:
+**Sidebar (admin / teamadmin)** — editar `component/shared/sidebar/sidebar.ts` y
+añadir un item en **cada rama** de rol:
 
 ```typescript
 // dentro de if (isClubAdmin):
@@ -223,7 +287,12 @@ items.push({ label: 'Dashboard', icon: 'speedometer2', route: '/dashboard/teamad
 items.push({ label: 'Dashboard', icon: 'speedometer2', route: '/dashboard/admin' });
 ```
 
-Es la única modificación permitida a un fichero existente.
+**Tile en home de usuario** — editar
+`component/shared/user-dashboard/user-dashboard.html` y añadir una sexta tarjeta
+apuntando a `/mi/dashboard` con icono `speedometer2`. El usuario no tiene sidebar,
+solo el grid de tarjetas de `MiHomePage`.
+
+Son las únicas modificaciones permitidas a ficheros existentes.
 
 ---
 

@@ -1,0 +1,71 @@
+.dashboard-page {
+  background-color: #f5f6fa;
+  min-height: 100vh;
+}
+
+.dashboard-header h1 {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.dashboard-filtros .form-label {
+  font-weight: 500;
+  color: #4b5563;
+}
+
+.dashboard-filtros .form-select {
+  min-width: 180px;
+}
+
+.chart-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.25rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  height: 100%;
+}
+
+.chart-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 1rem;
+}
+
+.chart-canvas-wrapper {
+  position: relative;
+  height: 260px;
+}
+
+.chart-canvas-wrapper--tall {
+  height: 340px;
+}
+
+.chart-card--gauge {
+  display: flex;
+  flex-direction: column;
+}
+
+.gauge-wrapper {
+  position: relative;
+  height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gauge-value {
+  position: absolute;
+  bottom: 25%;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #0d6efd;
+}
+
+table.table thead th {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #6b7280;
+}

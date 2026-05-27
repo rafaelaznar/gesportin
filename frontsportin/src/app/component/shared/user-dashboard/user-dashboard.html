@@ -5,13 +5,101 @@
         <i class="bi bi-person-circle"></i>
       </div>
       <div class="ud-welcome">
-        <h1>Bienvenido, <span class="ud-username">{{ userName() }}</span></h1>
-        <p>Área personal de tu club</p>
+        <h1>Mi Dashboard de <span class="ud-username">{{ userName() }}</span></h1>
+        <p>Resumen personal de tu actividad, pagos y seguimiento deportivo</p>
       </div>
     </div>
   </header>
 
+  <section class="ud-kpis" aria-label="Indicadores personales principales">
+    <article class="ud-kpi ud-kpi--blue">
+      <span class="ud-kpi-label">Mis equipos</span>
+      <span class="ud-kpi-value">{{ equiposCount() }}</span>
+    </article>
+    <article class="ud-kpi ud-kpi--green">
+      <span class="ud-kpi-label">Facturas registradas</span>
+      <span class="ud-kpi-value">{{ facturasCount() }}</span>
+    </article>
+    <article class="ud-kpi ud-kpi--red">
+      <span class="ud-kpi-label">Carrito pendiente</span>
+      <span class="ud-kpi-value">{{ carritoCount() }}</span>
+    </article>
+    <article class="ud-kpi ud-kpi--cyan">
+      <span class="ud-kpi-label">Actividad total</span>
+      <span class="ud-kpi-value">{{ totalActivity() }}</span>
+    </article>
+  </section>
+
+  @if (!loading()) {
+  <section class="ud-empty-state ud-summary-strip" aria-label="Resumen y siguiente accion">
+    <div class="ud-summary-copy">
+      <i class="bi bi-lightning-charge"></i>
+      <p>{{ activitySummary() }}</p>
+    </div>
+    <a [routerLink]="[recommendedAction().route]" class="btn btn-sm btn-outline-primary ud-summary-cta"
+      [attr.aria-label]="recommendedAction().detail">
+      {{ recommendedAction().title }}
+    </a>
+  </section>
+  }
+
+  @if (!loading() && !hasRecentActivity()) {
+  <section class="ud-empty-state" aria-label="Estado de actividad">
+    <i class="bi bi-info-circle"></i>
+    <p>Sin actividad reciente en carrito, facturas o equipos. Usa los accesos rápidos para empezar.</p>
+  </section>
+  }
+
+  <section class="ud-main-grid" aria-label="Estado y accesos rápidos">
+    <article class="ud-chart-card ud-chart-wide">
+      <header>
+        <h2>Estado de mi actividad</h2>
+        <i class="bi bi-pie-chart"></i>
+      </header>
+      <div class="ud-chart-container">
+        <canvas baseChart [data]="activityDoughnutChartData()" [options]="activityDoughnutOptions" [type]="'doughnut'">
+        </canvas>
+      </div>
+      <div class="ud-status-row" aria-label="Estado de progreso personal">
+        <span class="ud-status-chip ud-status-chip--ok">Completada: {{ completedActivityCount() }}</span>
+        <span class="ud-status-chip ud-status-chip--pending">Pendiente: {{ pendingActivityCount() }}</span>
+      </div>
+      <p class="ud-progress-note">Has completado el {{ completionRate() }}% de tu actividad registrada.</p>
+    </article>
+
+    <article class="ud-chart-card">
+      <header>
+        <h2>Accesos rápidos</h2>
+        <i class="bi bi-lightning-charge"></i>
+      </header>
+      <div class="ud-quick-panel">
+        <a [routerLink]="['/mi/equipos']" class="ud-quick-link"><i class="bi bi-trophy"></i> Ver mis equipos <span
+            class="ud-quick-count">{{ equiposCount() }}</span></a>
+        <a [routerLink]="['/mi/cuotas']" class="ud-quick-link"><i class="bi bi-cash-coin"></i> Gestionar mis cuotas
+          <span class="ud-quick-count">{{ completionRate() }}%</span></a>
+        <a [routerLink]="['/mi/noticias']" class="ud-quick-link"><i class="bi bi-newspaper"></i> Leer noticias del
+          club</a>
+        <a [routerLink]="['/mi/facturas']" class="ud-quick-link"><i class="bi bi-receipt"></i> Consultar mis facturas
+          <span class="ud-quick-count">{{ facturasCount() }}</span></a>
+      </div>
+    </article>
+  </section>
+
   <div class="ud-grid">
+
+    <!-- Mi Dashboard -->
+    <a [routerLink]="['/mi/dashboard']" class="ud-card ud-card--dashboard">
+      <div class="ud-card-icon">
+        <i class="bi bi-speedometer2"></i>
+      </div>
+      <div class="ud-card-body">
+        <h3>Mi Dashboard</h3>
+        <p>Resumen visual de tus equipos, cuotas y actividad en el club</p>
+      </div>
+      <div class="ud-card-arrow">
+        <i class="bi bi-arrow-right-circle"></i>
+      </div>
+    </a>
 
     <!-- Noticias -->
     <a [routerLink]="['/mi/noticias']" class="ud-card ud-card--news">
@@ -35,9 +123,9 @@
       <div class="ud-card-body">
         <h3>Mis Equipos</h3>
         @if (equiposCount() > 0) {
-          <p>Estás inscrito en <strong>{{ equiposCount() }}</strong> equipo{{ equiposCount() > 1 ? 's' : '' }}</p>
+        <p>Estás inscrito en <strong>{{ equiposCount() }}</strong> equipo{{ equiposCount() > 1 ? 's' : '' }}</p>
         } @else {
-          <p>Consulta las temporadas, categorías y resultados</p>
+        <p>Consulta las temporadas, categorías y resultados</p>
         }
       </div>
       <div class="ud-card-arrow">
@@ -64,15 +152,15 @@
       <div class="ud-card-icon">
         <i class="bi bi-bag-heart"></i>
         @if (carritoCount() > 0) {
-          <span class="ud-badge">{{ carritoCount() }}</span>
+        <span class="ud-badge">{{ carritoCount() }}</span>
         }
       </div>
       <div class="ud-card-body">
         <h3>Tienda Virtual</h3>
         @if (carritoCount() > 0) {
-          <p>Tienes <strong>{{ carritoCount() }}</strong> artículo{{ carritoCount() > 1 ? 's' : '' }} en el carrito</p>
+        <p>Tienes <strong>{{ carritoCount() }}</strong> artículo{{ carritoCount() > 1 ? 's' : '' }} en el carrito</p>
         } @else {
-          <p>Productos oficiales de tu club, organizado por categorías</p>
+        <p>Productos oficiales de tu club, organizados por categorías</p>
         }
       </div>
       <div class="ud-card-arrow">
@@ -85,15 +173,15 @@
       <div class="ud-card-icon">
         <i class="bi bi-receipt"></i>
         @if (facturasCount() > 0) {
-          <span class="ud-badge">{{ facturasCount() }}</span>
+        <span class="ud-badge">{{ facturasCount() }}</span>
         }
       </div>
       <div class="ud-card-body">
         <h3>Mis Facturas</h3>
         @if (facturasCount() > 0) {
-          <p>Tienes <strong>{{ facturasCount() }}</strong> factura{{ facturasCount() > 1 ? 's' : '' }} de compras</p>
+        <p>Tienes <strong>{{ facturasCount() }}</strong> factura{{ facturasCount() > 1 ? 's' : '' }} de compra</p>
         } @else {
-          <p>Historial completo de tus compras en la tienda</p>
+        <p>Historial completo de tus compras en la tienda</p>
         }
       </div>
       <div class="ud-card-arrow">
