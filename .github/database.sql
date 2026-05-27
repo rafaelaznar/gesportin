@@ -390,6 +390,26 @@ INSERT INTO `usuario` (`id`, `nombre`, `apellido1`, `apellido2`, `username`, `pa
 (3, 'Carla', 'Sánchez', 'Martínez', 'usuario', '7e4b4f5529e084ecafb996c891cfbd5b5284f5b00dc155c37bbb62a9f161a72e', '2026-03-30 15:57:44', 1, 3, 1, 1);
 
 --
+-- Datos semilla minimos para garantizar al menos 2 cuotas pendientes al usuario `usuario`
+--
+
+INSERT INTO `temporada` (`id`, `descripcion`, `id_club`) VALUES
+(1, 'Temporada base Gesportin', 1);
+
+INSERT INTO `categoria` (`id`, `nombre`, `id_temporada`) VALUES
+(1, 'Categoria base', 1);
+
+INSERT INTO `equipo` (`id`, `nombre`, `id_entrenador`, `id_categoria`) VALUES
+(1, 'Equipo Base Gesportin', 2, 1);
+
+INSERT INTO `jugador` (`id`, `dorsal`, `posicion`, `capitan`, `imagen`, `id_usuario`, `id_equipo`) VALUES
+(1, 9, 'Delantero centro', 0, NULL, 3, 1);
+
+INSERT INTO `cuota` (`id`, `descripcion`, `cantidad`, `fecha`, `id_equipo`) VALUES
+(1, 'Cuota mensual pendiente (usuario) - 1', 25.00, '2026-05-01 00:00:00', 1),
+(2, 'Cuota mensual pendiente (usuario) - 2', 30.00, '2026-06-01 00:00:00', 1);
+
+--
 -- Índices para tablas volcadas
 --
 
