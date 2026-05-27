@@ -363,6 +363,7 @@ export class FacturaAdminPlist {
           doc.text("ID", 18, 57);
           doc.text("Fecha", 35, 57);
           doc.text("Usuario", 95, 57);
+          doc.text("Compra", 165, 57);
 
           doc.setDrawColor(150, 150, 150);
           doc.line(14, 60, 196, 60);
@@ -385,6 +386,7 @@ export class FacturaAdminPlist {
               doc.text("ID", 18, 17);
               doc.text("Fecha", 35, 17);
               doc.text("Usuario", 95, 17);
+              doc.text("Compra", 165, 17);
               doc.setDrawColor(150, 150, 150);
               doc.line(14, 20, 196, 20);
               doc.setFont("Helvetica", "normal");
@@ -403,7 +405,10 @@ export class FacturaAdminPlist {
             const nombreCompleto = factura.usuario 
               ? `${factura.usuario.nombre} ${factura.usuario.apellido1 || ''}` 
               : 'No asignado';
-            doc.text(nombreCompleto, 95, y);
+            doc.text(nombreCompleto, 80, y);
+
+            const valorCompra = factura.compras ? factura.compras.toString() : '0';
+            doc.text(valorCompra, 165, y);
 
             y += 8;
           });
