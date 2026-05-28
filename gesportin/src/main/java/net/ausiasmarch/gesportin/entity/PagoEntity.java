@@ -13,7 +13,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import jdk.jfr.BooleanFlag;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -39,9 +38,9 @@ public class PagoEntity {
     @JoinColumn(name = "id_jugador")
     private JugadorEntity jugador;
 
-    @NotNull
-    @BooleanFlag
-    private Boolean abonado;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_payment_session")
+    private PaymentSessionEntity paymentSession;
 
     @NotNull
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss", shape = JsonFormat.Shape.STRING)

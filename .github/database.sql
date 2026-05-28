@@ -231,8 +231,27 @@ CREATE TABLE `pago` (
   `id` bigint NOT NULL,
   `id_cuota` bigint NOT NULL,
   `id_jugador` bigint NOT NULL,
-  `abonado` bit(1) NOT NULL,
+  `id_payment_session` bigint DEFAULT NULL,
   `fecha` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf32 COLLATE=utf32_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `payment_session`
+--
+
+CREATE TABLE `payment_session` (
+  `id` bigint NOT NULL,
+  `session_token` varchar(64) NOT NULL,
+  `tipo` varchar(16) NOT NULL,
+  `id_referencia` bigint NOT NULL,
+  `id_cuota` bigint DEFAULT NULL,
+  `estado` varchar(16) NOT NULL,
+  `importe` decimal(10,2) NOT NULL,
+  `descripcion` varchar(512) NOT NULL,
+  `fecha` datetime NOT NULL,
+  `id_resultado` bigint DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf32 COLLATE=utf32_unicode_ci;
 
 -- --------------------------------------------------------
@@ -371,6 +390,26 @@ INSERT INTO `usuario` (`id`, `nombre`, `apellido1`, `apellido2`, `username`, `pa
 (3, 'Carla', 'Sánchez', 'Martínez', 'usuario', '7e4b4f5529e084ecafb996c891cfbd5b5284f5b00dc155c37bbb62a9f161a72e', '2026-03-30 15:57:44', 1, 3, 1, 1);
 
 --
+-- Datos semilla minimos para garantizar al menos 2 cuotas pendientes al usuario `usuario`
+--
+
+INSERT INTO `temporada` (`id`, `descripcion`, `id_club`) VALUES
+(1, 'Temporada base Gesportin', 1);
+
+INSERT INTO `categoria` (`id`, `nombre`, `id_temporada`) VALUES
+(1, 'Categoria base', 1);
+
+INSERT INTO `equipo` (`id`, `nombre`, `id_entrenador`, `id_categoria`) VALUES
+(1, 'Equipo Base Gesportin', 2, 1);
+
+INSERT INTO `jugador` (`id`, `dorsal`, `posicion`, `capitan`, `imagen`, `id_usuario`, `id_equipo`) VALUES
+(1, 9, 'Delantero centro', 0, NULL, 3, 1);
+
+INSERT INTO `cuota` (`id`, `descripcion`, `cantidad`, `fecha`, `id_equipo`) VALUES
+(1, 'Cuota mensual pendiente (usuario) - 1', 25.00, '2026-05-01 00:00:00', 1),
+(2, 'Cuota mensual pendiente (usuario) - 2', 30.00, '2026-06-01 00:00:00', 1);
+
+--
 -- Índices para tablas volcadas
 --
 
@@ -482,7 +521,15 @@ ALTER TABLE `noticia`
 ALTER TABLE `pago`
   ADD PRIMARY KEY (`id`),
   ADD KEY `FKonch4hy8el3uyqxm2497mdal4` (`id_cuota`),
-  ADD KEY `FKlj1d0yxpgf7kh9ykelhqrqs53` (`id_jugador`);
+  ADD KEY `FKlj1d0yxpgf7kh9ykelhqrqs53` (`id_jugador`),
+  ADD KEY `FK_pago_payment_session` (`id_payment_session`);
+
+--
+-- Indices de la tabla `payment_session`
+--
+ALTER TABLE `payment_session`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `UK_session_token` (`session_token`);
 
 --
 -- Indices de la tabla `partido`
@@ -634,6 +681,12 @@ ALTER TABLE `noticia`
 -- AUTO_INCREMENT de la tabla `pago`
 --
 ALTER TABLE `pago`
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `payment_session`
+--
+ALTER TABLE `payment_session`
   MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
 
 --

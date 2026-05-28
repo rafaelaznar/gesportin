@@ -24,8 +24,8 @@
         <div class="row g-1 mb-3">
           <div class="col-5 text-muted small text-uppercase">ID</div>
           <div class="col-7 fw-semibold small">{{ oPago()?.id }}</div>
-          <div class="col-5 text-muted small text-uppercase">Abonado</div>
-          <div class="col-7 fw-semibold small">@if (oPago()?.abonado) { <span class='badge bg-success'>Abonado</span> } @else { <span class='badge bg-danger'>Pendiente</span> }</div>
+          <div class="col-5 text-muted small text-uppercase">Estado</div>
+          <div class="col-7 fw-semibold small">@if (oPago()?.paymentSession) { <span class='badge bg-success'>Pagado</span><span class="text-muted small ms-2">#{{ oPago()?.paymentSession?.id }}</span> } @else { <span class='badge bg-danger'>Pendiente</span> }</div>
           <div class="col-5 text-muted small text-uppercase">Fecha</div>
           <div class="col-7 fw-semibold small">{{ oPago()?.fecha | datetime }}</div>
         </div>

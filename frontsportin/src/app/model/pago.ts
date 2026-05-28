@@ -1,11 +1,12 @@
 import { ICuota } from "./cuota";
 import { IJugador } from "./jugador";
+import { IPaymentSession } from "./payment-session";
 
 export interface IPago {
   id: number;
   cuota: ICuota;
   jugador: IJugador;
-  abonado: number;
+  paymentSession?: IPaymentSession | null;
   fecha: string;
 }
 

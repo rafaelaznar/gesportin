@@ -1,6 +1,7 @@
 import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { IArticulo } from '../../../../model/articulo';
 import { ITipoarticulo } from '../../../../model/tipoarticulo';
 import { ICarrito } from '../../../../model/carrito';
@@ -12,6 +13,7 @@ import { CarritoService } from '../../../../service/carrito';
 import { ComentarioartService } from '../../../../service/comentarioart';
 import { PuntuacionartService } from '../../../../service/puntuacionart';
 import { SessionService } from '../../../../service/session';
+import { PaymentService } from '../../../../service/payment.service';
 import { forkJoin, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
@@ -34,6 +36,8 @@ export class CarritoUsuarioTienda implements OnInit {
   private comentarioartService = inject(ComentarioartService);
   private puntuacionartService = inject(PuntuacionartService);
   private session = inject(SessionService);
+  private paymentService = inject(PaymentService);
+  private router = inject(Router);
 
   grupos = signal<TiendaGroup[]>([]);
   carrito = signal<ICarrito[]>([]);
@@ -117,16 +121,27 @@ export class CarritoUsuarioTienda implements OnInit {
     const existing = this.carrito().find((c) => c.articulo?.id === articulo.id);
     if (existing) {
       this.carritoService
-        .update({ id: existing.id, cantidad: existing.cantidad + cantidad, articulo: { id: articulo.id } as any, usuario: { id: uid } as any })
+        .update({
+          id: existing.id,
+          cantidad: existing.cantidad + cantidad,
+          articulo: { id: articulo.id } as any,
+          usuario: { id: uid } as any,
+        })
         .subscribe({
-          next: () => { this.showMessage('Cantidad actualizada en el carrito', 'success'); this.loadCarrito(); },
+          next: () => {
+            this.showMessage('Cantidad actualizada en el carrito', 'success');
+            this.loadCarrito();
+          },
           error: () => this.showMessage('Error al actualizar carrito', 'danger'),
         });
     } else {
       this.carritoService
         .create({ cantidad, articulo: { id: articulo.id } as any, usuario: { id: uid } as any })
         .subscribe({
-          next: () => { this.showMessage('Añadido al carrito', 'success'); this.loadCarrito(); },
+          next: () => {
+            this.showMessage('Añadido al carrito', 'success');
+            this.loadCarrito();
+          },
           error: () => this.showMessage('Error al añadir al carrito', 'danger'),
         });
     }
@@ -134,7 +149,10 @@ export class CarritoUsuarioTienda implements OnInit {
 
   removeFromCart(id: number): void {
     this.carritoService.delete(id).subscribe({
-      next: () => { this.showMessage('Artículo eliminado del carrito', 'info'); this.loadCarrito(); },
+      next: () => {
+        this.showMessage('Artículo eliminado del carrito', 'info');
+        this.loadCarrito();
+      },
       error: () => this.showMessage('Error al eliminar', 'danger'),
     });
   }
@@ -148,7 +166,12 @@ export class CarritoUsuarioTienda implements OnInit {
       return;
     }
     this.carritoService
-      .update({ id: item.id, cantidad: newCantidad, articulo: { id: item.articulo?.id } as any, usuario: { id: uid } as any })
+      .update({
+        id: item.id,
+        cantidad: newCantidad,
+        articulo: { id: item.articulo?.id } as any,
+        usuario: { id: uid } as any,
+      })
       .subscribe({
         next: () => this.loadCarrito(),
         error: () => this.showMessage('Error al actualizar', 'danger'),
@@ -161,22 +184,24 @@ export class CarritoUsuarioTienda implements OnInit {
       return;
     }
     this.comprando.set(true);
-    this.carritoService.comprar().subscribe({
-      next: () => {
+    this.paymentService.iniciarTienda().subscribe({
+      next: (session) => {
         this.comprando.set(false);
-        this.showMessage('¡Compra realizada con éxito! Puedes ver tu factura en Mis Facturas.', 'success');
-        this.loadCarrito();
+        this.router.navigate(['/payment/checkout'], {
+          state: { sessionToken: session.sessionToken },
+        });
       },
-      error: () => {
+      error: (err) => {
         this.comprando.set(false);
-        this.showMessage('Error al procesar la compra', 'danger');
+        this.showMessage(err?.error?.message ?? 'Error al iniciar el pago', 'danger');
       },
     });
   }
 
   totalCarrito(): number {
     return this.carrito().reduce(
-      (acc, c) => acc + (c.articulo?.precio ?? 0) * (1 - (c.articulo?.descuento ?? 0) / 100) * c.cantidad,
+      (acc, c) =>
+        acc + (c.articulo?.precio ?? 0) * (1 - (c.articulo?.descuento ?? 0) / 100) * c.cantidad,
       0,
     );
   }
@@ -207,10 +232,14 @@ export class CarritoUsuarioTienda implements OnInit {
     this.loadingComentarios.set({ ...this.loadingComentarios(), [articuloId]: true });
     this.comentarioartService.getPage(0, 1000, 'id', 'asc', '', articuloId).subscribe({
       next: (page) => {
-        this.comentariosByArticulo.set({ ...this.comentariosByArticulo(), [articuloId]: page.content });
+        this.comentariosByArticulo.set({
+          ...this.comentariosByArticulo(),
+          [articuloId]: page.content,
+        });
         this.loadingComentarios.set({ ...this.loadingComentarios(), [articuloId]: false });
       },
-      error: () => this.loadingComentarios.set({ ...this.loadingComentarios(), [articuloId]: false }),
+      error: () =>
+        this.loadingComentarios.set({ ...this.loadingComentarios(), [articuloId]: false }),
     });
   }
 
@@ -259,7 +288,12 @@ export class CarritoUsuarioTienda implements OnInit {
     const existing = this.miPuntuacion()[articuloId];
     if (existing) {
       this.puntuacionartService
-        .update({ id: existing.id, puntuacion, articulo: { id: articuloId } as any, usuario: { id: uid } as any })
+        .update({
+          id: existing.id,
+          puntuacion,
+          articulo: { id: articuloId } as any,
+          usuario: { id: uid } as any,
+        })
         .subscribe({
           next: (updated) => {
             this.miPuntuacion.set({ ...this.miPuntuacion(), [articuloId]: updated });
@@ -308,7 +342,11 @@ export class CarritoUsuarioTienda implements OnInit {
     if (!uid || !texto) return;
     this.savingComentario.set(true);
     this.comentarioartService
-      .create({ contenido: texto, articulo: { id: articuloId } as any, usuario: { id: uid } as any })
+      .create({
+        contenido: texto,
+        articulo: { id: articuloId } as any,
+        usuario: { id: uid } as any,
+      })
       .subscribe({
         next: () => {
           this.savingComentario.set(false);
@@ -337,7 +375,12 @@ export class CarritoUsuarioTienda implements OnInit {
     const uid = this.session.getUserId();
     this.savingComentario.set(true);
     this.comentarioartService
-      .update({ id: editing.id, contenido: editing.contenido, articulo: { id: articuloId } as any, usuario: { id: uid } as any })
+      .update({
+        id: editing.id,
+        contenido: editing.contenido,
+        articulo: { id: articuloId } as any,
+        usuario: { id: uid } as any,
+      })
       .subscribe({
         next: () => {
           this.savingComentario.set(false);
@@ -372,5 +415,3 @@ export class CarritoUsuarioTienda implements OnInit {
     setTimeout(() => this.message.set(null), 5000);
   }
 }
-
-

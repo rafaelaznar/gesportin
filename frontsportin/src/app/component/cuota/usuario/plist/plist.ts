@@ -1,6 +1,6 @@
 import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IJugador } from '../../../../model/jugador';
+import { Router } from '@angular/router';
 import { ICuota } from '../../../../model/cuota';
 import { IPago } from '../../../../model/pago';
 import { JugadorService } from '../../../../service/jugador-service';
@@ -8,6 +8,7 @@ import { CuotaService } from '../../../../service/cuota';
 import { PagoService } from '../../../../service/pago';
 import { SessionService } from '../../../../service/session';
 import { NotificacionService } from '../../../../service/notificacion';
+import { PaymentService } from '../../../../service/payment.service';
 import { forkJoin, of } from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';
 import { DatetimePipe } from '../../../../pipe/datetime-pipe';
@@ -39,6 +40,8 @@ export class CuotaUsuarioPlist implements OnInit {
   private pagoService = inject(PagoService);
   private session = inject(SessionService);
   private notificacion = inject(NotificacionService);
+  private paymentService = inject(PaymentService);
+  private router = inject(Router);
 
   equipos = signal<EquipoGroup[]>([]);
   loading = signal(true);
@@ -76,9 +79,11 @@ export class CuotaUsuarioPlist implements OnInit {
                   }
                   return forkJoin(
                     cuotas.map((c) =>
-                      this.pagoService.getPage(0, 1000, 'id', 'asc', c.id, j.id).pipe(
-                        map((pagoPage) => ({ cuota: c, pagos: pagoPage.content } as CuotaRow)),
-                      ),
+                      this.pagoService
+                        .getPage(0, 1000, 'id', 'asc', c.id, j.id)
+                        .pipe(
+                          map((pagoPage) => ({ cuota: c, pagos: pagoPage.content }) as CuotaRow),
+                        ),
                     ),
                   ).pipe(
                     map(
@@ -113,7 +118,7 @@ export class CuotaUsuarioPlist implements OnInit {
   }
 
   estaPagado(cuotaRow: CuotaRow): boolean {
-    return cuotaRow.pagos.some((p) => p.abonado);
+    return cuotaRow.pagos.some((p) => p.paymentSession != null);
   }
 
   isPagando(cuotaId: number): boolean {
@@ -122,46 +127,29 @@ export class CuotaUsuarioPlist implements OnInit {
 
   pagar(equipoId: number, jugadorId: number, cuota: ICuota): void {
     const cuotaId = cuota.id;
-    this.pagando.update((s) => { s.add(cuotaId); return new Set(s); });
-    const today = new Date().toISOString().split('.')[0];
-    this.pagoService
-      .create({
-        cuota: { id: cuotaId } as ICuota,
-        jugador: { id: jugadorId } as IJugador,
-        abonado: 1,
-        fecha: today,
-      })
-      .subscribe({
-        next: (newId) => {
-          this.pagando.update((s) => { s.delete(cuotaId); return new Set(s); });
-          this.equipos.update((eqs) =>
-            eqs.map((eq) => {
-              if (eq.id !== equipoId) return eq;
-              return {
-                ...eq,
-                cuotas: eq.cuotas.map((cr) => {
-                  if (cr.cuota.id !== cuotaId) return cr;
-                  const nuevoPago: IPago = {
-                    id: newId as number,
-                    cuota: cr.cuota,
-                    jugador: { id: jugadorId } as IJugador,
-                    abonado: 1,
-                    fecha: today,
-                  };
-                  return { ...cr, pagos: [...cr.pagos, nuevoPago] };
-                }),
-              };
-            }),
-          );
-          this.notificacion.success('Pago registrado correctamente');
-        },
-        error: () => {
-          this.pagando.update((s) => { s.delete(cuotaId); return new Set(s); });
-          this.notificacion.error('Error al registrar el pago');
-        },
-      });
+    this.pagando.update((s) => {
+      s.add(cuotaId);
+      return new Set(s);
+    });
+    this.paymentService.iniciarCuota(jugadorId, cuotaId).subscribe({
+      next: (session) => {
+        this.pagando.update((s) => {
+          s.delete(cuotaId);
+          return new Set(s);
+        });
+        this.router.navigate(['/payment/checkout'], {
+          state: { sessionToken: session.sessionToken },
+        });
+      },
+      error: (err) => {
+        this.pagando.update((s) => {
+          s.delete(cuotaId);
+          return new Set(s);
+        });
+        this.notificacion.error(err?.error?.message ?? 'Error al iniciar el pago');
+      },
+    });
   }
-
   totalAdeudado(equipoGroup: EquipoGroup): number {
     return equipoGroup.cuotas
       .filter((cr) => !this.estaPagado(cr))

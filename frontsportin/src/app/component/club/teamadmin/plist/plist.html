@@ -67,7 +67,7 @@
           </div>
 
           <!-- Contadores con enlaces como 4 cuadrados en línea -->
-          <div class="row row-cols-4 g-2 mb-3 align-items-stretch">
+          <div class="row row-cols-2 row-cols-md-5 g-2 mb-3 align-items-stretch">
             
             <!-- Gestión del club (ROJO) -->
             <div class="col">
@@ -151,6 +151,19 @@
                   </div>
                 </a>
               }
+            </div>
+
+            <!-- Pagos (MORADO) -->
+            <div class="col">
+              <a [routerLink]="['/payment/teamadmin']" class="badge-square text-white shadow-sm" style="background-color: #6f42c1;">
+                <i class="bi bi-credit-card-2-front mb-1"></i>
+                <span class="title">Pagos</span>
+                <div class="mt-1">
+                  <span class="badge rounded-pill bg-white text-dark counter-pill">
+                    <i class="bi bi-arrow-right-circle"></i>
+                  </span>
+                </div>
+              </a>
             </div>
 
           </div>

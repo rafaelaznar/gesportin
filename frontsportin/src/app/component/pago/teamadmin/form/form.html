@@ -56,24 +56,6 @@
     </div>
 
     <div class="mb-3">
-      <label for="abonado" class="form-label">Abonado <span class="text-danger">*</span></label>
-      <input
-        id="abonado"
-        type="number"
-        step="0.01"
-        class="form-control"
-        formControlName="abonado"
-        [class.is-invalid]="abonado?.invalid && abonado?.touched"
-      />
-      @if (abonado?.invalid && abonado?.touched) {
-        <div class="invalid-feedback">
-          @if (abonado?.errors?.['required']) { <span>Abonado es obligatorio.</span> }
-          @if (abonado?.errors?.['min']) { <span>Abonado debe ser mayor a 0.</span> }
-        </div>
-      }
-    </div>
-
-    <div class="mb-3">
       <label for="fecha" class="form-label">Fecha <span class="text-danger">*</span></label>
       <input
         id="fecha"

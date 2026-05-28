@@ -1,6 +1,8 @@
 package net.ausiasmarch.gesportin.service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -9,15 +11,20 @@ import org.springframework.stereotype.Service;
 
 import net.ausiasmarch.gesportin.entity.JugadorEntity;
 import net.ausiasmarch.gesportin.entity.PagoEntity;
+import net.ausiasmarch.gesportin.entity.PaymentSessionEntity;
 import net.ausiasmarch.gesportin.exception.ResourceNotFoundException;
 import net.ausiasmarch.gesportin.exception.UnauthorizedException;
 import net.ausiasmarch.gesportin.repository.PagoRepository;
+import net.ausiasmarch.gesportin.repository.PaymentSessionRepository;
 
 @Service
 public class PagoService {
 
     @Autowired
     PagoRepository oPagoRepository;
+
+    @Autowired
+    PaymentSessionRepository oPaymentSessionRepository;
 
     @Autowired
     CuotaService oCuotaService;
@@ -114,7 +121,6 @@ public class PagoService {
         }
         oPagoExistente.setCuota(oCuotaService.get(oPagoEntity.getCuota().getId()));
         oPagoExistente.setJugador(oJugadorService.get(oPagoEntity.getJugador().getId()));
-        oPagoExistente.setAbonado(oPagoEntity.getAbonado());
         oPagoExistente.setFecha(oPagoEntity.getFecha());
         return oPagoRepository.save(oPagoExistente);
     }
@@ -164,9 +170,28 @@ public class PagoService {
             }
             oPagoNuevo.setCuota(cuota);
             oPagoNuevo.setJugador(jugador);
-            oPagoNuevo.setAbonado(oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, 1) == 1);
             oPagoNuevo.setFecha(LocalDateTime.now());
-            oPagoRepository.save(oPagoNuevo);
+            // ~50% de los pagos generados se marcan como pagados con una payment session
+            if (Math.random() < 0.5) {
+                PaymentSessionEntity session = new PaymentSessionEntity();
+                session.setSessionToken(UUID.randomUUID().toString().replace("-", ""));
+                session.setTipo("CUOTA");
+                session.setIdReferencia(jugador.getId());
+                session.setIdCuota(cuota.getId());
+                session.setEstado("COMPLETADO");
+                session.setImporte(cuota.getCantidad().setScale(2, java.math.RoundingMode.HALF_UP));
+                session.setDescripcion("Pago cuota: " + cuota.getDescripcion());
+                session.setFecha(LocalDateTime.now());
+                session = oPaymentSessionRepository.save(session);
+                oPagoNuevo.setPaymentSession(session);
+            }
+            PagoEntity saved = oPagoRepository.save(oPagoNuevo);
+            // Actualizar idResultado de la session con el id del pago creado
+            if (saved.getPaymentSession() != null) {
+                PaymentSessionEntity s = saved.getPaymentSession();
+                s.setIdResultado(saved.getId());
+                oPaymentSessionRepository.save(s);
+            }
         }
         return cantidad;
     }

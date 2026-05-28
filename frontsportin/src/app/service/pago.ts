@@ -62,7 +62,6 @@ export class PagoService {
 
   create(pago: Partial<IPago>): Observable<number> {
     const body = this.sanitizer.sanitize(pago, {
-      booleanFields: ['abonado'],
       nestedIdFields: ['cuota', 'jugador'],
     });
     return this.http.post<number>(`${serverURL}/pago`, body);
@@ -70,7 +69,6 @@ export class PagoService {
 
   update(pago: Partial<IPago>): Observable<number> {
     const body = this.sanitizer.sanitize(pago, {
-      booleanFields: ['abonado'],
       nestedIdFields: ['cuota', 'jugador'],
     });
     return this.http.put<number>(`${serverURL}/pago`, body);
