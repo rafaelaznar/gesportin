@@ -52,6 +52,7 @@
                     <th>Rival</th>
                     <th>Casa/Fuera</th>
                     <th>Resultado</th>
+                    <th>Ubicación</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -71,6 +72,15 @@
                         } @else {
                           <span class="text-muted small">—</span>
                         }
+                      </td>
+                      <td>
+                        <a
+                          [routerLink]="['/mi/equipos/map', p.id]"
+                          class="btn btn-outline-primary btn-sm"
+                          title="Ver ubicación"
+                        >
+                          <i class="bi bi-geo-alt"></i>
+                        </a>
                       </td>
                     </tr>
                   }

@@ -16,14 +16,20 @@
       />
       @if (rival?.invalid && rival?.touched) {
         <div class="invalid-feedback">
-          @if (rival?.errors?.['required']) { <span>Rival es obligatorio.</span> }
-          @if (rival?.errors?.['minlength']) { <span>Debe tener al menos 3 caracteres.</span> }
-          @if (rival?.errors?.['maxlength']) { <span>Máx 255 caracteres.</span> }
+          @if (rival?.errors?.['required']) {
+            <span>Rival es obligatorio.</span>
+          }
+          @if (rival?.errors?.['minlength']) {
+            <span>Debe tener al menos 3 caracteres.</span>
+          }
+          @if (rival?.errors?.['maxlength']) {
+            <span>Máx 255 caracteres.</span>
+          }
         </div>
       }
     </div>
 
-    <div class="p-3 rounded mb-3" style="background-color: #f8f9fa; border-left: 4px solid #0d6efd;">
+    <div class="p-3 rounded mb-3" style="background-color: #f8f9fa; border-left: 4px solid #0d6efd">
       <div class="mb-2">
         <label class="form-label">Liga <span class="text-danger">*</span></label>
         <input type="text" class="form-control" [value]="selectedLiga()?.nombre || ''" readonly />
@@ -37,7 +43,7 @@
           <input type="text" class="form-control" [value]="id_liga?.value || ''" readonly />
         </div>
         @if (selectedLiga()) {
-          <div class="flex-grow-1">
+          <div class="grow">
             <label class="form-label">Nombre</label>
             <p class="form-control-plaintext fw-semibold mb-0">{{ selectedLiga()?.nombre }}</p>
           </div>
@@ -75,19 +81,16 @@
       />
       @if (resultado?.invalid && resultado?.touched) {
         <div class="invalid-feedback">
-          @if (resultado?.errors?.['required']) { <span>El resultado es obligatorio.</span> }
+          @if (resultado?.errors?.['required']) {
+            <span>El resultado es obligatorio.</span>
+          }
         </div>
       }
     </div>
 
     <div class="mb-3">
       <label for="fecha" class="form-label">Fecha</label>
-      <input
-        id="fecha"
-        type="datetime-local"
-        class="form-control"
-        formControlName="fecha"
-      />
+      <input id="fecha" type="datetime-local" class="form-control" formControlName="fecha" />
     </div>
 
     <div class="mb-3">
@@ -101,11 +104,64 @@
       />
       @if (lugar?.invalid && lugar?.touched) {
         <div class="invalid-feedback">
-          @if (lugar?.errors?.['required']) { <span>El lugar es obligatorio.</span> }
-          @if (lugar?.errors?.['minlength']) { <span>Debe tener al menos 3 caracteres.</span> }
-          @if (lugar?.errors?.['maxlength']) { <span>Máx 255 caracteres.</span> }
+          @if (lugar?.errors?.['required']) {
+            <span>El lugar es obligatorio.</span>
+          }
+          @if (lugar?.errors?.['minlength']) {
+            <span>Debe tener al menos 3 caracteres.</span>
+          }
+          @if (lugar?.errors?.['maxlength']) {
+            <span>Máx 255 caracteres.</span>
+          }
         </div>
       }
+    </div>
+
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label for="latitud" class="form-label">Latitud</label>
+        <input
+          id="latitud"
+          type="number"
+          step="0.000001"
+          class="form-control"
+          formControlName="latitud"
+          [class.is-invalid]="
+            partidoForm.get('latitud')?.invalid && partidoForm.get('latitud')?.touched
+          "
+        />
+        @if (partidoForm.get('latitud')?.invalid && partidoForm.get('latitud')?.touched) {
+          <div class="invalid-feedback">Latitud debe estar entre -90 y 90.</div>
+        }
+      </div>
+      <div class="col-md-6 mb-3">
+        <label for="longitud" class="form-label">Longitud</label>
+        <input
+          id="longitud"
+          type="number"
+          step="0.000001"
+          class="form-control"
+          formControlName="longitud"
+          [class.is-invalid]="
+            partidoForm.get('longitud')?.invalid && partidoForm.get('longitud')?.touched
+          "
+        />
+        @if (partidoForm.get('longitud')?.invalid && partidoForm.get('longitud')?.touched) {
+          <div class="invalid-feedback">Longitud debe estar entre -180 y 180.</div>
+        }
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <label class="form-label">Ubicación en el mapa</label>
+      <div class="map-instructions small text-muted mb-2">
+        Haz clic en el mapa para fijar la latitud y longitud del partido.
+      </div>
+      <div id="partidoLocationMap" class="leaflet-map"></div>
+      <div class="small text-muted mt-2">
+        Latitud: {{ partidoForm.value.latitud ?? '—' }}, Longitud:
+        {{ partidoForm.value.longitud ?? '—' }}
+      </div>
     </div>
 
     <div class="mb-3">
@@ -136,8 +192,14 @@
 
     <div class="d-flex justify-content-between">
       <button type="button" class="btn btn-outline-secondary" (click)="onCancel()">Cancelar</button>
-      <button type="submit" class="btn btn-primary" [disabled]="submitting() || partidoForm.invalid">
-        @if (submitting()) { <span class="spinner-border spinner-border-sm me-2"></span> }
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="submitting() || partidoForm.invalid"
+      >
+        @if (submitting()) {
+          <span class="spinner-border spinner-border-sm me-2"></span>
+        }
         {{ isEditMode ? 'Guardar' : 'Crear' }}
       </button>
     </div>

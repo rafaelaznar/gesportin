@@ -1,9 +1,5 @@
-import { Component, signal, OnInit, inject, Input, Signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { HttpErrorResponse } from '@angular/common/http';
+import { Component, Input, OnInit, AfterViewInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DatetimePipe } from '../../../../pipe/datetime-pipe';
-import { PartidoService } from '../../../../service/partido';
 import { IPartido } from '../../../../model/partido';
 
 declare global {
@@ -17,56 +13,42 @@ const LEAFLET_JS_URL = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
 
 @Component({
   standalone: true,
-  selector: 'app-partido-admin-detail',
-  imports: [CommonModule, RouterLink, DatetimePipe],
-  templateUrl: './detail.html',
-  styleUrl: './detail.css',
+  selector: 'app-partido-teamadmin-map',
+  imports: [CommonModule],
+  templateUrl: './map.html',
+  styleUrls: ['./map.css'],
 })
-export class PartidoAdminDetail implements OnInit {
-  @Input() id: Signal<number> = signal(0);
+export class PartidoTeamadminMap implements OnInit, AfterViewInit {
+  @Input() partido: IPartido | null = null;
 
-  private partidoService = inject(PartidoService);
-
-  oPartido = signal<IPartido | null>(null);
-  loading = signal(true);
+  mapInitialized = signal(false);
   error = signal<string | null>(null);
-
   private mapInstance: any = null;
 
-  ngOnInit(): void {
-    const idPartido = this.id();
-    if (!idPartido || isNaN(idPartido)) {
-      this.error.set('ID de partido no válido');
-      this.loading.set(false);
-      return;
-    }
-    this.load(idPartido);
+  get mapId(): string {
+    return `partidoMap-${this.partido?.id ?? 'unknown'}`;
   }
 
-  private load(id: number): void {
-    this.partidoService.get(id).subscribe({
-      next: (data) => {
-        this.oPartido.set(data);
-        const lat = (data as any).latitud;
-        const lng = (data as any).longitud;
-        this.loadLeafletAssets()
-          .then(() => {
-            this.loading.set(false);
-            if (lat != null && lng != null) {
-              setTimeout(() => this.initMap(lat, lng), 0);
-            }
-          })
-          .catch((err) => {
-            this.error.set('Error cargando Leaflet: ' + err);
-            this.loading.set(false);
-          });
-      },
-      error: (err: HttpErrorResponse) => {
-        this.error.set('Error cargando el partido');
-        console.error(err);
-        this.loading.set(false);
-      },
-    });
+  ngOnInit(): void {
+    if (!this.partido) {
+      this.error.set('Partido no disponible para el mapa.');
+    }
+  }
+
+  ngAfterViewInit(): void {
+    const lat = this.partido?.latitud;
+    const lng = this.partido?.longitud;
+    if (lat == null || lng == null) {
+      return;
+    }
+
+    this.loadLeafletAssets()
+      .then(() => {
+        setTimeout(() => this.initMap(lat, lng), 0);
+      })
+      .catch((err) => {
+        this.error.set('Error cargando Leaflet: ' + err);
+      });
   }
 
   private loadLeafletAssets(): Promise<void> {
@@ -106,10 +88,18 @@ export class PartidoAdminDetail implements OnInit {
 
   private initMap(lat: number, lng: number): void {
     if (!window.L) {
+      this.error.set('Leaflet no está disponible.');
       return;
     }
+
+    const container = document.getElementById(this.mapId);
+    if (!container) {
+      this.error.set('Contenedor de mapa no encontrado.');
+      return;
+    }
+
     this.mapInstance?.remove();
-    this.mapInstance = window.L.map('partidoDetailMap').setView([lat, lng], 14);
+    this.mapInstance = window.L.map(this.mapId).setView([lat, lng], 13);
     window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors',
       noWrap: true,
@@ -121,5 +111,6 @@ export class PartidoAdminDetail implements OnInit {
       ]);
     } catch (e) {}
     window.L.marker([lat, lng]).addTo(this.mapInstance);
+    this.mapInitialized.set(true);
   }
 }

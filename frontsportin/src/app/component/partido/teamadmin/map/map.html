@@ -1,0 +1,10 @@
+<div class="partido-map-card">
+  @if (partido && partido.latitud != null && partido.longitud != null) {
+    <div id="{{ mapId }}" class="partido-map-container"></div>
+  } @else {
+    <div class="text-muted small">Sin coordenadas para este partido.</div>
+  }
+  @if (error()) {
+    <div class="alert alert-danger small mb-0 mt-1">{{ error() }}</div>
+  }
+</div>

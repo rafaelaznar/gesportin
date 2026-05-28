@@ -3,6 +3,8 @@ export interface IClub {
     nombre: string;
     direccion: string;
     telefono: string;
+    latitud?: number;
+    longitud?: number;
     fechaAlta: Date;
     imagen: string | null;
     temporadas: number;

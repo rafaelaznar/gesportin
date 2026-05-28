@@ -9,6 +9,8 @@ export interface IPartido {
     resultado: string;
     fecha?: string;
     lugar: string;
+    latitud?: number;
+    longitud?: number;
     estadopartido?: IEstadopartido;
     comentario?: string;
 }

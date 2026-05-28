@@ -1,10 +1,12 @@
-import { Component, signal, OnInit, inject, Input, Signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, inject, signal } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
-import { CommonModule } from '@angular/common';
-import { DatetimePipe } from '../../../../pipe/datetime-pipe';
-import { PartidoService } from '../../../../service/partido';
-import { IPartido } from '../../../../model/partido';
+import { Observable } from 'rxjs';
+import { ClubService } from '../../../service/club';
+import { PartidoService } from '../../../service/partido';
+import { IClub } from '../../../model/club';
+import { IPartido } from '../../../model/partido';
+import { RouterLink } from '@angular/router';
 
 declare global {
   interface Window {
@@ -16,39 +18,51 @@ const LEAFLET_CSS_URL = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
 const LEAFLET_JS_URL = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
 
 @Component({
-  standalone: true,
-  selector: 'app-partido-admin-detail',
-  imports: [CommonModule, RouterLink, DatetimePipe],
-  templateUrl: './detail.html',
-  styleUrl: './detail.css',
+  selector: 'app-ubicacion-view-page',
+  templateUrl: './view.html',
+  styleUrl: './view.css',
+  imports: [RouterLink],
 })
-export class PartidoAdminDetail implements OnInit {
-  @Input() id: Signal<number> = signal(0);
-
-  private partidoService = inject(PartidoService);
-
-  oPartido = signal<IPartido | null>(null);
+export class UbicacionViewPage {
+  oEntity = signal<IClub | IPartido | null>(null);
   loading = signal(true);
   error = signal<string | null>(null);
+  entityType = signal<'club' | 'partido' | null>(null);
+  title = signal('Ubicación');
+  currentCoordinates = signal<string>('');
 
   private mapInstance: any = null;
+  private clubService = inject(ClubService);
+  private partidoService = inject(PartidoService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
 
   ngOnInit(): void {
-    const idPartido = this.id();
-    if (!idPartido || isNaN(idPartido)) {
-      this.error.set('ID de partido no válido');
+    const entity = this.route.snapshot.paramMap.get('entity');
+    const idParam = this.route.snapshot.paramMap.get('id');
+    const id = idParam ? Number(idParam) : NaN;
+
+    if (!entity || (entity !== 'club' && entity !== 'partido') || isNaN(id)) {
+      this.error.set('Entidad o identificador inválido.');
       this.loading.set(false);
       return;
     }
-    this.load(idPartido);
+
+    this.entityType.set(entity as 'club' | 'partido');
+    this.title.set(entity === 'club' ? 'Ubicación del club' : 'Ubicación del partido');
+    this.loadEntity(entity, id);
   }
 
-  private load(id: number): void {
-    this.partidoService.get(id).subscribe({
-      next: (data) => {
-        this.oPartido.set(data);
+  private loadEntity(entity: string, id: number): void {
+    const service$: Observable<IClub | IPartido> =
+      entity === 'club' ? this.clubService.get(id) : this.partidoService.get(id);
+
+    service$.subscribe({
+      next: (data: IClub | IPartido) => {
+        this.oEntity.set(data);
         const lat = (data as any).latitud;
         const lng = (data as any).longitud;
+        this.currentCoordinates.set(lat != null && lng != null ? `${lat}, ${lng}` : '');
         this.loadLeafletAssets()
           .then(() => {
             this.loading.set(false);
@@ -62,8 +76,7 @@ export class PartidoAdminDetail implements OnInit {
           });
       },
       error: (err: HttpErrorResponse) => {
-        this.error.set('Error cargando el partido');
-        console.error(err);
+        this.error.set('Error cargando ubicación: ' + err.message);
         this.loading.set(false);
       },
     });
@@ -108,8 +121,9 @@ export class PartidoAdminDetail implements OnInit {
     if (!window.L) {
       return;
     }
+
     this.mapInstance?.remove();
-    this.mapInstance = window.L.map('partidoDetailMap').setView([lat, lng], 14);
+    this.mapInstance = window.L.map('ubicacionMap').setView([lat, lng], 14);
     window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors',
       noWrap: true,
@@ -121,5 +135,14 @@ export class PartidoAdminDetail implements OnInit {
       ]);
     } catch (e) {}
     window.L.marker([lat, lng]).addTo(this.mapInstance);
+  }
+
+  hasCoordinates(): boolean {
+    const entity = this.oEntity();
+    return entity != null && (entity as any).latitud != null && (entity as any).longitud != null;
+  }
+
+  goBack(): void {
+    this.router.navigate(['/']);
   }
 }

@@ -66,6 +66,10 @@
             </div>
           </div>
 
+          @if (oClub.latitud != null && oClub.longitud != null) {
+            <app-club-teamadmin-map [club]="oClub"></app-club-teamadmin-map>
+          }
+
           <!-- Contadores con enlaces como 4 cuadrados en línea -->
           <div class="row row-cols-4 g-2 mb-3 align-items-stretch">
             

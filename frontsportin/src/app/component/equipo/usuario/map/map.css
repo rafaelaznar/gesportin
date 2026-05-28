@@ -1,0 +1,11 @@
+.equipo-usuario-map-container {
+  width: 100%;
+  min-height: 320px;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.equipo-usuario-map-root {
+  margin-top: 1rem;
+}

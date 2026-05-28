@@ -48,7 +48,12 @@ public class ClubEntity {
     @Column(nullable = true)
     private byte[] imagen;
 
-    
+    @Column(nullable = true)
+    private Double latitud;
+
+    @Column(nullable = true)
+    private Double longitud;
+
     @Getter(AccessLevel.NONE)
     @OneToMany(mappedBy = "club", fetch = FetchType.LAZY)
     private List<TemporadaEntity> temporadas;

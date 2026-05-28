@@ -66,6 +66,8 @@ CREATE TABLE `club` (
   `nombre` varchar(255) CHARACTER SET utf32 COLLATE utf32_unicode_ci NOT NULL,
   `dirección` varchar(255) CHARACTER SET utf32 COLLATE utf32_unicode_ci NOT NULL,
   `teléfono` varchar(255) CHARACTER SET utf32 COLLATE utf32_unicode_ci NOT NULL,
+  `latitud` double DEFAULT NULL,
+  `longitud` double DEFAULT NULL,
   `fecha_alta` datetime NOT NULL,
   `imagen` longblob
 ) ENGINE=InnoDB DEFAULT CHARSET=utf32 COLLATE=utf32_unicode_ci;
@@ -74,8 +76,8 @@ CREATE TABLE `club` (
 -- Volcado de datos para la tabla `club`
 --
 
-INSERT INTO `club` (`id`, `nombre`, `dirección`, `teléfono`, `fecha_alta`, `imagen`) VALUES
-(1, 'Gesportin', '', '', '2026-04-16 09:41:26', NULL);
+INSERT INTO `club` (`id`, `nombre`, `dirección`, `teléfono`, `latitud`, `longitud`, `fecha_alta`, `imagen`) VALUES
+(1, 'Gesportin', '', '', NULL, NULL, '2026-04-16 09:41:26', NULL);
 
 -- --------------------------------------------------------
 
@@ -249,6 +251,8 @@ CREATE TABLE `partido` (
   `resultado` varchar(1024) CHARACTER SET utf32 COLLATE utf32_unicode_ci NOT NULL,
   `fecha` datetime DEFAULT NULL,
   `lugar` varchar(255) CHARACTER SET utf32 COLLATE utf32_unicode_ci NOT NULL,
+  `latitud` double DEFAULT NULL,
+  `longitud` double DEFAULT NULL,
   `id_estadopartido` bigint DEFAULT NULL,
   `comentario` text COLLATE utf32_unicode_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf32 COLLATE=utf32_unicode_ci;

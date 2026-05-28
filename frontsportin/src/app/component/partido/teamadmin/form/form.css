@@ -1,1 +1,11 @@
 /* Styles for partido admin form */
+.leaflet-map {
+  width: 100%;
+  min-height: 320px;
+  border: 1px solid #ced4da;
+  border-radius: 0.375rem;
+}
+
+.map-instructions {
+  font-size: 0.9rem;
+}

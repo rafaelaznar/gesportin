@@ -1,0 +1,15 @@
+#ubicacionMap {
+  width: 100%;
+  min-height: 420px;
+  height: 60vh;
+  border-radius: 0.5rem;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.08);
+}
+
+.ubicacion-page {
+  max-width: 1000px;
+}
+
+.ubicacion-page .alert {
+  margin-top: 1rem;
+}

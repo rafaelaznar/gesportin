@@ -58,6 +58,12 @@ public class PartidoEntity {
     private String lugar;
 
     @Column(nullable = true)
+    private Double latitud;
+
+    @Column(nullable = true)
+    private Double longitud;
+
+    @Column(nullable = true)
     private String comentario;
 
     @ManyToOne(fetch = FetchType.EAGER)

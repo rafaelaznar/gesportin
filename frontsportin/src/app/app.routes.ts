@@ -41,6 +41,7 @@ import { LigaTeamadminPlistPage } from './page/liga/teamadmin/plist/plist';
 import { NoticiaAdminPlistPage } from './page/noticia/admin/plist/plist';
 import { NoticiaPlistTeamadminPage } from './page/noticia/teamadmin/plist/plist';
 import { ClubAdminPlistPage } from './page/club/admin/plist/plist';
+import { UbicacionViewPage } from './page/ubicacion/view/view';
 import { CuotaTeamadminPlistPage } from './page/cuota/teamadmin/plist/plist';
 import { CuotaAdminPlistPage } from './page/cuota/admin/plist/plist';
 import { CuotaAdminNewPage } from './page/cuota/admin/new/new';
@@ -201,6 +202,7 @@ import { NoticiaUsuarioPlistPage } from './page/noticia/usuario/plist/plist';
 import { NoticiaUsuarioViewPage } from './page/noticia/usuario/view/view';
 import { EquipoUsuarioPlistPage } from './page/equipo/usuario/plist/plist';
 import { EquipoUsuarioViewPage } from './page/equipo/usuario/view/view';
+import { EquipoUsuarioMapPage } from './page/equipo/usuario/map/map';
 import { CuotaUsuarioPlistPage } from './page/cuota/usuario/plist/plist';
 import { CarritoUsuarioTiendaPage } from './page/carrito/usuario/tienda/tienda';
 import { FacturaUsuarioPlistPage } from './page/factura/usuario/plist/plist';
@@ -398,6 +400,7 @@ export const routes: Routes = [
   { path: 'usuario/teamadmin', component: UsuarioTeamadminPlistPage, canActivate: [ClubAdminGuard] },
   { path: 'usuario/teamadmin/club/:id_club', component: UsuarioTeamadminPlistPage, canActivate: [ClubAdminGuard] },
   { path: 'club/teamadmin', component: ClubPlistTeamadminPage, canActivate: [ClubAdminGuard] },
+  { path: 'ubicacion/:entity/:id', component: UbicacionViewPage, canActivate: [AuthGuard] },
   { path: 'temporada/teamadmin', component: TemporadaTeamadminPlistPage, canActivate: [ClubAdminGuard] },
   { path: 'temporada/teamadmin/club/:id_club', component: TemporadaTeamadminPlistPage, canActivate: [ClubAdminGuard] },
   { path: 'categoria/teamadmin', component: CategoriaTeamadminPlistPage, canActivate: [ClubAdminGuard] },
@@ -513,10 +516,11 @@ export const routes: Routes = [
   { path: 'mi/noticias', component: NoticiaUsuarioPlistPage, canActivate: [UsuarioGuard] },
   { path: 'mi/noticias/:id', component: NoticiaUsuarioViewPage, canActivate: [UsuarioGuard] },
   { path: 'mi/equipos', component: EquipoUsuarioPlistPage, canActivate: [UsuarioGuard] },
+  { path: 'mi/equipos/map/:id', component: EquipoUsuarioMapPage, canActivate: [UsuarioGuard] },
   { path: 'mi/equipos/:id', component: EquipoUsuarioViewPage, canActivate: [UsuarioGuard] },
   { path: 'mi/equipos/:id/jugadores', component: JugadorUsuarioEquipoPlistPage, canActivate: [UsuarioGuard] },
   { path: 'mi/cuotas', component: CuotaUsuarioPlistPage, canActivate: [UsuarioGuard] },
   { path: 'mi/tienda', component: CarritoUsuarioTiendaPage, canActivate: [UsuarioGuard] },
   { path: 'mi/facturas', component: FacturaUsuarioPlistPage, canActivate: [UsuarioGuard] },
-  ...protectedRoutes.map((r) => ({ ...r, canActivate: [AdminGuard] })), 
+  ...protectedRoutes.map((r) => ({ ...r, canActivate: [AdminGuard] })),
 ];

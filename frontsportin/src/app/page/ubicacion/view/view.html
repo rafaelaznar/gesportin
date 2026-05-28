@@ -1,0 +1,35 @@
+<div class="ubicacion-page container py-3">
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3 gap-3">
+    <div>
+      <h2>{{ title() }}</h2>
+      @if (entityType() === 'club') {
+        <p class="text-muted mb-1">Club: {{ oEntity()?.id }}</p>
+      } @else if (entityType() === 'partido') {
+        <p class="text-muted mb-1">Partido: {{ oEntity()?.id || 'N/A' }}</p>
+      }
+      @if (currentCoordinates()) {
+        <p class="text-muted mb-0">Coordenadas: {{ currentCoordinates() }}</p>
+      }
+    </div>
+    <a
+      class="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2"
+      [routerLink]="[entityType() === 'club' ? '/club' : '/partido']"
+    >
+      <i class="bi bi-arrow-left"></i> Volver
+    </a>
+  </div>
+
+  @if (loading()) {
+    <div class="alert alert-info">Cargando ubicación...</div>
+  } @else if (error()) {
+    <div class="alert alert-danger">{{ error() }}</div>
+  } @else {
+    @if (oEntity() && hasCoordinates()) {
+      <div id="ubicacionMap" class="map-container"></div>
+    } @else {
+      <div class="alert alert-warning">
+        No hay coordenadas disponibles para esta {{ entityType() === 'club' ? 'entidad' : 'entidad' }}.
+      </div>
+    }
+  }
+</div>

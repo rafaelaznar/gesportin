@@ -15,11 +15,12 @@ import { BotoneraActionsPlist } from '../../../shared/botonera-actions-plist/bot
 import { DatetimePipe } from '../../../../pipe/datetime-pipe';
 import { LigaService } from '../../../../service/liga';
 import { ILiga } from '../../../../model/liga';
+import { PartidoTeamadminMap } from '../map/map';
 
 @Component({
   standalone: true,
   selector: 'app-partido-teamadmin-plist',
-  imports: [RouterLink, BotoneraRpp, Paginacion, BotoneraActionsPlist, DatetimePipe],
+  imports: [RouterLink, BotoneraRpp, Paginacion, BotoneraActionsPlist, DatetimePipe, PartidoTeamadminMap],
   templateUrl: './plist.html',
   styleUrl: './plist.css',
 })
