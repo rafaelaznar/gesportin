@@ -142,7 +142,7 @@ Jugador perteneciente a un equipo, asociado a un usuario del sistema.
 | `dorsal` | int | NO | — | Número de camiseta |
 | `posicion` | varchar(50) | NO | — | Posición en el campo |
 | `capitan` | tinyint(1) | NO | 0 | 0=No, 1=Sí |
-| `imagen` | varchar(255) | SÍ | NULL | Ruta/URL de imagen |
+| `imagen` | longblob | SÍ | NULL | Imagen binaria del jugador |
 | `id_usuario` | bigint | NO | — | FK → usuario |
 | `id_equipo` | bigint | NO | — | FK → equipo |
 

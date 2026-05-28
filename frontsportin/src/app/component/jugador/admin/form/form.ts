@@ -7,6 +7,7 @@ import { ModalService } from '../../../shared/modal/modal.service';
 import { JugadorService } from '../../../../service/jugador-service';
 import { EquipoService } from '../../../../service/equipo';
 import { UsuarioService } from '../../../../service/usuarioService';
+import { ImageUploadService } from '../../../../service/image-upload';
 import { IJugador } from '../../../../model/jugador';
 import { IEquipo } from '../../../../model/equipo';
 import { IUsuario } from '../../../../model/usuario';
@@ -34,12 +35,14 @@ export class JugadorAdminForm implements OnInit {
   private oUsuarioService = inject(UsuarioService);
   private modalService = inject(ModalService);
   private sessionService = inject(SessionService);
+  public imageUpload = inject(ImageUploadService);
 
   jugadorForm!: FormGroup;
   error = signal<string | null>(null);
   submitting = signal(false);
   selectedEquipo = signal<IEquipo | null>(null);
   selectedUsuario = signal<IUsuario | null>(null);
+  imagePreview = signal<string | null>(null);
 
   constructor() {
     effect(() => {
@@ -64,6 +67,7 @@ export class JugadorAdminForm implements OnInit {
       dorsal: [0, [Validators.required, Validators.min(1)]],
       posicion: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
       capitan: [false, Validators.required],
+      imagen: [null],
       id_equipo: [null, Validators.required],
       id_usuario: [null, Validators.required],
     });
@@ -75,11 +79,13 @@ export class JugadorAdminForm implements OnInit {
       dorsal: jugador.dorsal,
       posicion: jugador.posicion,
       capitan: jugador.capitan,
+      imagen: jugador.imagen || null,
       id_equipo: jugador.equipo?.id,
       id_usuario: jugador.usuario?.id,
     });
     if (jugador.equipo?.id) this.loadEquipo(jugador.equipo.id);
     if (jugador.usuario?.id) this.loadUsuario(jugador.usuario.id);
+    if (jugador.imagen) this.imagePreview.set(this.imageUpload.toPreviewSrc(jugador.imagen));
   }
 
   private loadEquipo(idEquipo: number): void {
@@ -150,6 +156,7 @@ export class JugadorAdminForm implements OnInit {
       dorsal: Number(this.jugadorForm.value.dorsal),
       posicion: this.jugadorForm.value.posicion,
       capitan: Boolean(this.jugadorForm.value.capitan),
+      imagen: this.jugadorForm.value.imagen || null,
       equipo: { id: Number(this.jugadorForm.value.id_equipo) },
       usuario: { id: Number(this.jugadorForm.value.id_usuario) },
     };
@@ -183,6 +190,26 @@ export class JugadorAdminForm implements OnInit {
           this.submitting.set(false);
         },
       });
+    }
+  }
+
+  async onImageSelected(event: Event): Promise<void> {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    try {
+      const base64 = await this.imageUpload.fileToBase64(file);
+      this.jugadorForm.patchValue({ imagen: base64 });
+      this.imagePreview.set(this.imageUpload.toPreviewSrc(base64));
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'No se pudo procesar la imagen';
+      this.notificacion.error(message);
+      this.imagePreview.set(null);
+      input.value = '';
     }
   }
 

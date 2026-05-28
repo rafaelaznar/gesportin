@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, inject, signal } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, inject, signal, effect } from '@angular/core';
 import { toIsoDateTime } from '../../../../utils/date-utils';
 import { SessionService } from '../../../../service/session';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -9,6 +9,7 @@ import { ModalService } from '../../../shared/modal/modal.service';
 import { INoticia } from '../../../../model/noticia';
 import { IClub } from '../../../../model/club';
 import { ClubService } from '../../../../service/club';
+import { ImageUploadService } from '../../../../service/image-upload';
 import { NoticiaService } from '../../../../service/noticia';
 import { ClubAdminPlist } from '../../../club/admin/plist/plist';
 
@@ -28,6 +29,7 @@ export class NoticiaAdminForm implements OnInit {
   private oClubService = inject(ClubService);
   private oNoticiaService = inject(NoticiaService);
   private notificacion = inject(NotificacionService);
+  public imageUpload = inject(ImageUploadService);
   session: SessionService = inject(SessionService);
 
   noticiaForm!: FormGroup;
@@ -35,14 +37,24 @@ export class NoticiaAdminForm implements OnInit {
   submitting = signal(false);
   selectedClub = signal<IClub | null>(null);
   displayIdClub = signal<number | null>(null);
+  imagePreview = signal<string | null>(null);
 
   private modalService = inject(ModalService);
+
+  constructor() {
+    effect(() => {
+      const n = this.noticia;
+      if (n && this.noticiaForm) {
+        this.loadNoticiaData(n);
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.initForm();
 
     if (this.noticia) {
-      this.loadNoticiaData();
+      this.loadNoticiaData(this.noticia);
     }
   }
 
@@ -76,7 +88,7 @@ export class NoticiaAdminForm implements OnInit {
     });
   }
 
-  private loadNoticiaData(): void {
+  private loadNoticiaData(noticia: INoticia): void {
     if (!this.noticia) return;
 
     const fechaIso = toIsoDateTime(this.noticia.fecha);
@@ -90,10 +102,8 @@ export class NoticiaAdminForm implements OnInit {
       imagen: this.noticia.imagen || null,
       id_club: this.noticia.club?.id,
     });
-
-    if (this.noticia.club) {
-      this.syncClub(this.noticia.club.id);
-    }
+    if (this.noticia.club) this.syncClub(this.noticia.club.id);
+    if (noticia.imagen) this.imagePreview.set(this.imageUpload.toPreviewSrc(noticia.imagen));
   }
 
   private loadClub(idClub: number): void {
@@ -184,6 +194,26 @@ export class NoticiaAdminForm implements OnInit {
           this.submitting.set(false);
         },
       });
+    }
+  }
+
+  async onImageSelected(event: Event): Promise<void> {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    try {
+      const base64 = await this.imageUpload.fileToBase64(file);
+      this.noticiaForm.patchValue({ imagen: base64 });
+      this.imagePreview.set(this.imageUpload.toPreviewSrc(base64));
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'No se pudo procesar la imagen';
+      this.notificacion.error(message);
+      this.imagePreview.set(null);
+      input.value = '';
     }
   }
 

@@ -6,6 +6,7 @@ import { NotificacionService } from '../../../../service/notificacion';;
 import { ModalService } from '../../../shared/modal/modal.service';
 import { ArticuloService } from '../../../../service/articulo';
 import { TipoarticuloService } from '../../../../service/tipoarticulo';
+import { ImageUploadService } from '../../../../service/image-upload';
 import { IArticulo } from '../../../../model/articulo';
 import { ITipoarticulo } from '../../../../model/tipoarticulo';
 import { SessionService } from '../../../../service/session';
@@ -30,11 +31,13 @@ export class ArticuloAdminForm implements OnInit {
   private oTipoarticuloService = inject(TipoarticuloService);
   private modalService = inject(ModalService);
   private sessionService = inject(SessionService);
+  public imageUpload = inject(ImageUploadService);
 
   articuloForm!: FormGroup;
   error = signal<string | null>(null);
   submitting = signal(false);
   selectedTipoarticulo = signal<ITipoarticulo | null>(null);
+  imagePreview = signal<string | null>(null);
 
   constructor() {
     effect(() => {
@@ -59,6 +62,7 @@ export class ArticuloAdminForm implements OnInit {
       descripcion: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(255)]],
       precio: [0, [Validators.required, Validators.min(0)]],
       descuento: [0, [Validators.min(0), Validators.max(100)]],
+      imagen: [null],
       id_tipoarticulo: [null, Validators.required],
     });
   }
@@ -69,9 +73,11 @@ export class ArticuloAdminForm implements OnInit {
       descripcion: articulo.descripcion,
       precio: articulo.precio,
       descuento: articulo.descuento,
+      imagen: articulo.imagen || null,
       id_tipoarticulo: articulo.tipoarticulo?.id,
     });
     if (articulo.tipoarticulo?.id) this.loadTipoarticulo(articulo.tipoarticulo.id);
+    if (articulo.imagen) this.imagePreview.set(this.imageUpload.toPreviewSrc(articulo.imagen));
   }
 
   private loadTipoarticulo(idTipoarticulo: number): void {
@@ -120,6 +126,7 @@ export class ArticuloAdminForm implements OnInit {
       descripcion: this.articuloForm.value.descripcion,
       precio: Number(this.articuloForm.value.precio),
       descuento: Number(this.articuloForm.value.descuento),
+      imagen: this.articuloForm.value.imagen || null,
       tipoarticulo: { id: Number(this.articuloForm.value.id_tipoarticulo) },
     };
 
@@ -152,6 +159,26 @@ export class ArticuloAdminForm implements OnInit {
           this.submitting.set(false);
         },
       });
+    }
+  }
+
+  async onImageSelected(event: Event): Promise<void> {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    try {
+      const base64 = await this.imageUpload.fileToBase64(file);
+      this.articuloForm.patchValue({ imagen: base64 });
+      this.imagePreview.set(this.imageUpload.toPreviewSrc(base64));
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'No se pudo procesar la imagen';
+      this.notificacion.error(message);
+      this.imagePreview.set(null);
+      input.value = '';
     }
   }
 

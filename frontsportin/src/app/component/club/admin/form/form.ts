@@ -1,10 +1,11 @@
-import { Component, OnInit, Input, Output, EventEmitter, inject, signal } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, inject, signal, effect } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { NotificacionService } from '../../../../service/notificacion';;
 import { toIsoDateTime } from '../../../../utils/date-utils';
 import { ClubService } from '../../../../service/club';
+import { ImageUploadService } from '../../../../service/image-upload';
 import { IClub } from '../../../../model/club';
 
 @Component({
@@ -22,16 +23,28 @@ export class ClubAdminForm implements OnInit {
   private fb = inject(FormBuilder);
   private notificacion = inject(NotificacionService);
   private clubService = inject(ClubService);
+  public imageUpload = inject(ImageUploadService);
 
   clubForm!: FormGroup;
   loading = signal(false);
   error = signal<string | null>(null);
   submitting = signal(false);
+  imagePreview = signal<string | null>(null);
+
+  constructor() {
+    effect(() => {
+      const c = this.club;
+      if (c && this.clubForm) {
+        this.loadClubData(c);
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.initForm();
+
     if (this.club) {
-      this.loadClubData();
+      this.loadClubData(this.club);
     }
   }
 
@@ -46,7 +59,7 @@ export class ClubAdminForm implements OnInit {
     });
   }
 
-  private loadClubData(): void {
+  private loadClubData(club: IClub): void {
     if (!this.club) return;
     const fechaAltaInput = this.toDateInputValue(this.club.fechaAlta);
 
@@ -58,6 +71,7 @@ export class ClubAdminForm implements OnInit {
       fechaAlta: fechaAltaInput,
       imagen: this.club.imagen || null,
     });
+    if (club.imagen) this.imagePreview.set(this.imageUpload.toPreviewSrc(club.imagen));
   }
 
   get nombre() {
@@ -149,6 +163,26 @@ export class ClubAdminForm implements OnInit {
     }
     const text = String(value);
     return text.includes('T') ? text.split('T')[0] : text.split(' ')[0];
+  }
+
+  async onImageSelected(event: Event): Promise<void> {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    try {
+      const base64 = await this.imageUpload.fileToBase64(file);
+      this.clubForm.patchValue({ imagen: base64 });
+      this.imagePreview.set(this.imageUpload.toPreviewSrc(base64));
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'No se pudo procesar la imagen';
+      this.notificacion.error(message);
+      this.imagePreview.set(null);
+      input.value = '';
+    }
   }
 
   onCancel(): void {

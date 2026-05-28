@@ -1,15 +1,20 @@
 package net.ausiasmarch.gesportin.api;
 
+import java.io.IOException;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import net.ausiasmarch.gesportin.entity.ClubEntity;
 import net.ausiasmarch.gesportin.service.ClubService;
@@ -40,6 +45,11 @@ public class ClubApi {
     @PutMapping
     public ResponseEntity<ClubEntity> update(@RequestBody ClubEntity clubEntity) {
         return ResponseEntity.ok(oClubService.update(clubEntity));
+    }
+
+    @PatchMapping("/picture/{id}")
+    public void updatePicture(@PathVariable Long id, @RequestPart("image") MultipartFile image) throws IOException {
+        oClubService.updatePicture(id, image.getBytes());
     }
 
     @DeleteMapping("/{id}")

@@ -5,6 +5,7 @@ import { Paginacion } from '../../../shared/paginacion/paginacion';
 import { IPage } from '../../../../model/plist';
 import { IClub } from '../../../../model/club';
 import { ClubService } from '../../../../service/club';
+import { ImageUploadService } from '../../../../service/image-upload';
 import { SessionService } from '../../../../service/session';
 import { DatePipe } from '@angular/common';
 
@@ -26,6 +27,7 @@ export class ClubTeamadminPlist {
   orderField = signal<string>('id');
   orderDirection = signal<'asc' | 'desc'>('asc');
 
+  public imageUpload = inject(ImageUploadService);
   private oClubService = inject(ClubService);
   private route = inject(ActivatedRoute);
   session: SessionService = inject(SessionService);
