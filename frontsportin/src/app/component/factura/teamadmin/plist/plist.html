@@ -22,19 +22,7 @@
     }
   </div>
 
-  <!-- 3. Botón crear (oculto si hay filtro FK) -->
-  @if (!id_usuario || id_usuario === 0) {
-    <div class="d-flex my-1">
-      <div class="w-100 d-flex justify-content-center">
-        <a class="btn btn-primary new-btn"
-           [routerLink]="['/factura/teamadmin/new']"
-           role="button">
-          <i class="bi bi-plus-circle me-2" aria-hidden="true"></i>
-          <span class="d-none d-sm-inline">Crear factura</span>
-        </a>
-      </div>
-    </div>
-  }
+
 
   <!-- 4. Paginación: solo si hay más de 1 página -->
   @if (totalRecords() > 0 && (oPage()?.totalPages ?? 1) > 1) {
@@ -121,11 +109,22 @@
                 }
               </td>
               <td class="text-center">
-                <app-botonera-actions-plist
-                  [id]="oItem.id"
-                  strEntity="factura"
-                  strRole="teamadmin"
-                ></app-botonera-actions-plist>
+                <div class="d-flex justify-content-center align-items-center gap-1">
+                  <app-botonera-actions-plist
+                    [id]="oItem.id"
+                    strEntity="factura"
+                    strRole="teamadmin"
+                  ></app-botonera-actions-plist>
+                  <button class="btn btn-outline-danger btn-sm px-1 py-0" title="Exportar PDF" (click)="exportarPDFFactura(oItem); $event.stopPropagation()">
+                    <i class="bi bi-file-earmark-pdf" aria-hidden="true"></i>
+                  </button>
+                  <button class="btn btn-outline-success btn-sm px-1 py-0" title="Exportar CSV" (click)="exportarCSVFactura(oItem); $event.stopPropagation()">
+                    <i class="bi bi-filetype-csv" aria-hidden="true"></i>
+                  </button>
+                  <button class="btn btn-outline-secondary btn-sm px-1 py-0" title="Exportar Excel" (click)="exportarExcelFactura(oItem); $event.stopPropagation()">
+                    <i class="bi bi-file-earmark-spreadsheet" aria-hidden="true"></i>
+                  </button>
+                </div>
               </td>
             </tr>
           }
