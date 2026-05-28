@@ -1,17 +1,26 @@
 @if (items.length > 0) {
-  <nav aria-label="breadcrumb" class="mb-4">
+<nav aria-label="breadcrumb" class="mb-4">
+  <div class="breadcrumb-wrap">
     <ol class="breadcrumb mb-0">
       @for (item of items; track item.label; let last = $last) {
-        @if (last) {
-          <li class="breadcrumb-item active" aria-current="page">{{ item.label }}</li>
-        } @else if (item.route) {
-          <li class="breadcrumb-item">
-            <a [routerLink]="item.route">{{ item.label }}</a>
-          </li>
-        } @else {
-          <li class="breadcrumb-item">{{ item.label }}</li>
-        }
+      @if (last) {
+      <li class="breadcrumb-item active" aria-current="page">{{ item.label }}</li>
+      } @else if (item.route) {
+      <li class="breadcrumb-item">
+        <a [routerLink]="item.route">{{ item.label }}</a>
+      </li>
+      } @else {
+      <li class="breadcrumb-item">{{ item.label }}</li>
+      }
       }
     </ol>
-  </nav>
+
+    @if (dashboardRoute) {
+    <a class="btn btn-outline-primary btn-sm breadcrumb-dashboard-btn" [routerLink]="dashboardRoute">
+      <i class="bi bi-speedometer2 me-1" aria-hidden="true"></i>
+      Dashboard
+    </a>
+    }
+  </div>
+</nav>
 }

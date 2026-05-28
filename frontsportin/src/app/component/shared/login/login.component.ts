@@ -80,9 +80,9 @@ export class LoginComponent implements OnInit {
             }
             this.notificacion.success('Login successful');
             if (this.oSessionService.isUser()) {
-              this.router.navigate(['/mi']);
+              this.router.navigate(['/mi/dashboard']);
             } else if (this.oSessionService.isClubAdmin()) {
-              this.router.navigate(['/club/teamadmin']);
+              this.router.navigate(['/dashboard/teamadmin']);
             } else {
               this.router.navigate(['/admin']);
             }

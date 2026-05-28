@@ -1,43 +1,28 @@
 <div class="ms-auto d-flex align-items-center pe-3 top-actions">
   <div class="d-flex align-items-center ms-3">
     @if (!isSessionActive()) {
-      <a
-        [routerLink]="['/login']"
-        class="btn btn-sm btn-outline-light d-inline-flex align-items-center nav-login-btn"
-        [class.active]="activeRoute.startsWith('/login')"
-        title="Acceder"
-      >
-        <i class="bi bi-person-circle me-2"></i>
-        <span class="d-none d-lg-inline">Iniciar sesión</span>
-      </a>
+    <a [routerLink]="['/login']" class="btn btn-sm btn-outline-light d-inline-flex align-items-center nav-login-btn"
+      [class.active]="activeRoute.startsWith('/login')" title="Acceder">
+      <i class="bi bi-person-circle me-2"></i>
+      <span class="d-none d-lg-inline">Iniciar sesión</span>
+    </a>
     } @else {
-      @if (isUser()) {
-        <a
-          [routerLink]="['/mi']"
-          class="btn btn-sm btn-outline-light d-inline-flex align-items-center nav-login-btn me-2"
-          [class.active]="activeRoute.startsWith('/mi')"
-          title="Mi inicio"
-        >
-          <i class="bi bi-house-fill me-1"></i>
-          <span class="d-none d-lg-inline">Inicio</span>
-        </a>
-      }
-      <a
-        [routerLink]="['/mi/perfil']"
-        class="btn btn-sm btn-outline-light d-inline-flex align-items-center nav-login-btn"
-        [class.active]="activeRoute.startsWith('/mi/perfil')"
-        title="Mi perfil"
-      >
-        <i class="bi bi-person-circle me-2"></i>
-        <span class="d-none d-lg-inline">{{ userName() }} ({{ userTypeName() }})</span>
-      </a>
-      <a
-        [routerLink]="['/logout']"
-        class="btn btn-sm btn-outline-light d-inline-flex align-items-center nav-login-btn mx-3"
-        [class.active]="activeRoute.startsWith('/logout')"
-        title="Salir"
-        >Salir</a
-      >
+    @if (isUser()) {
+    <a [routerLink]="['/mi/dashboard']"
+      class="btn btn-sm btn-outline-light d-inline-flex align-items-center nav-login-btn me-2"
+      [class.active]="activeRoute.startsWith('/mi')" title="Mi inicio">
+      <i class="bi bi-house-fill me-1"></i>
+      <span class="d-none d-lg-inline">Inicio</span>
+    </a>
+    }
+    <a [routerLink]="['/mi/perfil']" class="btn btn-sm btn-outline-light d-inline-flex align-items-center nav-login-btn"
+      [class.active]="activeRoute.startsWith('/mi/perfil')" title="Mi perfil">
+      <i class="bi bi-person-circle me-2"></i>
+      <span class="d-none d-lg-inline">{{ userName() }} ({{ userTypeName() }})</span>
+    </a>
+    <a [routerLink]="['/logout']"
+      class="btn btn-sm btn-outline-light d-inline-flex align-items-center nav-login-btn mx-3"
+      [class.active]="activeRoute.startsWith('/logout')" title="Salir">Salir</a>
     }
   </div>
 </div>

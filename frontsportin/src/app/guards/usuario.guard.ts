@@ -31,7 +31,7 @@ export class UsuarioGuard implements CanActivate {
     }
 
     if (this.session.isClubAdmin()) {
-      return of(this.router.createUrlTree(['/club/teamadmin']));
+      return of(this.router.createUrlTree(['/dashboard/teamadmin']));
     }
 
     return of(this.router.createUrlTree(['/login']));
