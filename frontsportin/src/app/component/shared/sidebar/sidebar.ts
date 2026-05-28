@@ -39,6 +39,7 @@ export class SidebarComponent {
 
     const items: any[] = [
       { label: 'Home', icon: 'house-fill', route: '/' },
+      { label: 'Chat', icon: 'chat-dots-fill', route: '/chat' },
     ];
 
     if (isAdmin) {

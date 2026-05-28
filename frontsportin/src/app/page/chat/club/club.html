@@ -1,0 +1,26 @@
+<div class="container-fluid py-3">
+  <div class="d-flex align-items-center gap-2 mb-3">
+    <i class="bi bi-chat-dots fs-4 text-primary"></i>
+    <h5 class="mb-0 fw-bold">Chat del club</h5>
+
+    @if (isAdmin) {
+      <div class="ms-auto">
+        <select class="form-select form-select-sm" style="min-width: 200px" (change)="seleccionarClub($event)">
+          @for (club of clubs(); track club.id) {
+            <option [value]="club.id">{{ club.nombre }}</option>
+          }
+        </select>
+      </div>
+    }
+  </div>
+
+  @if (cargando()) {
+    <div class="text-center py-5 text-muted">
+      <div class="spinner-border" role="status"></div>
+    </div>
+  }
+
+  @if (!cargando() && idClub()) {
+    <app-chat-room [idClub]="idClub()!" />
+  }
+</div>

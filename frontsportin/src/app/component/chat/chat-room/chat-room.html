@@ -1,0 +1,35 @@
+<div class="chat-room d-flex flex-column">
+  <div class="d-flex align-items-center border-bottom pb-2 mb-2 px-2 flex-shrink-0">
+    <i class="bi bi-chat-dots-fill text-primary me-2"></i>
+    <span class="fw-semibold">Chat del club</span>
+  </div>
+
+  <div #messageList class="flex-grow-1 overflow-auto px-2 py-1">
+    @if (cargando()) {
+      <div class="text-center text-muted py-4">
+        <div class="spinner-border spinner-border-sm" role="status"></div>
+        <span class="ms-2 small">Cargando historial...</span>
+      </div>
+    }
+    @for (msg of mensajes(); track msg.id) {
+      <app-chat-message [mensaje]="msg" [propio]="msg.idUsuario === idUsuarioActual" />
+    }
+  </div>
+
+  <div class="border-top pt-2 px-2 flex-shrink-0">
+    <div class="input-group">
+      <input
+        type="text"
+        class="form-control form-control-sm"
+        placeholder="Escribe un mensaje..."
+        [(ngModel)]="textoNuevo"
+        (keyup.enter)="enviar()"
+        [disabled]="cargando()"
+      />
+      <button class="btn btn-primary btn-sm" (click)="enviar()" [disabled]="!textoNuevo.trim()">
+        <i class="bi bi-send-fill"></i>
+      </button>
+    </div>
+    <div class="text-muted small mt-1 px-1">Pulsa <kbd>Enter</kbd> para enviar</div>
+  </div>
+</div>

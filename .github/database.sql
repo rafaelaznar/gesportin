@@ -683,4 +683,80 @@ ALTER TABLE `tipousuario`
 --
 ALTER TABLE `usuario`
   MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=205;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `mensaje_chat`
+--
+
+CREATE TABLE `mensaje_chat` (
+  `id` bigint NOT NULL,
+  `contenido` text CHARACTER SET utf32 COLLATE utf32_unicode_ci NOT NULL,
+  `fecha_envio` datetime NOT NULL,
+  `id_club` bigint NOT NULL,
+  `id_usuario` bigint NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf32 COLLATE=utf32_unicode_ci;
+
+--
+-- Índices de la tabla `mensaje_chat`
+--
+ALTER TABLE `mensaje_chat`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_mc_club` (`id_club`),
+  ADD KEY `idx_mc_usuario` (`id_usuario`);
+
+--
+-- AUTO_INCREMENT de la tabla `mensaje_chat`
+--
+ALTER TABLE `mensaje_chat`
+  MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
+
+--
+-- Filtros para la tabla `mensaje_chat`
+--
+ALTER TABLE `mensaje_chat`
+  ADD CONSTRAINT `fk_mc_club` FOREIGN KEY (`id_club`) REFERENCES `club` (`id`),
+  ADD CONSTRAINT `fk_mc_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id`);
+
+-- --------------------------------------------------------
+
+--
+-- 10 clubs adicionales
+--
+INSERT INTO `club` (`id`, `nombre`, `dirección`, `teléfono`, `fecha_alta`, `imagen`) VALUES
+(2,  'Club Deportivo Valencia',  'Av. Aragón, 30, Valencia',     '960000002', '2026-05-17 00:00:00', NULL),
+(3,  'Atlético Castellón',       'Calle Mayor, 12, Castellón',   '960000003', '2026-05-17 00:00:00', NULL),
+(4,  'Real Alicante CF',         'Av. del Mar, 5, Alicante',     '960000004', '2026-05-17 00:00:00', NULL),
+(5,  'CD Sagunto',               'Calle Roma, 8, Sagunto',       '960000005', '2026-05-17 00:00:00', NULL),
+(6,  'UD Gandía',                'Passeig Germanies, 22, Gandía','960000006', '2026-05-17 00:00:00', NULL),
+(7,  'Club Baloncesto Elche',    'Calle Filet de Fora, 3, Elche','960000007', '2026-05-17 00:00:00', NULL),
+(8,  'CD Torrent',               'Av. al Vedat, 90, Torrent',    '960000008', '2026-05-17 00:00:00', NULL),
+(9,  'Vila-real Sport Club',     'Calle Cervantes, 14, Vila-real','960000009','2026-05-17 00:00:00', NULL),
+(10, 'CF Dénia',                 'Calle La Mar, 40, Dénia',      '960000010', '2026-05-17 00:00:00', NULL),
+(11, 'Club Náutico Cullera',     'Passeig Marítim, 1, Cullera',  '960000011', '2026-05-17 00:00:00', NULL);
+
+--
+-- 10 usuarios (uno por club nuevo). Tipo 2 = Administrador de club, rol 1 = Presidente.
+-- Contraseña en claro: 12345  ->  SHA-256: 5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5
+--
+INSERT INTO `usuario` (`id`, `nombre`, `apellido1`, `apellido2`, `username`, `password`, `fecha_alta`, `genero`, `id_tipousuario`, `id_club`, `id_rolusuario`) VALUES
+(205, 'Pablo',  'Martín',    'Ruiz',     'pablo.martin',     '5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5', '2026-05-17 00:00:00', 0, 2, 2,  1),
+(206, 'Lucía',  'Fernández', 'Gómez',    'lucia.fernandez',  '5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5', '2026-05-17 00:00:00', 1, 2, 3,  1),
+(207, 'Hugo',   'López',     'Díaz',     'hugo.lopez',       '5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5', '2026-05-17 00:00:00', 0, 2, 4,  1),
+(208, 'Sara',   'Moreno',    'Jiménez',  'sara.moreno',      '5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5', '2026-05-17 00:00:00', 1, 2, 5,  1),
+(209, 'Diego',  'Álvarez',   'Romero',   'diego.alvarez',    '5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5', '2026-05-17 00:00:00', 0, 2, 6,  1),
+(210, 'Marta',  'Navarro',   'Torres',   'marta.navarro',    '5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5', '2026-05-17 00:00:00', 1, 2, 7,  1),
+(211, 'Javier', 'Domínguez', 'Vázquez',  'javier.dominguez', '5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5', '2026-05-17 00:00:00', 0, 2, 8,  1),
+(212, 'Elena',  'Gil',       'Serrano',  'elena.gil',        '5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5', '2026-05-17 00:00:00', 1, 2, 9,  1),
+(213, 'Carlos', 'Ramos',     'Castro',   'carlos.ramos',     '5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5', '2026-05-17 00:00:00', 0, 2, 10, 1),
+(214, 'Nuria',  'Ortega',    'Rubio',    'nuria.ortega',     '5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5', '2026-05-17 00:00:00', 1, 2, 11, 1);
+
+--
+-- Usuario adicional en el club 2 (Club Deportivo Valencia, mismo club que pablo.martin).
+-- Tipo 3 = Usuario. Contraseña en claro: 12345
+--
+INSERT INTO `usuario` (`id`, `nombre`, `apellido1`, `apellido2`, `username`, `password`, `fecha_alta`, `genero`, `id_tipousuario`, `id_club`, `id_rolusuario`) VALUES
+(215, 'Ana', 'Torres', 'Beltrán', 'ana.torres', '5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5', '2026-05-17 00:00:00', 1, 3, 2, 1);
+
 COMMIT;
