@@ -3,6 +3,8 @@ import { Home } from './component/shared/home/home';
 import { LandingPage } from './component/shared/landing/landing';
 import { Logout } from './component/shared/logout/logout';
 import { LoginComponent } from './component/shared/login/login.component';
+import { ForgotPasswordComponent } from './component/shared/forgot-password/forgot-password';
+import { ChangePasswordComponent } from './component/shared/change-password/change-password';
 import { ArticuloAdminPlistPage } from './page/articulo/admin/plist/plist';
 import { ArticuloAdminViewPage } from './page/articulo/admin/view/view';
 import { ArticuloAdminNewPage } from './page/articulo/admin/new/new';
@@ -211,6 +213,8 @@ import { UsuarioPerfilPage } from './page/usuario/perfil/perfil';
 export const publicRoutes: Routes = [
   { path: '', component: LandingPage },
   { path: 'login', component: LoginComponent },
+  { path: 'forgot-password', component: ForgotPasswordComponent },
+  { path: 'change-password/:token', component: ChangePasswordComponent },
   { path: 'logout', component: Logout },
 ];
 

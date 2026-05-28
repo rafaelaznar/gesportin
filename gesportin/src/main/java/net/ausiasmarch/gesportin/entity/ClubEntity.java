@@ -34,10 +34,10 @@ public class ClubEntity {
     @Column(nullable = false)
     private String nombre;
 
-    @Column(name = "dirección", nullable = false)
+    @Column(name = "direccion", nullable = false)
     private String direccion;
 
-    @Column(name = "teléfono", nullable = false)
+    @Column(name = "telefono", nullable = false)
     private String telefono;
 
     @Column(name = "fecha_alta", nullable = false)

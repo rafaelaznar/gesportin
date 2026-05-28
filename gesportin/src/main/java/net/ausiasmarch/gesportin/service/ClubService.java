@@ -239,6 +239,7 @@ public class ClubService {
             usuario.setApellido1(apellido1);
             usuario.setApellido2(apellido2);
             usuario.setUsername(usernameBase + random.nextInt(10000));
+            usuario.setEmail(usuario.getUsername() + "@gesportin.local");
             usuario.setFechaAlta(LocalDateTime.now());
             usuario.setGenero(random.nextInt(2)); // 0 para hombre, 1 para mujer
             usuario.setPassword("7e4b4f5529e084ecafb996c891cfbd5b5284f5b00dc155c37bbb62a9f161a72e");

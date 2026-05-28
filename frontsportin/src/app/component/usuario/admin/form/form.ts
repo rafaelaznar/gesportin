@@ -70,6 +70,7 @@ export class UsuarioAdminForm implements OnInit {
       apellido1: ['', [Validators.maxLength(100)]],
       apellido2: ['', [Validators.maxLength(100)]],
       username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
+      email: ['', [Validators.required, Validators.email, Validators.maxLength(255)]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       genero: ['', Validators.required],
       id_tipousuario: [null, Validators.required],
@@ -92,6 +93,7 @@ export class UsuarioAdminForm implements OnInit {
       apellido1: usuario.apellido1,
       apellido2: usuario.apellido2,
       username: usuario.username,
+      email: usuario.email,
       genero: usuario.genero,
       id_tipousuario: usuario.tipousuario?.id,
       id_rolusuario: usuario.rolusuario?.id,
@@ -137,6 +139,10 @@ export class UsuarioAdminForm implements OnInit {
 
   get username() {
     return this.usuarioForm.get('username');
+  }
+
+  get email() {
+    return this.usuarioForm.get('email');
   }
 
   get password() {
@@ -205,6 +211,7 @@ export class UsuarioAdminForm implements OnInit {
       apellido1: this.usuarioForm.value.apellido1,
       apellido2: this.usuarioForm.value.apellido2,
       username: this.usuarioForm.value.username,
+      email: this.usuarioForm.value.email,
       genero: Number(this.usuarioForm.value.genero),
       tipousuario: { id: Number(this.usuarioForm.value.id_tipousuario) },
       rolusuario: { id: Number(this.usuarioForm.value.id_rolusuario) },

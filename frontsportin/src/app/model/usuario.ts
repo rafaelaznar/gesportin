@@ -9,6 +9,7 @@ export interface IUsuario {
   apellido1: string
   apellido2: string
   username: string
+  email: string
   password: string
   fechaAlta: string
   genero: number

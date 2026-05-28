@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import net.ausiasmarch.gesportin.entity.UsuarioEntity;
+import net.ausiasmarch.gesportin.exception.ConflictException;
 import net.ausiasmarch.gesportin.exception.ResourceNotFoundException;
 import net.ausiasmarch.gesportin.exception.UnauthorizedException;
 import net.ausiasmarch.gesportin.repository.UsuarioRepository;
@@ -34,6 +35,12 @@ public class UsuarioService {
 
     @Autowired
     private SessionService oSessionService;
+
+    @Autowired
+    private PasswordHashService oPasswordHashService;
+
+    @Autowired
+    private EmailService oEmailService;
 
     private final Random random = new Random();
 
@@ -142,11 +149,15 @@ public class UsuarioService {
         }
 
         oUsuarioEntity.setId(null);
+        validateUniqueUsuario(oUsuarioEntity);
         // Establecer la fecha de alta al momento de la creación
         oUsuarioEntity.setFechaAlta(LocalDateTime.now());
+        oUsuarioEntity.setPassword(oPasswordHashService.encodeIfNeeded(oUsuarioEntity.getPassword()));
         oUsuarioEntity.setTipousuario(oTipousuarioService.get(oUsuarioEntity.getTipousuario().getId()));
         oUsuarioEntity.setRolusuario(oRolusuarioService.get(oUsuarioEntity.getRolusuario().getId()));
-        return oUsuarioRepository.save(oUsuarioEntity);
+        UsuarioEntity oUsuarioGuardado = oUsuarioRepository.save(oUsuarioEntity);
+        oEmailService.sendWelcomeEmail(oUsuarioGuardado);
+        return oUsuarioGuardado;
     }
 
     public UsuarioEntity update(UsuarioEntity oUsuarioEntity) {
@@ -181,17 +192,51 @@ public class UsuarioService {
             oUsuarioEntity.setClub(oUsuarioExistente.getClub());
         }
 
+        validateUniqueUsuario(oUsuarioEntity);
         oUsuarioExistente.setNombre(oUsuarioEntity.getNombre());
         oUsuarioExistente.setApellido1(oUsuarioEntity.getApellido1());
         oUsuarioExistente.setApellido2(oUsuarioEntity.getApellido2());
         oUsuarioExistente.setUsername(oUsuarioEntity.getUsername());
-        oUsuarioExistente.setPassword(oUsuarioEntity.getPassword());
+        oUsuarioExistente.setEmail(oUsuarioEntity.getEmail());
+        boolean passwordChanged = false;
+        if (oUsuarioEntity.getPassword() != null && !oUsuarioEntity.getPassword().isBlank()) {
+            oUsuarioExistente.setPassword(oPasswordHashService.encodeIfNeeded(oUsuarioEntity.getPassword()));
+            passwordChanged = true;
+        }
         oUsuarioExistente.setFechaAlta(oUsuarioEntity.getFechaAlta());
         oUsuarioExistente.setGenero(oUsuarioEntity.getGenero());
         oUsuarioExistente.setTipousuario(oTipousuarioService.get(oUsuarioEntity.getTipousuario().getId()));
         oUsuarioExistente.setClub(oClubService.get(oUsuarioEntity.getClub().getId()));
         oUsuarioExistente.setRolusuario(oRolusuarioService.get(oUsuarioEntity.getRolusuario().getId()));
-        return oUsuarioRepository.save(oUsuarioExistente);
+        UsuarioEntity oUsuarioGuardado = oUsuarioRepository.save(oUsuarioExistente);
+        if (passwordChanged) {
+            oEmailService.sendPasswordChangedEmail(oUsuarioGuardado);
+        }
+        return oUsuarioGuardado;
+    }
+
+    private void validateUniqueUsuario(UsuarioEntity usuario) {
+        Long id = usuario.getId();
+        String username = usuario.getUsername();
+        String email = usuario.getEmail();
+
+        if (username != null && !username.isBlank()) {
+            boolean usernameExists = id == null
+                    ? oUsuarioRepository.existsByUsername(username)
+                    : oUsuarioRepository.existsByUsernameAndIdNot(username, id);
+            if (usernameExists) {
+                throw new ConflictException("Ya existe un usuario con ese username");
+            }
+        }
+
+        if (email != null && !email.isBlank()) {
+            boolean emailExists = id == null
+                    ? oUsuarioRepository.existsByEmailIgnoreCase(email)
+                    : oUsuarioRepository.existsByEmailIgnoreCaseAndIdNot(email, id);
+            if (emailExists) {
+                throw new ConflictException("Ya existe un usuario con ese email");
+            }
+        }
     }
 
     public Long delete(Long id) {
@@ -252,6 +297,7 @@ public class UsuarioService {
                     + oUsuario.getApellido2().substring(0, 2).toLowerCase())
                     + random.nextInt(10);
             oUsuario.setUsername(username);
+            oUsuario.setEmail(username + "@gesportin.local");
             oUsuario.setPassword("7e4b4f5529e084ecafb996c891cfbd5b5284f5b00dc155c37bbb62a9f161a72e");
             oUsuario.setFechaAlta(LocalDateTime.now().minusDays(random.nextInt(365)));
             oUsuario.setGenero((genero == 0) ? 0 : 1);
