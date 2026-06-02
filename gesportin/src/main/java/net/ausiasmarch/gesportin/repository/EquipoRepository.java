@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import net.ausiasmarch.gesportin.entity.EquipoEntity;
 
@@ -34,4 +35,14 @@ public interface EquipoRepository extends JpaRepository<EquipoEntity, Long> {
     List<EquipoEntity> getAllEquiposFromClub(Long id_club);
 
     long countByCategoriaTemporadaId(Long id_temporada);
+
+    @Query("SELECT COUNT(j) FROM JugadorEntity j WHERE j.equipo.id = :equipoId")
+    int countJugadoresByEquipoId(@Param("equipoId") Long equipoId);
+
+    @Query("SELECT COUNT(c) FROM CuotaEntity c WHERE c.equipo.id = :equipoId")
+    int countCuotasByEquipoId(@Param("equipoId") Long equipoId);
+
+    @Query("SELECT COUNT(l) FROM LigaEntity l WHERE l.equipo.id = :equipoId")
+    int countLigasByEquipoId(@Param("equipoId") Long equipoId);
 }
+

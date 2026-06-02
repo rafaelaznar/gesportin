@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import net.ausiasmarch.gesportin.dto.UsuarioDTO;
 import net.ausiasmarch.gesportin.entity.UsuarioEntity;
 import net.ausiasmarch.gesportin.exception.ResourceNotFoundException;
 import net.ausiasmarch.gesportin.exception.UnauthorizedException;
@@ -37,6 +38,21 @@ public class UsuarioService {
 
     private final Random random = new Random();
 
+    private UsuarioDTO toDTO(UsuarioEntity entity) {
+        int comentarios = oUsuarioRepository.countComentariosByUsuarioId(entity.getId());
+        int puntuaciones = oUsuarioRepository.countPuntuacionesByUsuarioId(entity.getId());
+        int comentarioarts = oUsuarioRepository.countComentarioartsByUsuarioId(entity.getId());
+        int carritos = oUsuarioRepository.countCarritosByUsuarioId(entity.getId());
+        int facturas = oUsuarioRepository.countFacturasByUsuarioId(entity.getId());
+        int equiposentrenados = oUsuarioRepository.countEquiposEntrenadosByUsuarioId(entity.getId());
+        int jugadores = oUsuarioRepository.countJugadoresByUsuarioId(entity.getId());
+        return new UsuarioDTO(entity, comentarios, puntuaciones, comentarioarts, carritos, facturas, equiposentrenados, jugadores);
+    }
+
+    private Page<UsuarioDTO> toPageDTO(Page<UsuarioEntity> page) {
+        return page.map(this::toDTO);
+    }
+
     private final String[] nombresVaron = {
         "Juan", "Carlos", "Luis", "Pedro", "José",
         "Francisco", "Antonio", "Manuel", "David", "Javier",
@@ -61,17 +77,17 @@ public class UsuarioService {
         "Castillo", "Garrido", "Calvo", "Peña", "Cruz", "Cano", "Núñez", "Prieto", "Díez", "Lozano"
     };
 
-    public UsuarioEntity get(Long id) {
+    public UsuarioDTO get(Long id) {
         UsuarioEntity e = oUsuarioRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con id: " + id));
         if (oSessionService.isEquipoAdmin() || oSessionService.isUsuario()) {
             Long clubId = (e.getClub()!=null) ? e.getClub().getId() : null;
             oSessionService.checkSameClub(clubId);
         }
-        return e;
+        return toDTO(e);
     }
 
-    public Page<UsuarioEntity> getPage(Pageable pageable, String nombre, String username, Long id_Tipousuario,
+    public Page<UsuarioDTO> getPage(Pageable pageable, String nombre, String username, Long id_Tipousuario,
             Long id_Club, Long id_Rol) {
         // equipo admins and regular users can only see users from their own club
         if (oSessionService.isEquipoAdmin() || oSessionService.isUsuario()) {
@@ -85,7 +101,7 @@ public class UsuarioService {
             // if no filtering at all, return club-specific page directly
             if ((nombre == null || nombre.isEmpty()) && username == null && id_Tipousuario == null && id_Club == null
                     && id_Rol == null) {
-                return oUsuarioRepository.findByClubId(myClub, pageable);
+                return toPageDTO(oUsuarioRepository.findByClubId(myClub, pageable));
             }
         }
 
@@ -111,13 +127,13 @@ public class UsuarioService {
                 java.util.List<UsuarioEntity> filtered = result.getContent().stream()
                         .filter(u -> u.getClub() != null && myClub.equals(u.getClub().getId()))
                         .collect(Collectors.toList());
-                return new org.springframework.data.domain.PageImpl<>(filtered, pageable, filtered.size());
+                return toPageDTO(new org.springframework.data.domain.PageImpl<>(filtered, pageable, filtered.size()));
             }
         }
-        return result;
+        return toPageDTO(result);
     }
 
-    public UsuarioEntity create(UsuarioEntity oUsuarioEntity) {
+    public UsuarioDTO create(UsuarioEntity oUsuarioEntity) {
         oSessionService.denyUsuario();
         // equipo admins can create users of type "usuario" (tipousuario=3) but only in their own club
         if (oSessionService.isEquipoAdmin()) {
@@ -146,10 +162,11 @@ public class UsuarioService {
         oUsuarioEntity.setFechaAlta(LocalDateTime.now());
         oUsuarioEntity.setTipousuario(oTipousuarioService.get(oUsuarioEntity.getTipousuario().getId()));
         oUsuarioEntity.setRolusuario(oRolusuarioService.get(oUsuarioEntity.getRolusuario().getId()));
-        return oUsuarioRepository.save(oUsuarioEntity);
+        UsuarioEntity saved = oUsuarioRepository.save(oUsuarioEntity);
+        return toDTO(saved);
     }
 
-    public UsuarioEntity update(UsuarioEntity oUsuarioEntity) {
+    public UsuarioDTO update(UsuarioEntity oUsuarioEntity) {
         oSessionService.denyUsuario();
         UsuarioEntity oUsuarioExistente = oUsuarioRepository.findById(oUsuarioEntity.getId())
                 .orElseThrow(
@@ -191,7 +208,8 @@ public class UsuarioService {
         oUsuarioExistente.setTipousuario(oTipousuarioService.get(oUsuarioEntity.getTipousuario().getId()));
         oUsuarioExistente.setClub(oClubService.get(oUsuarioEntity.getClub().getId()));
         oUsuarioExistente.setRolusuario(oRolusuarioService.get(oUsuarioEntity.getRolusuario().getId()));
-        return oUsuarioRepository.save(oUsuarioExistente);
+        UsuarioEntity saved = oUsuarioRepository.save(oUsuarioExistente);
+        return toDTO(saved);
     }
 
     public Long delete(Long id) {

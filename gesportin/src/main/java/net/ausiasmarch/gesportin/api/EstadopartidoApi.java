@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import net.ausiasmarch.gesportin.dto.EstadopartidoDTO;
 import net.ausiasmarch.gesportin.entity.EstadopartidoEntity;
 import net.ausiasmarch.gesportin.service.EstadopartidoService;
 
@@ -26,22 +27,22 @@ public class EstadopartidoApi {
     private EstadopartidoService oEstadopartidoService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<EstadopartidoEntity> get(@PathVariable Long id) {
+    public ResponseEntity<EstadopartidoDTO> get(@PathVariable Long id) {
         return ResponseEntity.ok(oEstadopartidoService.get(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<EstadopartidoEntity>> getAll() {
+    public ResponseEntity<List<EstadopartidoDTO>> getAll() {
         return ResponseEntity.ok(oEstadopartidoService.getAll());
     }
 
     @PostMapping
-    public ResponseEntity<EstadopartidoEntity> create(@RequestBody EstadopartidoEntity oEstadopartidoEntity) {
+    public ResponseEntity<EstadopartidoDTO> create(@RequestBody EstadopartidoEntity oEstadopartidoEntity) {
         return ResponseEntity.ok(oEstadopartidoService.create(oEstadopartidoEntity));
     }
 
     @PutMapping
-    public ResponseEntity<EstadopartidoEntity> update(@RequestBody EstadopartidoEntity oEstadopartidoEntity) {
+    public ResponseEntity<EstadopartidoDTO> update(@RequestBody EstadopartidoEntity oEstadopartidoEntity) {
         return ResponseEntity.ok(oEstadopartidoService.update(oEstadopartidoEntity));
     }
 

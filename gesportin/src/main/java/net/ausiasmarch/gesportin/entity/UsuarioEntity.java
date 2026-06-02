@@ -1,7 +1,6 @@
 package net.ausiasmarch.gesportin.entity;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -13,14 +12,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -77,60 +73,4 @@ public class UsuarioEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_club")
     private ClubEntity club;
-
-    @Getter(AccessLevel.NONE)
-    @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
-    private List<ComentarioEntity> comentarios;
-
-    @Getter(AccessLevel.NONE)
-    @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
-    private List<PuntuacionEntity> puntuaciones;
-
-    @Getter(AccessLevel.NONE)
-    @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
-    private List<ComentarioartEntity> comentarioarts;
-
-    @Getter(AccessLevel.NONE)
-    @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
-    private List<CarritoEntity> carritos;
-
-    @Getter(AccessLevel.NONE)
-    @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
-    private List<FacturaEntity> facturas;
-
-    @Getter(AccessLevel.NONE)
-    @OneToMany(mappedBy = "entrenador", fetch = FetchType.LAZY)
-    private List<EquipoEntity> equiposentrenados;
-
-    @Getter(AccessLevel.NONE)
-    @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
-    private List<JugadorEntity> jugadores;
-
-    public int getComentarios() {
-        return comentarios != null ? comentarios.size() : 0;
-    }
-
-    public int getPuntuaciones() {
-        return puntuaciones != null ? puntuaciones.size() : 0;
-    }
-
-    public int getComentarioarts() {
-        return comentarioarts != null ? comentarioarts.size() : 0;
-    }
-
-    public int getCarritos() {
-        return carritos != null ? carritos.size() : 0;
-    }
-
-    public int getFacturas() {
-        return facturas != null ? facturas.size() : 0;
-    }
-
-    public int getEquiposentrenados() {
-        return equiposentrenados != null ? equiposentrenados.size() : 0;
-    }
-
-    public int getJugadores() {
-        return jugadores != null ? jugadores.size() : 0;
-    }
 }

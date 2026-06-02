@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import net.ausiasmarch.gesportin.dto.UsuarioDTO;
 import net.ausiasmarch.gesportin.entity.UsuarioEntity;
 import net.ausiasmarch.gesportin.service.UsuarioService;
 
@@ -28,12 +29,12 @@ public class UsuarioApi {
     private UsuarioService oUsuarioService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<UsuarioEntity> get(@PathVariable Long id) {
+    public ResponseEntity<UsuarioDTO> get(@PathVariable Long id) {
         return ResponseEntity.ok(oUsuarioService.get(id));
     }
 
     @GetMapping
-    public ResponseEntity<Page<UsuarioEntity>> getPage(
+    public ResponseEntity<Page<UsuarioDTO>> getPage(
             @PageableDefault(size = 1000) Pageable pageable,
             @RequestParam(required = false) String nombre,
             @RequestParam(required = false) String username,
@@ -45,12 +46,12 @@ public class UsuarioApi {
     }
 
     @PostMapping
-    public ResponseEntity<UsuarioEntity> create(@RequestBody UsuarioEntity usuario) {
+    public ResponseEntity<UsuarioDTO> create(@RequestBody UsuarioEntity usuario) {
         return ResponseEntity.ok(oUsuarioService.create(usuario));
     }
 
     @PutMapping
-    public ResponseEntity<UsuarioEntity> update(@RequestBody UsuarioEntity usuario) {
+    public ResponseEntity<UsuarioDTO> update(@RequestBody UsuarioEntity usuario) {
         return ResponseEntity.ok(oUsuarioService.update(usuario));
     }
 

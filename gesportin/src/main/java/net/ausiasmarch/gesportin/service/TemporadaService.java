@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import net.ausiasmarch.gesportin.dto.TemporadaDTO;
 import net.ausiasmarch.gesportin.entity.TemporadaEntity;
 import net.ausiasmarch.gesportin.exception.ResourceNotFoundException;
 import net.ausiasmarch.gesportin.exception.UnauthorizedException;
@@ -51,16 +52,25 @@ public class TemporadaService {
             "Todo el año"
     };
 
-    public TemporadaEntity get(Long id) {
+    private TemporadaDTO toDTO(TemporadaEntity entity) {
+        int categorias = oTemporadaRepository.countCategoriasByTemporadaId(entity.getId());
+        return new TemporadaDTO(entity, categorias);
+    }
+
+    private Page<TemporadaDTO> toPageDTO(Page<TemporadaEntity> page) {
+        return page.map(this::toDTO);
+    }
+
+    public TemporadaDTO get(Long id) {
         TemporadaEntity e = oTemporadaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Temporada no encontrado con id: " + id));
         if (oSessionService.isEquipoAdmin() || oSessionService.isUsuario()) {
             oSessionService.checkSameClub(e.getClub().getId());
         }
-        return e;
+        return toDTO(e);
     }
 
-    public Page<TemporadaEntity> getPage(Pageable pageable, String descripcion, Long id_club) {
+    public Page<TemporadaDTO> getPage(Pageable pageable, String descripcion, Long id_club) {
         if (oSessionService.isEquipoAdmin() || oSessionService.isUsuario()) {
             Long myClub = oSessionService.getIdClub();
             if (id_club != null && !id_club.equals(myClub)) {
@@ -69,19 +79,22 @@ public class TemporadaService {
             // force filter by own club
             id_club = myClub;
         }
+        Page<TemporadaEntity> result;
         if (descripcion != null && !descripcion.isEmpty()) {
             if (id_club != null) {
-                return oTemporadaRepository.findByDescripcionContainingIgnoreCaseAndClubId(descripcion, id_club, pageable);
+                result = oTemporadaRepository.findByDescripcionContainingIgnoreCaseAndClubId(descripcion, id_club, pageable);
+            } else {
+                result = oTemporadaRepository.findByDescripcionContainingIgnoreCase(descripcion, pageable);
             }
-            return oTemporadaRepository.findByDescripcionContainingIgnoreCase(descripcion, pageable);
         } else if (id_club != null) {
-            return oTemporadaRepository.findByClubId(id_club, pageable);
+            result = oTemporadaRepository.findByClubId(id_club, pageable);
         } else {
-            return oTemporadaRepository.findAll(pageable);
+            result = oTemporadaRepository.findAll(pageable);
         }
+        return toPageDTO(result);
     }
 
-    public TemporadaEntity create(TemporadaEntity oTemporadaEntity) {
+    public TemporadaDTO create(TemporadaEntity oTemporadaEntity) {
         // regular usuarios cannot create temporadas
         oSessionService.denyUsuario();
         if (oSessionService.isEquipoAdmin()) {
@@ -89,10 +102,11 @@ public class TemporadaService {
         }
         oTemporadaEntity.setId(null);
         oTemporadaEntity.setClub(oClubService.get(oTemporadaEntity.getClub().getId()));
-        return oTemporadaRepository.save(oTemporadaEntity);
+        TemporadaEntity saved = oTemporadaRepository.save(oTemporadaEntity);
+        return toDTO(saved);
     }
 
-    public TemporadaEntity update(TemporadaEntity oTemporadaEntity) {
+    public TemporadaDTO update(TemporadaEntity oTemporadaEntity) {
         // regular usuarios cannot modify temporadas
         oSessionService.denyUsuario();
         TemporadaEntity oTemporadaExistente = oTemporadaRepository.findById(oTemporadaEntity.getId())
@@ -105,7 +119,8 @@ public class TemporadaService {
         }
         oTemporadaExistente.setDescripcion(oTemporadaEntity.getDescripcion());
         oTemporadaExistente.setClub(oClubService.get(oTemporadaEntity.getClub().getId()));
-        return oTemporadaRepository.save(oTemporadaExistente);
+        TemporadaEntity saved = oTemporadaRepository.save(oTemporadaExistente);
+        return toDTO(saved);
     }
 
     public Long delete(Long id) {

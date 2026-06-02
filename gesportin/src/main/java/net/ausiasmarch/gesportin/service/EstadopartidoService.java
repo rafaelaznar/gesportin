@@ -1,10 +1,12 @@
 package net.ausiasmarch.gesportin.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import net.ausiasmarch.gesportin.dto.EstadopartidoDTO;
 import net.ausiasmarch.gesportin.entity.EstadopartidoEntity;
 import net.ausiasmarch.gesportin.exception.ResourceNotFoundException;
 import net.ausiasmarch.gesportin.repository.EstadopartidoRepository;
@@ -18,13 +20,20 @@ public class EstadopartidoService {
     @Autowired
     SessionService oSessionService;
 
-    public EstadopartidoEntity get(Long id) {
-        return estadopartidoRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("EstadoPartido no encontrado con id: " + id));
+    private EstadopartidoDTO toDTO(EstadopartidoEntity entity) {
+        int partidos = estadopartidoRepository.countPartidosByEstadopartidoId(entity.getId());
+        return new EstadopartidoDTO(entity, partidos);
     }
 
-    public List<EstadopartidoEntity> getAll() {
-        return estadopartidoRepository.findAll();
+    public EstadopartidoDTO get(Long id) {
+        return toDTO(estadopartidoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("EstadoPartido no encontrado con id: " + id)));
+    }
+
+    public List<EstadopartidoDTO> getAll() {
+        return estadopartidoRepository.findAll().stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
     }
 
     public Long count() {
@@ -54,18 +63,20 @@ public class EstadopartidoService {
         return estadopartidoRepository.findAll(org.springframework.data.domain.Pageable.ofSize(1).withPage(index)).getContent().get(0);
     }
 
-    public EstadopartidoEntity create(EstadopartidoEntity oEstadopartidoEntity) {
+    public EstadopartidoDTO create(EstadopartidoEntity oEstadopartidoEntity) {
         oSessionService.requireAdmin();
         oEstadopartidoEntity.setId(null);
-        return estadopartidoRepository.save(oEstadopartidoEntity);
+        EstadopartidoEntity saved = estadopartidoRepository.save(oEstadopartidoEntity);
+        return toDTO(saved);
     }
 
-    public EstadopartidoEntity update(EstadopartidoEntity oEstadopartidoEntity) {
+    public EstadopartidoDTO update(EstadopartidoEntity oEstadopartidoEntity) {
         oSessionService.requireAdmin();
         EstadopartidoEntity existing = estadopartidoRepository.findById(oEstadopartidoEntity.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("EstadoPartido no encontrado con id: " + oEstadopartidoEntity.getId()));
         existing.setDescripcion(oEstadopartidoEntity.getDescripcion());
-        return estadopartidoRepository.save(existing);
+        EstadopartidoEntity saved = estadopartidoRepository.save(existing);
+        return toDTO(saved);
     }
 
     public Long delete(Long id) {

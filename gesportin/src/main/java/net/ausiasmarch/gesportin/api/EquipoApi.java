@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import net.ausiasmarch.gesportin.dto.EquipoDTO;
 import net.ausiasmarch.gesportin.entity.EquipoEntity;
 import net.ausiasmarch.gesportin.service.EquipoService;
 
@@ -28,12 +29,12 @@ public class EquipoApi {
     private EquipoService oEquipoService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<EquipoEntity> get(@PathVariable Long id) {
+    public ResponseEntity<EquipoDTO> get(@PathVariable Long id) {
         return ResponseEntity.ok(oEquipoService.get(id));
     }
 
     @GetMapping
-    public ResponseEntity<Page<EquipoEntity>> getPage(
+    public ResponseEntity<Page<EquipoDTO>> getPage(
             @PageableDefault(size = 1000) Pageable pageable,
             @RequestParam(required = false) String descripcion,
             @RequestParam(required = false) Long id_categoria,
@@ -42,12 +43,12 @@ public class EquipoApi {
     }
 
     @PostMapping
-    public ResponseEntity<EquipoEntity> create(@RequestBody EquipoEntity equipoEntity) {
+    public ResponseEntity<EquipoDTO> create(@RequestBody EquipoEntity equipoEntity) {
         return ResponseEntity.ok(oEquipoService.create(equipoEntity));
     }
 
     @PutMapping
-    public ResponseEntity<EquipoEntity> update(@RequestBody EquipoEntity equipoEntity) {
+    public ResponseEntity<EquipoDTO> update(@RequestBody EquipoEntity equipoEntity) {
         return ResponseEntity.ok(oEquipoService.update(equipoEntity));
     }
 

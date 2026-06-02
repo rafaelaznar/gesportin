@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import net.ausiasmarch.gesportin.dto.TemporadaDTO;
 import net.ausiasmarch.gesportin.entity.TemporadaEntity;
 import net.ausiasmarch.gesportin.service.TemporadaService;
 
@@ -28,12 +29,12 @@ public class TemporadaApi {
     private TemporadaService oTemporadaService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<TemporadaEntity> get(@PathVariable Long id) {
+    public ResponseEntity<TemporadaDTO> get(@PathVariable Long id) {
         return ResponseEntity.ok(oTemporadaService.get(id));
     }
 
     @GetMapping
-    public ResponseEntity<Page<TemporadaEntity>> getPage(
+    public ResponseEntity<Page<TemporadaDTO>> getPage(
             @PageableDefault(size = 1000) Pageable pageable, 
             @RequestParam(required = false) String descripcion,
             @RequestParam(required = false) Long id_club) {
@@ -41,12 +42,12 @@ public class TemporadaApi {
     }
 
     @PostMapping
-    public ResponseEntity<TemporadaEntity> create(@RequestBody TemporadaEntity oTemporadaEntity) {
+    public ResponseEntity<TemporadaDTO> create(@RequestBody TemporadaEntity oTemporadaEntity) {
         return ResponseEntity.ok(oTemporadaService.create(oTemporadaEntity));
     }
 
     @PutMapping
-    public ResponseEntity<TemporadaEntity> update(@RequestBody TemporadaEntity oTemporadaEntity) {
+    public ResponseEntity<TemporadaDTO> update(@RequestBody TemporadaEntity oTemporadaEntity) {
         return ResponseEntity.ok(oTemporadaService.update(oTemporadaEntity));
     }
 
