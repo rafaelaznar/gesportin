@@ -48,7 +48,7 @@ public class JWTService {
             }
 
             // extraer el id y nombre de usuario del token
-            Long userid = jws.getBody().get("userid", Long.class);
+            //Long userid = jws.getBody().get("userid", Long.class);
             String username = jws.getBody().get("username", String.class);
             return username;
         }

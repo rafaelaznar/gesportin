@@ -9,8 +9,8 @@ import net.ausiasmarch.gesportin.dto.CompraDTO;
 import net.ausiasmarch.gesportin.entity.CompraEntity;
 import net.ausiasmarch.gesportin.exception.ResourceNotFoundException;
 import net.ausiasmarch.gesportin.exception.UnauthorizedException;
-import net.ausiasmarch.gesportin.repository.ArticuloRepository;
 import net.ausiasmarch.gesportin.repository.CompraRepository;
+import net.ausiasmarch.gesportin.dtoconverter.CompraConverter;
 import net.ausiasmarch.gesportin.repository.FacturaRepository;
 
 @Service
@@ -18,9 +18,6 @@ public class CompraService {
 
     @Autowired
     private CompraRepository oCompraRepository;
-
-    @Autowired
-    private ArticuloRepository oArticuloRepository;
 
     @Autowired
     private FacturaRepository oFacturaRepository;
@@ -37,13 +34,10 @@ public class CompraService {
     @Autowired
     private SessionService oSessionService;
 
-    private CompraDTO toDTO(CompraEntity entity) {
-        return new CompraDTO(entity);
-    }
+    @Autowired
+    private CompraConverter oCompraConverter;
 
-    private Page<CompraDTO> toPageDTO(Page<CompraEntity> page) {
-        return page.map(this::toDTO);
-    }
+
 
     public CompraDTO get(Long id) {
         CompraEntity e = oCompraRepository.findById(id)
@@ -61,7 +55,7 @@ public class CompraService {
             }
             oSessionService.checkSameClub(e.getArticulo().getTipoarticulo().getClub().getId());
         }
-        return toDTO(e);
+        return oCompraConverter.toDTO(e);
     }
 
     public Page<CompraDTO> getPage(Pageable pageable, Long id_articulo, Long id_factura) {
@@ -80,7 +74,7 @@ public class CompraService {
                 }
             }
             if (id_articulo == null && id_factura == null) {
-                return toPageDTO(oCompraRepository.findByArticuloTipoarticuloClubId(myClub, pageable));
+                return oCompraConverter.toPageDTO(oCompraRepository.findByArticuloTipoarticuloClubId(myClub, pageable));
             }
         }
         if (oSessionService.isUsuario()) {
@@ -90,7 +84,7 @@ public class CompraService {
                     throw new UnauthorizedException("Acceso denegado: solo puede ver sus propias compras");
                 }
             } else if (id_articulo == null) {
-                return toPageDTO(oCompraRepository.findByFacturaUsuarioId(currentUserId, pageable));
+                return oCompraConverter.toPageDTO(oCompraRepository.findByFacturaUsuarioId(currentUserId, pageable));
             }
             // when filtering by articulo, ensure it belongs to the user's club
             if (id_articulo != null) {
@@ -102,11 +96,11 @@ public class CompraService {
             }
         }
         if (id_articulo != null) {
-            return toPageDTO(oCompraRepository.findByArticuloId(id_articulo, pageable));
+            return oCompraConverter.toPageDTO(oCompraRepository.findByArticuloId(id_articulo, pageable));
         } else if (id_factura != null) {
-            return toPageDTO(oCompraRepository.findByFacturaId(id_factura, pageable));
+            return oCompraConverter.toPageDTO(oCompraRepository.findByFacturaId(id_factura, pageable));
         } else {
-            return toPageDTO(oCompraRepository.findAll(pageable));
+            return oCompraConverter.toPageDTO(oCompraRepository.findAll(pageable));
         }
 
     }
@@ -121,7 +115,7 @@ public class CompraService {
         oCompraEntity.setArticulo(oArticuloService.get(oCompraEntity.getArticulo().getId()));
         oCompraEntity.setFactura(oFacturaService.get(oCompraEntity.getFactura().getId()));
         oCompraEntity.setId(null);
-        return toDTO(oCompraRepository.save(oCompraEntity));
+        return oCompraConverter.toDTO(oCompraRepository.save(oCompraEntity));
     }
 
     public CompraDTO update(CompraEntity oCompraEntity) {
@@ -138,7 +132,7 @@ public class CompraService {
         oCompraExistente.setPrecio(oCompraEntity.getPrecio());
         oCompraExistente.setArticulo(oArticuloService.get(oCompraEntity.getArticulo().getId()));
         oCompraExistente.setFactura(oFacturaService.get(oCompraEntity.getFactura().getId()));
-        return toDTO(oCompraRepository.save(oCompraExistente));
+        return oCompraConverter.toDTO(oCompraRepository.save(oCompraExistente));
     }
 
     public Long delete(Long id) {

@@ -17,16 +17,25 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
+//import net.ausiasmarch.gesportin.dtoconverter.EquipoConverter;
+import net.ausiasmarch.gesportin.dtoconverter.UsuarioConverter;
 import net.ausiasmarch.gesportin.entity.EquipoEntity;
 import net.ausiasmarch.gesportin.entity.JugadorEntity;
 import net.ausiasmarch.gesportin.entity.UsuarioEntity;
 import net.ausiasmarch.gesportin.exception.UnauthorizedException;
 import net.ausiasmarch.gesportin.repository.JugadorRepository;
+import net.ausiasmarch.gesportin.repository.UsuarioRepository;
 
 class JugadorServiceTest {
 
     @Mock
     private JugadorRepository jugadorRepository;
+
+    @Mock
+    private UsuarioRepository usuarioRepository;
+
+    @Mock
+    private UsuarioConverter usuarioConverter;
 
     @Mock
     private UsuarioService usuarioService;
@@ -114,8 +123,12 @@ class JugadorServiceTest {
         JugadorEntity nuevo = new JugadorEntity();
         nuevo.setUsuario(u2);
         nuevo.setEquipo(exampleEquipo);
-        when(usuarioService.get(3L)).thenReturn(u2);
-        when(equipoService.get(2L)).thenReturn(exampleEquipo);
+        
+        net.ausiasmarch.gesportin.dto.UsuarioDTO usuarioDTO = new net.ausiasmarch.gesportin.dto.UsuarioDTO(u2, 0, 0, 0, 0, 0, 0, 0);
+        when(usuarioConverter.toDTO(u2)).thenReturn(usuarioDTO);
+        when(usuarioService.get(3L)).thenReturn(usuarioDTO);
+        net.ausiasmarch.gesportin.dto.EquipoDTO equipoDTO = new net.ausiasmarch.gesportin.dto.EquipoDTO(exampleEquipo, 0, 0, 0);
+        when(equipoService.get(2L)).thenReturn(equipoDTO);
         doThrow(new UnauthorizedException("nope")).when(sessionService).checkSameClub(99L);
 
         assertThrows(UnauthorizedException.class, () -> jugadorService.create(nuevo));

@@ -10,6 +10,7 @@ import net.ausiasmarch.gesportin.entity.LigaEntity;
 import net.ausiasmarch.gesportin.exception.ResourceNotFoundException;
 import net.ausiasmarch.gesportin.exception.UnauthorizedException;
 import net.ausiasmarch.gesportin.repository.LigaRepository;
+import net.ausiasmarch.gesportin.dtoconverter.LigaConverter;
 
 @Service
 public class LigaService {
@@ -22,6 +23,9 @@ public class LigaService {
 
     @Autowired
     private SessionService oSessionService;
+
+    @Autowired
+    private LigaConverter oLigaConverter;
 
     private final String[] nombres = {
             "Liga", "Copa", "Supercopa", "Liga de Campeones", "Liga Europa", "Torneo",
@@ -36,14 +40,7 @@ public class LigaService {
         "de Honor", "de Plata", "de Bronce"
     };
 
-    private LigaDTO toDTO(LigaEntity entity) {
-        int partidos = oLigaRepository.countPartidosByLigaId(entity.getId());
-        return new LigaDTO(entity, partidos);
-    }
 
-    private Page<LigaDTO> toPageDTO(Page<LigaEntity> page) {
-        return page.map(this::toDTO);
-    }
 
     public LigaDTO get(Long id) {
         LigaEntity e = oLigaRepository.findById(id)
@@ -52,7 +49,7 @@ public class LigaService {
             Long clubId = e.getEquipo().getCategoria().getTemporada().getClub().getId();
             oSessionService.checkSameClub(clubId);
         }
-        return toDTO(e);
+        return oLigaConverter.toDTO(e);
     }
 
     public Page<LigaDTO> getPage(Pageable pageable, String nombre, Long id_equipo) {
@@ -66,7 +63,7 @@ public class LigaService {
             }
             if ((nombre == null || nombre.isEmpty()) && id_equipo == null) {
                 // restrict everything to club by using repository method
-                return toPageDTO(oLigaRepository.findByEquipoCategoriaTemporadaClubId(myClub, pageable));
+                return oLigaConverter.toPageDTO(oLigaRepository.findByEquipoCategoriaTemporadaClubId(myClub, pageable));
             }
         }
         Page<LigaEntity> result;
@@ -77,7 +74,7 @@ public class LigaService {
         } else {
             result = oLigaRepository.findAll(pageable);
         }
-        return toPageDTO(result);
+        return oLigaConverter.toPageDTO(result);
     }
 
     public LigaDTO create(LigaEntity oLigaEntity) {
@@ -89,7 +86,7 @@ public class LigaService {
         }
         oLigaEntity.setId(null);
         LigaEntity saved = oLigaRepository.save(oLigaEntity);
-        return toDTO(saved);
+        return oLigaConverter.toDTO(saved);
     }
 
     public LigaDTO update(LigaEntity oLigaEntity) {
@@ -108,7 +105,7 @@ public class LigaService {
         // oLigaExistente.setIdEquipo(oLigaEntity.getIdEquipo());
 
         LigaEntity saved = oLigaRepository.save(oLigaExistente);
-        return toDTO(saved);
+        return oLigaConverter.toDTO(saved);
     }
 
     public Long delete(Long id) {

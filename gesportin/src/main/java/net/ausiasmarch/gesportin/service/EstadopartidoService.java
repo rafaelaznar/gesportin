@@ -10,6 +10,7 @@ import net.ausiasmarch.gesportin.dto.EstadopartidoDTO;
 import net.ausiasmarch.gesportin.entity.EstadopartidoEntity;
 import net.ausiasmarch.gesportin.exception.ResourceNotFoundException;
 import net.ausiasmarch.gesportin.repository.EstadopartidoRepository;
+import net.ausiasmarch.gesportin.dtoconverter.EstadopartidoConverter;
 
 @Service
 public class EstadopartidoService {
@@ -20,19 +21,17 @@ public class EstadopartidoService {
     @Autowired
     SessionService oSessionService;
 
-    private EstadopartidoDTO toDTO(EstadopartidoEntity entity) {
-        int partidos = estadopartidoRepository.countPartidosByEstadopartidoId(entity.getId());
-        return new EstadopartidoDTO(entity, partidos);
-    }
+    @Autowired
+    EstadopartidoConverter oEstadopartidoConverter;
 
     public EstadopartidoDTO get(Long id) {
-        return toDTO(estadopartidoRepository.findById(id)
+        return oEstadopartidoConverter.toDTO(estadopartidoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("EstadoPartido no encontrado con id: " + id)));
     }
 
     public List<EstadopartidoDTO> getAll() {
         return estadopartidoRepository.findAll().stream()
-                .map(this::toDTO)
+                .map(entity -> oEstadopartidoConverter.toDTO(entity))
                 .collect(Collectors.toList());
     }
 
@@ -67,7 +66,7 @@ public class EstadopartidoService {
         oSessionService.requireAdmin();
         oEstadopartidoEntity.setId(null);
         EstadopartidoEntity saved = estadopartidoRepository.save(oEstadopartidoEntity);
-        return toDTO(saved);
+        return oEstadopartidoConverter.toDTO(saved);
     }
 
     public EstadopartidoDTO update(EstadopartidoEntity oEstadopartidoEntity) {
@@ -76,7 +75,7 @@ public class EstadopartidoService {
                 .orElseThrow(() -> new ResourceNotFoundException("EstadoPartido no encontrado con id: " + oEstadopartidoEntity.getId()));
         existing.setDescripcion(oEstadopartidoEntity.getDescripcion());
         EstadopartidoEntity saved = estadopartidoRepository.save(existing);
-        return toDTO(saved);
+        return oEstadopartidoConverter.toDTO(saved);
     }
 
     public Long delete(Long id) {

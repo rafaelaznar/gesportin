@@ -12,6 +12,7 @@ import net.ausiasmarch.gesportin.entity.ComentarioartEntity;
 import net.ausiasmarch.gesportin.exception.ResourceNotFoundException;
 import net.ausiasmarch.gesportin.exception.UnauthorizedException;
 import net.ausiasmarch.gesportin.repository.ComentarioartRepository;
+import net.ausiasmarch.gesportin.dtoconverter.ComentarioartConverter;
 
 @Service
 public class ComentarioartService {
@@ -31,15 +32,12 @@ public class ComentarioartService {
     @Autowired
     SessionService oSessionService;
 
+    @Autowired
+    ComentarioartConverter oComentarioartConverter;
+
     ArrayList<String> alComentarios = new ArrayList<>();
 
-    private ComentarioartDTO toDTO(ComentarioartEntity entity) {
-        return new ComentarioartDTO(entity);
-    }
 
-    private Page<ComentarioartDTO> toPageDTO(Page<ComentarioartEntity> page) {
-        return page.map(this::toDTO);
-    }
 
     public ComentarioartService() {
         alComentarios.add("Excelente artículo, muy informativo.");
@@ -66,7 +64,7 @@ public class ComentarioartService {
             Long clubId = e.getArticulo().getTipoarticulo().getClub().getId();
             oSessionService.checkSameClub(clubId);
         }
-        return toDTO(e);
+        return oComentarioartConverter.toDTO(e);
     }
 
     public Page<ComentarioartDTO> getPage(Pageable oPageable, String contenido, Long id_articulo, Long id_usuario) {
@@ -85,18 +83,18 @@ public class ComentarioartService {
                 }
             }
             if ((contenido == null || contenido.isEmpty()) && id_articulo == null && id_usuario == null) {
-                return toPageDTO(oComentarioartRepository.findByArticuloTipoarticuloClubId(myClub, oPageable));
+                return oComentarioartConverter.toPageDTO(oComentarioartRepository.findByArticuloTipoarticuloClubId(myClub, oPageable));
             }
         }
 
         if (contenido != null && !contenido.isEmpty()) {
-            return toPageDTO(oComentarioartRepository.findByContenidoContainingIgnoreCase(contenido, oPageable));
+            return oComentarioartConverter.toPageDTO(oComentarioartRepository.findByContenidoContainingIgnoreCase(contenido, oPageable));
         } else if (id_articulo != null) {
-            return toPageDTO(oComentarioartRepository.findByArticuloId(id_articulo, oPageable));
+            return oComentarioartConverter.toPageDTO(oComentarioartRepository.findByArticuloId(id_articulo, oPageable));
         } else if (id_usuario != null) {
-            return toPageDTO(oComentarioartRepository.findByUsuarioId(id_usuario, oPageable));
+            return oComentarioartConverter.toPageDTO(oComentarioartRepository.findByUsuarioId(id_usuario, oPageable));
         } else {
-            return toPageDTO(oComentarioartRepository.findAll(oPageable));
+            return oComentarioartConverter.toPageDTO(oComentarioartRepository.findAll(oPageable));
         }
     }
 
@@ -117,7 +115,7 @@ public class ComentarioartService {
         }
         oComentarioartEntity.setId(null);
         oComentarioartEntity.setArticulo(oArticuloService.get(oComentarioartEntity.getArticulo().getId()));
-        return toDTO(oComentarioartRepository.save(oComentarioartEntity));
+        return oComentarioartConverter.toDTO(oComentarioartRepository.save(oComentarioartEntity));
     }
 
     public ComentarioartDTO update(ComentarioartEntity oComentarioartEntity) {
@@ -143,7 +141,7 @@ public class ComentarioartService {
         }
         oComentarioartExistente.setContenido(oComentarioartEntity.getContenido());
         oComentarioartExistente.setArticulo(oArticuloService.get(oComentarioartEntity.getArticulo().getId()));
-        return toDTO(oComentarioartRepository.save(oComentarioartExistente));
+        return oComentarioartConverter.toDTO(oComentarioartRepository.save(oComentarioartExistente));
     }
 
     public Long delete(Long id) {

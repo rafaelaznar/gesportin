@@ -14,6 +14,7 @@ import net.ausiasmarch.gesportin.entity.ArticuloEntity;
 import net.ausiasmarch.gesportin.exception.ResourceNotFoundException;
 import net.ausiasmarch.gesportin.exception.UnauthorizedException;
 import net.ausiasmarch.gesportin.repository.ArticuloRepository;
+import net.ausiasmarch.gesportin.dtoconverter.ArticuloConverter;
 
 @Service
 public class ArticuloService {
@@ -27,22 +28,10 @@ public class ArticuloService {
     @Autowired
     private SessionService oSessionService;
 
+    @Autowired
+    private ArticuloConverter oArticuloConverter;
+
     private final Random random = new Random();
-
-    private ArticuloDTO toDTO(ArticuloEntity entity) {
-        return new ArticuloDTO(
-                entity,
-                oArticuloRepository.countComentarioartsByArticuloId(entity.getId()),
-                oArticuloRepository.countPuntuacionartsByArticuloId(entity.getId()),
-                oArticuloRepository.countComprasByArticuloId(entity.getId()),
-                oArticuloRepository.countCarritosByArticuloId(entity.getId()),
-                oArticuloRepository.avgPuntuacionByArticuloId(entity.getId()));
-    }
-
-    private org.springframework.data.domain.Page<ArticuloDTO> toPageDTO(
-            org.springframework.data.domain.Page<ArticuloEntity> page) {
-        return page.map(this::toDTO);
-    }
 
     private final String[] descripciones = {
             "Camiseta", "Pantalón corto", "Medias deportivas", "Balón oficial",
@@ -73,7 +62,7 @@ public class ArticuloService {
             Long clubId = e.getTipoarticulo().getClub().getId();
             oSessionService.checkSameClub(clubId);
         }
-        return toDTO(e);
+        return oArticuloConverter.toDTO(e);
     }
 
     public Page<ArticuloDTO> getPage(Pageable pageable, String descripcion, Long id_tipoarticulo) {
@@ -86,20 +75,20 @@ public class ArticuloService {
                 }
             }
             if (descripcion != null && !descripcion.isEmpty() && id_tipoarticulo == null) {
-                return toPageDTO(oArticuloRepository.findByDescripcionContainingIgnoreCaseAndTipoarticuloClubId(descripcion, myClub, pageable));
+                return oArticuloConverter.toPageDTO(oArticuloRepository.findByDescripcionContainingIgnoreCaseAndTipoarticuloClubId(descripcion, myClub, pageable));
             }
             if (descripcion == null || descripcion.isEmpty()) {
                 if (id_tipoarticulo == null) {
-                    return toPageDTO(oArticuloRepository.findByTipoarticuloClubId(myClub, pageable));
+                    return oArticuloConverter.toPageDTO(oArticuloRepository.findByTipoarticuloClubId(myClub, pageable));
                 }
             }
         }
         if (descripcion != null && !descripcion.isEmpty()) {
-            return toPageDTO(oArticuloRepository.findByDescripcionContainingIgnoreCase(descripcion, pageable));
+            return oArticuloConverter.toPageDTO(oArticuloRepository.findByDescripcionContainingIgnoreCase(descripcion, pageable));
         } else if (id_tipoarticulo != null) {
-            return toPageDTO(oArticuloRepository.findByTipoarticuloId(id_tipoarticulo, pageable));
+            return oArticuloConverter.toPageDTO(oArticuloRepository.findByTipoarticuloId(id_tipoarticulo, pageable));
         } else {
-            return toPageDTO(oArticuloRepository.findAll(pageable));
+            return oArticuloConverter.toPageDTO(oArticuloRepository.findAll(pageable));
         }
     }
 
@@ -113,7 +102,7 @@ public class ArticuloService {
         }
         oArticuloEntity.setId(null);
         oArticuloEntity.setTipoarticulo(oTipoarticuloService.get(oArticuloEntity.getTipoarticulo().getId()));
-        return toDTO(oArticuloRepository.save(oArticuloEntity));
+        return oArticuloConverter.toDTO(oArticuloRepository.save(oArticuloEntity));
     }
 
     public ArticuloDTO update(ArticuloEntity oArticuloEntity) {
@@ -134,7 +123,7 @@ public class ArticuloService {
         oArticuloExistente.setDescuento(oArticuloEntity.getDescuento());
         oArticuloExistente.setImagen(oArticuloEntity.getImagen());
         oArticuloExistente.setTipoarticulo(oTipoarticuloService.get(oArticuloEntity.getTipoarticulo().getId()));
-        return toDTO(oArticuloRepository.save(oArticuloExistente));
+        return oArticuloConverter.toDTO(oArticuloRepository.save(oArticuloExistente));
     }
 
     public Long delete(Long id) {

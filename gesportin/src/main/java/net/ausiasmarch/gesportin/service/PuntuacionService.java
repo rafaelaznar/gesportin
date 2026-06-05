@@ -5,10 +5,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import net.ausiasmarch.gesportin.dto.PuntuacionDTO;
 import net.ausiasmarch.gesportin.entity.PuntuacionEntity;
 import net.ausiasmarch.gesportin.exception.ResourceNotFoundException;
 import net.ausiasmarch.gesportin.exception.UnauthorizedException;
 import net.ausiasmarch.gesportin.repository.PuntuacionRepository;
+import net.ausiasmarch.gesportin.dtoconverter.PuntuacionConverter;
 
 @Service
 public class PuntuacionService {
@@ -28,17 +30,21 @@ public class PuntuacionService {
     @Autowired
     private SessionService oSessionService;
 
-    public PuntuacionEntity get(Long id) {
+    @Autowired
+    private PuntuacionConverter oPuntuacionConverter;
+
+    public PuntuacionDTO get(Long id) {
         PuntuacionEntity e = oPuntuacionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Puntuación no encontrado con id: " + id));
         if (oSessionService.isEquipoAdmin() || oSessionService.isUsuario()) {
             Long clubId = e.getNoticia().getClub().getId();
             oSessionService.checkSameClub(clubId);
         }
-        return e;
+        return oPuntuacionConverter.toDTO(e);
     }
 
-    public Page<PuntuacionEntity> getPage(Pageable pageable, Long id_noticia, Long id_usuario) {
+    public Page<PuntuacionDTO> getPage(Pageable pageable, Long id_noticia, Long id_usuario) {
+        Page<PuntuacionEntity> result;
         if (oSessionService.isEquipoAdmin() || oSessionService.isUsuario()) {
             Long myClub = oSessionService.getIdClub();
             if (id_noticia != null) {
@@ -58,19 +64,21 @@ public class PuntuacionService {
                 }
             }
             if (id_noticia == null && id_usuario == null) {
-                return oPuntuacionRepository.findByNoticiaClubId(myClub, pageable);
+                result = oPuntuacionRepository.findByNoticiaClubId(myClub, pageable);
+                return oPuntuacionConverter.toPageDTO(result);
             }
         }
         if (id_noticia != null) {
-            return oPuntuacionRepository.findByNoticiaId(id_noticia, pageable);
+            result = oPuntuacionRepository.findByNoticiaId(id_noticia, pageable);
         } else if (id_usuario != null) {
-            return oPuntuacionRepository.findByUsuarioId(id_usuario, pageable);
+            result = oPuntuacionRepository.findByUsuarioId(id_usuario, pageable);
         } else {
-            return oPuntuacionRepository.findAll(pageable);
+            result = oPuntuacionRepository.findAll(pageable);
         }
+        return oPuntuacionConverter.toPageDTO(result);
     }
 
-    public PuntuacionEntity create(PuntuacionEntity oPuntuacionEntity) {
+    public PuntuacionDTO create(PuntuacionEntity oPuntuacionEntity) {
         if (oSessionService.isEquipoAdmin()) {
             throw new UnauthorizedException("Acceso denegado: no puede gestionar puntuaciones");
         }
@@ -85,10 +93,11 @@ public class PuntuacionService {
         }
         oPuntuacionEntity.setId(null); 
         oPuntuacionEntity.setNoticia(noticia);
-        return oPuntuacionRepository.save(oPuntuacionEntity);
+        PuntuacionEntity saved = oPuntuacionRepository.save(oPuntuacionEntity);
+        return oPuntuacionConverter.toDTO(saved);
     }
 
-    public PuntuacionEntity update(PuntuacionEntity oPuntuacionEntity) {
+    public PuntuacionDTO update(PuntuacionEntity oPuntuacionEntity) {
         if (oSessionService.isEquipoAdmin()) {
             throw new UnauthorizedException("Acceso denegado: no puede gestionar puntuaciones");
         }
@@ -107,7 +116,8 @@ public class PuntuacionService {
 
         oPuntuacionExistente.setPuntuacion(oPuntuacionEntity.getPuntuacion());
         oPuntuacionExistente.setNoticia(oNoticiaService.get(oPuntuacionEntity.getNoticia().getId()));
-        return oPuntuacionRepository.save(oPuntuacionExistente);
+        PuntuacionEntity saved = oPuntuacionRepository.save(oPuntuacionExistente);
+        return oPuntuacionConverter.toDTO(saved);
     }
 
     public Long delete(Long id) {

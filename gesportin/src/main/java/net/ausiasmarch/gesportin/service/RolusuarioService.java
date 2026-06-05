@@ -6,10 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import net.ausiasmarch.gesportin.dto.RolusuarioDTO;
 import net.ausiasmarch.gesportin.entity.RolusuarioEntity;
 import net.ausiasmarch.gesportin.exception.ResourceNotFoundException;
-import net.ausiasmarch.gesportin.exception.UnauthorizedException;
 import net.ausiasmarch.gesportin.repository.RolusuarioRepository;
+import net.ausiasmarch.gesportin.dtoconverter.RolusuarioConverter;
 
 @Service
 public class RolusuarioService {
@@ -19,6 +20,9 @@ public class RolusuarioService {
 
     @Autowired
     private SessionService oSessionService;
+
+    @Autowired
+    private RolusuarioConverter oRolusuarioConverter;
 
     // private final Random random = new Random();
     private final String[] descripciones = {
@@ -41,36 +45,41 @@ public class RolusuarioService {
             "Consultor de Negocios", "Asistente Administrativo"
     };
 
-    public RolusuarioEntity get(Long id) {
-        return oRolusuarioRepository.findById(id)
+    public RolusuarioDTO get(Long id) {
+        RolusuarioEntity entity = oRolusuarioRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Rol no encontrado con id: " + id));
+        return oRolusuarioConverter.toDTO(entity);
     }
 
     public List<RolusuarioEntity> all() {
         return oRolusuarioRepository.findAll();
     }
 
-    public Page<RolusuarioEntity> getPage(Pageable oPageable, String descripcion) {
+    public Page<RolusuarioDTO> getPage(Pageable oPageable, String descripcion) {
+        Page<RolusuarioEntity> result;
         if (descripcion != null && !descripcion.isEmpty()) {
-            return oRolusuarioRepository.findByDescripcionContainingIgnoreCase(descripcion, oPageable);
+            result = oRolusuarioRepository.findByDescripcionContainingIgnoreCase(descripcion, oPageable);
         } else {
-            return oRolusuarioRepository.findAll(oPageable);
+            result = oRolusuarioRepository.findAll(oPageable);
         }
+        return oRolusuarioConverter.toPageDTO(result);
     }
 
-    public RolusuarioEntity create(RolusuarioEntity oRolusuarioEntity) {
+    public RolusuarioDTO create(RolusuarioEntity oRolusuarioEntity) {
         oSessionService.requireAdmin();
         oRolusuarioEntity.setId(null);
-        return oRolusuarioRepository.save(oRolusuarioEntity);
+        RolusuarioEntity saved = oRolusuarioRepository.save(oRolusuarioEntity);
+        return oRolusuarioConverter.toDTO(saved);
     }
 
-    public RolusuarioEntity update(RolusuarioEntity oRolusuarioEntity) {
+    public RolusuarioDTO update(RolusuarioEntity oRolusuarioEntity) {
         oSessionService.requireAdmin();
         RolusuarioEntity oRolusuarioExistente = oRolusuarioRepository.findById(oRolusuarioEntity.getId())
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Rol de usuario no encontrado con id: " + oRolusuarioEntity.getId()));
         oRolusuarioExistente.setDescripcion(oRolusuarioEntity.getDescripcion());
-        return oRolusuarioRepository.save(oRolusuarioExistente);
+        RolusuarioEntity saved = oRolusuarioRepository.save(oRolusuarioExistente);
+        return oRolusuarioConverter.toDTO(saved);
     }
 
     public Long delete(Long id) {

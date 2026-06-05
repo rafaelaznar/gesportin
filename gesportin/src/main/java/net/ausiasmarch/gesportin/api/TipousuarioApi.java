@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import net.ausiasmarch.gesportin.dto.TipousuarioDTO;
 import net.ausiasmarch.gesportin.entity.TipousuarioEntity;
 import net.ausiasmarch.gesportin.service.TipousuarioService;
 
@@ -23,7 +24,7 @@ public class TipousuarioApi {
     private TipousuarioService oTipousuarioService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<TipousuarioEntity> get(@PathVariable Long id) {
+    public ResponseEntity<TipousuarioDTO> get(@PathVariable Long id) {
         return ResponseEntity.ok(oTipousuarioService.get(id));
     }
 

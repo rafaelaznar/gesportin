@@ -10,8 +10,9 @@ import net.ausiasmarch.gesportin.dto.TipoarticuloDTO;
 import net.ausiasmarch.gesportin.entity.TipoarticuloEntity;
 import net.ausiasmarch.gesportin.exception.ResourceNotFoundException;
 import net.ausiasmarch.gesportin.exception.UnauthorizedException;
-import net.ausiasmarch.gesportin.repository.CompraRepository;
+//import net.ausiasmarch.gesportin.repository.CompraRepository;
 import net.ausiasmarch.gesportin.repository.TipoarticuloRepository;
+import net.ausiasmarch.gesportin.dtoconverter.TipoarticuloConverter;
 
 @Service
 public class TipoarticuloService {
@@ -19,14 +20,17 @@ public class TipoarticuloService {
     @Autowired
     private TipoarticuloRepository oTipoarticuloRepository;
 
-    @Autowired
-    private CompraRepository oCompraRepository;
+    //@Autowired
+    //private CompraRepository oCompraRepository;
 
     @Autowired
     private ClubService oClubService;
 
     @Autowired
     private SessionService oSessionService;
+
+    @Autowired
+    private TipoarticuloConverter oTipoarticuloConverter;
 
     //private final Random random = new Random();
     private final String[] descripciones = {
@@ -42,16 +46,6 @@ public class TipoarticuloService {
         "Temporal", "Permanente", "Exclusivo", "Popular", "Especial"
     };
 
-    private TipoarticuloDTO toDTO(TipoarticuloEntity entity) {
-        return new TipoarticuloDTO(
-                entity,
-                oTipoarticuloRepository.countArticulosByTipoarticuloId(entity.getId()),
-                oCompraRepository.sumVentasByTipoarticuloId(entity.getId()));
-    }
-
-    private Page<TipoarticuloDTO> toPageDTO(Page<TipoarticuloEntity> page) {
-        return page.map(this::toDTO);
-    }
 
     public TipoarticuloDTO get(Long id) {
         TipoarticuloEntity e = oTipoarticuloRepository.findById(id)
@@ -59,7 +53,7 @@ public class TipoarticuloService {
         if (oSessionService.isEquipoAdmin() || oSessionService.isUsuario()) {
             oSessionService.checkSameClub(e.getClub().getId());
         }
-        return toDTO(e);
+        return oTipoarticuloConverter.toDTO(e);
     }
 
     public Page<TipoarticuloDTO> getPage(Pageable oPageable, String descripcion, Long idClub) {
@@ -72,13 +66,13 @@ public class TipoarticuloService {
         }
         if (descripcion != null && !descripcion.isEmpty()) {
             if (idClub != null) {
-                return toPageDTO(oTipoarticuloRepository.findByDescripcionContainingIgnoreCaseAndClubId(descripcion, idClub, oPageable));
+                return oTipoarticuloConverter.toPageDTO(oTipoarticuloRepository.findByDescripcionContainingIgnoreCaseAndClubId(descripcion, idClub, oPageable));
             }
-            return toPageDTO(oTipoarticuloRepository.findByDescripcionContainingIgnoreCase(descripcion, oPageable));
+            return oTipoarticuloConverter.toPageDTO(oTipoarticuloRepository.findByDescripcionContainingIgnoreCase(descripcion, oPageable));
         } else if (idClub != null) {
-            return toPageDTO(oTipoarticuloRepository.findByClubId(idClub, oPageable));
+            return oTipoarticuloConverter.toPageDTO(oTipoarticuloRepository.findByClubId(idClub, oPageable));
         } else {
-            return toPageDTO(oTipoarticuloRepository.findAll(oPageable));
+            return oTipoarticuloConverter.toPageDTO(oTipoarticuloRepository.findAll(oPageable));
         }
     }
 
@@ -90,7 +84,7 @@ public class TipoarticuloService {
         }
         oTipoarticuloEntity.setId(null);
         oTipoarticuloEntity.setClub(oClubService.get(oTipoarticuloEntity.getClub().getId()));
-        return toDTO(oTipoarticuloRepository.save(oTipoarticuloEntity));
+        return oTipoarticuloConverter.toDTO(oTipoarticuloRepository.save(oTipoarticuloEntity));
     }
 
     public TipoarticuloDTO update(TipoarticuloEntity oTipoarticuloEntity) {
@@ -104,7 +98,7 @@ public class TipoarticuloService {
         }
         oTipoarticuloExistente.setDescripcion(oTipoarticuloEntity.getDescripcion());
         oTipoarticuloExistente.setClub(oClubService.get(oTipoarticuloEntity.getClub().getId()));
-        return toDTO(oTipoarticuloRepository.save(oTipoarticuloExistente));
+        return oTipoarticuloConverter.toDTO(oTipoarticuloRepository.save(oTipoarticuloExistente));
     }
 
     public Long delete(Long id) {

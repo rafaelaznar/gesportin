@@ -14,6 +14,7 @@ import net.ausiasmarch.gesportin.entity.CuotaEntity;
 import net.ausiasmarch.gesportin.exception.ResourceNotFoundException;
 import net.ausiasmarch.gesportin.exception.UnauthorizedException;
 import net.ausiasmarch.gesportin.repository.CuotaRepository;
+import net.ausiasmarch.gesportin.dtoconverter.CuotaConverter;
 
 @Service
 public class CuotaService {
@@ -27,14 +28,8 @@ public class CuotaService {
     @Autowired
     private SessionService oSessionService;
 
-    private CuotaDTO toDTO(CuotaEntity entity) {
-        int pagos = oCuotaRepository.countPagosByCuotaId(entity.getId());
-        return new CuotaDTO(entity, pagos);
-    }
-
-    private Page<CuotaDTO> toPageDTO(Page<CuotaEntity> page) {
-        return page.map(this::toDTO);
-    }
+    @Autowired
+    private CuotaConverter oCuotaConverter;
 
     public CuotaDTO get(Long id) {
         CuotaEntity e = oCuotaRepository.findById(id)
@@ -43,7 +38,7 @@ public class CuotaService {
             Long clubId = e.getEquipo().getCategoria().getTemporada().getClub().getId();
             oSessionService.checkSameClub(clubId);
         }
-        return toDTO(e);
+        return oCuotaConverter.toDTO(e);
     }
 
     public Page<CuotaDTO> getPage(Pageable pageable, String descripcion, Long id_equipo) {
@@ -56,15 +51,15 @@ public class CuotaService {
                 }
             }
             if ((descripcion == null || descripcion.isEmpty()) && id_equipo == null) {
-                return toPageDTO(oCuotaRepository.findByEquipoCategoriaTemporadaClubId(myClub, pageable));
+                return oCuotaConverter.toPageDTO(oCuotaRepository.findByEquipoCategoriaTemporadaClubId(myClub, pageable));
             }
         }
         if (descripcion != null && !descripcion.isEmpty()) {
-            return toPageDTO(oCuotaRepository.findByDescripcionContainingIgnoreCase(descripcion, pageable));
+            return oCuotaConverter.toPageDTO(oCuotaRepository.findByDescripcionContainingIgnoreCase(descripcion, pageable));
         } else if (id_equipo != null) {
-            return toPageDTO(oCuotaRepository.findByEquipoId(id_equipo, pageable));
+            return oCuotaConverter.toPageDTO(oCuotaRepository.findByEquipoId(id_equipo, pageable));
         } else {
-            return toPageDTO(oCuotaRepository.findAll(pageable));
+            return oCuotaConverter.toPageDTO(oCuotaRepository.findAll(pageable));
         }
     }
 
@@ -80,7 +75,7 @@ public class CuotaService {
         oCuotaEntity.setFecha(LocalDateTime.now());
         oCuotaEntity.setEquipo(oEquipoService.get(oCuotaEntity.getEquipo().getId()));
         CuotaEntity saved = oCuotaRepository.save(oCuotaEntity);
-        return toDTO(saved);
+        return oCuotaConverter.toDTO(saved);
     }
 
     public CuotaDTO update(CuotaEntity oCuotaEntity) {
@@ -100,7 +95,7 @@ public class CuotaService {
         oCuotaExistente.setFecha(oCuotaEntity.getFecha());
         oCuotaExistente.setEquipo(oEquipoService.get(oCuotaEntity.getEquipo().getId()));
         CuotaEntity saved = oCuotaRepository.save(oCuotaExistente);
-        return toDTO(saved);
+        return oCuotaConverter.toDTO(saved);
     }
 
     public Long delete(Long id) {

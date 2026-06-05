@@ -16,6 +16,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
+import net.ausiasmarch.gesportin.dtoconverter.UsuarioConverter;
+import net.ausiasmarch.gesportin.dto.UsuarioDTO;
 import net.ausiasmarch.gesportin.entity.UsuarioEntity;
 import net.ausiasmarch.gesportin.exception.UnauthorizedException;
 import net.ausiasmarch.gesportin.repository.UsuarioRepository;
@@ -28,10 +30,14 @@ class UsuarioServiceTest {
     @Mock
     private SessionService sessionService;
 
+    @Mock
+    private UsuarioConverter usuarioConverter;
+
     @InjectMocks
     private UsuarioService usuarioService;
 
     private UsuarioEntity exampleUsuario;
+    private UsuarioDTO exampleUsuarioDTO;
 
     @BeforeEach
     void setUp() {
@@ -40,15 +46,19 @@ class UsuarioServiceTest {
         exampleUsuario.setId(1L);
         exampleUsuario.setClub(new net.ausiasmarch.gesportin.entity.ClubEntity());
         exampleUsuario.getClub().setId(42L);
+
+        exampleUsuarioDTO = new UsuarioDTO();
+        exampleUsuarioDTO.setId(1L);
     }
 
     @Test
     void get_whenEquipoAdminSameClub_shouldReturnUsuario() {
         when(sessionService.isEquipoAdmin()).thenReturn(true);
         when(usuarioRepository.findById(1L)).thenReturn(Optional.of(exampleUsuario));
+        when(usuarioConverter.toDTO(exampleUsuario)).thenReturn(exampleUsuarioDTO);
 
-        UsuarioEntity result = usuarioService.get(1L);
-        assertEquals(exampleUsuario, result);
+        UsuarioDTO result = usuarioService.get(1L);
+        assertEquals(exampleUsuarioDTO, result);
         verify(sessionService).checkSameClub(42L);
     }
 
@@ -70,10 +80,13 @@ class UsuarioServiceTest {
         when(sessionService.getIdClub()).thenReturn(42L);
         Page<UsuarioEntity> page = new PageImpl<>(java.util.Collections.singletonList(exampleUsuario));
         when(usuarioRepository.findByClubId(42L, PageRequest.of(0, 10))).thenReturn(page);
+        
+        Page<UsuarioDTO> dtoPage = new PageImpl<>(java.util.Collections.singletonList(exampleUsuarioDTO));
+        when(usuarioConverter.toPageDTO(page)).thenReturn(dtoPage);
 
-        Page<UsuarioEntity> result = usuarioService.getPage(PageRequest.of(0, 10), null, null, null, null, null);
+        Page<UsuarioDTO> result = usuarioService.getPage(PageRequest.of(0, 10), null, null, null, null, null);
         assertEquals(1, result.getTotalElements());
-        assertEquals(exampleUsuario, result.getContent().get(0));
+        assertEquals(exampleUsuarioDTO, result.getContent().get(0));
     }
 
     @Test

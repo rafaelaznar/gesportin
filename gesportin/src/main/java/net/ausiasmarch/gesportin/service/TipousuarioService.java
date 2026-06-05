@@ -5,9 +5,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import net.ausiasmarch.gesportin.dto.TipousuarioDTO;
 import net.ausiasmarch.gesportin.entity.TipousuarioEntity;
 import net.ausiasmarch.gesportin.exception.ResourceNotFoundException;
 import net.ausiasmarch.gesportin.repository.TipousuarioRepository;
+import net.ausiasmarch.gesportin.dtoconverter.TipousuarioConverter;
 
 @Service
 public class TipousuarioService {
@@ -18,13 +20,13 @@ public class TipousuarioService {
     @Autowired
     SessionService oSessionService;
 
-    private static final String[] TIPOS = {
-        "Administrador", "Administrador de club", "Usuario"
-    };
+    @Autowired
+    TipousuarioConverter oTipousuarioConverter;
 
-    public TipousuarioEntity get(Long id) {
-        return tipousuarioRepository.findById(id)
+    public TipousuarioDTO get(Long id) {
+        TipousuarioEntity entity = tipousuarioRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Tipousuario no encontrado con id: " + id));
+        return oTipousuarioConverter.toDTO(entity);
     }
 
     public List<TipousuarioEntity> getAll() {

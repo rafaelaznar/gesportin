@@ -16,6 +16,8 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import net.ausiasmarch.gesportin.dtoconverter.ClubConverter;
+import net.ausiasmarch.gesportin.dto.ClubDTO;
 import net.ausiasmarch.gesportin.entity.ClubEntity;
 import net.ausiasmarch.gesportin.exception.UnauthorizedException;
 import net.ausiasmarch.gesportin.repository.ClubRepository;
@@ -28,10 +30,14 @@ class ClubServiceTest {
     @Mock
     private SessionService sessionService;
 
+    @Mock
+    private ClubConverter clubConverter;
+
     @InjectMocks
     private ClubService clubService;
 
     private ClubEntity exampleClub;
+    private ClubDTO exampleClubDTO;
 
     @BeforeEach
     void setUp() {
@@ -39,6 +45,10 @@ class ClubServiceTest {
         exampleClub = new ClubEntity();
         exampleClub.setId(42L);
         exampleClub.setNombre("Test Club");
+
+        exampleClubDTO = new ClubDTO();
+        exampleClubDTO.setId(42L);
+        exampleClubDTO.setNombre("Test Club");
     }
 
     @Test
@@ -48,9 +58,10 @@ class ClubServiceTest {
         // do not throw when checkSameClub is called
         doNothing().when(sessionService).checkSameClub(42L);
         when(clubRepository.findById(42L)).thenReturn(Optional.of(exampleClub));
+        when(clubConverter.toDTO(exampleClub)).thenReturn(exampleClubDTO);
 
-        ClubEntity result = clubService.get(42L);
-        assertEquals(exampleClub, result);
+        ClubDTO result = clubService.get(42L);
+        assertEquals(exampleClubDTO, result);
         verify(sessionService).checkSameClub(42L);
     }
 
@@ -68,10 +79,11 @@ class ClubServiceTest {
         when(sessionService.isEquipoAdmin()).thenReturn(true);
         when(sessionService.getIdClub()).thenReturn(42L);
         when(clubRepository.findById(42L)).thenReturn(Optional.of(exampleClub));
+        when(clubConverter.toDTO(exampleClub)).thenReturn(exampleClubDTO);
 
-        Page<ClubEntity> page = clubService.getPage(PageRequest.of(0, 10));
+        Page<ClubDTO> page = clubService.getPage(PageRequest.of(0, 10));
         assertEquals(1, page.getTotalElements());
-        assertEquals(exampleClub, page.getContent().get(0));
+        assertEquals(exampleClubDTO, page.getContent().get(0));
     }
 
     @Test

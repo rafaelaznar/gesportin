@@ -12,6 +12,7 @@ import net.ausiasmarch.gesportin.entity.EquipoEntity;
 import net.ausiasmarch.gesportin.exception.ResourceNotFoundException;
 import net.ausiasmarch.gesportin.exception.UnauthorizedException;
 import net.ausiasmarch.gesportin.repository.EquipoRepository;
+import net.ausiasmarch.gesportin.dtoconverter.EquipoConverter;
 
 @Service
 public class EquipoService {
@@ -34,16 +35,8 @@ public class EquipoService {
     @Autowired
     private SessionService oSessionService;
 
-    private EquipoDTO toDTO(EquipoEntity entity) {
-        int jugadores = oEquipoRepository.countJugadoresByEquipoId(entity.getId());
-        int cuotas = oEquipoRepository.countCuotasByEquipoId(entity.getId());
-        int ligas = oEquipoRepository.countLigasByEquipoId(entity.getId());
-        return new EquipoDTO(entity, jugadores, cuotas, ligas);
-    }
-
-    private Page<EquipoDTO> toPageDTO(Page<EquipoEntity> page) {
-        return page.map(this::toDTO);
-    }
+    @Autowired
+    private EquipoConverter oEquipoConverter;
 
     public EquipoDTO get(Long id) {
         EquipoEntity e = oEquipoRepository.findById(id)
@@ -52,7 +45,7 @@ public class EquipoService {
             Long clubId = e.getCategoria().getTemporada().getClub().getId();
             oSessionService.checkSameClub(clubId);
         }
-        return toDTO(e);
+        return oEquipoConverter.toDTO(e);
     }
 
     public Page<EquipoDTO> getPage(Pageable pageable, String descripcion, Long id_categoria, Long id_usuario) {
@@ -74,23 +67,25 @@ public class EquipoService {
             if (descripcion == null || descripcion.isEmpty()) {
                 if (id_categoria != null) {
                     // id_categoria already validated to belong to same club above
-                    return toPageDTO(oEquipoRepository.findByCategoriaId(id_categoria, pageable));
+                    return oEquipoConverter.toPageDTO(oEquipoRepository.findByCategoriaId(id_categoria, pageable));
                 }
                 // force club filter when no other filter provided
-                return toPageDTO(oEquipoRepository.findByCategoriaTemporadaClubId(myClub, pageable));
+                return oEquipoConverter.toPageDTO(oEquipoRepository.findByCategoriaTemporadaClubId(myClub, pageable));
             } else {
                 // description filter must be scoped to own club
-                return toPageDTO(oEquipoRepository.findByNombreContainingIgnoreCaseAndCategoriaTemporadaClubId(descripcion, myClub, pageable));
+                return oEquipoConverter.toPageDTO(oEquipoRepository
+                        .findByNombreContainingIgnoreCaseAndCategoriaTemporadaClubId(descripcion, myClub, pageable));
             }
         }
         if (descripcion != null && !descripcion.isEmpty()) {
-            return toPageDTO(oEquipoRepository.findByNombreContainingIgnoreCase(descripcion, pageable));
+            return oEquipoConverter
+                    .toPageDTO(oEquipoRepository.findByNombreContainingIgnoreCase(descripcion, pageable));
         } else if (id_categoria != null) {
-            return toPageDTO(oEquipoRepository.findByCategoriaId(id_categoria, pageable));
+            return oEquipoConverter.toPageDTO(oEquipoRepository.findByCategoriaId(id_categoria, pageable));
         } else if (id_usuario != null) {
-            return toPageDTO(oEquipoRepository.findByEntrenadorId(id_usuario, pageable));
+            return oEquipoConverter.toPageDTO(oEquipoRepository.findByEntrenadorId(id_usuario, pageable));
         } else {
-            return toPageDTO(oEquipoRepository.findAll(pageable));
+            return oEquipoConverter.toPageDTO(oEquipoRepository.findAll(pageable));
         }
     }
 
@@ -105,7 +100,7 @@ public class EquipoService {
         oEquipoEntity.setEntrenador(oUsuarioService.get(oEquipoEntity.getEntrenador().getId()));
         oEquipoEntity.setCategoria(oCategoriaService.get(oEquipoEntity.getCategoria().getId()));
         EquipoEntity saved = oEquipoRepository.save(oEquipoEntity);
-        return toDTO(saved);
+        return oEquipoConverter.toDTO(saved);
     }
 
     public EquipoDTO update(EquipoEntity oEquipoEntity) {
@@ -113,7 +108,7 @@ public class EquipoService {
         oSessionService.denyUsuario();
         EquipoEntity oEquipoExistente = oEquipoRepository.findById(oEquipoEntity.getId())
                 .orElseThrow(() -> new ResourceNotFoundException(
-                "Equipo no encontrado con id: " + oEquipoEntity.getId()));
+                        "Equipo no encontrado con id: " + oEquipoEntity.getId()));
         if (oSessionService.isEquipoAdmin()) {
             Long clubOld = oEquipoExistente.getCategoria().getTemporada().getClub().getId();
             Long clubNew = oCategoriaService.get(oEquipoEntity.getCategoria().getId()).getTemporada().getClub().getId();
@@ -121,11 +116,17 @@ public class EquipoService {
             oSessionService.checkSameClub(clubNew);
         }
         oEquipoExistente.setNombre(oEquipoEntity.getNombre());
-        oEquipoExistente.setEntrenador(oUsuarioService.get(oEquipoEntity.getEntrenador().getId()));
+        //oEquipoExistente.setCategoria(oEquipoEntity.getCategoria());
         oEquipoExistente.setCategoria(oCategoriaService.get(oEquipoEntity.getCategoria().getId()));
+        oEquipoExistente.setEntrenador(oUsuarioService.get(oEquipoEntity.getEntrenador().getId()));
         EquipoEntity saved = oEquipoRepository.save(oEquipoExistente);
-        return toDTO(saved);
+        return oEquipoConverter.toDTO(saved);
     }
+
+//    Long clubNew = oCategoriaService.get(oEquipoEntity.getCategoria().getId()).getTemporada().getClub()
+//            .getId();oSessionService.checkSameClub(clubOld);oSessionService.checkSameClub(clubNew);}oEquipoExistente.setNombre(oEquipoEntity.getNombre());oEquipoExistente.setEntrenador(oUsuarioService.get(oEquipoEntity.getEntrenador().getId()));oEquipoExistente.setCategoria(oCategoriaService.get(oEquipoEntity.getCategoria().getId()));
+//    EquipoEntity saved = oEquipoRepository.save(oEquipoExistente);return oEquipoConverter.toDTO(saved);
+//    }
 
     public Long delete(Long id) {
         // regular usuarios cannot delete equipos

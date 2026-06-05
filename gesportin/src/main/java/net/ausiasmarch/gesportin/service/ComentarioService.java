@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import net.ausiasmarch.gesportin.dto.ComentarioDTO;
+import net.ausiasmarch.gesportin.dtoconverter.ComentarioConverter;
 import net.ausiasmarch.gesportin.entity.ComentarioEntity;
 import net.ausiasmarch.gesportin.exception.ResourceNotFoundException;
 import net.ausiasmarch.gesportin.exception.UnauthorizedException;
@@ -31,15 +32,10 @@ public class ComentarioService {
     @Autowired
     SessionService oSessionService;
 
+    @Autowired
+    ComentarioConverter oComentarioConverter;
+
     ArrayList<String> alComentarios = new ArrayList<>();
-
-    private ComentarioDTO toDTO(ComentarioEntity entity) {
-        return new ComentarioDTO(entity);
-    }
-
-    private Page<ComentarioDTO> toPageDTO(Page<ComentarioEntity> page) {
-        return page.map(this::toDTO);
-    }
 
     public ComentarioService() {
         alComentarios.add("Excelente artículo, muy informativo.");
@@ -71,10 +67,11 @@ public class ComentarioService {
             Long clubId = e.getNoticia().getClub().getId();
             oSessionService.checkSameClub(clubId);
         }
-        return toDTO(e);
+        return oComentarioConverter.toDTO(e);
     }
 
     public Page<ComentarioDTO> getPage(Pageable oPageable, String contenido, Long id_usuario, Long id_noticia) {
+        Page<ComentarioEntity> result;
         if (oSessionService.isEquipoAdmin() || oSessionService.isUsuario()) {
             Long myClub = oSessionService.getIdClub();
             if (id_usuario != null) {
@@ -94,17 +91,20 @@ public class ComentarioService {
                 }
             }
             if ((contenido == null || contenido.isEmpty()) && id_usuario == null && id_noticia == null) {
-                return toPageDTO(oComentariosRepository.findByNoticiaClubId(myClub, oPageable));
+                result = oComentariosRepository.findByNoticiaClubId(myClub, oPageable);
+                return oComentarioConverter.toPageDTO(result);
             }
         }
         if (contenido != null && !contenido.isEmpty()) {
-            return toPageDTO(oComentariosRepository.findByContenidoContainingIgnoreCase(contenido, oPageable));
+            result = oComentariosRepository.findByContenidoContainingIgnoreCase(contenido, oPageable);
         } else if (id_usuario != null) {
-            return toPageDTO(oComentariosRepository.findByUsuarioId(id_usuario, oPageable));
+            result = oComentariosRepository.findByUsuarioId(id_usuario, oPageable);
         } else if (id_noticia != null) {
-            return toPageDTO(oComentariosRepository.findByNoticiaId(id_noticia, oPageable));
-        } else
-        return toPageDTO(oComentariosRepository.findAll(oPageable));
+            result = oComentariosRepository.findByNoticiaId(id_noticia, oPageable);
+        } else {
+            result = oComentariosRepository.findAll(oPageable);
+        }
+        return oComentarioConverter.toPageDTO(result);
     }
 
     public ComentarioDTO create(ComentarioEntity oComentarioEntity) {
@@ -121,7 +121,7 @@ public class ComentarioService {
         }
         oComentarioEntity.setId(null);
         oComentarioEntity.setNoticia(noticia);
-        return toDTO(oComentariosRepository.save(oComentarioEntity));
+        return oComentarioConverter.toDTO(oComentariosRepository.save(oComentarioEntity));
     }
 
     public ComentarioDTO update(ComentarioEntity oComentarioEntity) {
@@ -141,7 +141,7 @@ public class ComentarioService {
         }
         oComentarioExistente.setContenido(oComentarioEntity.getContenido());
         oComentarioExistente.setNoticia(oNoticaService.get(oComentarioEntity.getNoticia().getId()));
-        return toDTO(oComentariosRepository.save(oComentarioExistente));
+        return oComentarioConverter.toDTO(oComentariosRepository.save(oComentarioExistente));
     }
 
     public Long delete(Long id) {

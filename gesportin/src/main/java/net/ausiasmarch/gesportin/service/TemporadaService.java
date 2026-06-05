@@ -10,6 +10,7 @@ import net.ausiasmarch.gesportin.entity.TemporadaEntity;
 import net.ausiasmarch.gesportin.exception.ResourceNotFoundException;
 import net.ausiasmarch.gesportin.exception.UnauthorizedException;
 import net.ausiasmarch.gesportin.repository.TemporadaRepository;
+import net.ausiasmarch.gesportin.dtoconverter.TemporadaConverter;
 
 @Service
 public class TemporadaService {
@@ -22,6 +23,9 @@ public class TemporadaService {
 
     @Autowired
     private SessionService oSessionService;
+
+    @Autowired
+    private TemporadaConverter oTemporadaConverter;
 
     private final String[] años = {
             "2019/2020",
@@ -52,22 +56,13 @@ public class TemporadaService {
             "Todo el año"
     };
 
-    private TemporadaDTO toDTO(TemporadaEntity entity) {
-        int categorias = oTemporadaRepository.countCategoriasByTemporadaId(entity.getId());
-        return new TemporadaDTO(entity, categorias);
-    }
-
-    private Page<TemporadaDTO> toPageDTO(Page<TemporadaEntity> page) {
-        return page.map(this::toDTO);
-    }
-
     public TemporadaDTO get(Long id) {
         TemporadaEntity e = oTemporadaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Temporada no encontrado con id: " + id));
         if (oSessionService.isEquipoAdmin() || oSessionService.isUsuario()) {
             oSessionService.checkSameClub(e.getClub().getId());
         }
-        return toDTO(e);
+        return oTemporadaConverter.toDTO(e);
     }
 
     public Page<TemporadaDTO> getPage(Pageable pageable, String descripcion, Long id_club) {
@@ -91,7 +86,7 @@ public class TemporadaService {
         } else {
             result = oTemporadaRepository.findAll(pageable);
         }
-        return toPageDTO(result);
+        return oTemporadaConverter.toPageDTO(result);
     }
 
     public TemporadaDTO create(TemporadaEntity oTemporadaEntity) {
@@ -103,7 +98,7 @@ public class TemporadaService {
         oTemporadaEntity.setId(null);
         oTemporadaEntity.setClub(oClubService.get(oTemporadaEntity.getClub().getId()));
         TemporadaEntity saved = oTemporadaRepository.save(oTemporadaEntity);
-        return toDTO(saved);
+        return oTemporadaConverter.toDTO(saved);
     }
 
     public TemporadaDTO update(TemporadaEntity oTemporadaEntity) {
@@ -120,7 +115,7 @@ public class TemporadaService {
         oTemporadaExistente.setDescripcion(oTemporadaEntity.getDescripcion());
         oTemporadaExistente.setClub(oClubService.get(oTemporadaEntity.getClub().getId()));
         TemporadaEntity saved = oTemporadaRepository.save(oTemporadaExistente);
-        return toDTO(saved);
+        return oTemporadaConverter.toDTO(saved);
     }
 
     public Long delete(Long id) {

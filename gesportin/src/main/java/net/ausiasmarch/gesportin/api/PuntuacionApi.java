@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import net.ausiasmarch.gesportin.dto.PuntuacionDTO;
 import net.ausiasmarch.gesportin.entity.PuntuacionEntity;
 import net.ausiasmarch.gesportin.service.PuntuacionService;
 
@@ -28,12 +29,12 @@ public class PuntuacionApi {
     private PuntuacionService oPuntuacionService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<PuntuacionEntity> get(@PathVariable Long id) {
+    public ResponseEntity<PuntuacionDTO> get(@PathVariable Long id) {
         return ResponseEntity.ok(oPuntuacionService.get(id));
     }
 
     @GetMapping
-    public ResponseEntity<Page<PuntuacionEntity>> getPage(
+    public ResponseEntity<Page<PuntuacionDTO>> getPage(
             @PageableDefault(size = 1000) Pageable pageable,
             @RequestParam(required = false) Long id_noticia,
             @RequestParam(required = false) Long id_usuario) {
@@ -41,12 +42,12 @@ public class PuntuacionApi {
     }
 
     @PostMapping
-    public ResponseEntity<PuntuacionEntity> create(@RequestBody PuntuacionEntity oPuntuacionEntity) {
+    public ResponseEntity<PuntuacionDTO> create(@RequestBody PuntuacionEntity oPuntuacionEntity) {
         return ResponseEntity.ok(oPuntuacionService.create(oPuntuacionEntity));
     }
 
     @PutMapping
-    public ResponseEntity<PuntuacionEntity> update(@RequestBody PuntuacionEntity oPuntuacionEntity) {
+    public ResponseEntity<PuntuacionDTO> update(@RequestBody PuntuacionEntity oPuntuacionEntity) {
         return ResponseEntity.ok(oPuntuacionService.update(oPuntuacionEntity));
     }
 

@@ -5,10 +5,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import net.ausiasmarch.gesportin.dto.PuntuacionartDTO;
 import net.ausiasmarch.gesportin.entity.PuntuacionartEntity;
 import net.ausiasmarch.gesportin.exception.ResourceNotFoundException;
 import net.ausiasmarch.gesportin.exception.UnauthorizedException;
 import net.ausiasmarch.gesportin.repository.PuntuacionartRepository;
+import net.ausiasmarch.gesportin.dtoconverter.PuntuacionartConverter;
 
 @Service
 public class PuntuacionartService {
@@ -28,17 +30,21 @@ public class PuntuacionartService {
     @Autowired
     private SessionService oSessionService;
 
-    public PuntuacionartEntity get(Long id) {
+    @Autowired
+    private PuntuacionartConverter oPuntuacionartConverter;
+
+    public PuntuacionartDTO get(Long id) {
         PuntuacionartEntity e = oPuntuacionartRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Puntuacionart no encontrado con id: " + id));
         if (oSessionService.isEquipoAdmin() || oSessionService.isUsuario()) {
             Long clubId = e.getArticulo().getTipoarticulo().getClub().getId();
             oSessionService.checkSameClub(clubId);
         }
-        return e;
+        return oPuntuacionartConverter.toDTO(e);
     }
 
-    public Page<PuntuacionartEntity> getPage(Pageable pageable, Long id_articulo, Long id_usuario) {
+    public Page<PuntuacionartDTO> getPage(Pageable pageable, Long id_articulo, Long id_usuario) {
+        Page<PuntuacionartEntity> result;
         if (oSessionService.isEquipoAdmin() || oSessionService.isUsuario()) {
             Long myClub = oSessionService.getIdClub();
             if (id_articulo != null) {
@@ -57,19 +63,21 @@ public class PuntuacionartService {
                 }
             }
             if (id_articulo == null && id_usuario == null) {
-                return oPuntuacionartRepository.findByArticuloTipoarticuloClubId(myClub, pageable);
+                result = oPuntuacionartRepository.findByArticuloTipoarticuloClubId(myClub, pageable);
+                return oPuntuacionartConverter.toPageDTO(result);
             }
         }
         if (id_articulo != null) {
-            return oPuntuacionartRepository.findByArticuloId(id_articulo, pageable);
+            result = oPuntuacionartRepository.findByArticuloId(id_articulo, pageable);
         } else if (id_usuario != null) {
-            return oPuntuacionartRepository.findByUsuarioId(id_usuario, pageable);
+            result = oPuntuacionartRepository.findByUsuarioId(id_usuario, pageable);
         } else {
-            return oPuntuacionartRepository.findAll(pageable);
+            result = oPuntuacionartRepository.findAll(pageable);
         }
+        return oPuntuacionartConverter.toPageDTO(result);
     }
 
-    public PuntuacionartEntity create(PuntuacionartEntity oPuntuacionartEntity) {
+    public PuntuacionartDTO create(PuntuacionartEntity oPuntuacionartEntity) {
         if (oSessionService.isEquipoAdmin()) {
             throw new UnauthorizedException("Acceso denegado: no puede gestionar puntuaciones");
         }
@@ -87,10 +95,11 @@ public class PuntuacionartService {
         }
         oPuntuacionartEntity.setId(null);
         oPuntuacionartEntity.setArticulo(articulo);
-        return oPuntuacionartRepository.save(oPuntuacionartEntity);
+        PuntuacionartEntity saved = oPuntuacionartRepository.save(oPuntuacionartEntity);
+        return oPuntuacionartConverter.toDTO(saved);
     }
 
-    public PuntuacionartEntity update(PuntuacionartEntity oPuntuacionartEntity) {
+    public PuntuacionartDTO update(PuntuacionartEntity oPuntuacionartEntity) {
         if (oSessionService.isEquipoAdmin()) {
             throw new UnauthorizedException("Acceso denegado: no puede gestionar puntuaciones");
         }
@@ -108,7 +117,8 @@ public class PuntuacionartService {
         }
         existing.setPuntuacion(oPuntuacionartEntity.getPuntuacion());
         existing.setArticulo(oArticuloService.get(oPuntuacionartEntity.getArticulo().getId()));
-        return oPuntuacionartRepository.save(existing);
+        PuntuacionartEntity saved = oPuntuacionartRepository.save(existing);
+        return oPuntuacionartConverter.toDTO(saved);
     }
 
     public Long delete(Long id) {

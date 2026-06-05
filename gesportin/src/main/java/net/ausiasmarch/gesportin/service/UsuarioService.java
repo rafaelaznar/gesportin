@@ -14,6 +14,7 @@ import net.ausiasmarch.gesportin.entity.UsuarioEntity;
 import net.ausiasmarch.gesportin.exception.ResourceNotFoundException;
 import net.ausiasmarch.gesportin.exception.UnauthorizedException;
 import net.ausiasmarch.gesportin.repository.UsuarioRepository;
+import net.ausiasmarch.gesportin.dtoconverter.UsuarioConverter;
 
 @Service
 public class UsuarioService {
@@ -36,22 +37,12 @@ public class UsuarioService {
     @Autowired
     private SessionService oSessionService;
 
+    @Autowired
+    private UsuarioConverter oUsuarioConverter;
+
     private final Random random = new Random();
 
-    private UsuarioDTO toDTO(UsuarioEntity entity) {
-        int comentarios = oUsuarioRepository.countComentariosByUsuarioId(entity.getId());
-        int puntuaciones = oUsuarioRepository.countPuntuacionesByUsuarioId(entity.getId());
-        int comentarioarts = oUsuarioRepository.countComentarioartsByUsuarioId(entity.getId());
-        int carritos = oUsuarioRepository.countCarritosByUsuarioId(entity.getId());
-        int facturas = oUsuarioRepository.countFacturasByUsuarioId(entity.getId());
-        int equiposentrenados = oUsuarioRepository.countEquiposEntrenadosByUsuarioId(entity.getId());
-        int jugadores = oUsuarioRepository.countJugadoresByUsuarioId(entity.getId());
-        return new UsuarioDTO(entity, comentarios, puntuaciones, comentarioarts, carritos, facturas, equiposentrenados, jugadores);
-    }
 
-    private Page<UsuarioDTO> toPageDTO(Page<UsuarioEntity> page) {
-        return page.map(this::toDTO);
-    }
 
     private final String[] nombresVaron = {
         "Juan", "Carlos", "Luis", "Pedro", "José",
@@ -84,7 +75,7 @@ public class UsuarioService {
             Long clubId = (e.getClub()!=null) ? e.getClub().getId() : null;
             oSessionService.checkSameClub(clubId);
         }
-        return toDTO(e);
+        return oUsuarioConverter.toDTO(e);
     }
 
     public Page<UsuarioDTO> getPage(Pageable pageable, String nombre, String username, Long id_Tipousuario,
@@ -101,7 +92,7 @@ public class UsuarioService {
             // if no filtering at all, return club-specific page directly
             if ((nombre == null || nombre.isEmpty()) && username == null && id_Tipousuario == null && id_Club == null
                     && id_Rol == null) {
-                return toPageDTO(oUsuarioRepository.findByClubId(myClub, pageable));
+                return oUsuarioConverter.toPageDTO(oUsuarioRepository.findByClubId(myClub, pageable));
             }
         }
 
@@ -127,10 +118,10 @@ public class UsuarioService {
                 java.util.List<UsuarioEntity> filtered = result.getContent().stream()
                         .filter(u -> u.getClub() != null && myClub.equals(u.getClub().getId()))
                         .collect(Collectors.toList());
-                return toPageDTO(new org.springframework.data.domain.PageImpl<>(filtered, pageable, filtered.size()));
+                return oUsuarioConverter.toPageDTO(new org.springframework.data.domain.PageImpl<>(filtered, pageable, filtered.size()));
             }
         }
-        return toPageDTO(result);
+        return oUsuarioConverter.toPageDTO(result);
     }
 
     public UsuarioDTO create(UsuarioEntity oUsuarioEntity) {
@@ -163,7 +154,7 @@ public class UsuarioService {
         oUsuarioEntity.setTipousuario(oTipousuarioService.get(oUsuarioEntity.getTipousuario().getId()));
         oUsuarioEntity.setRolusuario(oRolusuarioService.get(oUsuarioEntity.getRolusuario().getId()));
         UsuarioEntity saved = oUsuarioRepository.save(oUsuarioEntity);
-        return toDTO(saved);
+        return oUsuarioConverter.toDTO(saved);
     }
 
     public UsuarioDTO update(UsuarioEntity oUsuarioEntity) {
@@ -209,7 +200,7 @@ public class UsuarioService {
         oUsuarioExistente.setClub(oClubService.get(oUsuarioEntity.getClub().getId()));
         oUsuarioExistente.setRolusuario(oRolusuarioService.get(oUsuarioEntity.getRolusuario().getId()));
         UsuarioEntity saved = oUsuarioRepository.save(oUsuarioExistente);
-        return toDTO(saved);
+        return oUsuarioConverter.toDTO(saved);
     }
 
     public Long delete(Long id) {

@@ -27,6 +27,7 @@ import net.ausiasmarch.gesportin.exception.ResourceNotFoundException;
 import net.ausiasmarch.gesportin.repository.ArticuloRepository;
 import net.ausiasmarch.gesportin.repository.CategoriaRepository;
 import net.ausiasmarch.gesportin.repository.ClubRepository;
+import net.ausiasmarch.gesportin.dtoconverter.ClubConverter;
 import net.ausiasmarch.gesportin.repository.ComentarioRepository;
 import net.ausiasmarch.gesportin.repository.CompraRepository;
 import net.ausiasmarch.gesportin.repository.EquipoRepository;
@@ -91,19 +92,10 @@ public class ClubService {
     @Autowired
     private RolusuarioRepository oRolusuarioRepository;
 
+    @Autowired
+    private ClubConverter oClubConverter;
+
     private final Random random = new Random();
-
-    private ClubDTO toDTO(ClubEntity entity) {
-        return new ClubDTO(entity,
-                oClubRepository.countTemporadasByClubId(entity.getId()),
-                oClubRepository.countNoticiasByClubId(entity.getId()),
-                oClubRepository.countTipoarticulosByClubId(entity.getId()),
-                oClubRepository.countUsuariosByClubId(entity.getId()));
-    }
-
-    private Page<ClubDTO> toPageDTO(Page<ClubEntity> page) {
-        return page.map(this::toDTO);
-    }
 
     private final String[] descripciones1 = {
         "Atlético", "Deportivo", "Real club", "Unión deportiva",
@@ -136,7 +128,7 @@ public class ClubService {
     public ClubDTO get(Long id) {
         // equipo administrators may only view their own club
         oSessionService.checkSameClub(id);
-        return toDTO(oClubRepository.findById(id)
+        return oClubConverter.toDTO(oClubRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Club no encontrado con id: " + id)));
     }
 
@@ -150,10 +142,10 @@ public class ClubService {
             if (club == null) {
                 return org.springframework.data.domain.Page.empty(pageable);
             }
-            java.util.List<ClubDTO> list = java.util.Collections.singletonList(toDTO(club));
+            java.util.List<ClubDTO> list = java.util.Collections.singletonList(oClubConverter.toDTO(club));
             return new org.springframework.data.domain.PageImpl<>(list, pageable, 1);
         }
-        return toPageDTO(oClubRepository.findAll(pageable));
+        return oClubConverter.toPageDTO(oClubRepository.findAll(pageable));
     }
 
     public ClubDTO create(ClubEntity oClubEntity) {
@@ -162,7 +154,7 @@ public class ClubService {
         oSessionService.denyUsuario();
         oClubEntity.setId(null);
         oClubEntity.setFechaAlta(LocalDateTime.now());
-        return toDTO(oClubRepository.save(oClubEntity));
+        return oClubConverter.toDTO(oClubRepository.save(oClubEntity));
     }
 
     public ClubDTO update(ClubEntity oClubEntity) {
@@ -176,7 +168,7 @@ public class ClubService {
         oClubExistente.setDireccion(oClubEntity.getDireccion());
         oClubExistente.setTelefono(oClubEntity.getTelefono());
         oClubExistente.setFechaAlta(oClubEntity.getFechaAlta());
-        return toDTO(oClubRepository.save(oClubExistente));
+        return oClubConverter.toDTO(oClubRepository.save(oClubExistente));
     }
 
     public Long delete(Long id) {

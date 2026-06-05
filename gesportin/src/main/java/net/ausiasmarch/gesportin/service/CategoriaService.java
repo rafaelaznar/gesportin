@@ -12,6 +12,7 @@ import net.ausiasmarch.gesportin.entity.CategoriaEntity;
 import net.ausiasmarch.gesportin.exception.ResourceNotFoundException;
 import net.ausiasmarch.gesportin.exception.UnauthorizedException;
 import net.ausiasmarch.gesportin.repository.CategoriaRepository;
+import net.ausiasmarch.gesportin.dtoconverter.CategoriaConverter;
 
 @Service
 public class CategoriaService {
@@ -28,15 +29,10 @@ public class CategoriaService {
     @Autowired
     private SessionService oSessionService;
 
+    @Autowired
+    private CategoriaConverter oCategoriaConverter;
+
     private static final String[] CATEGORIAS = {"Querubín", "Pre-benjamín", "Benjamín", "Alevín", "Infantil", "Cadete", "Juvenil", "Amateur"};
-
-    private CategoriaDTO toDTO(CategoriaEntity entity) {
-        return new CategoriaDTO(entity, oCategoriaRepository.countEquiposByCategoriaId(entity.getId()));
-    }
-
-    private Page<CategoriaDTO> toPageDTO(Page<CategoriaEntity> page) {
-        return page.map(this::toDTO);
-    }
 
     public CategoriaDTO get(Long id) {
         CategoriaEntity e = oCategoriaRepository.findById(id)
@@ -45,7 +41,7 @@ public class CategoriaService {
             Long clubId = e.getTemporada().getClub().getId();
             oSessionService.checkSameClub(clubId);
         }
-        return toDTO(e);
+        return oCategoriaConverter.toDTO(e);
     }
 
     public Page<CategoriaDTO> getPage(Pageable pageable, Optional<String> nombre, Optional<Long> id_temporada) {
@@ -58,15 +54,15 @@ public class CategoriaService {
                 }
             } else {
                 // when no temporada filter provided, return only those belonging to the user's club
-                return toPageDTO(oCategoriaRepository.findByTemporadaClubId(myClub, pageable));
+                return oCategoriaConverter.toPageDTO(oCategoriaRepository.findByTemporadaClubId(myClub, pageable));
             }
         }
         if(nombre.isPresent() && !nombre.get().isEmpty()) {
-            return toPageDTO(oCategoriaRepository.findByNombreContainingIgnoreCase(nombre.get(), pageable));
+            return oCategoriaConverter.toPageDTO(oCategoriaRepository.findByNombreContainingIgnoreCase(nombre.get(), pageable));
         } else if( id_temporada.isPresent()) {
-            return toPageDTO(oCategoriaRepository.findByTemporadaId(id_temporada.get(), pageable));
+            return oCategoriaConverter.toPageDTO(oCategoriaRepository.findByTemporadaId(id_temporada.get(), pageable));
         } else {
-            return toPageDTO(oCategoriaRepository.findAll(pageable));
+            return oCategoriaConverter.toPageDTO(oCategoriaRepository.findAll(pageable));
         }
     }
 
@@ -75,7 +71,7 @@ public class CategoriaService {
         oSessionService.denyUsuario();
         oCategoriaEntity.setId(null);
         oCategoriaEntity.setTemporada(oTemporadaService.get(oCategoriaEntity.getTemporada().getId()));
-        return toDTO(oCategoriaRepository.save(oCategoriaEntity));
+        return oCategoriaConverter.toDTO(oCategoriaRepository.save(oCategoriaEntity));
     }
 
     public CategoriaDTO update(CategoriaEntity oCategoriaEntity) {
@@ -86,7 +82,7 @@ public class CategoriaService {
                         "Categoria no encontrado con id: " + oCategoriaEntity.getId()));
         oCategoriaExistente.setNombre(oCategoriaEntity.getNombre());
         oCategoriaExistente.setTemporada(oTemporadaService.get(oCategoriaEntity.getTemporada().getId()));
-        return toDTO(oCategoriaRepository.save(oCategoriaExistente));
+        return oCategoriaConverter.toDTO(oCategoriaRepository.save(oCategoriaExistente));
     }
 
     public Long delete(Long id) {

@@ -18,6 +18,7 @@ import net.ausiasmarch.gesportin.exception.GeneralException;
 import net.ausiasmarch.gesportin.exception.ResourceNotFoundException;
 import net.ausiasmarch.gesportin.exception.UnauthorizedException;
 import net.ausiasmarch.gesportin.repository.CarritoRepository;
+import net.ausiasmarch.gesportin.dtoconverter.CarritoConverter;
 import net.ausiasmarch.gesportin.repository.CompraRepository;
 import net.ausiasmarch.gesportin.repository.FacturaRepository;
 
@@ -45,14 +46,8 @@ public class CarritoService {
     @Autowired
     private SessionService oSessionService;
 
-    private CarritoDTO toDTO(CarritoEntity entity) {
-        return new CarritoDTO(entity);
-    }
-
-    private org.springframework.data.domain.Page<CarritoDTO> toPageDTO(
-            org.springframework.data.domain.Page<CarritoEntity> page) {
-        return page.map(this::toDTO);
-    }
+    @Autowired
+    private CarritoConverter oCarritoConverter;
 
     public CarritoDTO get(Long id) {
         if (oSessionService.isEquipoAdmin()) {
@@ -71,7 +66,7 @@ public class CarritoService {
                 throw new UnauthorizedException("Acceso denegado: solo puede ver artículos de su club");
             }
         }
-        return toDTO(carrito);
+        return oCarritoConverter.toDTO(carrito);
     }
 
     public Page<CarritoDTO> getPage(Pageable pageable, Long id_usuario, Long id_articulo) {
@@ -86,7 +81,7 @@ public class CarritoService {
             id_usuario = currentUserId;
         }
         if (id_usuario != null) {
-            return toPageDTO(oCarritoRepository.findByUsuarioId(id_usuario, pageable));
+            return oCarritoConverter.toPageDTO(oCarritoRepository.findByUsuarioId(id_usuario, pageable));
         } else if (id_articulo != null) {
             // ensure articulo belongs to user's club when user is a regular usuario
             if (oSessionService.isUsuario()) {
@@ -96,12 +91,12 @@ public class CarritoService {
                     throw new UnauthorizedException("Acceso denegado: solo puede ver artículos de su club");
                 }
             }
-            return toPageDTO(oCarritoRepository.findByArticuloId(id_articulo, pageable));
+            return oCarritoConverter.toPageDTO(oCarritoRepository.findByArticuloId(id_articulo, pageable));
         } else {
             if (oSessionService.isUsuario()) {
-                return toPageDTO(oCarritoRepository.findByUsuarioId(oSessionService.getIdUsuario(), pageable));
+                return oCarritoConverter.toPageDTO(oCarritoRepository.findByUsuarioId(oSessionService.getIdUsuario(), pageable));
             }
-            return toPageDTO(oCarritoRepository.findAll(pageable));
+            return oCarritoConverter.toPageDTO(oCarritoRepository.findAll(pageable));
         }
     }
 
@@ -123,7 +118,7 @@ public class CarritoService {
         }
         carrito.setId(null);
         carrito.setArticulo(oArticuloService.get(carrito.getArticulo().getId()));
-        return toDTO(oCarritoRepository.save(carrito));
+        return oCarritoConverter.toDTO(oCarritoRepository.save(carrito));
     }
 
     public CarritoDTO update(CarritoEntity carrito) {
@@ -148,7 +143,7 @@ public class CarritoService {
         }
         existente.setCantidad(carrito.getCantidad());
         existente.setArticulo(oArticuloService.get(carrito.getArticulo().getId()));
-        return toDTO(oCarritoRepository.save(existente));
+        return oCarritoConverter.toDTO(oCarritoRepository.save(existente));
     }
 
     public Long delete(Long id) {

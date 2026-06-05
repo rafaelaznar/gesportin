@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import net.ausiasmarch.gesportin.dto.RolusuarioDTO;
 import net.ausiasmarch.gesportin.entity.RolusuarioEntity;
 import net.ausiasmarch.gesportin.service.RolusuarioService;
 
@@ -31,7 +32,7 @@ public class RolusuarioApi {
     private RolusuarioService oRolusuarioService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<RolusuarioEntity> get(@PathVariable Long id) {
+    public ResponseEntity<RolusuarioDTO> get(@PathVariable Long id) {
         return ResponseEntity.ok(oRolusuarioService.get(id));
     }
 
@@ -41,19 +42,19 @@ public class RolusuarioApi {
     }
 
     @GetMapping
-    public ResponseEntity<Page<RolusuarioEntity>> getPage(
+    public ResponseEntity<Page<RolusuarioDTO>> getPage(
             @PageableDefault(size = 1000) Pageable pageable,
             @RequestParam(required = false) String descripcion) {
         return ResponseEntity.ok(oRolusuarioService.getPage(pageable, descripcion));
     }
 
     @PostMapping
-    public ResponseEntity<RolusuarioEntity> create(@RequestBody RolusuarioEntity oRolusuarioEntity) {
+    public ResponseEntity<RolusuarioDTO> create(@RequestBody RolusuarioEntity oRolusuarioEntity) {
         return ResponseEntity.ok(oRolusuarioService.create(oRolusuarioEntity));
     }
 
     @PutMapping
-    public ResponseEntity<RolusuarioEntity> update(@RequestBody RolusuarioEntity oRolusuarioEntity) {
+    public ResponseEntity<RolusuarioDTO> update(@RequestBody RolusuarioEntity oRolusuarioEntity) {
         return ResponseEntity.ok(oRolusuarioService.update(oRolusuarioEntity));
     }
 

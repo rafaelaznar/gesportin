@@ -12,6 +12,7 @@ import net.ausiasmarch.gesportin.entity.PartidoEntity;
 import net.ausiasmarch.gesportin.exception.ResourceNotFoundException;
 import net.ausiasmarch.gesportin.exception.UnauthorizedException;
 import net.ausiasmarch.gesportin.repository.PartidoRepository;
+import net.ausiasmarch.gesportin.dtoconverter.PartidoConverter;
 
 @Service
 public class PartidoService {
@@ -31,13 +32,8 @@ public class PartidoService {
     @Autowired
     private SessionService oSessionService;
 
-    private PartidoDTO toDTO(PartidoEntity entity) {
-        return new PartidoDTO(entity);
-    }
-
-    private Page<PartidoDTO> toPageDTO(Page<PartidoEntity> page) {
-        return page.map(this::toDTO);
-    }
+    @Autowired
+    private PartidoConverter oPartidoConverter;
 
     public PartidoDTO get(Long id) {
         PartidoEntity e = oPartidoRepository.findById(id)
@@ -46,7 +42,7 @@ public class PartidoService {
             Long clubId = e.getLiga().getEquipo().getCategoria().getTemporada().getClub().getId();
             oSessionService.checkSameClub(clubId);
         }
-        return toDTO(e);
+        return oPartidoConverter.toDTO(e);
     }
 
     public Page<PartidoDTO> getPage(Pageable pageable, Long id_liga) {
@@ -60,7 +56,7 @@ public class PartidoService {
                 }
             } else {
                 result = oPartidoRepository.findByLigaEquipoCategoriaTemporadaClubId(myClub, pageable);
-                return toPageDTO(result);
+                return oPartidoConverter.toPageDTO(result);
             }
         }
         if (id_liga != null) {
@@ -68,7 +64,7 @@ public class PartidoService {
         } else {
             result = oPartidoRepository.findAll(pageable);
         }
-        return toPageDTO(result);
+        return oPartidoConverter.toPageDTO(result);
     }
 
     public PartidoDTO create(PartidoEntity oPartidoEntity) {
@@ -82,7 +78,7 @@ public class PartidoService {
         oPartidoEntity.setId(null);
         oPartidoEntity.setLiga(oLigaService.get(oPartidoEntity.getLiga().getId()));
         PartidoEntity saved = oPartidoRepository.save(oPartidoEntity);
-        return toDTO(saved);
+        return oPartidoConverter.toDTO(saved);
     }
 
     public PartidoDTO update(PartidoEntity oPartidoEntity) {
@@ -111,7 +107,7 @@ public class PartidoService {
             oPartidoExistente.setEstadopartido(null);
         }
         PartidoEntity saved = oPartidoRepository.save(oPartidoExistente);
-        return toDTO(saved);
+        return oPartidoConverter.toDTO(saved);
     }
 
     public Long delete(Long id) {
