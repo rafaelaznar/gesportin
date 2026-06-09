@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import net.ausiasmarch.gesportin.dto.JugadorDTO;
 import net.ausiasmarch.gesportin.entity.JugadorEntity;
 import net.ausiasmarch.gesportin.entity.UsuarioEntity;
 import net.ausiasmarch.gesportin.service.JugadorService;
@@ -29,12 +30,12 @@ public class JugadorApi {
     private JugadorService oJugadorService;
 
     @GetMapping("/{id:[0-9]+}")
-    public ResponseEntity<JugadorEntity> get(@PathVariable Long id) {
+    public ResponseEntity<JugadorDTO> get(@PathVariable Long id) {
         return ResponseEntity.ok(oJugadorService.get(id));
     }
 
     @GetMapping
-    public ResponseEntity<Page<JugadorEntity>> getPage(
+    public ResponseEntity<Page<JugadorDTO>> getPage(
             @PageableDefault(size = 1000) Pageable pageable,
             @RequestParam(required = false) String posicion,
             @RequestParam(required = false) Long id_usuario,
@@ -43,12 +44,12 @@ public class JugadorApi {
     }
 
     @PostMapping
-    public ResponseEntity<JugadorEntity> create(@RequestBody JugadorEntity jugadorEntity) {
+    public ResponseEntity<JugadorDTO> create(@RequestBody JugadorEntity jugadorEntity) {
         return ResponseEntity.ok(oJugadorService.create(jugadorEntity));
     }
 
     @PutMapping
-    public ResponseEntity<JugadorEntity> update(@RequestBody JugadorEntity jugadorEntity) {
+    public ResponseEntity<JugadorDTO> update(@RequestBody JugadorEntity jugadorEntity) {
         return ResponseEntity.ok(oJugadorService.update(jugadorEntity));
     }
 

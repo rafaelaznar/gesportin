@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import net.ausiasmarch.gesportin.dto.NoticiaDTO;
+import net.ausiasmarch.gesportin.dtoconverter.NoticiaConverter;
 import net.ausiasmarch.gesportin.entity.NoticiaEntity;
 import net.ausiasmarch.gesportin.exception.ResourceNotFoundException;
 import net.ausiasmarch.gesportin.exception.UnauthorizedException;
@@ -27,6 +29,9 @@ public class NoticiaService {
 
     @Autowired
     private SessionService oSessionService;
+
+    @Autowired
+    private NoticiaConverter oNoticiaConverter;
 
     ArrayList<String> alFrases = new ArrayList<>();
 
@@ -49,16 +54,16 @@ public class NoticiaService {
         alFrases.add("El tiempo lo dirá.");
     }
 
-    public NoticiaEntity get(Long id) {
+    public NoticiaDTO get(Long id) {
         NoticiaEntity e = oNoticiaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Noticia no encontrado con id: " + id));
         if (oSessionService.isEquipoAdmin() || oSessionService.isUsuario()) {
             oSessionService.checkSameClub(e.getClub().getId());
         }
-        return e;
+        return oNoticiaConverter.toDTO(e);
     }
 
-    public Page<NoticiaEntity> getPage(Pageable oPageable, String contenido, Long idClub) {
+    public Page<NoticiaDTO> getPage(Pageable oPageable, String contenido, Long idClub) {
         if (oSessionService.isEquipoAdmin() || oSessionService.isUsuario()) {
             Long myClub = oSessionService.getIdClub();
             if (idClub != null && !idClub.equals(myClub)) {
@@ -69,17 +74,17 @@ public class NoticiaService {
         }
         if (contenido != null && !contenido.isEmpty()) {
             if (idClub != null) {
-                return oNoticiaRepository.findByClubIdAndTextoContainingIgnoreCase(idClub, contenido, oPageable);
+                return oNoticiaConverter.toPageDTO(oNoticiaRepository.findByClubIdAndTextoContainingIgnoreCase(idClub, contenido, oPageable));
             }
-            return oNoticiaRepository.findByTituloContainingIgnoreCaseOrContenidoContainingIgnoreCase(contenido, contenido, oPageable);
+            return oNoticiaConverter.toPageDTO(oNoticiaRepository.findByTituloContainingIgnoreCaseOrContenidoContainingIgnoreCase(contenido, contenido, oPageable));
         } else if (idClub != null) {
-            return oNoticiaRepository.findByClubId(idClub, oPageable);
+            return oNoticiaConverter.toPageDTO(oNoticiaRepository.findByClubId(idClub, oPageable));
         } else {
-            return oNoticiaRepository.findAll(oPageable);
+            return oNoticiaConverter.toPageDTO(oNoticiaRepository.findAll(oPageable));
         }
     }
 
-    public NoticiaEntity create(NoticiaEntity oNoticiaEntity) {
+    public NoticiaDTO create(NoticiaEntity oNoticiaEntity) {
         // regular usuarios cannot create noticias
         oSessionService.denyUsuario();
         if (oSessionService.isEquipoAdmin()) {
@@ -89,10 +94,11 @@ public class NoticiaService {
         oNoticiaEntity.setFecha(LocalDateTime.now());
         oNoticiaEntity.setClub(oClubService.get(oNoticiaEntity.getClub().getId()));
 
-        return oNoticiaRepository.save(oNoticiaEntity);
+        NoticiaEntity saved = oNoticiaRepository.save(oNoticiaEntity);
+        return oNoticiaConverter.toDTO(saved);
     }
 
-    public NoticiaEntity update(NoticiaEntity oNoticiaEntity) {
+    public NoticiaDTO update(NoticiaEntity oNoticiaEntity) {
         // regular usuarios cannot modify noticias
         oSessionService.denyUsuario();
         NoticiaEntity oNoticiaExistente = oNoticiaRepository.findById(oNoticiaEntity.getId())
@@ -107,7 +113,8 @@ public class NoticiaService {
         oNoticiaExistente.setFecha(oNoticiaEntity.getFecha());
         oNoticiaExistente.setImagen(oNoticiaEntity.getImagen());
         oNoticiaExistente.setClub(oClubService.get(oNoticiaEntity.getClub().getId()));
-        return oNoticiaRepository.save(oNoticiaExistente);
+        NoticiaEntity saved = oNoticiaRepository.save(oNoticiaExistente);
+        return oNoticiaConverter.toDTO(saved);
     }
 
     public Long delete(Long id) {

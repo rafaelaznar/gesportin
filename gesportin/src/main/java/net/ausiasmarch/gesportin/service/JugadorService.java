@@ -7,6 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import net.ausiasmarch.gesportin.dto.JugadorDTO;
+import net.ausiasmarch.gesportin.dtoconverter.JugadorConverter;
 import net.ausiasmarch.gesportin.entity.EquipoEntity;
 import net.ausiasmarch.gesportin.entity.JugadorEntity;
 import net.ausiasmarch.gesportin.entity.UsuarioEntity;
@@ -32,6 +34,9 @@ public class JugadorService {
 
     @Autowired
     private SessionService oSessionService;
+
+    @Autowired
+    private JugadorConverter oJugadorConverter;
 
     ArrayList<String> posiciones = new ArrayList<>();
 
@@ -62,7 +67,7 @@ public class JugadorService {
         posiciones.add("Punta");
     }
 
-    public JugadorEntity get(Long id) {
+    public JugadorDTO get(Long id) {
         JugadorEntity e = oJugadorRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Jugador no encontrado con id: " + id));
         if (oSessionService.isEquipoAdmin() || oSessionService.isUsuario()) {
@@ -71,10 +76,10 @@ public class JugadorService {
             oSessionService.checkSameClub(clubUsuario);
             oSessionService.checkSameClub(clubEquipo);
         }
-        return e;
+        return oJugadorConverter.toDTO(e);
     }
 
-    public Page<JugadorEntity> getPage(
+    public Page<JugadorDTO> getPage(
             Pageable pageable,
             String posicion,
             Long idUsuario,
@@ -95,22 +100,22 @@ public class JugadorService {
                 }
             }
             if ((posicion == null || posicion.isEmpty()) && idUsuario == null && idEquipo == null) {
-                return oJugadorRepository.findByEquipoCategoriaTemporadaClubId(myClub, pageable);
+                return oJugadorConverter.toPageDTO(oJugadorRepository.findByEquipoCategoriaTemporadaClubId(myClub, pageable));
             }
         }
 
         if (posicion != null && !posicion.isEmpty()) {
-            return oJugadorRepository.findByPosicionContainingIgnoreCase(posicion, pageable);
+            return oJugadorConverter.toPageDTO(oJugadorRepository.findByPosicionContainingIgnoreCase(posicion, pageable));
         } else if (idUsuario != null) {
-            return oJugadorRepository.findByUsuarioId(idUsuario, pageable);
+            return oJugadorConverter.toPageDTO(oJugadorRepository.findByUsuarioId(idUsuario, pageable));
         } else if (idEquipo != null) {
-            return oJugadorRepository.findByEquipoId(idEquipo, pageable);
+            return oJugadorConverter.toPageDTO(oJugadorRepository.findByEquipoId(idEquipo, pageable));
         } else {
-            return oJugadorRepository.findAll(pageable);
+            return oJugadorConverter.toPageDTO(oJugadorRepository.findAll(pageable));
         }
     }
 
-    public JugadorEntity create(JugadorEntity oJugadorEntity) {
+    public JugadorDTO create(JugadorEntity oJugadorEntity) {
         oSessionService.denyUsuario();
         if (oSessionService.isEquipoAdmin()) {
             Long clubUsr = oUsuarioService.get(oJugadorEntity.getUsuario().getId()).getClub().getId();
@@ -128,10 +133,11 @@ public class JugadorService {
             throw new GeneralException("El usuario ya está asignado como jugador en este equipo");
         }
 
-        return oJugadorRepository.save(oJugadorEntity);
+        JugadorEntity saved = oJugadorRepository.save(oJugadorEntity);
+        return oJugadorConverter.toDTO(saved);
     }
 
-    public JugadorEntity update(JugadorEntity oJugadorEntity) {
+    public JugadorDTO update(JugadorEntity oJugadorEntity) {
         oSessionService.denyUsuario();
         JugadorEntity oJugadorExistente = oJugadorRepository.findById(oJugadorEntity.getId())
                 .orElseThrow(
@@ -161,7 +167,8 @@ public class JugadorService {
         oJugadorExistente.setImagen(oJugadorEntity.getImagen());
         oJugadorExistente.setUsuario(nuevoUsuario);
         oJugadorExistente.setEquipo(nuevoEquipo);
-        return oJugadorRepository.save(oJugadorExistente);
+        JugadorEntity saved = oJugadorRepository.save(oJugadorExistente);
+        return oJugadorConverter.toDTO(saved);
     }
 
     public Long delete(Long id) {

@@ -7,6 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import net.ausiasmarch.gesportin.dto.FacturaDTO;
+import net.ausiasmarch.gesportin.dtoconverter.FacturaConverter;
 import net.ausiasmarch.gesportin.entity.FacturaEntity;
 import net.ausiasmarch.gesportin.exception.ResourceNotFoundException;
 import net.ausiasmarch.gesportin.exception.UnauthorizedException;
@@ -27,7 +29,10 @@ public class FacturaService {
     @Autowired
     private SessionService oSessionService;
 
-    public FacturaEntity get(Long id) {
+    @Autowired
+    private FacturaConverter oFacturaConverter;
+
+    public FacturaDTO get(Long id) {
         FacturaEntity e = oFacturaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Factura no encontrado con id: " + id));
         if (oSessionService.isEquipoAdmin()) {
@@ -40,10 +45,10 @@ public class FacturaService {
                 throw new UnauthorizedException("Acceso denegado: solo puede ver sus propias facturas");
             }
         }
-        return e;
+        return oFacturaConverter.toDTO(e);
     }
 
-    public Page<FacturaEntity> getPage(Pageable pageable, Long id_usuario) {
+    public Page<FacturaDTO> getPage(Pageable pageable, Long id_usuario) {
         if (oSessionService.isEquipoAdmin()) {
             Long myClub = oSessionService.getIdClub();
             if (id_usuario != null) {
@@ -53,7 +58,7 @@ public class FacturaService {
                 }
             }
             if (id_usuario == null) {
-                return oFacturaRepository.findByUsuarioClubId(myClub, pageable);
+                return oFacturaConverter.toPageDTO(oFacturaRepository.findByUsuarioClubId(myClub, pageable));
             }
         }
         if (oSessionService.isUsuario()) {
@@ -61,16 +66,16 @@ public class FacturaService {
             if (id_usuario != null && !id_usuario.equals(currentUserId)) {
                 throw new UnauthorizedException("Acceso denegado: solo puede ver sus propias facturas");
             }
-            return oFacturaRepository.findByUsuarioId(currentUserId, pageable);
+            return oFacturaConverter.toPageDTO(oFacturaRepository.findByUsuarioId(currentUserId, pageable));
         }
         if (id_usuario != null) {
-            return oFacturaRepository.findByUsuarioId(id_usuario, pageable);
+            return oFacturaConverter.toPageDTO(oFacturaRepository.findByUsuarioId(id_usuario, pageable));
         } else {
-            return oFacturaRepository.findAll(pageable);
+            return oFacturaConverter.toPageDTO(oFacturaRepository.findAll(pageable));
         }
     }
 
-    public FacturaEntity create(FacturaEntity oFacturaEntity) {
+    public FacturaDTO create(FacturaEntity oFacturaEntity) {
         if (oSessionService.isEquipoAdmin()) {
             throw new UnauthorizedException("Acceso denegado: equipo‑admin no puede crear facturas");
         }
@@ -80,10 +85,11 @@ public class FacturaService {
         oFacturaEntity.setUsuario(oUsuarioService.get(oFacturaEntity.getUsuario().getId()));
         oFacturaEntity.setId(null);
         oFacturaEntity.setFecha(LocalDateTime.now());
-        return oFacturaRepository.save(oFacturaEntity);
+        FacturaEntity saved = oFacturaRepository.save(oFacturaEntity);
+        return oFacturaConverter.toDTO(saved);
     }
 
-    public FacturaEntity update(FacturaEntity oFacturaEntity) {
+    public FacturaDTO update(FacturaEntity oFacturaEntity) {
         if (oSessionService.isEquipoAdmin()) {
             throw new UnauthorizedException("Acceso denegado: equipo‑admin no puede modificar facturas");
         }
@@ -95,7 +101,8 @@ public class FacturaService {
                         "Factura no encontrado con id: " + oFacturaEntity.getId()));
         oFacturaExistente.setUsuario(oUsuarioService.get(oFacturaEntity.getUsuario().getId()));
         oFacturaExistente.setFecha(oFacturaEntity.getFecha());
-        return oFacturaRepository.save(oFacturaExistente);
+        FacturaEntity saved = oFacturaRepository.save(oFacturaExistente);
+        return oFacturaConverter.toDTO(saved);
     }
 
     public Long delete(Long id) {

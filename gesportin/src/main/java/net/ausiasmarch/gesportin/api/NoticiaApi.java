@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import net.ausiasmarch.gesportin.dto.NoticiaDTO;
 import net.ausiasmarch.gesportin.entity.NoticiaEntity;
 import net.ausiasmarch.gesportin.service.NoticiaService;
 
@@ -28,12 +29,12 @@ public class NoticiaApi {
     private NoticiaService oNoticiaService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<NoticiaEntity> get(@PathVariable Long id) {
+    public ResponseEntity<NoticiaDTO> get(@PathVariable Long id) {
         return ResponseEntity.ok(oNoticiaService.get(id));
     }
 
     @GetMapping
-    public ResponseEntity<Page<NoticiaEntity>> getPage(
+    public ResponseEntity<Page<NoticiaDTO>> getPage(
             @PageableDefault(size = 1000) Pageable oPageable,
             @RequestParam(required = false) String contenido,
             @RequestParam(required = false) Long id_club) {
@@ -41,12 +42,12 @@ public class NoticiaApi {
     }
 
     @PostMapping
-    public ResponseEntity<NoticiaEntity> create(@RequestBody NoticiaEntity noticiaEntity) {
+    public ResponseEntity<NoticiaDTO> create(@RequestBody NoticiaEntity noticiaEntity) {
         return ResponseEntity.ok(oNoticiaService.create(noticiaEntity));
     }
 
     @PutMapping
-    public ResponseEntity<NoticiaEntity> update(@RequestBody NoticiaEntity noticiaEntity) {
+    public ResponseEntity<NoticiaDTO> update(@RequestBody NoticiaEntity noticiaEntity) {
         return ResponseEntity.ok(oNoticiaService.update(noticiaEntity));
     }
 

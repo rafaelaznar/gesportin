@@ -46,8 +46,4 @@ public class FacturaEntity {
     @Getter(AccessLevel.NONE)
     @OneToMany(mappedBy = "factura", fetch = FetchType.LAZY)
     private List<CompraEntity> compras;
-
-    public int getCompras()  {
-        return compras != null ? compras.size() : 0;
-    }
 }

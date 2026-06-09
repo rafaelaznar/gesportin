@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import net.ausiasmarch.gesportin.dto.FacturaDTO;
 import net.ausiasmarch.gesportin.entity.FacturaEntity;
 import net.ausiasmarch.gesportin.service.FacturaService;
 
@@ -29,24 +30,24 @@ public class FacturaApi {
     private FacturaService oFacturaService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<FacturaEntity> get(@PathVariable Long id) {
+    public ResponseEntity<FacturaDTO> get(@PathVariable Long id) {
         return ResponseEntity.ok(oFacturaService.get(id));
     }
 
     @GetMapping
-    public ResponseEntity<Page<FacturaEntity>> getPage(
+    public ResponseEntity<Page<FacturaDTO>> getPage(
         @PageableDefault(size = 1000) Pageable pageable,
         @RequestParam(required = false) Long id_usuario) {
         return ResponseEntity.ok(oFacturaService.getPage(pageable, id_usuario));
     }
 
     @PostMapping
-    public ResponseEntity<FacturaEntity> create(@RequestBody FacturaEntity facturaEntity) {
+    public ResponseEntity<FacturaDTO> create(@RequestBody FacturaEntity facturaEntity) {
         return ResponseEntity.ok(oFacturaService.create(facturaEntity));
     }
 
     @PutMapping
-    public ResponseEntity<FacturaEntity> update(@RequestBody FacturaEntity facturaEntity) {
+    public ResponseEntity<FacturaDTO> update(@RequestBody FacturaEntity facturaEntity) {
         return ResponseEntity.ok(oFacturaService.update(facturaEntity));
     }
 

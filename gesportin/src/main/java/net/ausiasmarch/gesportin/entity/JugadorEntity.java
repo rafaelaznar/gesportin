@@ -60,8 +60,4 @@ public class JugadorEntity {
     @Getter(AccessLevel.NONE)
     @OneToMany(mappedBy = "jugador", fetch = FetchType.LAZY)
     private List<PagoEntity> pagos;
-
-    public int getPagos() {
-        return pagos != null ? pagos.size() : 0;
-    }
 }

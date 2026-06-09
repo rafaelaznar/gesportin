@@ -43,4 +43,8 @@ public interface JugadorRepository extends JpaRepository<JugadorEntity, Long> {
             @Param("nombre") String nombre,
             @Param("apellido1") String apellido1,
             @Param("apellido2") String apellido2,
-            Pageable pageable);}
+            Pageable pageable);
+    
+    @Query("SELECT COUNT(p) FROM PagoEntity p WHERE p.jugador.id = :jugadorId")
+    int countPagosByJugadorId(@Param("jugadorId") Long jugadorId);
+}

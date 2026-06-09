@@ -62,20 +62,4 @@ public class NoticiaEntity {
     @Getter(AccessLevel.NONE)
     @OneToMany(mappedBy = "noticia", fetch = FetchType.LAZY)
     private java.util.List<PuntuacionEntity> puntuaciones;
-
-    public int getComentarios() {
-        return comentarios != null ? comentarios.size() : 0;
-    }
-
-    public int getPuntuaciones() {
-        return puntuaciones != null ? puntuaciones.size() : 0;
-    }
-
-    public double getMediaPuntuacion() {
-        if (puntuaciones == null || puntuaciones.isEmpty()) return 0.0;
-        return puntuaciones.stream()
-                .mapToInt(PuntuacionEntity::getPuntuacion)
-                .average()
-                .orElse(0.0);
-    }
 }
