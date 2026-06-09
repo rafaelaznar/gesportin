@@ -19,4 +19,5 @@ public interface CategoriaRepository extends JpaRepository<CategoriaEntity, Long
 
     @Query("SELECT COUNT(e) FROM EquipoEntity e WHERE e.categoria.id = :id")
     int countEquiposByCategoriaId(@Param("id") Long id);
+    
 }

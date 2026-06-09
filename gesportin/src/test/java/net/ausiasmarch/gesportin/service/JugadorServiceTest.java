@@ -17,7 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
-//import net.ausiasmarch.gesportin.dtoconverter.EquipoConverter;
+import net.ausiasmarch.gesportin.dto.JugadorDTO;
 import net.ausiasmarch.gesportin.dtoconverter.UsuarioConverter;
 import net.ausiasmarch.gesportin.entity.EquipoEntity;
 import net.ausiasmarch.gesportin.entity.JugadorEntity;
@@ -107,7 +107,7 @@ class JugadorServiceTest {
         when(jugadorRepository.findByEquipoCategoriaTemporadaClubId(42L, PageRequest.of(0,10)))
                 .thenReturn(new PageImpl<>(java.util.Collections.singletonList(exampleJugador)));
 
-        Page<JugadorEntity> page = jugadorService.getPage(PageRequest.of(0,10), null, null, null);
+        Page<JugadorDTO> page = jugadorService.getPage(PageRequest.of(0,10), null, null, null);
         assertEquals(1, page.getTotalElements());
         assertEquals(exampleJugador, page.getContent().get(0));
     }

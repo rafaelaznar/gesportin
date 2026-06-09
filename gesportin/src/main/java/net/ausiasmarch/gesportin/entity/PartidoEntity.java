@@ -2,6 +2,9 @@ package net.ausiasmarch.gesportin.entity;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Column;
@@ -37,6 +40,7 @@ public class PartidoEntity {
 
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
+    @NotFound(action = NotFoundAction.IGNORE)
     @JoinColumn(name = "id_liga")
     private LigaEntity liga;
 
@@ -61,6 +65,7 @@ public class PartidoEntity {
     private String comentario;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @NotFound(action = NotFoundAction.IGNORE)
     @JoinColumn(name = "id_estadopartido")
     private EstadopartidoEntity estadopartido;
 

@@ -8,11 +8,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import net.ausiasmarch.gesportin.dto.CategoriaDTO;
+import net.ausiasmarch.gesportin.dtoconverter.CategoriaConverter;
 import net.ausiasmarch.gesportin.entity.CategoriaEntity;
 import net.ausiasmarch.gesportin.exception.ResourceNotFoundException;
 import net.ausiasmarch.gesportin.exception.UnauthorizedException;
 import net.ausiasmarch.gesportin.repository.CategoriaRepository;
-import net.ausiasmarch.gesportin.dtoconverter.CategoriaConverter;
 
 @Service
 public class CategoriaService {
@@ -45,25 +45,43 @@ public class CategoriaService {
     }
 
     public Page<CategoriaDTO> getPage(Pageable pageable, Optional<String> nombre, Optional<Long> id_temporada) {
-        if (oSessionService.isEquipoAdmin() || oSessionService.isUsuario()) {
-            Long myClub = oSessionService.getIdClub();
-            if (id_temporada.isPresent()) {
-                Long clubTemporada = oTemporadaService.get(id_temporada.get()).getClub().getId();
-                if (!myClub.equals(clubTemporada)) {
-                    throw new UnauthorizedException("Acceso denegado: solo categorias de su club");
-                }
+        if (oSessionService.isAdmin()) {
+            // los admins pueden ver todas las categorias de todos los clubes
+            if (nombre.isPresent() && !nombre.get().isEmpty()) {
+                return oCategoriaConverter.toPageDTO(oCategoriaRepository.findByNombreContainingIgnoreCase(nombre.get(), pageable));
+            } else if (id_temporada.isPresent()) {
+                return oCategoriaConverter.toPageDTO(oCategoriaRepository.findByTemporadaId(id_temporada.get(), pageable));
             } else {
-                // when no temporada filter provided, return only those belonging to the user's club
+                return oCategoriaConverter.toPageDTO(oCategoriaRepository.findAll(pageable));
+            }
+        }
+        if (oSessionService.isEquipoAdmin()) {
+            // los admins de equipo pueden ver todas las categorias de todas las temporadas de su club
+            // obtenemos el id del club del admin de equipo
+            Long myClub = oSessionService.getIdClub();
+            oSessionService.checkSameClub(myClub);
+            if (nombre.isPresent() && !nombre.get().isEmpty()) {
+                return oCategoriaConverter.toPageDTO(oCategoriaRepository.findByNombreContainingIgnoreCase(nombre.get(), pageable));
+            } else if (id_temporada.isPresent()) {
+                return oCategoriaConverter.toPageDTO(oCategoriaRepository.findByTemporadaId(id_temporada.get(), pageable));
+            } else {
                 return oCategoriaConverter.toPageDTO(oCategoriaRepository.findByTemporadaClubId(myClub, pageable));
             }
         }
-        if(nombre.isPresent() && !nombre.get().isEmpty()) {
-            return oCategoriaConverter.toPageDTO(oCategoriaRepository.findByNombreContainingIgnoreCase(nombre.get(), pageable));
-        } else if( id_temporada.isPresent()) {
-            return oCategoriaConverter.toPageDTO(oCategoriaRepository.findByTemporadaId(id_temporada.get(), pageable));
-        } else {
-            return oCategoriaConverter.toPageDTO(oCategoriaRepository.findAll(pageable));
+        if (oSessionService.isUsuario()) {
+            // los usuarios regulares solo pueden ver las categorias de las temporadas de su club
+            Long myClub = oSessionService.getIdClub();
+            oSessionService.checkSameClub(myClub);
+            if (nombre.isPresent() && !nombre.get().isEmpty()) {
+                return oCategoriaConverter.toPageDTO(oCategoriaRepository.findByNombreContainingIgnoreCase(nombre.get(), pageable));
+            } else if (id_temporada.isPresent()) {
+                return oCategoriaConverter.toPageDTO(oCategoriaRepository.findByTemporadaId(id_temporada.get(), pageable));
+            } else {
+                return oCategoriaConverter.toPageDTO(oCategoriaRepository.findByTemporadaClubId(myClub, pageable));
+            }
         }
+        // los no autenticados no pueden ver ninguna categoria
+        throw new UnauthorizedException("Acceso denegado: autenticación requerida para ver categorias");
     }
 
     public CategoriaDTO create(CategoriaEntity oCategoriaEntity) {
@@ -79,7 +97,7 @@ public class CategoriaService {
         oSessionService.denyUsuario();
         CategoriaEntity oCategoriaExistente = oCategoriaRepository.findById(oCategoriaEntity.getId())
                 .orElseThrow(() -> new ResourceNotFoundException(
-                        "Categoria no encontrado con id: " + oCategoriaEntity.getId()));
+                "Categoria no encontrado con id: " + oCategoriaEntity.getId()));
         oCategoriaExistente.setNombre(oCategoriaEntity.getNombre());
         oCategoriaExistente.setTemporada(oTemporadaService.get(oCategoriaEntity.getTemporada().getId()));
         return oCategoriaConverter.toDTO(oCategoriaRepository.save(oCategoriaExistente));

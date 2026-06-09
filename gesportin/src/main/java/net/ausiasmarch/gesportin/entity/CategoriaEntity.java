@@ -1,5 +1,8 @@
 package net.ausiasmarch.gesportin.entity;
 
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -29,8 +32,8 @@ public class CategoriaEntity {
     @Size(min=4, max=255)
     private String nombre;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
+    @NotFound(action = NotFoundAction.IGNORE)
     @JoinColumn(name = "id_temporada")
     private TemporadaEntity temporada;
 }
