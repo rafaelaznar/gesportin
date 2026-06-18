@@ -1,7 +1,5 @@
 package net.ausiasmarch.gesportin.entity;
 
-import java.util.List;
-
 import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -10,15 +8,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import jdk.jfr.BooleanFlag;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -57,7 +52,5 @@ public class JugadorEntity {
     @JoinColumn(name = "id_equipo")
     private EquipoEntity equipo;
 
-    @Getter(AccessLevel.NONE)
-    @OneToMany(mappedBy = "jugador", fetch = FetchType.LAZY)
-    private List<PagoEntity> pagos;
+
 }
