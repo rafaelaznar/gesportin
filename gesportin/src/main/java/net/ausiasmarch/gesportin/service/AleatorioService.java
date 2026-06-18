@@ -44,6 +44,8 @@ public class AleatorioService {
         "naranja", "de alto rendimiento", "de última generación", "de diseño ergonómico",
         "de diseño moderno", "de edición limitada", "con tecnología avanzada"};
 
+    private static final String[] CATEGORIAS = {"Querubín", "Pre-benjamín", "Benjamín", "Alevín", "Infantil", "Cadete", "Juvenil", "Amateur"};
+
     private final Random random = new Random();
 
     private final String[] eq3 = {
@@ -51,6 +53,10 @@ public class AleatorioService {
 
     public String getDescripcionArticulo() {
         return descripcionesArticulos1[random.nextInt(descripcionesArticulos1.length)] + " " + descripcionesArticulos2[random.nextInt(descripcionesArticulos2.length)];
+    }
+
+    public String getCategoriaAleatoria() {
+        return CATEGORIAS[random.nextInt(CATEGORIAS.length)];
     }
 
     public String primeraMayuscuString(String str) {

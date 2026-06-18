@@ -32,7 +32,7 @@ public class CategoriaService {
     @Autowired
     private CategoriaConverter oCategoriaConverter;
 
-    private static final String[] CATEGORIAS = {"Querubín", "Pre-benjamín", "Benjamín", "Alevín", "Infantil", "Cadete", "Juvenil", "Amateur"};
+    
 
     public CategoriaDTO get(Long id) {
         CategoriaEntity e = oCategoriaRepository.findById(id)
@@ -130,7 +130,7 @@ public class CategoriaService {
         oSessionService.requireAdmin();
         for (long j = 0; j < cantidad; j++) {
             CategoriaEntity oCategoria = new CategoriaEntity();
-            oCategoria.setNombre(CATEGORIAS[oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, CATEGORIAS.length - 1)]);
+            oCategoria.setNombre(oAleatorioService.getCategoriaAleatoria());
             oCategoria.setTemporada(oTemporadaService.getOneRandom());
             oCategoriaRepository.save(oCategoria);
         }
