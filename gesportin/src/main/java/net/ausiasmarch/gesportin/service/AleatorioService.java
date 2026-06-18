@@ -1,28 +1,57 @@
 package net.ausiasmarch.gesportin.service;
 
+import java.util.Random;
+
 import org.springframework.stereotype.Service;
 
 @Service
 public class AleatorioService {
 
     private final String[] eq1 = {
-            "leones", "tiburones", "toros", "lobos",
-            "jaguares", "búfalos", "halcones", "dragones",
-            "los mejores", "fantásticos", "invencibles",
-            "poderosos", "valientes", "rápidos", "furiosos", "indomables", "imparables",
-            "legendarios", "épicos", "supremos"
+        "leones", "tiburones", "toros", "lobos",
+        "jaguares", "búfalos", "halcones", "dragones",
+        "los mejores", "fantásticos", "invencibles",
+        "poderosos", "valientes", "rápidos", "furiosos", "indomables", "imparables",
+        "legendarios", "épicos", "supremos"
     };
 
     private final String[] eq2 = {
-            "rojos", "azules", "verdes", "amarillos", "negros",
-            "blancos", "naranjas", "morados", "grises", "dorados",
-            "eléctricos", "cósmicos", "místicos", "sagrados", "gloriosos",
-            "celestiales", "eternos", "infinitos"
+        "rojos", "azules", "verdes", "amarillos", "negros",
+        "blancos", "naranjas", "morados", "grises", "dorados",
+        "eléctricos", "cósmicos", "místicos", "sagrados", "gloriosos",
+        "celestiales", "eternos", "infinitos"
     };
 
-    private final String[] eq3 = {
-            "de primer año", "de segundo año",
+    private final String[] descripcionesArticulos1 = {
+        "Camiseta", "Pantalón corto", "Medias deportivas", "Balón oficial",
+        "Zapatillas de fútbol", "Guantes de portero", "Espinilleras", "Sudadera",
+        "Chaqueta de chándal", "Mochila deportiva", "Botella de agua", "Bufanda del club",
+        "Gorra deportiva", "Muñequeras", "Cinta para el pelo", "Rodilleras",
+        "Protector bucal", "Silbato", "Cronómetro", "Conos de entrenamiento",
+        "Petos de entrenamiento", "Red de portería", "Bomba de aire", "Aguja para balones",
+        "Camiseta de entrenamiento", "Pantalón largo", "Bolsa de deporte", "Toalla",
+        "Chanclas", "Calcetines térmicos", "Chubasquero", "Polo del club",
+        "Bermudas", "Leggins deportivos", "Top deportivo", "Cortavientos",
+        "Chaleco reflectante", "Gafas de sol deportivas", "Reloj deportivo", "Pulsera fitness",
+        "Protector solar", "Vendas elásticas", "Spray frío", "Crema muscular",
+        "Bidón isotérmico", "Portabotellas", "Silbato electrónico", "Tarjetas de árbitro",
+        "Marcador deportivo", "Pizarra táctica"
     };
+
+    private final String[] descripcionesArticulos2 = {
+        "oficial", "de entrenamiento", "de alta calidad", "resistente",
+        "transpirable", "ajustable", "duradero", "verde", "azul", "rojo",
+        "naranja", "de alto rendimiento", "de última generación", "de diseño ergonómico",
+        "de diseño moderno", "de edición limitada", "con tecnología avanzada"};
+
+    private final Random random = new Random();
+
+    private final String[] eq3 = {
+        "de primer año", "de segundo año",};
+
+    public String getDescripcionArticulo() {
+        return descripcionesArticulos1[random.nextInt(descripcionesArticulos1.length)] + " " + descripcionesArticulos2[random.nextInt(descripcionesArticulos2.length)];
+    }
 
     public String primeraMayuscuString(String str) {
         if (str == null || str.isEmpty()) {
@@ -32,8 +61,8 @@ public class AleatorioService {
     }
 
     public String generarNombreEquipoAleatorio() {
-        String nombre = eq1[(int) (Math.random() * eq1.length)] + " " +
-                eq2[(int) (Math.random() * eq2.length)];
+        String nombre = eq1[(int) (Math.random() * eq1.length)] + " "
+                + eq2[(int) (Math.random() * eq2.length)];
         if (Math.random() < 0.3) {
             nombre += " " + eq3[(int) (Math.random() * eq3.length)];
         }
@@ -62,9 +91,9 @@ public class AleatorioService {
 
     public String eliminarAcentos(String input) {
         String[][] acentos = {
-                { "á", "a" }, { "é", "e" }, { "í", "i" }, { "ó", "o" }, { "ú", "u" },
-                { "Á", "A" }, { "É", "E" }, { "Í", "I" }, { "Ó", "O" }, { "Ú", "U" },
-                { "ñ", "ny" }, { "Ñ", "NY" }
+            {"á", "a"}, {"é", "e"}, {"í", "i"}, {"ó", "o"}, {"ú", "u"},
+            {"Á", "A"}, {"É", "E"}, {"Í", "I"}, {"Ó", "O"}, {"Ú", "U"},
+            {"ñ", "ny"}, {"Ñ", "NY"}
         };
         for (String[] par : acentos) {
             input = input.replace(par[0], par[1]);

@@ -10,11 +10,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import net.ausiasmarch.gesportin.dto.ArticuloDTO;
+import net.ausiasmarch.gesportin.dtoconverter.ArticuloConverter;
 import net.ausiasmarch.gesportin.entity.ArticuloEntity;
 import net.ausiasmarch.gesportin.exception.ResourceNotFoundException;
 import net.ausiasmarch.gesportin.exception.UnauthorizedException;
 import net.ausiasmarch.gesportin.repository.ArticuloRepository;
-import net.ausiasmarch.gesportin.dtoconverter.ArticuloConverter;
 
 @Service
 public class ArticuloService {
@@ -31,29 +31,10 @@ public class ArticuloService {
     @Autowired
     private ArticuloConverter oArticuloConverter;
 
+    @Autowired
+    private AleatorioService oAleatorioService;
+
     private final Random random = new Random();
-
-    private final String[] descripciones = {
-            "Camiseta", "Pantalón corto", "Medias deportivas", "Balón oficial",
-            "Zapatillas de fútbol", "Guantes de portero", "Espinilleras", "Sudadera",
-            "Chaqueta de chándal", "Mochila deportiva", "Botella de agua", "Bufanda del club",
-            "Gorra deportiva", "Muñequeras", "Cinta para el pelo", "Rodilleras",
-            "Protector bucal", "Silbato", "Cronómetro", "Conos de entrenamiento",
-            "Petos de entrenamiento", "Red de portería", "Bomba de aire", "Aguja para balones",
-            "Camiseta de entrenamiento", "Pantalón largo", "Bolsa de deporte", "Toalla",
-            "Chanclas", "Calcetines térmicos", "Chubasquero", "Polo del club",
-            "Bermudas", "Leggins deportivos", "Top deportivo", "Cortavientos",
-            "Chaleco reflectante", "Gafas de sol deportivas", "Reloj deportivo", "Pulsera fitness",
-            "Protector solar", "Vendas elásticas", "Spray frío", "Crema muscular",
-            "Bidón isotérmico", "Portabotellas", "Silbato electrónico", "Tarjetas de árbitro",
-            "Marcador deportivo", "Pizarra táctica"
-    };
-
-    private final String[] descripciones2 = {
-            "oficial", "de entrenamiento", "de alta calidad", "resistente",
-            "transpirable", "ajustable", "duradero", "verde", "azul", "rojo",
-            "naranja", "de alto rendimiento", "de última generación", "de diseño ergonómico",
-            "de diseño moderno", "de edición limitada", "con tecnología avanzada" };
 
     public ArticuloDTO get(Long id) {
         ArticuloEntity e = oArticuloRepository.findById(id)
@@ -110,7 +91,7 @@ public class ArticuloService {
         oSessionService.denyUsuario();
         ArticuloEntity oArticuloExistente = oArticuloRepository.findById(oArticuloEntity.getId())
                 .orElseThrow(() -> new ResourceNotFoundException(
-                        "Articulo no encontrado con id: " + oArticuloEntity.getId()));
+                "Articulo no encontrado con id: " + oArticuloEntity.getId()));
         if (oSessionService.isEquipoAdmin()) {
             Long clubOld = oArticuloExistente.getTipoarticulo().getClub().getId();
             Long clubNew = oTipoarticuloService.get(oArticuloEntity.getTipoarticulo().getId())
@@ -154,8 +135,7 @@ public class ArticuloService {
         oSessionService.requireAdmin();
         for (int i = 0; i < cantidad; i++) {
             ArticuloEntity oArticulo = new ArticuloEntity();
-            oArticulo.setDescripcion(descripciones[random.nextInt(descripciones.length)] + " "
-                    + descripciones2[random.nextInt(descripciones2.length)]);
+            oArticulo.setDescripcion(oAleatorioService.getDescripcionArticulo());
             oArticulo.setPrecio(BigDecimal.valueOf(random.nextDouble() * 100 + 5).setScale(2, RoundingMode.HALF_UP));
             oArticulo.setDescuento(random.nextBoolean()
                     ? BigDecimal.valueOf(random.nextDouble() * 30).setScale(2, RoundingMode.HALF_UP)
