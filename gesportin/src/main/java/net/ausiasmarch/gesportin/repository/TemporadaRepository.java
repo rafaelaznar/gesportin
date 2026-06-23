@@ -18,6 +18,9 @@ public interface TemporadaRepository extends JpaRepository<TemporadaEntity, Long
 
     @Query("SELECT COUNT(c) FROM CategoriaEntity c WHERE c.temporada.id = :temporadaId")
     int countCategoriasByTemporadaId(@Param("temporadaId") Long temporadaId);
+
+    @Query("SELECT COUNT(e) FROM EquipoEntity e WHERE e.categoria.temporada.id = :temporadaId")
+    int countEquiposByTemporadaId(@Param("temporadaId") Long temporadaId);
 }
 
 

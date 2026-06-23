@@ -9,8 +9,8 @@ import net.ausiasmarch.gesportin.entity.TemporadaEntity;
 import net.ausiasmarch.gesportin.repository.TemporadaRepository;
 
 /**
- * Conversor inyectable para TemporadaDTO (complejo con 1 computed field: categorias).
- * Requiere TemporadaRepository para ejecutar la query de conteo de categorías.
+ * Conversor inyectable para TemporadaDTO (complejo con 2 computed fields: categorias, equipos).
+ * Requiere TemporadaRepository para ejecutar las queries de conteo de categorías y equipos.
  */
 @Component
 public class TemporadaConverter {
@@ -19,22 +19,23 @@ public class TemporadaConverter {
     private TemporadaRepository repository;
 
     /**
-     * Convierte un TemporadaEntity a TemporadaDTO con el computed field categorias.
+     * Convierte un TemporadaEntity a TemporadaDTO con los computed fields categorias y equipos.
      * @param entity Entidad Temporada
-     * @return TemporadaDTO con categorias poblado
+     * @return TemporadaDTO con categorias y equipos poblados
      */
     public TemporadaDTO toDTO(TemporadaEntity entity) {
         if (entity == null) {
             return null;
         }
         int categorias = (int) repository.countCategoriasByTemporadaId(entity.getId());
-        return new TemporadaDTO(entity, categorias);
+        int equipos = (int) repository.countEquiposByTemporadaId(entity.getId());
+        return new TemporadaDTO(entity, categorias, equipos);
     }
 
     /**
-     * Convierte una Page<TemporadaEntity> a Page<TemporadaDTO> con el computed field categorias.
+     * Convierte una Page<TemporadaEntity> a Page<TemporadaDTO> con los computed fields categorias y equipos.
      * @param page Página de entidades Temporada
-     * @return Page<TemporadaDTO> con categorias poblado para cada elemento
+     * @return Page<TemporadaDTO> con categorias y equipos poblados para cada elemento
      */
     public Page<TemporadaDTO> toPageDTO(Page<TemporadaEntity> page) {
         if (page == null) {

@@ -28,6 +28,8 @@
           <div class="col-7 fw-semibold small">{{ oTemporada()?.descripcion }}</div>
           <div class="col-5 text-muted small text-uppercase">Categorías</div>
           <div class="col-7 fw-semibold small">@if ((oTemporada()?.categorias ?? 0) > 0) { <a [routerLink]="[session.isClubAdmin() ? '/categoria/teamadmin/temporada' : '/categoria/teamadmin/temporada', oTemporada()?.id]" class="text-decoration-none">{{ oTemporada()?.categorias }}</a> } @else { 0 <a [routerLink]="['/categoria/teamadmin/new']" [queryParams]="{ id_temporada: oTemporada()?.id }" class="btn btn-outline-success btn-sm ms-1 py-0 px-1" title="Crear categoría para esta temporada"><i class="bi bi-plus-lg"></i></a> }</div>
+          <div class="col-5 text-muted small text-uppercase">Equipos</div>
+          <div class="col-7 fw-semibold small">{{ oTemporada()?.equipos ?? 0 }}</div>
         </div>
         <div class="card border-start border-3 border-info mt-3">
           <div class="card-header py-1 d-flex align-items-center gap-2 bg-info bg-opacity-10" style="cursor:pointer" (click)="showClub.set(!showClub())">

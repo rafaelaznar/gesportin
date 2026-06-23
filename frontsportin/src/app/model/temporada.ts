@@ -5,5 +5,6 @@ export interface ITemporada {
     descripcion: string
     club: IClub
     categorias: number
+    equipos: number
 }
 
