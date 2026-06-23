@@ -183,13 +183,15 @@ Expande: `club`
 | `descripcion` | String | string | Ej: "2025-2026" |
 | `club` | ClubEntity | object | **EXPANDIDO** |
 | `categorias` | int (contador) | number | |
+| `equipos` | int (contador) | number | |
 
 ```json
 {
   "id": 1,
   "descripcion": "2025-2026",
   "club": { "id": 1, "nombre": "...", ... },
-  "categorias": 3
+  "categorias": 3,
+  "equipos": 12
 }
 ```
 
@@ -292,7 +294,8 @@ Expande: `temporada` (→ `club`)
     "id": 1,
     "descripcion": "2025-2026",
     "club": { "id": 1, "nombre": "...", ... },
-    "categorias": 0
+    "categorias": 0,
+    "equipos": 0
   },
   "equipos": 2
 }
@@ -536,7 +539,8 @@ Expande: `categoria` (→ `temporada` → `club`), `entrenador` (→ `tipousuari
       "id": 1,
       "descripcion": "2025-2026",
       "club": { "id": 1, "nombre": "...", ... },
-      "categorias": 0
+      "categorias": 0,
+      "equipos": 0
     },
     "equipos": 0
   },
@@ -686,7 +690,8 @@ Expande: `liga` (→ `equipo` → `categoria` → `temporada` → `club`, y → 
           "id": 1,
           "descripcion": "2025-2026",
           "club": { "id": 1, "nombre": "...", ... },
-          "categorias": 0
+          "categorias": 0,
+          "equipos": 0
         },
         "equipos": 0
       },
