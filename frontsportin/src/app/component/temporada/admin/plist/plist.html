@@ -108,6 +108,12 @@
                             <span>Equipos</span>
                           </div>
                         </th>
+                        <th scope="col" class="d-none d-md-table-cell">
+                          <div class="header-stacked">
+                            <div class="header-top"><i class="bi bi-trophy" aria-hidden="true"></i></div>
+                            <span>Ligas</span>
+                          </div>
+                        </th>
                         <th scope="col" style="width: 7%" class="text-center">
                           <div class="header-stacked">
                             <div class="header-top"><i class="bi bi-gear" aria-hidden="true"></i></div>
@@ -161,6 +167,19 @@
                               } @else {
                                 <a [routerLink]="['/equipo/temporada', oTemporada.id]">
                                   {{ oTemporada.equipos }}
+                                </a>
+                              }
+                            }
+                          </td>
+                          <td style="text-align: center" class="d-none d-md-table-cell">
+                            @if (isDialogMode()) {
+                              {{ oTemporada.ligas }}
+                            } @else {
+                              @if (oTemporada.ligas === 0) {
+                                <i class="bi bi-ban" aria-hidden="true"></i>
+                              } @else {
+                                <a [routerLink]="['/liga/temporada', oTemporada.id]">
+                                  {{ oTemporada.ligas }}
                                 </a>
                               }
                             }

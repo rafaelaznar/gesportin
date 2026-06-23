@@ -6,5 +6,6 @@ export interface ITemporada {
     club: IClub
     categorias: number
     equipos: number
+    ligas: number
 }
 

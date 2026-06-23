@@ -12,12 +12,14 @@ public class TemporadaDTO extends TemporadaEntity {
 
     private int categorias;
     private int equipos;
+    private int ligas;
 
-    public TemporadaDTO(TemporadaEntity entity, int categorias, int equipos) {
+    public TemporadaDTO(TemporadaEntity entity, int categorias, int equipos, int ligas) {
         setId(entity.getId());
         setDescripcion(entity.getDescripcion());
         setClub(entity.getClub());
         this.categorias = categorias;
         this.equipos = equipos;
+        this.ligas = ligas;
     }
 }

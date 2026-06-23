@@ -236,6 +236,7 @@ const protectedRoutes: Routes = [
   { path: 'liga', component: LigaAdminPlistPage },
   { path: 'liga/teamadmin', component: LigaTeamadminPlistPage, canActivate: [ClubAdminGuard] },
   { path: 'liga/equipo/:id_equipo', component: LigaAdminPlistPage, data: { allowClubAdmin: true } },
+  { path: 'liga/temporada/:id_temporada', component: LigaAdminPlistPage, data: { allowClubAdmin: true } },
   { path: 'liga/new', component: LigaAdminNewPage, data: { allowClubAdmin: true } },
 
   { path: 'liga/view/:id', component: LigaAdminViewPage, data: { allowClubAdmin: true } },

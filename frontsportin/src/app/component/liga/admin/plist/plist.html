@@ -8,17 +8,19 @@
   }
 
   @if (!equipo || equipo <= 0) {
-    <div class="d-flex justify-content-center my-2">
-      <input
-        class="form-control me-2"
-        type="search"
-        placeholder="Buscar por nombre"
-        aria-label="Search"
-        (input)="onSearchNombre($any($event.target).value)"
-        [value]="nombre()"
-        name="searchField"
-      />
-    </div>
+    @if (!temporada || temporada <= 0) {
+      <div class="d-flex justify-content-center my-2">
+        <input
+          class="form-control me-2"
+          type="search"
+          placeholder="Buscar por nombre"
+          aria-label="Search"
+          (input)="onSearchNombre($any($event.target).value)"
+          [value]="nombre()"
+          name="searchField"
+        />
+      </div>
+    }
   }
 
   <div class="d-flex justify-content-center my-1">
@@ -32,6 +34,14 @@
       }
       @if (session.isClubAdmin() && !isDialogMode()) {
         <a class="ms-2" [routerLink]="['/liga/teamadmin']" role="button" title="Quitar filtro">
+          <i class="bi bi-x-lg" aria-hidden="true"></i> Quitar filtro
+        </a>
+      }
+    }
+    @if (temporada && temporada > 0) {
+      <small class="text-muted ms-3">Filtro: id de temporada = {{ temporada }}</small>
+      @if (!isDialogMode()) {
+        <a class="ms-2" [routerLink]="['/liga']" role="button" title="Quitar filtro">
           <i class="bi bi-x-lg" aria-hidden="true"></i> Quitar filtro
         </a>
       }

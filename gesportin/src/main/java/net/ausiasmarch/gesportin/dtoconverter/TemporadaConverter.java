@@ -29,7 +29,8 @@ public class TemporadaConverter {
         }
         int categorias = (int) repository.countCategoriasByTemporadaId(entity.getId());
         int equipos = (int) repository.countEquiposByTemporadaId(entity.getId());
-        return new TemporadaDTO(entity, categorias, equipos);
+        int ligas = (int) repository.countLigasByTemporadaId(entity.getId());
+        return new TemporadaDTO(entity, categorias, equipos, ligas);
     }
 
     /**

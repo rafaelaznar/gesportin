@@ -52,7 +52,7 @@ public class LigaService {
         return oLigaConverter.toDTO(e);
     }
 
-    public Page<LigaDTO> getPage(Pageable pageable, String nombre, Long id_equipo) {
+    public Page<LigaDTO> getPage(Pageable pageable, String nombre, Long id_equipo, Long id_temporada) {
         if (oSessionService.isEquipoAdmin() || oSessionService.isUsuario()) {
             Long myClub = oSessionService.getIdClub();
             if (id_equipo != null) {
@@ -61,8 +61,7 @@ public class LigaService {
                     throw new UnauthorizedException("Acceso denegado: solo ligas de su club");
                 }
             }
-            if ((nombre == null || nombre.isEmpty()) && id_equipo == null) {
-                // restrict everything to club by using repository method
+            if ((nombre == null || nombre.isEmpty()) && id_equipo == null && id_temporada == null) {
                 return oLigaConverter.toPageDTO(oLigaRepository.findByEquipoCategoriaTemporadaClubId(myClub, pageable));
             }
         }
@@ -71,6 +70,8 @@ public class LigaService {
             result = oLigaRepository.findByNombreContainingIgnoreCase(nombre, pageable);
         } else if (id_equipo != null) {
             result = oLigaRepository.findByEquipoId(id_equipo, pageable);
+        } else if (id_temporada != null) {
+            result = oLigaRepository.findByEquipoCategoriaTemporadaId(id_temporada, pageable);
         } else {
             result = oLigaRepository.findAll(pageable);
         }

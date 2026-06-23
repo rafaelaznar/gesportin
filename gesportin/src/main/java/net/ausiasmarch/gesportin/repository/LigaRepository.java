@@ -15,6 +15,9 @@ public interface LigaRepository extends JpaRepository<LigaEntity, Long> {
     // filter ligas according to the club of the equipo (used by equipo-admin)
     Page<LigaEntity> findByEquipoCategoriaTemporadaClubId(Long clubId, Pageable pageable);
 
+    // filter ligas by temporada
+    Page<LigaEntity> findByEquipoCategoriaTemporadaId(Long idTemporada, Pageable pageable);
+
     @Query("SELECT COUNT(p) FROM PartidoEntity p WHERE p.liga.id = :ligaId")
     int countPartidosByLigaId(@Param("ligaId") Long ligaId);
 }

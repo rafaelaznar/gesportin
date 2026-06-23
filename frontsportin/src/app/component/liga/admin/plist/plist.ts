@@ -22,6 +22,7 @@ import { BotoneraActionsPlist } from '../../../shared/botonera-actions-plist/bot
 })
 export class LigaAdminPlist {
   @Input() equipo?: number;
+  @Input() temporada?: number;
   @Input() strRole: string = '';
 
   oPage = signal<IPage<ILiga> | null>(null);
@@ -51,6 +52,15 @@ export class LigaAdminPlist {
       const idEquipo = this.route.snapshot.paramMap.get('id_equipo');
       if (idEquipo) {
         this.equipo = Number(idEquipo);
+      }
+    }
+
+    if (this.temporada != null) {
+      // mantenemos temporada filtrada a partir del input
+    } else {
+      const idTemporada = this.route.snapshot.paramMap.get('id_temporada');
+      if (idTemporada) {
+        this.temporada = Number(idTemporada);
       }
     }
 
@@ -94,6 +104,7 @@ export class LigaAdminPlist {
         this.orderDirection(),
         this.nombre(),
         this.equipo ?? 0,
+        this.temporada ?? 0,
       )
       .subscribe({
         next: (data: IPage<ILiga>) => {

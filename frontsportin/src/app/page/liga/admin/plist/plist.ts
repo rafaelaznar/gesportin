@@ -10,6 +10,7 @@ import { LigaAdminPlist } from '../../../../component/liga/admin/plist/plist';
 })
 export class LigaAdminPlistPage {
   id_equipo = signal<number>(0);
+  id_temporada = signal<number>(0);
 
   constructor(private route: ActivatedRoute) {}
 
@@ -17,6 +18,11 @@ export class LigaAdminPlistPage {
     const id = this.route.snapshot.paramMap.get('id_equipo');
     if (id) {
       this.id_equipo.set(Number(id));
+    }
+
+    const idTemporada = this.route.snapshot.paramMap.get('id_temporada');
+    if (idTemporada) {
+      this.id_temporada.set(Number(idTemporada));
     }
   }
 }
