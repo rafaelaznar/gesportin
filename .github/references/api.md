@@ -59,19 +59,21 @@ Los cuerpos de creación y actualización envían el **objeto completo** con las
   - [8. Equipo](#8-equipo)
   - [9. Jugador](#9-jugador)
   - [10. Liga](#10-liga)
-  - [11. Partido](#11-partido)
-  - [12. Cuota](#12-cuota)
-  - [13. Pago](#13-pago)
-  - [14. Noticia](#14-noticia)
-  - [15. Comentario](#15-comentario)
-  - [16. Puntuacion](#16-puntuacion)
-  - [17. Tipoarticulo](#17-tipoarticulo)
-  - [18. Articulo](#18-articulo)
-  - [19. Comentarioart](#19-comentarioart)
-  - [20. Puntuacionart](#20-puntuacionart)
-  - [21. Carrito](#21-carrito)
-  - [22. Factura](#22-factura)
-  - [23. Compra](#23-compra)
+  - [11. Estadopartido](#11-estadopartido)
+  - [12. Partido](#12-partido)
+  - [13. Cuota](#13-cuota)
+  - [14. Pago](#14-pago)
+  - [15. Noticia](#15-noticia)
+  - [16. Comentario](#16-comentario)
+  - [17. Puntuacion](#17-puntuacion)
+  - [18. Tipoarticulo](#18-tipoarticulo)
+  - [19. Articulo](#19-articulo)
+  - [20. Comentarioart](#20-comentarioart)
+  - [21. Puntuacionart](#21-puntuacionart)
+  - [22. Carrito](#22-carrito)
+  - [23. Factura](#23-factura)
+  - [24. Compra](#24-compra)
+  - [Admin / Seed](#admin--seed)
   - [Resumen de endpoints de utilidad](#resumen-de-endpoints-de-utilidad)
 
 ---
@@ -81,8 +83,8 @@ Los cuerpos de creación y actualización envían el **objeto completo** con las
 **Base:** `/session`
 
 | Método | Path | Body | Respuesta | Auth |
-|---|---|---|---|---|
-| POST | `/session/login` | `{ "username": "", "password": "" }` | `{ "token": "" }` | No |
+|---|---|---|---|---|---|
+| POST | `/session/login` | `{ "username": "", "password": "" }` | `TokenBean { "token": "" }` | No |
 | GET | `/session/check` | — | `true` / `false` | Opcional |
 
 ---
@@ -110,9 +112,9 @@ No expone `POST`/`PUT`/`DELETE /{id}`. Solo lectura.
 **Endpoints:**
 
 | Método | Path | Parámetros | Respuesta |
-|---|---|---|---|
-| GET | `/{id}` | — | TipousuarioEntity |
-| GET | `/` | — | `List<TipousuarioEntity>` (lista completa, sin paginación) |
+|---|---|---|---|---|
+| GET | `/{id}` | — | TipousuarioDTO |
+| GET | `/` | — | `List<TipousuarioDTO>` (lista completa, sin paginación) |
 | GET | `/fill` | — | Long (cantidad creada) |
 | DELETE | `/empty` | — | Long (cantidad eliminada) |
 | GET | `/count` | — | Long |
@@ -149,12 +151,12 @@ No expone `POST`/`PUT`/`DELETE /{id}`. Solo lectura.
 **Endpoints:**
 
 | Método | Path | Parámetros opcionales | Respuesta |
-|---|---|---|---|
-| GET | `/{id}` | — | RolusuarioEntity |
-| GET | `/all` | — | `List<RolusuarioEntity>` (sin paginar) |
-| GET | `/` | `descripcion` | `Page<RolusuarioEntity>` |
-| POST | `/` | — (body) | RolusuarioEntity |
-| PUT | `/` | — (body) | RolusuarioEntity |
+|---|---|---|---|---|
+| GET | `/{id}` | — | RolusuarioDTO |
+| GET | `/all` | — | `List<RolusuarioDTO>` (sin paginar) |
+| GET | `/` | `descripcion` | `Page<RolusuarioDTO>` |
+| POST | `/` | — (body) | RolusuarioDTO |
+| PUT | `/` | — (body) | RolusuarioDTO |
 | DELETE | `/{id}` | — | Long |
 | POST | `/fill` | — | Long |
 | DELETE | `/empty` | — | Long |
@@ -199,10 +201,10 @@ No expone `POST`/`PUT`/`DELETE /{id}`. Solo lectura.
 
 | Método | Path | Parámetros opcionales | Respuesta |
 |---|---|---|---|
-| GET | `/{id}` | — | ClubEntity |
-| GET | `/` | — | `Page<ClubEntity>` |
-| POST | `/` | — (body) | ClubEntity |
-| PUT | `/` | — (body) | ClubEntity |
+| GET | `/{id}` | — | ClubDTO |
+| GET | `/` | — | `Page<ClubDTO>` |
+| POST | `/` | — (body) | ClubDTO |
+| PUT | `/` | — (body) | ClubDTO |
 | DELETE | `/{id}` | — | Long |
 | POST | `/fill/{cantidad}` | — | Long |
 | DELETE | `/empty` | — | Long |
@@ -263,10 +265,10 @@ No expone `POST`/`PUT`/`DELETE /{id}`. Solo lectura.
 
 | Método | Path | Parámetros opcionales | Respuesta |
 |---|---|---|---|
-| GET | `/{id}` | — | UsuarioEntity |
-| GET | `/` | `nombre`, `username`, `id_tipousuario`, `id_club`, `id_rol` | `Page<UsuarioEntity>` (size=1000) |
-| POST | `/` | — (body) | UsuarioEntity |
-| PUT | `/` | — (body) | UsuarioEntity |
+| GET | `/{id}` | — | UsuarioDTO |
+| GET | `/` | `nombre`, `username`, `id_tipousuario`, `id_club`, `id_rol` | `Page<UsuarioDTO>` (size=1000) |
+| POST | `/` | — (body) | UsuarioDTO |
+| PUT | `/` | — (body) | UsuarioDTO |
 | DELETE | `/{id}` | — | Long |
 | POST | `/fill/{cantidad}` | — | Long |
 | DELETE | `/empty` | — | Long |
@@ -299,10 +301,10 @@ No expone `POST`/`PUT`/`DELETE /{id}`. Solo lectura.
 
 | Método | Path | Parámetros opcionales | Respuesta |
 |---|---|---|---|
-| GET | `/{id}` | — | TemporadaEntity |
-| GET | `/` | `descripcion`, `id_club` | `Page<TemporadaEntity>` (size=1000) |
-| POST | `/` | — (body) | TemporadaEntity |
-| PUT | `/` | — (body) | TemporadaEntity |
+| GET | `/{id}` | — | TemporadaDTO |
+| GET | `/` | `descripcion`, `id_club` | `Page<TemporadaDTO>` (size=1000) |
+| POST | `/` | — (body) | TemporadaDTO |
+| PUT | `/` | — (body) | TemporadaDTO |
 | DELETE | `/{id}` | — | Long |
 | POST | `/fill/{cantidad}` | — | Long |
 | DELETE | `/empty` | — | Long |
@@ -335,10 +337,10 @@ No expone `POST`/`PUT`/`DELETE /{id}`. Solo lectura.
 
 | Método | Path | Parámetros opcionales | Respuesta |
 |---|---|---|---|
-| GET | `/{id}` | — | CategoriaEntity |
-| GET | `/` | `nombre`, `id_temporada` | `Page<CategoriaEntity>` |
-| POST | `/` | — (body) | CategoriaEntity |
-| PUT | `/` | — (body) | CategoriaEntity |
+| GET | `/{id}` | — | CategoriaDTO |
+| GET | `/` | `nombre`, `id_temporada` | `Page<CategoriaDTO>` |
+| POST | `/` | — (body) | CategoriaDTO |
+| PUT | `/` | — (body) | CategoriaDTO |
 | DELETE | `/{id}` | — | Long |
 | POST | `/fill/{cantidad}` | — | Long |
 | DELETE | `/empty` | — | Long |
@@ -377,10 +379,10 @@ No expone `POST`/`PUT`/`DELETE /{id}`. Solo lectura.
 
 | Método | Path | Parámetros opcionales | Respuesta |
 |---|---|---|---|
-| GET | `/{id}` | — | EquipoEntity |
-| GET | `/` | `descripcion`, `id_categoria`, `id_usuario` | `Page<EquipoEntity>` (size=1000) |
-| POST | `/` | — (body) | EquipoEntity |
-| PUT | `/` | — (body) | EquipoEntity |
+| GET | `/{id}` | — | EquipoDTO |
+| GET | `/` | `descripcion`, `id_categoria`, `id_usuario` | `Page<EquipoDTO>` (size=1000) |
+| POST | `/` | — (body) | EquipoDTO |
+| PUT | `/` | — (body) | EquipoDTO |
 | DELETE | `/{id}` | — | Long |
 | POST | `/fill/{cantidad}` | — | Long |
 | DELETE | `/empty` | — | Long |
@@ -423,10 +425,10 @@ No expone `POST`/`PUT`/`DELETE /{id}`. Solo lectura.
 
 | Método | Path | Parámetros opcionales | Respuesta |
 |---|---|---|---|
-| GET | `/{id}` | — | JugadorEntity |
-| GET | `/` | `posicion`, `id_usuario`, `id_equipo` | `Page<JugadorEntity>` (size=1000) |
-| POST | `/` | — (body) | JugadorEntity |
-| PUT | `/` | — (body) | JugadorEntity |
+| GET | `/{id}` | — | JugadorDTO |
+| GET | `/` | `posicion`, `id_usuario`, `id_equipo` | `Page<JugadorDTO>` (size=1000) |
+| POST | `/` | — (body) | JugadorDTO |
+| PUT | `/` | — (body) | JugadorDTO |
 | DELETE | `/{id}` | — | Long |
 | POST | `/fill/{cantidad}` | — | Long |
 | DELETE | `/empty` | — | Long |
@@ -462,10 +464,10 @@ No expone `POST`/`PUT`/`DELETE /{id}`. Solo lectura.
 
 | Método | Path | Parámetros opcionales | Respuesta |
 |---|---|---|---|
-| GET | `/{id}` | — | LigaEntity |
-| GET | `/` | `nombre`, `id_equipo` | `Page<LigaEntity>` (size=1000) |
-| POST | `/` | — (body) | LigaEntity |
-| PUT | `/` | — (body) | LigaEntity |
+| GET | `/{id}` | — | LigaDTO |
+| GET | `/` | `nombre`, `id_equipo` | `Page<LigaDTO>` (size=1000) |
+| POST | `/` | — (body) | LigaDTO |
+| PUT | `/` | — (body) | LigaDTO |
 | DELETE | `/{id}` | — | Long |
 | POST | `/fill/{cantidad}` | — | Long |
 | DELETE | `/empty` | — | Long |
@@ -477,7 +479,7 @@ No expone `POST`/`PUT`/`DELETE /{id}`. Solo lectura.
 
 **Base:** `/estadopartido`
 
-No expone `POST`/`PUT`/`DELETE /{id}`. Solo lectura + fill/empty para datos del sistema.
+Datos fijos del sistema. Se recomienda no crear/editar/borrar manualmente, pero la API expone los endpoints completos.
 
 **Modelo JSON:**
 ```json
@@ -498,8 +500,11 @@ No expone `POST`/`PUT`/`DELETE /{id}`. Solo lectura + fill/empty para datos del 
 
 | Método | Path | Parámetros opcionales | Respuesta |
 |---|---|---|---|
-| GET | `/{id}` | — | EstadopartidoEntity |
-| GET | `/` | — | `List<EstadopartidoEntity>` (lista completa, sin paginación) |
+| GET | `/{id}` | — | EstadopartidoDTO |
+| GET | `/` | — | `List<EstadopartidoDTO>` (lista completa, sin paginación) |
+| POST | `/` | — (body) | EstadopartidoDTO |
+| PUT | `/` | — (body) | EstadopartidoDTO |
+| DELETE | `/{id}` | — | Long |
 | GET | `/fill` | — | Long (cantidad creada; fijos del sistema) |
 | DELETE | `/empty` | — | Long (cantidad eliminada) |
 | GET | `/count` | — | Long |
@@ -551,10 +556,10 @@ No expone `POST`/`PUT`/`DELETE /{id}`. Solo lectura + fill/empty para datos del 
 
 | Método | Path | Parámetros opcionales | Respuesta |
 |---|---|---|---|
-| GET | `/{id}` | — | PartidoEntity |
-| GET | `/` | `id_liga` | `Page<PartidoEntity>` |
-| POST | `/` | — (body) | PartidoEntity |
-| PUT | `/` | — (body) | PartidoEntity |
+| GET | `/{id}` | — | PartidoDTO |
+| GET | `/` | `id_liga` | `Page<PartidoDTO>` |
+| POST | `/` | — (body) | PartidoDTO |
+| PUT | `/` | — (body) | PartidoDTO |
 | DELETE | `/{id}` | — | Long |
 | POST | `/fill/{cantidad}` | — | Long |
 | DELETE | `/empty` | — | Long |
@@ -562,7 +567,7 @@ No expone `POST`/`PUT`/`DELETE /{id}`. Solo lectura + fill/empty para datos del 
 
 ---
 
-## 12. Cuota
+## 13. Cuota
 
 **Base:** `/cuota`
 
@@ -591,10 +596,10 @@ No expone `POST`/`PUT`/`DELETE /{id}`. Solo lectura + fill/empty para datos del 
 
 | Método | Path | Parámetros opcionales | Respuesta |
 |---|---|---|---|
-| GET | `/{id}` | — | CuotaEntity |
-| GET | `/` | `descripcion`, `id_equipo` | `Page<CuotaEntity>` (size=1000) |
-| POST | `/` | — (body) | CuotaEntity |
-| PUT | `/` | — (body) | CuotaEntity |
+| GET | `/{id}` | — | CuotaDTO |
+| GET | `/` | `descripcion`, `id_equipo` | `Page<CuotaDTO>` (size=1000) |
+| POST | `/` | — (body) | CuotaDTO |
+| PUT | `/` | — (body) | CuotaDTO |
 | DELETE | `/{id}` | — | Long |
 | POST | `/fill/{cantidad}` | — | Long |
 | DELETE | `/empty` | — | Long |
@@ -602,7 +607,7 @@ No expone `POST`/`PUT`/`DELETE /{id}`. Solo lectura + fill/empty para datos del 
 
 ---
 
-## 13. Pago
+## 14. Pago
 
 **Base:** `/pago`
 
@@ -629,10 +634,10 @@ No expone `POST`/`PUT`/`DELETE /{id}`. Solo lectura + fill/empty para datos del 
 
 | Método | Path | Parámetros opcionales | Respuesta |
 |---|---|---|---|
-| GET | `/{id}` | — | PagoEntity |
-| GET | `/` | `id_cuota`, `id_jugador` | `Page<PagoEntity>` (size=1000) |
-| POST | `/` | — (body) | PagoEntity |
-| PUT | `/` | — (body) | PagoEntity |
+| GET | `/{id}` | — | PagoDTO |
+| GET | `/` | `id_cuota`, `id_jugador` | `Page<PagoDTO>` (size=1000) |
+| POST | `/` | — (body) | PagoDTO |
+| PUT | `/` | — (body) | PagoDTO |
 | DELETE | `/{id}` | — | Long |
 | POST | `/fill/{cantidad}` | — | Long |
 | DELETE | `/empty` | — | Long |
@@ -640,7 +645,7 @@ No expone `POST`/`PUT`/`DELETE /{id}`. Solo lectura + fill/empty para datos del 
 
 ---
 
-## 14. Noticia
+## 15. Noticia
 
 **Base:** `/noticia`
 
@@ -668,15 +673,16 @@ No expone `POST`/`PUT`/`DELETE /{id}`. Solo lectura + fill/empty para datos del 
 | `club` | Object | FK expandida |
 | `comentarios` | int | Contador |
 | `puntuaciones` | int | Contador |
+| `mediaPuntuacion` | double | Promedio de puntuaciones (1-5), 0 si no hay |
 
 **Endpoints:**
 
 | Método | Path | Parámetros opcionales | Respuesta |
 |---|---|---|---|
-| GET | `/{id}` | — | NoticiaEntity |
-| GET | `/` | `contenido`, `id_club` | `Page<NoticiaEntity>` (size=1000) |
-| POST | `/` | — (body) | NoticiaEntity |
-| PUT | `/` | — (body) | NoticiaEntity |
+| GET | `/{id}` | — | NoticiaDTO |
+| GET | `/` | `contenido`, `id_club` | `Page<NoticiaDTO>` (size=1000) |
+| POST | `/` | — (body) | NoticiaDTO |
+| PUT | `/` | — (body) | NoticiaDTO |
 | DELETE | `/{id}` | — | Long |
 | POST | `/fill/{cantidad}` | — | Long |
 | DELETE | `/empty` | — | Long |
@@ -684,7 +690,7 @@ No expone `POST`/`PUT`/`DELETE /{id}`. Solo lectura + fill/empty para datos del 
 
 ---
 
-## 15. Comentario
+## 16. Comentario
 
 **Base:** `/comentario`
 
@@ -709,10 +715,10 @@ No expone `POST`/`PUT`/`DELETE /{id}`. Solo lectura + fill/empty para datos del 
 
 | Método | Path | Parámetros opcionales | Respuesta |
 |---|---|---|---|
-| GET | `/{id}` | — | ComentarioEntity |
-| GET | `/` | `contenido`, `id_usuario`, `id_noticia` | `Page<ComentarioEntity>` (size=1000) |
-| POST | `/` | — (body) | ComentarioEntity |
-| PUT | `/` | — (body) | ComentarioEntity |
+| GET | `/{id}` | — | ComentarioDTO |
+| GET | `/` | `contenido`, `id_usuario`, `id_noticia` | `Page<ComentarioDTO>` (size=1000) |
+| POST | `/` | — (body) | ComentarioDTO |
+| PUT | `/` | — (body) | ComentarioDTO |
 | DELETE | `/{id}` | — | Long |
 | POST | `/fill/{cantidad}` | — | Long |
 | DELETE | `/empty` | — | Long |
@@ -720,7 +726,7 @@ No expone `POST`/`PUT`/`DELETE /{id}`. Solo lectura + fill/empty para datos del 
 
 ---
 
-## 16. Puntuacion
+## 17. Puntuacion
 
 **Base:** `/puntuacion`
 
@@ -745,10 +751,10 @@ No expone `POST`/`PUT`/`DELETE /{id}`. Solo lectura + fill/empty para datos del 
 
 | Método | Path | Parámetros opcionales | Respuesta |
 |---|---|---|---|
-| GET | `/{id}` | — | PuntuacionEntity |
-| GET | `/` | `id_noticia`, `id_usuario` | `Page<PuntuacionEntity>` (size=1000) |
-| POST | `/` | — (body) | PuntuacionEntity |
-| PUT | `/` | — (body) | PuntuacionEntity |
+| GET | `/{id}` | — | PuntuacionDTO |
+| GET | `/` | `id_noticia`, `id_usuario` | `Page<PuntuacionDTO>` (size=1000) |
+| POST | `/` | — (body) | PuntuacionDTO |
+| PUT | `/` | — (body) | PuntuacionDTO |
 | DELETE | `/{id}` | — | Long |
 | POST | `/fill/{cantidad}` | — | Long |
 | DELETE | `/empty` | — | Long |
@@ -756,7 +762,7 @@ No expone `POST`/`PUT`/`DELETE /{id}`. Solo lectura + fill/empty para datos del 
 
 ---
 
-## 17. Tipoarticulo
+## 18. Tipoarticulo
 
 **Base:** `/tipoarticulo`
 
@@ -776,15 +782,16 @@ No expone `POST`/`PUT`/`DELETE /{id}`. Solo lectura + fill/empty para datos del 
 | `descripcion` | String | |
 | `club` | Object | FK expandida |
 | `articulos` | int | Contador |
+| `totalVentas` | Double | Suma de ingresos por compras de artículos de este tipo; puede ser null |
 
 **Endpoints:**
 
 | Método | Path | Parámetros opcionales | Respuesta |
 |---|---|---|---|
-| GET | `/{id}` | — | TipoarticuloEntity |
-| GET | `/` | `descripcion`, `id_club` | `Page<TipoarticuloEntity>` (size=1000) |
-| POST | `/` | — (body) | TipoarticuloEntity |
-| PUT | `/` | — (body) | TipoarticuloEntity |
+| GET | `/{id}` | — | TipoarticuloDTO |
+| GET | `/` | `descripcion`, `id_club` | `Page<TipoarticuloDTO>` (size=1000) |
+| POST | `/` | — (body) | TipoarticuloDTO |
+| PUT | `/` | — (body) | TipoarticuloDTO |
 | DELETE | `/{id}` | — | Long |
 | POST | `/fill/{cantidad}` | — | Long |
 | DELETE | `/empty` | — | Long |
@@ -792,7 +799,7 @@ No expone `POST`/`PUT`/`DELETE /{id}`. Solo lectura + fill/empty para datos del 
 
 ---
 
-## 18. Articulo
+## 19. Articulo
 
 **Base:** `/articulo`
 
@@ -806,6 +813,8 @@ No expone `POST`/`PUT`/`DELETE /{id}`. Solo lectura + fill/empty para datos del 
   "imagen": null,
   "tipoarticulo": { "id": 1, "descripcion": "...", "club": { ... }, "articulos": 0 },
   "comentarioarts": 3,
+  "puntuacionarts": 12,
+  "mediaPuntuacion": 4.5,
   "compras": 5,
   "carritos": 2
 }
@@ -820,6 +829,8 @@ No expone `POST`/`PUT`/`DELETE /{id}`. Solo lectura + fill/empty para datos del 
 | `imagen` | byte[] | Blob; puede ser null |
 | `tipoarticulo` | Object | FK expandida (incluye `club` anidado) |
 | `comentarioarts` | int | Contador |
+| `puntuacionarts` | int | Número de puntuaciones |
+| `mediaPuntuacion` | double | Promedio de puntuaciones (1-5), 0 si no hay |
 | `compras` | int | Contador |
 | `carritos` | int | Contador |
 
@@ -829,10 +840,10 @@ No expone `POST`/`PUT`/`DELETE /{id}`. Solo lectura + fill/empty para datos del 
 
 | Método | Path | Parámetros opcionales | Respuesta |
 |---|---|---|---|
-| GET | `/{id}` | — | ArticuloEntity |
-| GET | `/` | `descripcion`, `id_tipoarticulo` | `Page<ArticuloEntity>` (size=1000) |
-| POST | `/` | — (body) | ArticuloEntity |
-| PUT | `/` | — (body) | ArticuloEntity |
+| GET | `/{id}` | — | ArticuloDTO |
+| GET | `/` | `descripcion`, `id_tipoarticulo` | `Page<ArticuloDTO>` (size=1000) |
+| POST | `/` | — (body) | ArticuloDTO |
+| PUT | `/` | — (body) | ArticuloDTO |
 | DELETE | `/{id}` | — | Long |
 | POST | `/fill/{cantidad}` | — | Long |
 | GET | `/fill` | — | Long (crea 50 por defecto) |
@@ -841,7 +852,7 @@ No expone `POST`/`PUT`/`DELETE /{id}`. Solo lectura + fill/empty para datos del 
 
 ---
 
-## 19. Comentarioart
+## 20. Comentarioart
 
 **Base:** `/comentarioart`
 
@@ -866,10 +877,10 @@ No expone `POST`/`PUT`/`DELETE /{id}`. Solo lectura + fill/empty para datos del 
 
 | Método | Path | Parámetros opcionales | Respuesta |
 |---|---|---|---|
-| GET | `/{id}` | — | ComentarioartEntity |
-| GET | `/` | `contenido`, `id_articulo`, `id_usuario` | `Page<ComentarioartEntity>` (size=1000) |
-| POST | `/` | — (body) | ComentarioartEntity |
-| PUT | `/` | — (body) | ComentarioartEntity |
+| GET | `/{id}` | — | ComentarioartDTO |
+| GET | `/` | `contenido`, `id_articulo`, `id_usuario` | `Page<ComentarioartDTO>` (size=1000) |
+| POST | `/` | — (body) | ComentarioartDTO |
+| PUT | `/` | — (body) | ComentarioartDTO |
 | DELETE | `/{id}` | — | Long |
 | POST | `/fill/{cantidad}` | — | Long |
 | DELETE | `/empty` | — | Long |
@@ -877,7 +888,7 @@ No expone `POST`/`PUT`/`DELETE /{id}`. Solo lectura + fill/empty para datos del 
 
 ---
 
-## 20. Puntuacionart
+## 21. Puntuacionart
 
 **Base:** `/puntuacionart`
 
@@ -902,10 +913,10 @@ No expone `POST`/`PUT`/`DELETE /{id}`. Solo lectura + fill/empty para datos del 
 
 | Método | Path | Parámetros opcionales | Respuesta |
 |---|---|---|---|
-| GET | `/{id}` | — | PuntuacionartEntity |
-| GET | `/` | `id_articulo`, `id_usuario` | `Page<PuntuacionartEntity>` (size=1000) |
-| POST | `/` | — (body) | PuntuacionartEntity |
-| PUT | `/` | — (body) | PuntuacionartEntity |
+| GET | `/{id}` | — | PuntuacionartDTO |
+| GET | `/` | `id_articulo`, `id_usuario` | `Page<PuntuacionartDTO>` (size=1000) |
+| POST | `/` | — (body) | PuntuacionartDTO |
+| PUT | `/` | — (body) | PuntuacionartDTO |
 | DELETE | `/{id}` | — | Long |
 | POST | `/fill/{cantidad}` | — | Long |
 | DELETE | `/empty` | — | Long |
@@ -913,7 +924,7 @@ No expone `POST`/`PUT`/`DELETE /{id}`. Solo lectura + fill/empty para datos del 
 
 ---
 
-## 21. Carrito
+## 22. Carrito
 
 **Base:** `/carrito`
 
@@ -923,27 +934,29 @@ No expone `POST`/`PUT`/`DELETE /{id}`. Solo lectura + fill/empty para datos del 
   "id": 1,
   "cantidad": 2,
   "articulo": { "id": 3, ... },
-  "usuario": { "id": 5, ... }
+  "usuario": { "id": 5, ... },
+  "precioTotal": 53.98
 }
 ```
 
 | Campo | Tipo | Notas |
-|---|---|---|
+|---|---|---|---|
 | `id` | Long | PK |
 | `cantidad` | Integer | Unidades |
 | `articulo` | Object | FK expandida |
 | `usuario` | Object | FK expandida |
+| `precioTotal` | double | Precio total calculado (precio * cantidad con descuento) |
 
 **Endpoints:**
 
 | Método | Path | Parámetros opcionales | Respuesta |
 |---|---|---|---|
-| GET | `/{id}` | — | CarritoEntity |
-| GET | `/` | `id_usuario`, `id_articulo` | `Page<CarritoEntity>` (size=1000) |
-| POST | `/` | — (body) | CarritoEntity |
-| PUT | `/` | — (body) | CarritoEntity |
+| GET | `/{id}` | — | CarritoDTO |
+| GET | `/` | `id_usuario`, `id_articulo` | `Page<CarritoDTO>` (size=1000) |
+| POST | `/` | — (body) | CarritoDTO |
+| PUT | `/` | — (body) | CarritoDTO |
 | DELETE | `/{id}` | — | Long |
-| POST | `/comprar` | — | FacturaEntity (crea factura + compras + vacía carrito) |
+| POST | `/comprar` | — | FacturaDTO (crea factura + compras + vacía carrito) |
 | POST | `/fill/{cantidad}` | — | Long |
 | DELETE | `/empty` | — | Long |
 | GET | `/count` | — | Long |
@@ -952,7 +965,7 @@ No expone `POST`/`PUT`/`DELETE /{id}`. Solo lectura + fill/empty para datos del 
 
 ---
 
-## 22. Factura
+## 23. Factura
 
 **Base:** `/factura`
 
@@ -977,10 +990,10 @@ No expone `POST`/`PUT`/`DELETE /{id}`. Solo lectura + fill/empty para datos del 
 
 | Método | Path | Parámetros opcionales | Respuesta |
 |---|---|---|---|
-| GET | `/{id}` | — | FacturaEntity |
-| GET | `/` | `id_usuario` | `Page<FacturaEntity>` (size=1000) |
-| POST | `/` | — (body) | FacturaEntity |
-| PUT | `/` | — (body) | FacturaEntity |
+| GET | `/{id}` | — | FacturaDTO |
+| GET | `/` | `id_usuario` | `Page<FacturaDTO>` (size=1000) |
+| POST | `/` | — (body) | FacturaDTO |
+| PUT | `/` | — (body) | FacturaDTO |
 | DELETE | `/{id}` | — | Long |
 | POST | `/fill/{cantidad}` | — | Long |
 | DELETE | `/empty` | — | Long |
@@ -990,7 +1003,7 @@ No expone `POST`/`PUT`/`DELETE /{id}`. Solo lectura + fill/empty para datos del 
 
 ---
 
-## 23. Compra
+## 24. Compra
 
 **Base:** `/compra`
 
@@ -1017,14 +1030,28 @@ No expone `POST`/`PUT`/`DELETE /{id}`. Solo lectura + fill/empty para datos del 
 
 | Método | Path | Parámetros opcionales | Respuesta |
 |---|---|---|---|
-| GET | `/{id}` | — | CompraEntity |
-| GET | `/` | `id_articulo`, `id_factura` | `Page<CompraEntity>` |
-| POST | `/` | — (body) | CompraEntity |
-| PUT | `/` | — (body) | CompraEntity |
+| GET | `/{id}` | — | CompraDTO |
+| GET | `/` | `id_articulo`, `id_factura` | `Page<CompraDTO>` |
+| POST | `/` | — (body) | CompraDTO |
+| PUT | `/` | — (body) | CompraDTO |
 | DELETE | `/{id}` | — | Long |
 | POST | `/fill/{cantidad}` | — | Long |
 | DELETE | `/empty` | — | Long |
 | GET | `/count` | — | Long |
+
+---
+
+## 25. Admin / Seed
+
+**Base:** `/admin`
+
+Endpoints de utilidad para administración del sistema (todos requieren `tipousuario.id = 1`).
+
+| Método | Path | Respuesta | Descripción |
+|---|---|---|---|
+| POST | `/admin/seed` | Long | Inserta datos de sistema faltantes (idempotente) |
+| POST | `/admin/reset` | Long | Reset transaccional: borra todos los datos y re-siembra datos mínimos |
+| POST | `/admin/resetcomplete` | Long | Como `/reset` pero también reinicia los contadores AUTO_INCREMENT |
 
 ---
 
@@ -1034,7 +1061,11 @@ No expone `POST`/`PUT`/`DELETE /{id}`. Solo lectura + fill/empty para datos del 
 |---|---|
 | `POST /{recurso}/fill/{cantidad}` | Inserta `cantidad` registros con datos aleatorios |
 | `GET /articulo/fill` | Inserta 50 artículos (atajo sin parámetro) |
+| `GET /estadopartido/fill` | Inserta datos fijos del sistema (5 estados) |
 | `POST /rolusuario/fill` | Sin parámetro de cantidad (cantidad fija interna) |
 | `GET /tipousuario/fill` | Sin parámetro de cantidad (datos fijos del sistema) |
+| `POST /admin/seed` | Siembra datos de sistema faltantes |
+| `POST /admin/reset` | Reset completo transaccional |
+| `POST /admin/resetcomplete` | Reset completo + reinicio de AUTO_INCREMENT |
 | `DELETE /{recurso}/empty` | Elimina todos los registros del recurso |
 | `GET /{recurso}/count` | Devuelve el total de registros |
