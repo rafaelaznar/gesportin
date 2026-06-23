@@ -48,13 +48,18 @@ public class EquipoService {
         return oEquipoConverter.toDTO(e);
     }
 
-    public Page<EquipoDTO> getPage(Pageable pageable, String descripcion, Long id_categoria, Long id_usuario) {
+    public Page<EquipoDTO> getPage(Pageable pageable, String descripcion, Long id_categoria, Long id_temporada, Long id_usuario) {
         if (oSessionService.isEquipoAdmin() || oSessionService.isUsuario()) {
             Long myClub = oSessionService.getIdClub();
-            // if filters specify something outside club, reject
             if (id_categoria != null) {
                 Long clubCat = oCategoriaService.get(id_categoria).getTemporada().getClub().getId();
                 if (!myClub.equals(clubCat)) {
+                    throw new UnauthorizedException("Acceso denegado: solo equipos de su club");
+                }
+            }
+            if (id_temporada != null) {
+                Long clubTmp = oTemporadaService.get(id_temporada).getClub().getId();
+                if (!myClub.equals(clubTmp)) {
                     throw new UnauthorizedException("Acceso denegado: solo equipos de su club");
                 }
             }
@@ -64,22 +69,23 @@ public class EquipoService {
                     throw new UnauthorizedException("Acceso denegado: solo equipos de su club");
                 }
             }
-            if (descripcion == null || descripcion.isEmpty()) {
-                if (id_categoria != null) {
-                    // id_categoria already validated to belong to same club above
-                    return oEquipoConverter.toPageDTO(oEquipoRepository.findByCategoriaId(id_categoria, pageable));
-                }
-                // force club filter when no other filter provided
-                return oEquipoConverter.toPageDTO(oEquipoRepository.findByCategoriaTemporadaClubId(myClub, pageable));
-            } else {
-                // description filter must be scoped to own club
+            if (descripcion != null && !descripcion.isEmpty()) {
                 return oEquipoConverter.toPageDTO(oEquipoRepository
                         .findByNombreContainingIgnoreCaseAndCategoriaTemporadaClubId(descripcion, myClub, pageable));
             }
+            if (id_temporada != null) {
+                return oEquipoConverter.toPageDTO(oEquipoRepository.findByCategoriaTemporadaId(id_temporada, pageable));
+            }
+            if (id_categoria != null) {
+                return oEquipoConverter.toPageDTO(oEquipoRepository.findByCategoriaId(id_categoria, pageable));
+            }
+            return oEquipoConverter.toPageDTO(oEquipoRepository.findByCategoriaTemporadaClubId(myClub, pageable));
         }
         if (descripcion != null && !descripcion.isEmpty()) {
             return oEquipoConverter
                     .toPageDTO(oEquipoRepository.findByNombreContainingIgnoreCase(descripcion, pageable));
+        } else if (id_temporada != null) {
+            return oEquipoConverter.toPageDTO(oEquipoRepository.findByCategoriaTemporadaId(id_temporada, pageable));
         } else if (id_categoria != null) {
             return oEquipoConverter.toPageDTO(oEquipoRepository.findByCategoriaId(id_categoria, pageable));
         } else if (id_usuario != null) {

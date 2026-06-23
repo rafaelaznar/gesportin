@@ -342,6 +342,7 @@ const protectedRoutes: Routes = [
   { path: 'equipo/teamadmin', component: EquipoTeamadminPlistPage, canActivate: [ClubAdminGuard] },
 
   { path: 'equipo/categoria/:id_categoria', component: EquipoAdminPlistPage, data: { allowClubAdmin: true } },
+  { path: 'equipo/temporada/:id_temporada', component: EquipoAdminPlistPage, data: { allowClubAdmin: true } },
   { path: 'equipo/new', component: EquipoAdminNewPage, data: { allowClubAdmin: true } },
 
   { path: 'equipo/edit/:id', component: EquipoAdminEditPage, data: { allowClubAdmin: true } },

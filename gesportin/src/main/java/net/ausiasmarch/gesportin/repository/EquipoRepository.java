@@ -18,6 +18,8 @@ public interface EquipoRepository extends JpaRepository<EquipoEntity, Long> {
 
     Page<EquipoEntity> findByCategoriaId(Long idCategoria, Pageable pageable);
 
+    Page<EquipoEntity> findByCategoriaTemporadaId(Long idTemporada, Pageable pageable);
+
     Page<EquipoEntity> findByEntrenadorId(Long idEntrenador, Pageable pageable);
 
     // teams filtered by club of their category's temporada (used by equipo‑admin)

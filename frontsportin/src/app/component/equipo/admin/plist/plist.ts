@@ -21,6 +21,7 @@ import { MODAL_REF } from '../../../shared/modal/modal.tokens';
 })
 export class EquipoAdminPlist {
   @Input() categoria = signal<number>(0);
+  @Input() temporada = signal<number>(0);
   @Input() usuario = signal<number>(0);
 
   oPage = signal<IPage<IEquipo> | null>(null);
@@ -59,6 +60,7 @@ export class EquipoAdminPlist {
         this.orderDirection(),
         this.nombre(),
         this.categoria(),
+        this.temporada(),
         this.usuario(),
       )
       .subscribe({

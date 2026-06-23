@@ -10,6 +10,7 @@ import { EquipoAdminPlist } from '../../../../component/equipo/admin/plist/plist
 })
 export class EquipoAdminPlistPage {
   categoria = signal<number>(0);
+  temporada = signal<number>(0);
   usuario = signal<number>(0);
 
   constructor(private route: ActivatedRoute) {}
@@ -18,6 +19,11 @@ export class EquipoAdminPlistPage {
     const id_categoria = this.route.snapshot.paramMap.get('id_categoria');
     if (id_categoria) {
       this.categoria.set(+id_categoria);
+    }
+
+    const id_temporada = this.route.snapshot.paramMap.get('id_temporada');
+    if (id_temporada) {
+      this.temporada.set(+id_temporada);
     }
 
     const id_usuario = this.route.snapshot.paramMap.get('id_usuario');

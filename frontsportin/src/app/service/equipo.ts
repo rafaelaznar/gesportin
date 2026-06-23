@@ -22,6 +22,7 @@ export class EquipoService {
     direction: string = '',
     nombre: string = '',
     id_categoria: number = 0,
+    id_temporada: number = 0,
     id_usuario: number = 0,
   ): Observable<IPage<IEquipo>> {
     if (order === '') {
@@ -31,8 +32,6 @@ export class EquipoService {
       direction = 'asc';
     }
 
-    // Construir la URL incluyendo solo los parámetros esperados por la API
-    // Búsqueda por nombre (parametro 'nombre') y filtros por id_categoria e id_usuario
     let url = serverURL + `/equipo?page=${page}&size=${rpp}&sort=${order},${direction}`;
 
     if (nombre && nombre.length > 0) {
@@ -41,6 +40,10 @@ export class EquipoService {
 
     if (id_categoria && id_categoria > 0) {
       url += `&id_categoria=${id_categoria}`;
+    }
+
+    if (id_temporada && id_temporada > 0) {
+      url += `&id_temporada=${id_temporada}`;
     }
 
     if (id_usuario && id_usuario > 0) {

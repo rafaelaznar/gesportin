@@ -38,8 +38,9 @@ public class EquipoApi {
             @PageableDefault(size = 1000) Pageable pageable,
             @RequestParam(required = false) String descripcion,
             @RequestParam(required = false) Long id_categoria,
+            @RequestParam(required = false) Long id_temporada,
             @RequestParam(required = false) Long id_usuario) {                        
-        return ResponseEntity.ok(oEquipoService.getPage(pageable, descripcion, id_categoria, id_usuario));
+        return ResponseEntity.ok(oEquipoService.getPage(pageable, descripcion, id_categoria, id_temporada, id_usuario));
     }
 
     @PostMapping
