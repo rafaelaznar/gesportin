@@ -55,7 +55,13 @@
                           <span>ID</span>
                         </div>
                       </th>
-                      <th scope="col" (click)="onOrder('nombre')" style="cursor: pointer; width: 30%">
+                      <th scope="col" style="width: 8%">
+                        <div class="header-stacked">
+                          <div class="header-top"><i class="bi bi-image" aria-hidden="true"></i></div>
+                          <span>Logo</span>
+                        </div>
+                      </th>
+                      <th scope="col" (click)="onOrder('nombre')" style="cursor: pointer; width: 22%">
                         <div class="header-stacked">
                           <div class="header-top">
                             <i class="bi bi-building" aria-hidden="true"></i>
@@ -103,6 +109,13 @@
                     @for (oClub of oPage()?.content; track oClub.id) {
                       <tr>
                         <th scope="row" class="text-center align-middle">{{ oClub.id }}</th>
+                        <td class="text-center align-middle">
+                          @if (imageUpload.toPreviewSrc(oClub.imagen)) {
+                            <img [src]="imageUpload.toPreviewSrc(oClub.imagen)" alt="Logo" class="club-logo-img" />
+                          } @else {
+                            <img src="no-img.jpg" alt="Sin logo" class="club-logo-img" />
+                          }
+                        </td>
                         <td class="align-middle text-truncate">{{ oClub.nombre }}</td>            
                         <td class="d-none d-md-table-cell text-center align-middle">
                           @if (isDialogMode()) {

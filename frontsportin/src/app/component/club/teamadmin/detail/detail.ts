@@ -5,6 +5,7 @@ import { IClub } from '../../../../model/club';
 import { DatetimePipe } from '../../../../pipe/datetime-pipe';
 import { ClubService } from '../../../../service/club';
 import { SessionService } from '../../../../service/session';
+import { ImageUploadService } from '../../../../service/image-upload';
 
 @Component({
   selector: 'app-club-teamadmin-detail',
@@ -17,6 +18,7 @@ export class ClubTeamadminDetail implements OnInit {
 
   private oClubService = inject(ClubService);
   session = inject(SessionService);
+  imageUpload: ImageUploadService = inject(ImageUploadService);
   //private notificacion = inject(NotificacionService);
 
   oClub = signal<IClub | null>(null);

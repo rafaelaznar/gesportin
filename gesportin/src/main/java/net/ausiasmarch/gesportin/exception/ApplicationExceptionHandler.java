@@ -48,4 +48,10 @@ public class ApplicationExceptionHandler {
         return new ResponseEntity<>(oExceptionBean, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @ExceptionHandler(ResourceNotAllowedException.class)
+    public ResponseEntity<ExceptionBean> handleResourceNotAllowedException(ResourceNotAllowedException ex) {        
+        ExceptionBean oExceptionBean = new ExceptionBean(403, ex.getMessage(), System.currentTimeMillis());
+        return new ResponseEntity<>(oExceptionBean, HttpStatus.FORBIDDEN);
+    }
+
 }

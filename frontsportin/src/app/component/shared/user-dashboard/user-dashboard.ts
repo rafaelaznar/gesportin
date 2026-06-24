@@ -5,6 +5,9 @@ import { SessionService } from '../../../service/session';
 import { CarritoService } from '../../../service/carrito';
 import { FacturaService } from '../../../service/factura-service';
 import { JugadorService } from '../../../service/jugador-service';
+import { ClubService } from '../../../service/club';
+import { ImageUploadService } from '../../../service/image-upload';
+import { IClub } from '../../../model/club';
 
 @Component({
   selector: 'app-user-dashboard',
@@ -19,12 +22,15 @@ export class UserDashboardComponent implements OnInit {
   facturasCount = signal(0);
   equiposCount = signal(0);
   loading = signal(true);
+  clubLogo = signal<string | null>(null);
 
   constructor(
     private session: SessionService,
     private carritoService: CarritoService,
     private facturaService: FacturaService,
     private jugadorService: JugadorService,
+    private clubService: ClubService,
+    public imageUpload: ImageUploadService,
   ) {}
 
   ngOnInit(): void {
@@ -44,6 +50,15 @@ export class UserDashboardComponent implements OnInit {
       this.jugadorService
         .getPage(0, 1000, 'id', 'asc', '', userId, 0)
         .subscribe({ next: (p) => this.equiposCount.set(p.totalElements) });
+    }
+    const clubId = this.session.getClubId();
+    if (clubId) {
+      this.clubService.get(clubId).subscribe({
+        next: (club: IClub) => {
+          const src = this.imageUpload.toPreviewSrc(club.imagen);
+          this.clubLogo.set(src);
+        },
+      });
     }
     this.loading.set(false);
   }

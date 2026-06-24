@@ -12,6 +12,14 @@
 .controls-row app-paginacion,
 .controls-row app-botonera-rpp { display: inline-flex; justify-content: center; }
 
+/* Logo image in table */
+.club-logo-img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
 /* At small widths (<=850px) stack controls and center them */
 @media (max-width: 850px) {
 	.controls-row { flex-wrap: wrap; justify-content: center; }

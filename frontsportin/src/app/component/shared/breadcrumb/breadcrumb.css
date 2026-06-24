@@ -1,3 +1,19 @@
+/* Logo del club fuera de la caja amarilla */
+.breadcrumb-logo {
+  height: 68px;
+  width: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 4px;
+  flex-shrink: 0;   
+}
+
+@media (max-width: 576px) {
+  .breadcrumb-logo {
+    height: 44px;
+  }
+}
+
 nav .breadcrumb {
   border-style: dashed;
   border-color: darkslateblue;
@@ -5,7 +21,7 @@ nav .breadcrumb {
   border-width: 1px;
   background-color: rgb(255, 241, 214); 
   padding: 20px;
-  margin: 20px 0;
+  
 }
 
 .breadcrumb {

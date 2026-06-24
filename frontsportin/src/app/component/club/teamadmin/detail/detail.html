@@ -32,8 +32,14 @@
           <div class="col-7 fw-semibold small">{{ oClub()?.telefono }}</div>
           <div class="col-5 text-muted small text-uppercase">Fecha alta</div>
           <div class="col-7 fw-semibold small">{{ oClub()?.fechaAlta | datetime }}</div>
-          <div class="col-5 text-muted small text-uppercase">Imagen</div>
-          <div class="col-7 fw-semibold small">@if (oClub()?.imagen) { <img [src]="'data:image/jpeg;base64,' + oClub()?.imagen" class="img-thumbnail" style="max-height:80px" alt="club"/> } @else { Sin imagen }</div>
+          <div class="col-5 text-muted small text-uppercase">Logotipo</div>
+          <div class="col-7 fw-semibold small">
+            @if (imageUpload.toPreviewSrc(oClub()?.imagen)) {
+              <img [src]="imageUpload.toPreviewSrc(oClub()?.imagen)" class="img-thumbnail" style="max-height: 120px" alt="Logo del club"/>
+            } @else {
+              <span class="text-muted">Sin logotipo</span>
+            }
+          </div>
         </div>
         <div class="border-top mt-3 pt-3">          
           <div class="row g-2">

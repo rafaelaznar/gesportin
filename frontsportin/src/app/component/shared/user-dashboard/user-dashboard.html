@@ -2,7 +2,11 @@
   <header class="ud-hero">
     <div class="ud-hero-content">
       <div class="ud-avatar">
-        <i class="bi bi-person-circle"></i>
+        @if (clubLogo()) {
+          <img [src]="clubLogo()" alt="Logo del club" class="ud-logo-img" />
+        } @else {
+          <i class="bi bi-person-circle"></i>
+        }
       </div>
       <div class="ud-welcome">
         <h1>Bienvenido, <span class="ud-username">{{ userName() }}</span></h1>

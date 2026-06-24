@@ -10,6 +10,7 @@ import { BotoneraActionsPlist } from '../../../shared/botonera-actions-plist/bot
 import { ClubService } from '../../../../service/club';
 import { IClub } from '../../../../model/club';
 import { SessionService } from '../../../../service/session';
+import { ImageUploadService } from '../../../../service/image-upload';
 
 @Component({
   selector: 'app-club-admin-plist',
@@ -35,6 +36,7 @@ export class ClubAdminPlist {
   private route = inject(ActivatedRoute);
   private modalRef = inject(MODAL_REF, { optional: true });
   session: SessionService = inject(SessionService);
+  imageUpload = inject(ImageUploadService);
 
   ngOnInit() {
     const msg = this.route.snapshot.queryParamMap.get('msg');

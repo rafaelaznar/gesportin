@@ -6,6 +6,7 @@ import { NotificacionService } from '../../../../service/notificacion';;
 import { toIsoDateTime } from '../../../../utils/date-utils';
 import { ClubService } from '../../../../service/club';
 import { IClub } from '../../../../model/club';
+import { ImageUploadService } from '../../../../service/image-upload';
 
 @Component({
   selector: 'app-club-admin-form',
@@ -22,11 +23,13 @@ export class ClubAdminForm implements OnInit {
   private fb = inject(FormBuilder);
   private notificacion = inject(NotificacionService);
   private clubService = inject(ClubService);
+  imageUpload: ImageUploadService = inject(ImageUploadService);
 
   clubForm!: FormGroup;
   loading = signal(false);
   error = signal<string | null>(null);
   submitting = signal(false);
+  selectedImage = signal<string | null>(null);
 
   ngOnInit(): void {
     this.initForm();
@@ -58,6 +61,10 @@ export class ClubAdminForm implements OnInit {
       fechaAlta: fechaAltaInput,
       imagen: this.club.imagen || null,
     });
+
+    if (this.club.imagen) {
+      this.selectedImage.set(this.imageUpload.toPreviewSrc(this.club.imagen));
+    }
   }
 
   get nombre() {
@@ -66,6 +73,21 @@ export class ClubAdminForm implements OnInit {
 
   get fechaAlta() {
     return this.clubForm.get('fechaAlta');
+  }
+
+  async onFileSelected(event: Event): Promise<void> {
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) {
+      return;
+    }
+    const file = input.files[0];
+    try {
+      const base64 = await this.imageUpload.fileToBase64(file);
+      this.clubForm.patchValue({ imagen: base64 });
+      this.selectedImage.set(this.imageUpload.toPreviewSrc(base64));
+    } catch (err: any) {
+      this.notificacion.error(err.message || 'Error al cargar la imagen');
+    }
   }
 
   onSubmit(): void {

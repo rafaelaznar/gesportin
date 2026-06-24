@@ -6,6 +6,7 @@ import { IPage } from '../../../../model/plist';
 import { IClub } from '../../../../model/club';
 import { ClubService } from '../../../../service/club';
 import { SessionService } from '../../../../service/session';
+import { ImageUploadService } from '../../../../service/image-upload';
 import { DatePipe } from '@angular/common';
 
 @Component({
@@ -29,6 +30,7 @@ export class ClubTeamadminPlist {
   private oClubService = inject(ClubService);
   private route = inject(ActivatedRoute);
   session: SessionService = inject(SessionService);
+  imageUpload: ImageUploadService = inject(ImageUploadService);
 
   ngOnInit() {
     const msg = this.route.snapshot.queryParamMap.get('msg');

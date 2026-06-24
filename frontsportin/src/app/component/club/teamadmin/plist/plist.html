@@ -36,11 +36,19 @@
           <div class="d-flex gap-3 mb-3 justify-content-center">
             <!-- Imagen del club -->
             <div class="img-container">
-              <img
-                src="no-img.jpg"
-                [alt]="oClub.nombre"
-                class="club-img"
-              />
+              @if (imageUpload.toPreviewSrc(oClub.imagen)) {
+                <img
+                  [src]="imageUpload.toPreviewSrc(oClub.imagen)"
+                  [alt]="oClub.nombre"
+                  class="club-img"
+                />
+              } @else {
+                <img
+                  src="no-img.jpg"
+                  [alt]="oClub.nombre"
+                  class="club-img"
+                />
+              }
             </div>
 
             <!-- Datos del club en un recuadro -->

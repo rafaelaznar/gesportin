@@ -1,17 +1,22 @@
 @if (items.length > 0) {
-  <nav aria-label="breadcrumb" class="mb-4">
-    <ol class="breadcrumb mb-0">
-      @for (item of items; track item.label; let last = $last) {
-        @if (last) {
-          <li class="breadcrumb-item active" aria-current="page">{{ item.label }}</li>
-        } @else if (item.route) {
-          <li class="breadcrumb-item">
-            <a [routerLink]="item.route">{{ item.label }}</a>
-          </li>
-        } @else {
-          <li class="breadcrumb-item">{{ item.label }}</li>
+  <div class="d-flex align-items-center gap-2 mb-4">
+    @if (displayLogoUrl) {
+      <img [src]="displayLogoUrl" alt="Logo" class="breadcrumb-logo" />
+    }
+    <nav aria-label="breadcrumb" class="flex-grow-1">
+      <ol class="breadcrumb mb-0">
+        @for (item of items; track item.label; let last = $last) {
+          @if (last) {
+            <li class="breadcrumb-item active" aria-current="page">{{ item.label }}</li>
+          } @else if (item.route) {
+            <li class="breadcrumb-item">
+              <a [routerLink]="item.route">{{ item.label }}</a>
+            </li>
+          } @else {
+            <li class="breadcrumb-item">{{ item.label }}</li>
+          }
         }
-      }
-    </ol>
-  </nav>
+      </ol>
+    </nav>
+  </div>
 }
