@@ -52,9 +52,9 @@
           <div class="col-7 fw-semibold small">{{ oJugador()?.capitan ? 'Sí' : 'No' }}</div>
           <div class="col-5 text-muted small text-uppercase">Imagen</div>
           <div class="col-7 fw-semibold small">
-            @if (oJugador()?.imagen) {
+            @if (imageUpload.toPreviewSrc(oJugador()?.imagen)) {
               <img
-                [src]="oJugador()?.imagen"
+                [src]="imageUpload.toPreviewSrc(oJugador()?.imagen)"
                 class="img-thumbnail"
                 style="max-height: 80px"
                 alt="jugador"

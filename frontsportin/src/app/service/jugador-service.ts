@@ -16,6 +16,12 @@ export class JugadorService {
     private sanitizer: PayloadSanitizerService,
   ) {}
 
+  updatePicture(id: number, file: File): Observable<void> {
+    const formData = new FormData();
+    formData.append('image', file);
+    return this.http.patch<void>(`${serverURL}/jugador/picture/${id}`, formData);
+  }
+
   getPage(
     page: number,
     rpp: number,

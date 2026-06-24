@@ -6,6 +6,7 @@ import { JugadorService } from '../../../../service/jugador-service';
 import { IJugador } from '../../../../model/jugador';
 import { SessionService } from '../../../../service/session';
 import { DatetimePipe } from '../../../../pipe/datetime-pipe';
+import { ImageUploadService } from '../../../../service/image-upload';
 
 @Component({
   standalone: true,
@@ -19,6 +20,7 @@ export class JugadorAdminDetail implements OnInit {
 
   private jugadorService = inject(JugadorService);
   session = inject(SessionService);
+  imageUpload: ImageUploadService = inject(ImageUploadService);
 
   oJugador = signal<IJugador | null>(null);
   loading = signal(true);

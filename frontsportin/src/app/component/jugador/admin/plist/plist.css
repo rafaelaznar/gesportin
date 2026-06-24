@@ -5,6 +5,14 @@
 .new-btn { display: inline-block; margin: 10px auto; }
 .controls-row app-paginacion,
 .controls-row app-botonera-rpp { display: inline-flex; justify-content: center; }
+
+.club-logo-img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
 @media (max-width: 850px) {
   .controls-row { flex-wrap: wrap; justify-content: center; }
   .controls-row .col-control { flex: 1 1 100%; justify-content: center; }

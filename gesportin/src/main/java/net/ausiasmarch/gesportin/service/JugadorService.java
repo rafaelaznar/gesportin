@@ -1,5 +1,6 @@
 package net.ausiasmarch.gesportin.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +14,11 @@ import net.ausiasmarch.gesportin.entity.EquipoEntity;
 import net.ausiasmarch.gesportin.entity.JugadorEntity;
 import net.ausiasmarch.gesportin.entity.UsuarioEntity;
 import net.ausiasmarch.gesportin.exception.GeneralException;
+import net.ausiasmarch.gesportin.exception.ResourceNotAllowedException;
 import net.ausiasmarch.gesportin.exception.ResourceNotFoundException;
 import net.ausiasmarch.gesportin.exception.UnauthorizedException;
 import net.ausiasmarch.gesportin.repository.JugadorRepository;
+import static net.ausiasmarch.gesportin.util.ImageValidator.isValidPicture;
 
 @Service
 public class JugadorService {
@@ -169,6 +172,18 @@ public class JugadorService {
         oJugadorExistente.setEquipo(nuevoEquipo);
         JugadorEntity saved = oJugadorRepository.save(oJugadorExistente);
         return oJugadorConverter.toDTO(saved);
+    }
+
+    public void updatePicture(Long id, byte[] newImage) throws IOException {
+        oSessionService.denyEquipoAdmin();
+        oSessionService.denyUsuario();
+        JugadorEntity oJugadorExistente = oJugadorRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Jugador no encontrado con id: " + id));
+
+        if (!isValidPicture(newImage))
+            throw new ResourceNotAllowedException("This image is not allowed");
+        oJugadorExistente.setImagen(newImage);
+        oJugadorRepository.save(oJugadorExistente);
     }
 
     public Long delete(Long id) {

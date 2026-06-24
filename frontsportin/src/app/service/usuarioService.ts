@@ -56,19 +56,7 @@ export class UsuarioService {
       strUrl += `&nombre=${encodeURIComponent(nombre)}`;
     }
 
-    const request$ = this.oHttp.get<IPage<IUsuario>>(strUrl);
-    if (this.security.isClubAdmin()) {
-      const myClubId = this.security.getClubId();
-      if (myClubId != null) {
-        return request$.pipe(
-          map((pageData) => {
-            const filtered = pageData.content.filter((u) => u.club?.id === myClubId);
-            return { ...pageData, content: filtered, totalElements: filtered.length } as IPage<IUsuario>;
-          }),
-        );
-      }
-    }
-    return request$;
+    return this.oHttp.get<IPage<IUsuario>>(strUrl);
   }
 
   fill(amount: number): Observable<number> {

@@ -6,6 +6,7 @@ import { ModalRef } from '../../../shared/modal/modal-ref';
 import { MODAL_REF } from '../../../shared/modal/modal.tokens';
 import { debounceTimeSearch } from '../../../../environment/environment';
 import { SessionService } from '../../../../service/session';
+import { ImageUploadService } from '../../../../service/image-upload';
 import { IJugador } from '../../../../model/jugador';
 import { IPage } from '../../../../model/plist';
 import { JugadorService } from '../../../../service/jugador-service';
@@ -40,6 +41,7 @@ export class JugadorAdminPlist {
   private route = inject(ActivatedRoute);
   private modalRef = inject(MODAL_REF, { optional: true });
   session = inject(SessionService);
+  imageUpload = inject(ImageUploadService);
 
   ngOnInit() {
     if (this.id_equipo != null) {
