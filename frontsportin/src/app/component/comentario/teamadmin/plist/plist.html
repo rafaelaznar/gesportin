@@ -36,11 +36,6 @@
       }
       @if (idUsuario() > 0) {
         <small class="text-muted ms-3">Filtro: id de usuario = {{ idUsuario() }}</small>
-        @if (true) {
-          <a class="ms-2" [routerLink]="['/comentario', strRole]" role="button" title="Quitar filtro">
-            <i class="bi bi-x-lg" aria-hidden="true"></i> Quitar filtro
-          </a>
-        }
       }
     }
     @if (contenido() && contenido().length > 0) {
