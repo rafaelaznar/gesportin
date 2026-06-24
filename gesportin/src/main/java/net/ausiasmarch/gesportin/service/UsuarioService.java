@@ -118,7 +118,7 @@ public class UsuarioService {
                 java.util.List<UsuarioEntity> filtered = result.getContent().stream()
                         .filter(u -> u.getClub() != null && myClub.equals(u.getClub().getId()))
                         .collect(Collectors.toList());
-                return oUsuarioConverter.toPageDTO(new org.springframework.data.domain.PageImpl<>(filtered, pageable, filtered.size()));
+                        return oUsuarioConverter.toPageDTO(new org.springframework.data.domain.PageImpl<>(filtered, pageable, result.getTotalElements()));
             }
         }
         return oUsuarioConverter.toPageDTO(result);
