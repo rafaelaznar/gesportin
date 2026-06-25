@@ -189,7 +189,6 @@ CREATE TABLE `jugador` (
   `dorsal` int NOT NULL,
   `posicion` varchar(255) CHARACTER SET utf32 COLLATE utf32_unicode_ci NOT NULL,
   `capitan` tinyint(1) NOT NULL DEFAULT '0',
-  `imagen` longblob,
   `id_usuario` bigint NOT NULL,
   `id_equipo` bigint NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf32 COLLATE=utf32_unicode_ci;
@@ -358,7 +357,8 @@ CREATE TABLE `usuario` (
   `genero` int NOT NULL,
   `id_tipousuario` bigint NOT NULL,
   `id_club` bigint NOT NULL,
-  `id_rolusuario` bigint NOT NULL
+  `id_rolusuario` bigint NOT NULL,
+  `imagen` longblob
 ) ENGINE=InnoDB DEFAULT CHARSET=utf32 COLLATE=utf32_unicode_ci;
 
 --
