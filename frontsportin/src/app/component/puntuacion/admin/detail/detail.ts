@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { DatetimePipe } from '../../../../pipe/datetime-pipe';
 import { PuntuacionService } from '../../../../service/puntuacion';
 import { IPuntuacion } from '../../../../model/puntuacion';
+import { ImageUploadService } from '../../../../service/image-upload';
 
 @Component({
   standalone: true,
@@ -17,6 +18,7 @@ export class PuntuacionAdminDetail implements OnInit {
   @Input() id: Signal<number> = signal(0);
 
   private oPuntuacionService = inject(PuntuacionService);
+  imageUpload: ImageUploadService = inject(ImageUploadService);
 
   oPuntuacion = signal<IPuntuacion | null>(null);
   loading = signal(true);

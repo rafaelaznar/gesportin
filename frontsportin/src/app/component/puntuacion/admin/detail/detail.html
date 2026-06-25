@@ -185,6 +185,14 @@
               <div class="col-7 fw-semibold small">{{ oPuntuacion()?.usuario?.fechaAlta | datetime }}</div>
               <div class="col-5 text-muted small text-uppercase">Género</div>
               <div class="col-7 fw-semibold small">{{ oPuntuacion()?.usuario?.genero === 0 ? 'Hombre' : 'Mujer' }}</div>
+              <div class="col-5 text-muted small text-uppercase">Imagen</div>
+              <div class="col-7 fw-semibold small">
+                @if (imageUpload.toPreviewSrc(oPuntuacion()?.usuario?.imagen)) {
+                  <img [src]="imageUpload.toPreviewSrc(oPuntuacion()?.usuario?.imagen)" class="img-thumbnail" style="max-height: 80px" alt="Foto del usuario"/>
+                } @else {
+                  <span class="text-muted">Sin imagen</span>
+                }
+              </div>
               <div class="col-5 text-muted small text-uppercase">Comentarios</div>
               <div class="col-7 fw-semibold small">
                 @if ((oPuntuacion()?.usuario?.comentarios ?? 0) > 0) {

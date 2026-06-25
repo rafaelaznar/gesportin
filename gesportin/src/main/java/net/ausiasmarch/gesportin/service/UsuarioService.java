@@ -11,10 +11,12 @@ import org.springframework.stereotype.Service;
 
 import net.ausiasmarch.gesportin.dto.UsuarioDTO;
 import net.ausiasmarch.gesportin.entity.UsuarioEntity;
+import net.ausiasmarch.gesportin.exception.ResourceNotAllowedException;
 import net.ausiasmarch.gesportin.exception.ResourceNotFoundException;
 import net.ausiasmarch.gesportin.exception.UnauthorizedException;
 import net.ausiasmarch.gesportin.repository.UsuarioRepository;
 import net.ausiasmarch.gesportin.dtoconverter.UsuarioConverter;
+import static net.ausiasmarch.gesportin.util.ImageValidator.isValidPicture;
 
 @Service
 public class UsuarioService {
@@ -193,14 +195,39 @@ public class UsuarioService {
         oUsuarioExistente.setApellido1(oUsuarioEntity.getApellido1());
         oUsuarioExistente.setApellido2(oUsuarioEntity.getApellido2());
         oUsuarioExistente.setUsername(oUsuarioEntity.getUsername());
-        oUsuarioExistente.setPassword(oUsuarioEntity.getPassword());
-        oUsuarioExistente.setFechaAlta(oUsuarioEntity.getFechaAlta());
+        if (oUsuarioEntity.getPassword() != null && !oUsuarioEntity.getPassword().isEmpty()) {
+            oUsuarioExistente.setPassword(oUsuarioEntity.getPassword());
+        }
+        // fechaAlta is server-managed: never overwrite on update
         oUsuarioExistente.setGenero(oUsuarioEntity.getGenero());
         oUsuarioExistente.setTipousuario(oTipousuarioService.get(oUsuarioEntity.getTipousuario().getId()));
         oUsuarioExistente.setClub(oClubService.get(oUsuarioEntity.getClub().getId()));
         oUsuarioExistente.setRolusuario(oRolusuarioService.get(oUsuarioEntity.getRolusuario().getId()));
+        oUsuarioExistente.setImagen(oUsuarioEntity.getImagen());
         UsuarioEntity saved = oUsuarioRepository.save(oUsuarioExistente);
         return oUsuarioConverter.toDTO(saved);
+    }
+
+    public void updatePicture(Long id, byte[] newImage) throws java.io.IOException {
+        oSessionService.denyUsuario();
+        UsuarioEntity oUsuarioExistente = oUsuarioRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con id: " + id));
+
+        // team admins can only update images of users in their own club
+        if (oSessionService.isEquipoAdmin()) {
+            Long myClub = oSessionService.getIdClub();
+            if (myClub == null) {
+                throw new UnauthorizedException("Acceso denegado: no tiene club asignado");
+            }
+            Long userClubId = oUsuarioExistente.getClub() != null ? oUsuarioExistente.getClub().getId() : null;
+            if (userClubId == null || !myClub.equals(userClubId)) {
+                throw new UnauthorizedException("Acceso denegado: el usuario no pertenece a su club");
+            }
+        }
+
+        if(!isValidPicture(newImage)) throw new ResourceNotAllowedException("This image is not allowed");
+        oUsuarioExistente.setImagen(newImage);
+        oUsuarioRepository.save(oUsuarioExistente);
     }
 
     public Long delete(Long id) {

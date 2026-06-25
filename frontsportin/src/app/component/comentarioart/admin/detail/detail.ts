@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { DatetimePipe } from '../../../../pipe/datetime-pipe';
 import { ComentarioartService } from '../../../../service/comentarioart';
 import { IComentarioart } from '../../../../model/comentarioart';
+import { ImageUploadService } from '../../../../service/image-upload';
 
 @Component({
   standalone: true,
@@ -17,6 +18,7 @@ export class ComentarioartAdminDetail implements OnInit {
   @Input() id: Signal<number> = signal(0);
 
   private comentarioartService = inject(ComentarioartService);
+  imageUpload: ImageUploadService = inject(ImageUploadService);
 
   oComentarioart = signal<IComentarioart | null>(null);
   loading = signal(true);

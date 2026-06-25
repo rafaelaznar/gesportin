@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { DatetimePipe } from '../../../../pipe/datetime-pipe';
 import { FacturaService } from '../../../../service/factura-service';
 import { IFactura } from '../../../../model/factura';
+import { ImageUploadService } from '../../../../service/image-upload';
 
 @Component({
   standalone: true,
@@ -17,6 +18,7 @@ export class FacturaAdminDetail implements OnInit {
   @Input() id: Signal<number> = signal(0);
 
   private facturaService = inject(FacturaService);
+  imageUpload: ImageUploadService = inject(ImageUploadService);
 
   oFactura = signal<IFactura | null>(null);
   loading = signal(true);

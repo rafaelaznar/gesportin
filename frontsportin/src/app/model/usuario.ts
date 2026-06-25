@@ -15,6 +15,7 @@ export interface IUsuario {
   tipousuario: ITipousuario
   rolusuario: IRolusuario
   club: IClub
+  imagen?: string | null
   comentarios: number
   puntuaciones: number
   comentarioarts: number

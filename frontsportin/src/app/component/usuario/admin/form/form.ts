@@ -4,6 +4,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { NotificacionService } from '../../../../service/notificacion';
 import { ModalService } from '../../../shared/modal/modal.service';
+import { ImageUploadService } from '../../../../service/image-upload';
 import { UsuarioService } from '../../../../service/usuarioService';
 import { ClubService } from '../../../../service/club';
 import { TipousuarioService } from '../../../../service/tipousuario';
@@ -38,10 +39,12 @@ export class UsuarioAdminForm implements OnInit {
   private oRolusuarioService = inject(RolusuarioService);
   private modalService = inject(ModalService);
   private sessionService = inject(SessionService);
+  imageUpload: ImageUploadService = inject(ImageUploadService);
 
   usuarioForm!: FormGroup;
   error = signal<string | null>(null);
   submitting = signal(false);
+  selectedImage = signal<string | null>(null);
   selectedClub = signal<IClub | null>(null);
   selectedTipousuario = signal<ITipousuario | null>(null);
   selectedRolusuario = signal<IRolusuario | null>(null);
@@ -75,6 +78,7 @@ export class UsuarioAdminForm implements OnInit {
       id_tipousuario: [null, Validators.required],
       id_rolusuario: [null, Validators.required],
       id_club: [null, Validators.required],
+      imagen: [null],
     });
 
     // On edit mode, password is optional
@@ -96,10 +100,14 @@ export class UsuarioAdminForm implements OnInit {
       id_tipousuario: usuario.tipousuario?.id,
       id_rolusuario: usuario.rolusuario?.id,
       id_club: usuario.club?.id,
+      imagen: usuario.imagen || null,
     });
     if (usuario.tipousuario?.id) this.loadTipousuario(usuario.tipousuario.id);
     if (usuario.rolusuario?.id) this.loadRolusuario(usuario.rolusuario.id);
     if (usuario.club?.id) this.loadClub(usuario.club.id);
+    if (usuario.imagen) {
+      this.selectedImage.set(this.imageUpload.toPreviewSrc(usuario.imagen));
+    }
   }
 
   private loadClub(idClub: number): void {
@@ -192,6 +200,19 @@ export class UsuarioAdminForm implements OnInit {
     });
   }
 
+  async onFileSelected(event: Event): Promise<void> {
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) return;
+    const file = input.files[0];
+    try {
+      const base64 = await this.imageUpload.fileToBase64(file);
+      this.usuarioForm.patchValue({ imagen: base64 });
+      this.selectedImage.set(this.imageUpload.toPreviewSrc(base64));
+    } catch (err: any) {
+      this.notificacion.error(err.message || 'Error al cargar la imagen');
+    }
+  }
+
   onSubmit(): void {
     if (this.usuarioForm.invalid) {
       this.notificacion.success('Por favor, complete todos los campos correctamente');
@@ -209,6 +230,7 @@ export class UsuarioAdminForm implements OnInit {
       tipousuario: { id: Number(this.usuarioForm.value.id_tipousuario) },
       rolusuario: { id: Number(this.usuarioForm.value.id_rolusuario) },
       club: { id: Number(this.usuarioForm.value.id_club) },
+      imagen: this.usuarioForm.value.imagen || null,
     };
 
     if (!this.isEditMode) {

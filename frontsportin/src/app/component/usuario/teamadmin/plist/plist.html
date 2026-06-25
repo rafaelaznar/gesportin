@@ -50,7 +50,7 @@
       <table class="table table-striped table-bordered table-sm w-100">
         <thead>
           <tr>
-            <th scope="col" (click)="onOrder('id')" style="cursor: pointer; width: 6%">
+            <th scope="col" (click)="onOrder('id')" style="cursor: pointer; width: 5%">
               <div class="header-stacked">
                 <div class="header-top">
                   <i class="bi bi-hash" aria-hidden="true"></i>
@@ -66,7 +66,13 @@
                 <span>ID</span>
               </div>
             </th>
-            <th scope="col" (click)="onOrder('nombre')" style="cursor: pointer; width: 14%">
+            <th scope="col" style="width: 7%">
+              <div class="header-stacked">
+                <div class="header-top"><i class="bi bi-image" aria-hidden="true"></i></div>
+                <span>Imagen</span>
+              </div>
+            </th>
+            <th scope="col" (click)="onOrder('nombre')" style="cursor: pointer; width: 13%">
               <div class="header-stacked">
                 <div class="header-top">
                   <i class="bi bi-person" aria-hidden="true"></i>
@@ -183,6 +189,13 @@
               [style.cursor]="isDialogMode() ? 'pointer' : 'default'"
             >
               <th scope="row" class="text-center">{{ oUsuario.id }}</th>
+              <td class="text-center align-middle">
+                @if (imageUpload.toPreviewSrc(oUsuario.imagen)) {
+                  <img [src]="imageUpload.toPreviewSrc(oUsuario.imagen)" alt="Foto" class="user-img-thumb" />
+                } @else {
+                  <img src="no-img.jpg" alt="Sin foto" class="user-img-thumb" />
+                }
+              </td>
               <td>{{ oUsuario.nombre }}</td>
               <td>{{ oUsuario.apellido1 }}</td>
               <td>{{ oUsuario.username }}</td>

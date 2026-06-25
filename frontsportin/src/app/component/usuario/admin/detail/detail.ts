@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { DatetimePipe } from '../../../../pipe/datetime-pipe';
+import { ImageUploadService } from '../../../../service/image-upload';
 import { UsuarioService } from '../../../../service/usuarioService';
 import { IUsuario } from '../../../../model/usuario';
 
@@ -17,6 +18,7 @@ export class UsuarioAdminDetail implements OnInit {
   @Input() id: Signal<number> = signal(0);
 
   private usuarioService = inject(UsuarioService);
+  imageUpload: ImageUploadService = inject(ImageUploadService);
 
   oUsuario = signal<IUsuario | null>(null);
   loading = signal(true);

@@ -6,6 +6,7 @@ import { DatetimePipe } from '../../../../pipe/datetime-pipe';
 import { EquipoService } from '../../../../service/equipo';
 import { IEquipo } from '../../../../model/equipo';
 import { SessionService } from '../../../../service/session';
+import { ImageUploadService } from '../../../../service/image-upload';
 
 @Component({
   selector: 'app-equipo-admin-detail',
@@ -19,6 +20,7 @@ export class EquipoAdminDetail implements OnInit {
 
   private oEquipoService = inject(EquipoService);
   session = inject(SessionService);
+  imageUpload: ImageUploadService = inject(ImageUploadService);
 
   oEquipo = signal<IEquipo | null>(null);
   loading = signal(true);

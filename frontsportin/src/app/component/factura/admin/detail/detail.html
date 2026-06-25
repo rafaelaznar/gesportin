@@ -76,6 +76,14 @@
               <div class="col-7 fw-semibold small">{{ oFactura()?.usuario?.fechaAlta | datetime }}</div>
               <div class="col-5 text-muted small text-uppercase">Género</div>
               <div class="col-7 fw-semibold small">{{ oFactura()?.usuario?.genero === 0 ? 'Hombre' : 'Mujer' }}</div>
+              <div class="col-5 text-muted small text-uppercase">Imagen</div>
+              <div class="col-7 fw-semibold small">
+                @if (imageUpload.toPreviewSrc(oFactura()?.usuario?.imagen)) {
+                  <img [src]="imageUpload.toPreviewSrc(oFactura()?.usuario?.imagen)" class="img-thumbnail" style="max-height: 80px" alt="Foto del usuario"/>
+                } @else {
+                  <span class="text-muted">Sin imagen</span>
+                }
+              </div>
               <div class="col-5 text-muted small text-uppercase">Comentarios</div>
               <div class="col-7 fw-semibold small">
                 @if ((oFactura()?.usuario?.comentarios ?? 0) > 0) {

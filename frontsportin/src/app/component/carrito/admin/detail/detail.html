@@ -224,6 +224,14 @@
               <div class="col-7 fw-semibold small">{{ oCarrito()?.usuario?.fechaAlta | datetime }}</div>
               <div class="col-5 text-muted small text-uppercase">Género</div>
               <div class="col-7 fw-semibold small">{{ oCarrito()?.usuario?.genero === 0 ? 'Hombre' : 'Mujer' }}</div>
+              <div class="col-5 text-muted small text-uppercase">Imagen</div>
+              <div class="col-7 fw-semibold small">
+                @if (imageUpload.toPreviewSrc(oCarrito()?.usuario?.imagen)) {
+                  <img [src]="imageUpload.toPreviewSrc(oCarrito()?.usuario?.imagen)" class="img-thumbnail" style="max-height: 80px" alt="Foto del usuario"/>
+                } @else {
+                  <span class="text-muted">Sin imagen</span>
+                }
+              </div>
               <div class="col-5 text-muted small text-uppercase">Comentarios</div>
               <div class="col-7 fw-semibold small">
                 @if ((oCarrito()?.usuario?.comentarios ?? 0) > 0) {

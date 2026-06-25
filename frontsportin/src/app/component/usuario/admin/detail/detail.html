@@ -48,6 +48,14 @@
           <div class="col-7 fw-semibold small">{{ oUsuario()?.fechaAlta | datetime }}</div>
           <div class="col-5 text-muted small text-uppercase">Género</div>
           <div class="col-7 fw-semibold small">{{ oUsuario()?.genero === 0 ? 'Hombre' : 'Mujer' }}</div>
+          <div class="col-5 text-muted small text-uppercase">Imagen</div>
+          <div class="col-7 fw-semibold small">
+            @if (imageUpload.toPreviewSrc(oUsuario()?.imagen)) {
+              <img [src]="imageUpload.toPreviewSrc(oUsuario()?.imagen)" class="img-thumbnail" style="max-height: 120px" alt="Foto del usuario"/>
+            } @else {
+              <span class="text-muted">Sin imagen</span>
+            }
+          </div>
           <div class="col-5 text-muted small text-uppercase">Comentarios</div>
           <div class="col-7 fw-semibold small">
             @if ((oUsuario()?.comentarios ?? 0) > 0) {

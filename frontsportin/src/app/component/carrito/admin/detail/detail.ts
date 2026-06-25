@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { DatetimePipe } from '../../../../pipe/datetime-pipe';
 import { CarritoService } from '../../../../service/carrito';
 import { ICarrito } from '../../../../model/carrito';
+import { ImageUploadService } from '../../../../service/image-upload';
 
 @Component({
   standalone: true,
@@ -17,6 +18,7 @@ export class CarritoAdminDetail implements OnInit {
   @Input() id: Signal<number> = signal(0);
 
   private carritoService = inject(CarritoService);
+  imageUpload: ImageUploadService = inject(ImageUploadService);
 
   oCarrito = signal<ICarrito | null>(null);
   loading = signal(true);

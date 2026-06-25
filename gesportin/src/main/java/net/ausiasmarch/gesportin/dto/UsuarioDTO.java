@@ -31,6 +31,7 @@ public class UsuarioDTO extends UsuarioEntity {
         setTipousuario(entity.getTipousuario());
         setRolusuario(entity.getRolusuario());
         setClub(entity.getClub());
+        setImagen(entity.getImagen());
         this.comentarios = comentarios;
         this.puntuaciones = puntuaciones;
         this.comentarioarts = comentarioarts;

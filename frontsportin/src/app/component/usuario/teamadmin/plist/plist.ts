@@ -6,6 +6,7 @@ import { ModalRef } from '../../../shared/modal/modal-ref';
 import { MODAL_REF } from '../../../shared/modal/modal.tokens';
 import { debounceTimeSearch } from '../../../../environment/environment';
 import { SessionService } from '../../../../service/session';
+import { ImageUploadService } from '../../../../service/image-upload';
 import { IUsuario } from '../../../../model/usuario';
 import { IPage } from '../../../../model/plist';
 import { UsuarioService } from '../../../../service/usuarioService';
@@ -35,6 +36,7 @@ export class UsuarioTeamadminPlist {
   private usuarioService = inject(UsuarioService);
   private modalRef = inject(MODAL_REF, { optional: true });
   session = inject(SessionService);
+  imageUpload = inject(ImageUploadService);
 
   ngOnInit() {
         this.searchSubscription = this.searchSubject

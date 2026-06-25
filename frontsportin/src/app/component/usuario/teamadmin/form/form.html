@@ -155,6 +155,22 @@
     </div>
     }
 
+    <div class="mb-3">
+      <label for="imagen" class="form-label">Foto del usuario</label>
+      <input
+        type="file"
+        class="form-control"
+        id="imagen"
+        accept="image/*"
+        (change)="onFileSelected($event)"
+      />
+      @if (selectedImage()) {
+        <div class="mt-2 text-center">
+          <img [src]="selectedImage()" class="img-thumbnail" style="max-height: 160px" alt="Vista previa de la foto" />
+        </div>
+      }
+    </div>
+
     <div class="d-flex justify-content-between">
       <button type="button" class="btn btn-outline-secondary" (click)="onCancel()">Cancelar</button>
       <button type="submit" class="btn btn-primary" [disabled]="submitting() || usuarioForm.invalid">
