@@ -1,11 +1,32 @@
-.controls-row { display: flex; flex-wrap: nowrap; gap: 0.5rem; align-items: center; }
-.controls-row .col-control { flex: 1 1 50%; display: flex; align-items: center; }
-.controls-row .col-control.left { justify-content: flex-start; }
-.controls-row .col-control.right { justify-content: flex-end; }
 .new-btn { display: inline-block; margin: 10px auto; }
-.controls-row app-paginacion,
-.controls-row app-botonera-rpp { display: inline-flex; justify-content: center; }
-@media (max-width: 850px) {
-  .controls-row { flex-wrap: wrap; justify-content: center; }
-  .controls-row .col-control { flex: 1 1 100%; justify-content: center; }
+
+.comentarios-blog {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.comentario-card {
+  border-left: 4px solid var(--bs-primary, #0d6efd);
+  border-radius: 0.375rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.15s ease-in-out;
+}
+
+.comentario-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.comentario-card .card-body {
+  padding: 0.75rem 1rem;
+}
+
+.comentario-autor {
+  font-size: 0.9rem;
+}
+
+.comentario-contenido {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  margin-bottom: 0.5rem;
 }

@@ -1,24 +1,21 @@
-import { Component, OnInit, inject, signal, input } from '@angular/core';
+import { Component, OnInit, inject, signal, computed, input } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { NotificacionService } from '../../../../service/notificacion';
-import { ModalService } from '../../../shared/modal/modal.service';
 import { ComentarioService } from '../../../../service/comentario';
 import { UsuarioService } from '../../../../service/usuarioService';
 import { NoticiaService } from '../../../../service/noticia';
 import { IComentario } from '../../../../model/comentario';
 import { IUsuario } from '../../../../model/usuario';
-import { INoticia } from '../../../../model/noticia';
 import { SessionService } from '../../../../service/session';
-import { UsuarioAdminPlist } from '../../../usuario/admin/plist/plist';
-import { NoticiaAdminPlist } from '../../../noticia/admin/plist/plist';
+import { NoticiaTeamadminEmbedded } from '../../../noticia/teamadmin/embedded/embedded';
 
 @Component({
   selector: 'app-comentario-teamadmin-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, NoticiaTeamadminEmbedded],
   templateUrl: './form.html',
   styleUrl: './form.css',
 })
@@ -33,15 +30,20 @@ export class ComentarioTeamadminForm implements OnInit {
   private oComentarioService = inject(ComentarioService);
   private oUsuarioService = inject(UsuarioService);
   private oNoticiaService = inject(NoticiaService);
-  private modalService = inject(ModalService);
   sessionService = inject(SessionService);
 
   comentarioForm!: FormGroup;
   error = signal<string | null>(null);
   loading = signal<boolean>(false);
   submitting = signal(false);
-  selectedUsuario = signal<IUsuario | null>(null);
-  selectedNoticia = signal<INoticia | null>(null);
+  currentUser = signal<IUsuario | null>(null);
+  noticiaTitle = signal<string>('');
+
+  maxChars = 1000;
+  charsLeft = computed(() => {
+    const val = this.comentarioForm?.get('contenido')?.value || '';
+    return this.maxChars - val.length;
+  });
 
   ngOnInit(): void {
     this.initForm();
@@ -49,24 +51,29 @@ export class ComentarioTeamadminForm implements OnInit {
     if (this.id() > 0) {
       this.loadById(this.id());
     } else {
-      // Auto-set current session user for teamadmin
       const userId = this.sessionService.getUserId();
       if (userId) {
         this.comentarioForm.patchValue({ id_usuario: userId });
-        this.loadUsuario(userId);
+        this.oUsuarioService.get(userId).subscribe({
+          next: (usuario) => this.currentUser.set(usuario),
+          error: () => {},
+        });
       }
       if (this.idNoticia() > 0) {
         this.comentarioForm.patchValue({ id_noticia: this.idNoticia() });
-        this.loadNoticia(this.idNoticia());
+        this.oNoticiaService.getById(this.idNoticia()).subscribe({
+          next: (noticia) => this.noticiaTitle.set(noticia.titulo),
+          error: () => {},
+        });
       }
-      this.loading?.set(false);
+      this.loading.set(false);
     }
   }
 
   private initForm(): void {
     this.comentarioForm = this.fb.group({
       id: [{ value: 0, disabled: true }],
-      contenido: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(1000)]],
+      contenido: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(this.maxChars)]],
       id_usuario: [null],
       id_noticia: [null, Validators.required],
     });
@@ -76,7 +83,21 @@ export class ComentarioTeamadminForm implements OnInit {
     this.loading.set(true);
     this.oComentarioService.get(id).subscribe({
       next: (data: IComentario) => {
-        this.loadComentarioData(data);
+        this.comentarioForm.patchValue({
+          id: data.id,
+          contenido: data.contenido ?? '',
+          id_usuario: data.usuario?.id ?? null,
+          id_noticia: data.noticia?.id ?? null,
+        });
+        if (data.noticia?.id) {
+          this.noticiaTitle.set(data.noticia.titulo);
+        }
+        if (data.usuario?.id) {
+          this.oUsuarioService.get(data.usuario.id).subscribe({
+            next: (usuario) => this.currentUser.set(usuario),
+            error: () => {},
+          });
+        }
         this.loading.set(false);
       },
       error: (err: HttpErrorResponse) => {
@@ -87,69 +108,11 @@ export class ComentarioTeamadminForm implements OnInit {
     });
   }
 
-  private loadComentarioData(comentario: IComentario): void {
-    this.comentarioForm.patchValue({
-      id: comentario.id,
-      contenido: comentario.contenido ?? '',
-      id_usuario: comentario.usuario?.id ?? null,
-      id_noticia: comentario.noticia?.id ?? null,
-    });
-    const noticia = comentario.noticia;
-    if (noticia) {
-      const titulo = noticia.titulo;
-    }
-    if (comentario.usuario?.id) this.loadUsuario(comentario.usuario.id);
-    if (comentario.noticia?.id) this.loadNoticia(comentario.noticia.id);
-  }
-
-  private loadUsuario(idUsuario: number): void {
-    this.oUsuarioService.get(idUsuario).subscribe({
-      next: (usuario) => this.selectedUsuario.set(usuario),
-      error: () => this.selectedUsuario.set(null),
-    });
-  }
-
-  private loadNoticia(idNoticia: number): void {
-    this.oNoticiaService.getById(idNoticia).subscribe({
-      next: (noticia) => {
-        this.selectedNoticia.set(noticia);
-        if (this.id() === 0) {
-          const titulo = noticia.titulo;
-        }
-      },
-      error: () => this.selectedNoticia.set(null),
-    });
-  }
-
   get contenido() { return this.comentarioForm.get('contenido'); }
-  get id_usuario() { return this.comentarioForm.get('id_usuario'); }
-  get id_noticia() { return this.comentarioForm.get('id_noticia'); }
-
-  openUsuarioFinderModal(): void {
-    const ref = this.modalService.open<unknown, IUsuario | null>(UsuarioAdminPlist);
-    ref.afterClosed$.subscribe((usuario: IUsuario | null) => {
-      if (usuario?.id != null) {
-        this.comentarioForm.patchValue({ id_usuario: usuario.id });
-        this.selectedUsuario.set(usuario);
-        this.notificacion.success(`Usuario seleccionado: ${usuario.nombre}`);
-      }
-    });
-  }
-
-  openNoticiaFinderModal(): void {
-    const ref = this.modalService.open<unknown, INoticia | null>(NoticiaAdminPlist);
-    ref.afterClosed$.subscribe((noticia: INoticia | null) => {
-      if (noticia?.id != null) {
-        this.comentarioForm.patchValue({ id_noticia: noticia.id });
-        this.selectedNoticia.set(noticia);
-        this.notificacion.success(`Noticia seleccionada: ${noticia.titulo}`);
-      }
-    });
-  }
 
   onSubmit(): void {
     if (this.comentarioForm.invalid) {
-      this.notificacion.success('Por favor, complete todos los campos correctamente');
+      this.notificacion.success('Por favor, complete el comentario');
       return;
     }
 
@@ -171,7 +134,7 @@ export class ComentarioTeamadminForm implements OnInit {
         },
         error: (err: HttpErrorResponse) => {
           this.error.set('Error actualizando el comentario');
-          this.notificacion.success('Error actualizando el comentario');
+          this.notificacion.success('Error al actualizar el comentario');
           console.error(err);
           this.submitting.set(false);
         },
@@ -190,7 +153,7 @@ export class ComentarioTeamadminForm implements OnInit {
         },
         error: (err: HttpErrorResponse) => {
           this.error.set('Error creando el comentario');
-          this.notificacion.success('Error creando el comentario');
+          this.notificacion.success('Error al crear el comentario');
           console.error(err);
           this.submitting.set(false);
         },
@@ -199,6 +162,11 @@ export class ComentarioTeamadminForm implements OnInit {
   }
 
   onCancel(): void {
-    this.router.navigate([this.returnUrl()]);
+    const idNoticia = this.idNoticia();
+    if (idNoticia > 0) {
+      this.router.navigate(['/comentario/teamadmin/noticia', idNoticia]);
+    } else {
+      this.router.navigate([this.returnUrl()]);
+    }
   }
 }

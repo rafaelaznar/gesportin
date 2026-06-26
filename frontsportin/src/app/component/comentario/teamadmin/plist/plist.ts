@@ -5,20 +5,14 @@ import { IPage } from '../../../../model/plist';
 import { ComentarioService } from '../../../../service/comentario';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Paginacion } from '../../../shared/paginacion/paginacion';
-import { BotoneraRpp } from '../../../shared/botonera-rpp/botonera-rpp';
-import { TrimPipe } from '../../../../pipe/trim-pipe';
-import { Subject, Subscription } from 'rxjs';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { debounceTimeSearch } from '../../../../environment/environment';
 import { BotoneraActionsPlist } from '../../../shared/botonera-actions-plist/botonera-actions-plist';
 import { NoticiaTeamadminEmbedded } from '../../../noticia/teamadmin/embedded/embedded';
-
 @Component({
   standalone: true,
   selector: 'app-comentario-teamadmin-plist',
   templateUrl: './plist.html',
   styleUrl: './plist.css',
-  imports: [Paginacion, RouterLink, TrimPipe, BotoneraRpp, BotoneraActionsPlist, NoticiaTeamadminEmbedded],
+  imports: [Paginacion, RouterLink, BotoneraActionsPlist, NoticiaTeamadminEmbedded],
 })
 export class ComentarioTeamadminPlist implements OnInit, OnDestroy {
   readonly strRole = 'teamadmin';
@@ -29,23 +23,20 @@ export class ComentarioTeamadminPlist implements OnInit, OnDestroy {
 
   oPage = signal<IPage<IComentario> | null>(null);
   numPage = signal<number>(0);
-  numRpp = signal<number>(5);
+  numRpp = signal<number>(10); // RPP fijo a 10
 
   message = signal<string | null>(null);
   totalRecords = computed(() => this.oPage()?.totalElements ?? 0);
   private messageTimeout: any = null;
 
   orderField = signal<string>('id');
-  orderDirection = signal<'asc' | 'desc'>('asc');
+  orderDirection = signal<'asc' | 'desc'>('desc'); // Siempre descendente por id
 
-  contenido = signal<string>('');
   idUsuario = signal<number>(0);
   idNoticia = signal<number>(0);
 
   private route = inject(ActivatedRoute);
   private oComentarioService = inject(ComentarioService);
-  private searchSubject = new Subject<string>();
-  private searchSubscription?: Subscription;
 
   ngOnInit() {
     if (this.id_usuario) this.idUsuario.set(this.id_usuario);
@@ -54,19 +45,10 @@ export class ComentarioTeamadminPlist implements OnInit, OnDestroy {
     const msg = this.route.snapshot.queryParamMap.get('msg');
     if (msg) this.showMessage(msg);
 
-    this.searchSubscription = this.searchSubject
-      .pipe(debounceTime(debounceTimeSearch), distinctUntilChanged())
-      .subscribe((searchTerm: string) => {
-        this.contenido.set(searchTerm);
-        this.numPage.set(0);
-        this.getPage();
-      });
-
     this.getPage();
   }
 
   ngOnDestroy() {
-    if (this.searchSubscription) this.searchSubscription.unsubscribe();
     if (this.messageTimeout) clearTimeout(this.messageTimeout);
   }
 
@@ -85,7 +67,7 @@ export class ComentarioTeamadminPlist implements OnInit, OnDestroy {
       this.numRpp(),
       this.orderField(),
       this.orderDirection(),
-      this.contenido(),
+      '',
       this.idUsuario(),
       this.idNoticia(),
     ).subscribe({
@@ -100,29 +82,8 @@ export class ComentarioTeamadminPlist implements OnInit, OnDestroy {
     });
   }
 
-  onOrder(order: string) {
-    if (this.orderField() === order) {
-      this.orderDirection.set(this.orderDirection() === 'asc' ? 'desc' : 'asc');
-    } else {
-      this.orderField.set(order);
-      this.orderDirection.set('asc');
-    }
-    this.numPage.set(0);
-    this.getPage();
-  }
-
   goToPage(numPage: number) {
     this.numPage.set(numPage);
     this.getPage();
-  }
-
-  onRppChange(n: number) {
-    this.numRpp.set(n);
-    this.numPage.set(0);
-    this.getPage();
-  }
-
-  onSearch(value: string) {
-    this.searchSubject.next(value);
   }
 }
