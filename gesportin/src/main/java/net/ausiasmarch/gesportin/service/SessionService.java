@@ -86,6 +86,7 @@ public class SessionService {
     /**
      * Return the club id of the currently logged user (null if no session or no
      * club).
+     * No puede haber nadie sin club así que si el usuario en sesión no tiene club, es un error de datos y se emite un UnauthorizedException. Esto es para proteger la integridad de los datos y evitar que un usuario sin club pueda realizar operaciones que requieren pertenecer a un club específico.
      */
     public Long getIdClub() {
         String username = getUsername();
@@ -94,7 +95,8 @@ public class SessionService {
         }
         UsuarioEntity oUsuarioEntity = oUsuarioRepository.findFirstByUsername(username).orElse(null);
         if (oUsuarioEntity == null || oUsuarioEntity.getClub() == null) {
-            return null;
+            //return null;
+            throw new UnauthorizedException("Acceso denegado: el usuario en sesión no tiene club asignado");
         }
         return oUsuarioEntity.getClub().getId();
     }

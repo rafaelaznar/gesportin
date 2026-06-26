@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { NotificacionService } from '../../../../service/notificacion';
 import { ModalService } from '../../../shared/modal/modal.service';
 import { ImageUploadService } from '../../../../service/image-upload';
+import { LoginService } from '../../../../service/login';
 import { UsuarioService } from '../../../../service/usuarioService';
 import { ClubService } from '../../../../service/club';
 import { TipousuarioService } from '../../../../service/tipousuario';
@@ -33,6 +34,7 @@ export class UsuarioTeamadminForm implements OnInit {
   private router = inject(Router);
   private fb = inject(FormBuilder);
   private notificacion = inject(NotificacionService);
+  private oLoginService = inject(LoginService);
   private oUsuarioService = inject(UsuarioService);
   private oClubService = inject(ClubService);
   private oTipousuarioService = inject(TipousuarioService);
@@ -79,6 +81,7 @@ export class UsuarioTeamadminForm implements OnInit {
       apellido2: ['', [Validators.maxLength(100)]],
       username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
       password: ['', [Validators.required, Validators.minLength(6)]],
+      genero: ['', Validators.required],
       id_tipousuario: [null, Validators.required],
       id_rolusuario: [null, Validators.required],
       id_club: [null, Validators.required],
@@ -115,6 +118,7 @@ export class UsuarioTeamadminForm implements OnInit {
       apellido1: usuario.apellido1,
       apellido2: usuario.apellido2,
       username: usuario.username,
+      genero: usuario.genero,
       id_tipousuario: usuario.tipousuario?.id,
       id_rolusuario: usuario.rolusuario?.id,
       id_club: usuario.club?.id,
@@ -167,6 +171,10 @@ export class UsuarioTeamadminForm implements OnInit {
 
   get password() {
     return this.usuarioForm.get('password');
+  }
+
+  get genero() {
+    return this.usuarioForm.get('genero');
   }
 
   get id_tipousuario() {
@@ -227,7 +235,7 @@ export class UsuarioTeamadminForm implements OnInit {
     }
   }
 
-  onSubmit(): void {
+  async onSubmit(): Promise<void> {
     if (this.usuarioForm.invalid) {
       this.notificacion.success('Por favor, complete todos los campos correctamente');
       return;
@@ -240,6 +248,7 @@ export class UsuarioTeamadminForm implements OnInit {
       apellido1: this.usuarioForm.value.apellido1,
       apellido2: this.usuarioForm.value.apellido2,
       username: this.usuarioForm.value.username,
+      genero: Number(this.usuarioForm.value.genero),
       tipousuario: { id: Number(this.usuarioForm.value.id_tipousuario) },
       rolusuario: { id: Number(this.usuarioForm.value.id_rolusuario) },
       club: { id: Number(this.usuarioForm.value.id_club) },
@@ -247,7 +256,14 @@ export class UsuarioTeamadminForm implements OnInit {
     };
 
     if (this.id() <= 0) {
-      usuarioData.password = this.usuarioForm.value.password;
+      const rawPassword = this.usuarioForm.value.password;
+      if (rawPassword) {
+        usuarioData.password = await this.oLoginService.sha256(rawPassword);
+      } else {
+        this.submitting.set(false);
+        this.notificacion.error('La contraseña es obligatoria');
+        return;
+      }
     }
 
     if (this.id() > 0) {

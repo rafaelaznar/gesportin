@@ -350,7 +350,7 @@ CREATE TABLE `usuario` (
   `id` bigint NOT NULL,
   `nombre` varchar(255) CHARACTER SET utf32 COLLATE utf32_unicode_ci NOT NULL,
   `apellido1` varchar(255) CHARACTER SET utf32 COLLATE utf32_unicode_ci NOT NULL,
-  `apellido2` varchar(255) CHARACTER SET utf32 COLLATE utf32_unicode_ci NOT NULL,
+  `apellido2` varchar(255) CHARACTER SET utf32 COLLATE utf32_unicode_ci,
   `username` varchar(255) CHARACTER SET utf32 COLLATE utf32_unicode_ci NOT NULL,
   `password` varchar(255) CHARACTER SET utf32 COLLATE utf32_unicode_ci NOT NULL,
   `fecha_alta` datetime NOT NULL,

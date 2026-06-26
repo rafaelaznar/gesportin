@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { NotificacionService } from '../../../../service/notificacion';
 import { ModalService } from '../../../shared/modal/modal.service';
 import { ImageUploadService } from '../../../../service/image-upload';
+import { LoginService } from '../../../../service/login';
 import { UsuarioService } from '../../../../service/usuarioService';
 import { ClubService } from '../../../../service/club';
 import { TipousuarioService } from '../../../../service/tipousuario';
@@ -33,6 +34,7 @@ export class UsuarioAdminForm implements OnInit {
 
   private fb = inject(FormBuilder);
   private notificacion = inject(NotificacionService);
+  private oLoginService = inject(LoginService);
   private oUsuarioService = inject(UsuarioService);
   private oClubService = inject(ClubService);
   private oTipousuarioService = inject(TipousuarioService);
@@ -213,7 +215,7 @@ export class UsuarioAdminForm implements OnInit {
     }
   }
 
-  onSubmit(): void {
+  async onSubmit(): Promise<void> {
     if (this.usuarioForm.invalid) {
       this.notificacion.success('Por favor, complete todos los campos correctamente');
       return;
@@ -234,7 +236,14 @@ export class UsuarioAdminForm implements OnInit {
     };
 
     if (!this.isEditMode) {
-      usuarioData.password = this.usuarioForm.value.password;
+      const rawPassword = this.usuarioForm.value.password;
+      if (rawPassword) {
+        usuarioData.password = await this.oLoginService.sha256(rawPassword);
+      } else {
+        this.submitting.set(false);
+        this.notificacion.error('La contraseña es obligatoria');
+        return;
+      }
     }
 
     if (this.isEditMode && this.usuario?.id) {

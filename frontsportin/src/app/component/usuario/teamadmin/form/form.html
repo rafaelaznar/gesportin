@@ -43,6 +43,25 @@
     </div>
 
     <div class="mb-3">
+      <label for="genero" class="form-label">Género <span class="text-danger">*</span></label>
+      <select
+        id="genero"
+        class="form-select"
+        formControlName="genero"
+        [class.is-invalid]="genero?.invalid && genero?.touched"
+      >
+        <option value="" disabled>Selecciona género</option>
+        <option [value]="0">Hombre</option>
+        <option [value]="1">Mujer</option>
+      </select>
+      @if (genero?.invalid && genero?.touched) {
+        <div class="invalid-feedback">
+          @if (genero?.errors?.['required']) { <span>Género es obligatorio.</span> }
+        </div>
+      }
+    </div>
+
+    <div class="mb-3">
       <label for="username" class="form-label">Username <span class="text-danger">*</span></label>
       <input
         id="username"

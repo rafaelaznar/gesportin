@@ -14,6 +14,7 @@ import net.ausiasmarch.gesportin.entity.UsuarioEntity;
 import net.ausiasmarch.gesportin.exception.ResourceNotAllowedException;
 import net.ausiasmarch.gesportin.exception.ResourceNotFoundException;
 import net.ausiasmarch.gesportin.exception.UnauthorizedException;
+import net.ausiasmarch.gesportin.repository.ClubRepository;
 import net.ausiasmarch.gesportin.repository.UsuarioRepository;
 import net.ausiasmarch.gesportin.dtoconverter.UsuarioConverter;
 import static net.ausiasmarch.gesportin.util.ImageValidator.isValidPicture;
@@ -23,6 +24,9 @@ public class UsuarioService {
 
     @Autowired
     private UsuarioRepository oUsuarioRepository;
+
+    @Autowired
+    private ClubRepository oClubRepository;
 
     @Autowired
     private ClubService oClubService;
@@ -44,37 +48,35 @@ public class UsuarioService {
 
     private final Random random = new Random();
 
-
-
     private final String[] nombresVaron = {
-        "Juan", "Carlos", "Luis", "Pedro", "José",
-        "Francisco", "Antonio", "Manuel", "David", "Javier",
-        "Miguel", "Alejandro", "Rafael", "Daniel", "Fernando",
-        "Sergio", "Jorge", "Alberto", "Raúl", "Pablo",
-        "Rubén", "Adrián", "Diego", "Iván", "Óscar"
+            "Juan", "Carlos", "Luis", "Pedro", "José",
+            "Francisco", "Antonio", "Manuel", "David", "Javier",
+            "Miguel", "Alejandro", "Rafael", "Daniel", "Fernando",
+            "Sergio", "Jorge", "Alberto", "Raúl", "Pablo",
+            "Rubén", "Adrián", "Diego", "Iván", "Óscar"
     };
 
     private final String[] nombresMujer = {
-        "María", "Carmen", "Ana", "Laura", "Isabel",
-        "Patricia", "Sofía", "Lucía", "Marta", "Elena",
-        "Sara", "Cristina", "Raquel", "Beatriz", "Julia",
-        "Victoria", "Claudia", "Andrea", "Alba", "Noelia",
-        "Silvia", "Natalia", "Irene", "Carla", "Lorena"
+            "María", "Carmen", "Ana", "Laura", "Isabel",
+            "Patricia", "Sofía", "Lucía", "Marta", "Elena",
+            "Sara", "Cristina", "Raquel", "Beatriz", "Julia",
+            "Victoria", "Claudia", "Andrea", "Alba", "Noelia",
+            "Silvia", "Natalia", "Irene", "Carla", "Lorena"
     };
 
     private final String[] apellidos = {
-        "García", "Rodríguez", "González", "Fernández", "López", "Martínez", "Sánchez", "Pérez", "Gómez", "Martín",
-        "Jiménez", "Ruiz", "Hernández", "Díaz", "Moreno", "Muñoz", "Álvarez", "Romero", "Alonso", "Gutiérrez",
-        "Navarro", "Torres", "Domínguez", "Vázquez", "Ramos", "Gil", "Ramírez", "Serrano", "Blanco", "Suárez",
-        "Molina", "Castro", "Ortega", "Rubio", "Morales", "Delgado", "Ortiz", "Marín", "Iglesias", "Santos",
-        "Castillo", "Garrido", "Calvo", "Peña", "Cruz", "Cano", "Núñez", "Prieto", "Díez", "Lozano"
+            "García", "Rodríguez", "González", "Fernández", "López", "Martínez", "Sánchez", "Pérez", "Gómez", "Martín",
+            "Jiménez", "Ruiz", "Hernández", "Díaz", "Moreno", "Muñoz", "Álvarez", "Romero", "Alonso", "Gutiérrez",
+            "Navarro", "Torres", "Domínguez", "Vázquez", "Ramos", "Gil", "Ramírez", "Serrano", "Blanco", "Suárez",
+            "Molina", "Castro", "Ortega", "Rubio", "Morales", "Delgado", "Ortiz", "Marín", "Iglesias", "Santos",
+            "Castillo", "Garrido", "Calvo", "Peña", "Cruz", "Cano", "Núñez", "Prieto", "Díez", "Lozano"
     };
 
     public UsuarioDTO get(Long id) {
         UsuarioEntity e = oUsuarioRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con id: " + id));
         if (oSessionService.isEquipoAdmin() || oSessionService.isUsuario()) {
-            Long clubId = (e.getClub()!=null) ? e.getClub().getId() : null;
+            Long clubId = (e.getClub() != null) ? e.getClub().getId() : null;
             oSessionService.checkSameClub(clubId);
         }
         return oUsuarioConverter.toDTO(e);
@@ -120,7 +122,8 @@ public class UsuarioService {
                 java.util.List<UsuarioEntity> filtered = result.getContent().stream()
                         .filter(u -> u.getClub() != null && myClub.equals(u.getClub().getId()))
                         .collect(Collectors.toList());
-                        return oUsuarioConverter.toPageDTO(new org.springframework.data.domain.PageImpl<>(filtered, pageable, result.getTotalElements()));
+                return oUsuarioConverter.toPageDTO(
+                        new org.springframework.data.domain.PageImpl<>(filtered, pageable, result.getTotalElements()));
             }
         }
         return oUsuarioConverter.toPageDTO(result);
@@ -128,33 +131,50 @@ public class UsuarioService {
 
     public UsuarioDTO create(UsuarioEntity oUsuarioEntity) {
         oSessionService.denyUsuario();
-        // equipo admins can create users of type "usuario" (tipousuario=3) but only in their own club
+        // equipo admins can create users of type "usuario" (tipousuario=3) but only in
+        // their own club
         if (oSessionService.isEquipoAdmin()) {
             Long myClub = oSessionService.getIdClub();
             if (myClub == null) {
                 throw new UnauthorizedException("Acceso denegado: no tiene club asignado");
             }
-            if (oUsuarioEntity.getClub() == null || oUsuarioEntity.getClub().getId() == null) {
-                throw new UnauthorizedException("Acceso denegado: debe especificar el club");
-            }
-            // Only allow creating users in own club
-            oSessionService.checkSameClub(oUsuarioEntity.getClub().getId());
             // Only allow creating users with tipousuario "usuario" (id=3)
-            if (oUsuarioEntity.getTipousuario() == null || oUsuarioEntity.getTipousuario().getId() == null
-                    || oUsuarioEntity.getTipousuario().getId() != 3L) {
-                throw new UnauthorizedException("Acceso denegado: solo puede crear usuarios del tipo usuario");
-            }
-            // Force club to the admin's club
-            oUsuarioEntity.setClub(oClubService.get(myClub));
-        } else {
-            oUsuarioEntity.setClub(oClubService.get(oUsuarioEntity.getClub().getId()));
+            oUsuarioEntity.setTipousuario(oTipousuarioService.get(3L));
+
+            // Force club to the admin's club (ignore whatever the client sent)
+            oUsuarioEntity.setClub(oClubRepository.findById(myClub)
+                    .orElseThrow(() -> new ResourceNotFoundException("Club no encontrado con id: " + myClub)));
+
         }
 
         oUsuarioEntity.setId(null);
         // Establecer la fecha de alta al momento de la creación
         oUsuarioEntity.setFechaAlta(LocalDateTime.now());
-        oUsuarioEntity.setTipousuario(oTipousuarioService.get(oUsuarioEntity.getTipousuario().getId()));
-        oUsuarioEntity.setRolusuario(oRolusuarioService.get(oUsuarioEntity.getRolusuario().getId()));
+
+        // comprobar que esten todos los campos obligatorios o dar un error de
+        // validación
+        if (oUsuarioEntity.getNombre() == null || oUsuarioEntity.getNombre().isEmpty()) {
+            throw new ResourceNotAllowedException("El nombre es obligatorio");
+        }
+        if (oUsuarioEntity.getApellido1() == null || oUsuarioEntity.getApellido1().isEmpty()) {
+            throw new ResourceNotAllowedException("El primer apellido es obligatorio");
+        }
+        if (oUsuarioEntity.getUsername() == null || oUsuarioEntity.getUsername().isEmpty()) {
+            throw new ResourceNotAllowedException("El nombre de usuario es obligatorio");
+        }
+        if (oUsuarioEntity.getPassword() == null || oUsuarioEntity.getPassword().isEmpty()) {
+            throw new ResourceNotAllowedException("La contraseña es obligatoria");
+        }
+        if (oUsuarioEntity.getGenero() == null) {
+            throw new ResourceNotAllowedException("El género es obligatorio");
+        }
+        if (oUsuarioEntity.getTipousuario() == null || oUsuarioEntity.getTipousuario().getId() == null) {
+            throw new ResourceNotAllowedException("El tipo de usuario es obligatorio");
+        }
+        if (oUsuarioEntity.getRolusuario() == null || oUsuarioEntity.getRolusuario().getId() == null) {
+            throw new ResourceNotAllowedException("El rol de usuario es obligatorio");
+        }
+
         UsuarioEntity saved = oUsuarioRepository.save(oUsuarioEntity);
         return oUsuarioConverter.toDTO(saved);
     }
@@ -165,7 +185,8 @@ public class UsuarioService {
                 .orElseThrow(
                         () -> new ResourceNotFoundException("Usuario no encontrado con id: " + oUsuarioEntity.getId()));
 
-        // equipo admins can only modify "usuario" users belonging to their own club and cannot change their club
+        // equipo admins can only modify "usuario" users belonging to their own club and
+        // cannot change their club
         if (oSessionService.isEquipoAdmin()) {
             Long myClub = oSessionService.getIdClub();
             if (myClub == null) {
@@ -176,7 +197,8 @@ public class UsuarioService {
                 throw new UnauthorizedException("Acceso denegado: solo puede modificar usuarios del tipo usuario");
             }
             // must be in same club
-            oSessionService.checkSameClub(oUsuarioExistente.getClub() != null ? oUsuarioExistente.getClub().getId() : null);
+            oSessionService
+                    .checkSameClub(oUsuarioExistente.getClub() != null ? oUsuarioExistente.getClub().getId() : null);
             // cannot change club
             if (oUsuarioEntity.getClub() != null && oUsuarioEntity.getClub().getId() != null
                     && !oUsuarioEntity.getClub().getId().equals(oUsuarioExistente.getClub().getId())) {
@@ -199,7 +221,9 @@ public class UsuarioService {
             oUsuarioExistente.setPassword(oUsuarioEntity.getPassword());
         }
         // fechaAlta is server-managed: never overwrite on update
-        oUsuarioExistente.setGenero(oUsuarioEntity.getGenero());
+        if (oUsuarioEntity.getGenero() != null) {
+            oUsuarioExistente.setGenero(oUsuarioEntity.getGenero());
+        }
         oUsuarioExistente.setTipousuario(oTipousuarioService.get(oUsuarioEntity.getTipousuario().getId()));
         oUsuarioExistente.setClub(oClubService.get(oUsuarioEntity.getClub().getId()));
         oUsuarioExistente.setRolusuario(oRolusuarioService.get(oUsuarioEntity.getRolusuario().getId()));
@@ -225,7 +249,8 @@ public class UsuarioService {
             }
         }
 
-        if(!isValidPicture(newImage)) throw new ResourceNotAllowedException("This image is not allowed");
+        if (!isValidPicture(newImage))
+            throw new ResourceNotAllowedException("This image is not allowed");
         oUsuarioExistente.setImagen(newImage);
         oUsuarioRepository.save(oUsuarioExistente);
     }
@@ -319,12 +344,14 @@ public class UsuarioService {
     }
 
     public UsuarioEntity getOneRandomFromClubAndTipousuario(Long clubId, Long tipousuarioId) {
-        long count = oUsuarioRepository.findByClubIdAndTipousuarioId(clubId, tipousuarioId, Pageable.ofSize(1)).getTotalElements();
+        long count = oUsuarioRepository.findByClubIdAndTipousuarioId(clubId, tipousuarioId, Pageable.ofSize(1))
+                .getTotalElements();
         if (count == 0) {
             return null;
         }
         int index = (int) (Math.random() * count);
-        var page = oUsuarioRepository.findByClubIdAndTipousuarioId(clubId, tipousuarioId, Pageable.ofSize(1).withPage(index));
+        var page = oUsuarioRepository.findByClubIdAndTipousuarioId(clubId, tipousuarioId,
+                Pageable.ofSize(1).withPage(index));
         return page.hasContent() ? page.getContent().get(0) : null;
     }
 }
