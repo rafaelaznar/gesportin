@@ -17,11 +17,9 @@
     <small class="text-muted">Total registros: {{ totalRecords() || 0 }}</small>
     @if (id_usuario && id_usuario > 0) {
       <small class="text-muted ms-3">Filtro: id de usuario = {{ id_usuario }}</small>
-      @if (!isDialogMode()) {
-        <a class="ms-2" [routerLink]="strRole ? ['/factura', strRole] : ['/factura']" role="button" title="Quitar filtro">
-          <i class="bi bi-x-lg" aria-hidden="true"></i> Quitar filtro
-        </a>
-      }
+      <a class="ms-2" [routerLink]="strRole ? ['/factura', strRole] : ['/factura']" role="button" title="Quitar filtro">
+        <i class="bi bi-x-lg" aria-hidden="true"></i> Quitar filtro
+      </a>
     }
     @if (descripcion() && descripcion().length > 0) {
       <small class="text-muted ms-3">Filtro: búsqueda contiene "{{ descripcion() }}"</small>
@@ -106,38 +104,22 @@
                   </thead>
                   <tbody>
                     @for (oFactura of oPage()?.content; track oFactura.id) {
-                      <tr (click)="onSelect(oFactura)" [style.cursor]="isDialogMode() ? 'pointer' : 'default'">
+                      <tr>
                         <th scope="row" class="text-center">{{ oFactura.id }}</th>
                         <td>{{ oFactura.fecha }}</td>
                         <td>
-                          @if (isDialogMode()) {
-                            {{ oFactura.usuario.nombre }} {{ oFactura.usuario.apellido1 }} {{ oFactura.usuario.apellido2 }}
+                          <a [routerLink]="strRole ? ['/usuario', strRole, 'view', oFactura.usuario.id] : ['/usuario/view', oFactura.usuario.id]">{{ oFactura.usuario.nombre }} {{ oFactura.usuario.apellido1 }} {{ oFactura.usuario.apellido2 }}</a>
+                          <a class="btn btn-warning btn-sm ms-2 float-end" [routerLink]="strRole ? ['/factura', strRole, 'usuario', oFactura.usuario.id] : ['/factura/usuario', oFactura.usuario.id]" role="button" title="Filtrar por usuario"><i class="bi bi-funnel-fill" aria-hidden="true"></i></a>
+                        </td>
+                        <td class="text-center">
+                          @if (!oFactura.compras || oFactura.compras === 0) {
+                            <i class="bi bi-ban" aria-hidden="true"></i>
                           } @else {
-                            <a [routerLink]="strRole ? ['/usuario', strRole, 'view', oFactura.usuario.id] : ['/usuario/view', oFactura.usuario.id]">{{ oFactura.usuario.nombre }} {{ oFactura.usuario.apellido1 }} {{ oFactura.usuario.apellido2 }}</a>
-                            <a class="btn btn-warning btn-sm ms-2 float-end" [routerLink]="strRole ? ['/factura', strRole, 'usuario', oFactura.usuario.id] : ['/factura/usuario', oFactura.usuario.id]" role="button" title="Filtrar por usuario"><i class="bi bi-funnel-fill" aria-hidden="true"></i></a>
+                            <a [routerLink]="strRole ? ['/compra', strRole, 'factura', oFactura.id] : ['/compra/factura', oFactura.id]">{{ oFactura.compras }}</a>
                           }
                         </td>
                         <td class="text-center">
-                          @if (isDialogMode()) {
-                            {{ oFactura.compras || 0 }}
-                          } @else {
-                            @if (!oFactura.compras || oFactura.compras === 0) {
-                              <i class="bi bi-ban" aria-hidden="true"></i>
-                            } @else {
-                              <a [routerLink]="strRole ? ['/compra', strRole, 'factura', oFactura.id] : ['/compra/factura', oFactura.id]">{{ oFactura.compras }}</a>
-                            }
-                          }
-                        </td>
-                        <td class="text-center">
-                          @if (isDialogMode()) {
-                            <div class="d-flex justify-content-center">
-                              <button class="btn btn-success btn-sm" (click)="onSelect(oFactura)" title="Seleccionar">
-                                <i class="bi bi-check-circle" aria-hidden="true"></i> Seleccionar
-                              </button>
-                            </div>
-                          } @else {
-                            <app-botonera-actions-plist [id]="oFactura.id" strEntity="factura" [strRole]="strRole"></app-botonera-actions-plist>
-                          }
+                          <app-botonera-actions-plist [id]="oFactura.id" strEntity="factura" [strRole]="strRole"></app-botonera-actions-plist>
                         </td>
                       </tr>
                     }

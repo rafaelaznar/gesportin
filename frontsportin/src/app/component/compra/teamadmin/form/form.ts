@@ -13,7 +13,7 @@ import { IArticulo } from '../../../../model/articulo';
 import { IFactura } from '../../../../model/factura';
 import { SessionService } from '../../../../service/session';
 import { ArticuloPlistFinder } from '../../../articulo/finder/plist';
-import { FacturaAdminPlist } from '../../../factura/admin/plist/plist';
+import { FacturaPlistFinder } from '../../../factura/finder/plist';
 
 @Component({
   selector: 'app-compra-teamadmin-form',
@@ -129,7 +129,7 @@ export class CompraTeamadminForm implements OnInit {
   }
 
   openFacturaFinderModal(): void {
-    const ref = this.modalService.open<unknown, IFactura | null>(FacturaAdminPlist);
+    const ref = this.modalService.open<unknown, IFactura | null>(FacturaPlistFinder);
     ref.afterClosed$.subscribe((factura: IFactura | null) => {
       if (factura?.id != null) {
         this.compraForm.patchValue({ id_factura: factura.id });

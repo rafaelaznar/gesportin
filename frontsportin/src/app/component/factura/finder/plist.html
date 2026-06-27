@@ -1,0 +1,80 @@
+<div class="p-3">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="mb-0">
+      <i class="bi bi-receipt me-2" aria-hidden="true"></i>Seleccionar factura
+    </h5>
+    <button type="button" class="btn-close" aria-label="Cerrar" (click)="onCancel()"></button>
+  </div>
+
+  <!-- Indicadores de filtro -->
+  @if (id_usuario() > 0) {
+    <div class="mb-2">
+      <span class="badge bg-info me-1">Usuario: {{ id_usuario() }}</span>
+    </div>
+  }
+
+  <!-- Contador de registros -->
+  <div class="mb-2">
+    <span class="text-muted small">
+      {{ totalRecords() }} factura{{ totalRecords() !== 1 ? 's' : '' }}
+    </span>
+  </div>
+
+  <!-- Indicador de carga sutil mientras se mantienen los datos anteriores -->
+  @if (loading()) {
+    <div class="finder-loading-bar">
+      <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+      <small class="text-muted">Cargando...</small>
+    </div>
+  }
+
+  @if (oPage() && oPage()!.content.length > 0) {
+    <div class="table-responsive">
+      <table class="table table-hover table-sm align-middle">
+        <thead class="table-light">
+          <tr>
+            <th role="button" (click)="onOrder('id')" style="cursor:pointer; width:10%">
+              ID
+              @if (orderField() === 'id') {
+                <i class="bi" [class.bi-caret-up-fill]="orderDirection() === 'asc'"
+                  [class.bi-caret-down-fill]="orderDirection() === 'desc'" aria-hidden="true"></i>
+              }
+            </th>
+            <th role="button" (click)="onOrder('fecha')" style="cursor:pointer; width:22%">
+              Fecha
+              @if (orderField() === 'fecha') {
+                <i class="bi" [class.bi-caret-up-fill]="orderDirection() === 'asc'"
+                  [class.bi-caret-down-fill]="orderDirection() === 'desc'" aria-hidden="true"></i>
+              }
+            </th>
+            <th style="width:40%">Usuario</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (factura of oPage()!.content; track factura.id) {
+            <tr style="cursor: pointer" title="Seleccionar factura {{ factura.id }}"
+              (click)="onSelect(factura)">
+              <td>{{ factura.id }}</td>
+              <td>{{ factura.fecha }}</td>
+              <td>{{ factura.usuario.nombre }} {{ factura.usuario.apellido1 }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    @if (oPage()!.totalPages > 1) {
+      <div class="d-flex justify-content-center mt-3">
+        <app-paginacion [numPage]="numPage()" [numPages]="oPage()!.totalPages" (pageChange)="goToPage($event)" />
+      </div>
+    }
+  } @else if (!loading()) {
+    <div class="alert alert-info" role="alert">
+      <i class="bi bi-info-circle me-2" aria-hidden="true"></i>
+      No se encontraron facturas.
+    </div>
+  } @else {
+    <div class="text-center py-3" role="status">
+      <span class="spinner-border spinner-border-sm me-2"></span>Cargando...
+    </div>
+  }
+</div>
