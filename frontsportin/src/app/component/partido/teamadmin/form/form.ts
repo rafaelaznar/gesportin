@@ -13,7 +13,7 @@ import { IPartido } from '../../../../model/partido';
 import { ILiga } from '../../../../model/liga';
 import { IEstadopartido } from '../../../../model/estadopartido';
 import { SessionService } from '../../../../service/session';
-import { LigaAdminPlist } from '../../../liga/admin/plist/plist';
+import { LigaPlistFinder } from '../../../liga/finder/plist';
 
 @Component({
   selector: 'app-partido-teamadmin-form',
@@ -148,7 +148,7 @@ export class PartidoTeamadminForm implements OnInit {
   }
 
   openLigaFinderModal(): void {
-    const ref = this.modalService.open<unknown, ILiga | null>(LigaAdminPlist);
+    const ref = this.modalService.open<unknown, ILiga | null>(LigaPlistFinder);
     ref.afterClosed$.subscribe((liga: ILiga | null) => {
       if (liga?.id != null) {
         this.partidoForm.patchValue({ id_liga: liga.id });

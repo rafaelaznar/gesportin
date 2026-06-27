@@ -2,8 +2,6 @@ import { Component, computed, inject, Input, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Subject, Subscription, debounceTime, distinctUntilChanged } from 'rxjs';
-import { ModalRef } from '../../../shared/modal/modal-ref';
-import { MODAL_REF } from '../../../shared/modal/modal.tokens';
 import { debounceTimeSearch } from '../../../../environment/environment';
 import { SessionService } from '../../../../service/session';
 import { ILiga } from '../../../../model/liga';
@@ -42,7 +40,6 @@ export class LigaAdminPlist {
 
   private oLigaService = inject(LigaService);
   private route = inject(ActivatedRoute);
-  private modalRef = inject(MODAL_REF, { optional: true });
   session = inject(SessionService);
 
   ngOnInit(): void {
@@ -144,13 +141,5 @@ export class LigaAdminPlist {
     }
     this.numPage.set(0);
     this.getPage();
-  }
-
-  isDialogMode(): boolean {
-    return !!this.modalRef;
-  }
-
-  onSelect(liga: ILiga): void {
-    this.modalRef?.close(liga);
   }
 }

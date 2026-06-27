@@ -70,7 +70,7 @@
               <td>{{ noticia.id }}</td>
               <td class="text-truncate">{{ noticia.titulo | trim: 60 }}</td>
               <td>{{ noticia.fecha | datetime }}</td>
-              <td>{{ noticia.club?.nombre || 'Club ' + noticia.club?.id }}</td>
+              <td>{{ noticia.club.nombre || 'Club ' + noticia.club.id }}</td>
             </tr>
           }
         </tbody>

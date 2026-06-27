@@ -27,12 +27,12 @@
     <small class="text-muted">Total registros: {{ totalRecords() || 0 }}</small>
     @if (equipo && equipo > 0) {
       <small class="text-muted ms-3">Filtro: id de equipo = {{ equipo }}</small>
-      @if (!session.isClubAdmin() && !isDialogMode()) {
+      @if (!session.isClubAdmin()) {
         <a class="ms-2" [routerLink]="['/liga']" role="button" title="Quitar filtro">
           <i class="bi bi-x-lg" aria-hidden="true"></i> Quitar filtro
         </a>
       }
-      @if (session.isClubAdmin() && !isDialogMode()) {
+      @if (session.isClubAdmin()) {
         <a class="ms-2" [routerLink]="['/liga/teamadmin']" role="button" title="Quitar filtro">
           <i class="bi bi-x-lg" aria-hidden="true"></i> Quitar filtro
         </a>
@@ -40,11 +40,9 @@
     }
     @if (temporada && temporada > 0) {
       <small class="text-muted ms-3">Filtro: id de temporada = {{ temporada }}</small>
-      @if (!isDialogMode()) {
-        <a class="ms-2" [routerLink]="['/liga']" role="button" title="Quitar filtro">
-          <i class="bi bi-x-lg" aria-hidden="true"></i> Quitar filtro
-        </a>
-      }
+      <a class="ms-2" [routerLink]="['/liga']" role="button" title="Quitar filtro">
+        <i class="bi bi-x-lg" aria-hidden="true"></i> Quitar filtro
+      </a>
     }
     @if (nombre() && nombre().length > 0) {
       <small class="text-muted ms-3">Filtro: búsqueda contiene "{{ nombre() }}"</small>
@@ -129,38 +127,22 @@
                     </thead>
                     <tbody>
                       @for (liga of oPage()?.content; track liga.id) {
-                        <tr (click)="onSelect(liga)" [style.cursor]="isDialogMode() ? 'pointer' : 'default'">
+                        <tr>
                           <th scope="row" class="text-center">{{ liga.id }}</th>
                           <td>{{ liga.nombre }}</td>
                           <td>
-                            @if (isDialogMode()) {
-                              {{ liga.equipo.nombre }}
-                            } @else {
-                              <a [routerLink]="['/equipo/view', liga.equipo.id]">{{ liga.equipo.nombre }}</a>
-                              <a class="btn btn-warning btn-sm ms-2 float-end" [routerLink]="[session.isClubAdmin() ? '/liga/teamadmin/equipo' : '/liga/equipo', liga.equipo.id]" role="button" title="Filtrar por equipo"><i class="bi bi-funnel-fill" aria-hidden="true"></i></a>
-                            }
+                            <a [routerLink]="['/equipo/view', liga.equipo.id]">{{ liga.equipo.nombre }}</a>
+                            <a class="btn btn-warning btn-sm ms-2 float-end" [routerLink]="[session.isClubAdmin() ? '/liga/teamadmin/equipo' : '/liga/equipo', liga.equipo.id]" role="button" title="Filtrar por equipo"><i class="bi bi-funnel-fill" aria-hidden="true"></i></a>
                           </td>
                           <td class="text-center d-none d-md-table-cell">
-                            @if (isDialogMode()) {
-                              {{ liga.partidos || 0 }}
+                            @if (!liga.partidos || liga.partidos === 0) {
+                              <i class="bi bi-ban" aria-hidden="true"></i>
                             } @else {
-                              @if (!liga.partidos || liga.partidos === 0) {
-                                <i class="bi bi-ban" aria-hidden="true"></i>
-                              } @else {
-                                <a [routerLink]="[session.isClubAdmin() ? '/partido/teamadmin/liga' : '/partido/liga', liga.id]">{{ liga.partidos }}</a>
-                              }
+                              <a [routerLink]="[session.isClubAdmin() ? '/partido/teamadmin/liga' : '/partido/liga', liga.id]">{{ liga.partidos }}</a>
                             }
                           </td>
                           <td class="text-center">
-                            @if (isDialogMode()) {
-                              <div class="d-flex justify-content-center">
-                                <button class="btn btn-success btn-sm" (click)="onSelect(liga)" title="Seleccionar">
-                                  <i class="bi bi-check-circle" aria-hidden="true"></i> Seleccionar
-                                </button>
-                              </div>
-                            } @else {
-                              <app-botonera-actions-plist [id]="liga.id" strEntity="liga"></app-botonera-actions-plist>
-                            }
+                            <app-botonera-actions-plist [id]="liga.id" strEntity="liga"></app-botonera-actions-plist>
                           </td>
                         </tr>
                       }

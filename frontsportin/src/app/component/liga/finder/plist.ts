@@ -5,30 +5,32 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { MODAL_REF } from '../../shared/modal/modal.tokens';
 import { ModalRef } from '../../shared/modal/modal-ref';
 import { debounceTimeSearch } from '../../../environment/environment';
-import { TemporadaService } from '../../../service/temporada';
-import { ITemporada } from '../../../model/temporada';
+import { LigaService } from '../../../service/liga';
+import { ILiga } from '../../../model/liga';
 import { IPage } from '../../../model/plist';
 import { Paginacion } from '../../shared/paginacion/paginacion';
 
 @Component({
-  selector: 'app-temporada-plist-finder',
+  selector: 'app-liga-plist-finder',
   standalone: true,
   imports: [CommonModule, Paginacion],
   templateUrl: './plist.html',
   styleUrl: './plist.css',
 })
-export class TemporadaPlistFinder implements OnInit, OnDestroy {
+export class LigaPlistFinder implements OnInit, OnDestroy {
 
-  /** Filtro por club — recibido via modalService.open(..., { data: { id_club } }) */
-  id_club = input<number>(0);
+  /** Filtro por equipo — recibido via modalService.open(..., { data: { id_equipo } }) */
+  id_equipo = input<number>(0);
+  /** Filtro por temporada — recibido via modalService.open(..., { data: { id_temporada } }) */
+  id_temporada = input<number>(0);
 
-  private readonly modalRef = inject(MODAL_REF, { optional: true }) as ModalRef<unknown, ITemporada | null> | null;
-  private readonly temporadaService = inject(TemporadaService);
+  private readonly modalRef = inject(MODAL_REF, { optional: true }) as ModalRef<unknown, ILiga | null> | null;
+  private readonly ligaService = inject(LigaService);
 
-  oPage = signal<IPage<ITemporada> | null>(null);
+  oPage = signal<IPage<ILiga> | null>(null);
   numPage = signal<number>(0);
   numRpp = signal<number>(10);
-  descripcion = signal<string>('');
+  nombre = signal<string>('');
   orderField = signal<string>('id');
   orderDirection = signal<'asc' | 'desc'>('asc');
   totalRecords = computed(() => this.oPage()?.totalElements ?? 0);
@@ -41,7 +43,7 @@ export class TemporadaPlistFinder implements OnInit, OnDestroy {
     this.searchSubscription = this.searchSubject
       .pipe(debounceTime(debounceTimeSearch), distinctUntilChanged())
       .subscribe((value: string) => {
-        this.descripcion.set(value);
+        this.nombre.set(value);
         this.numPage.set(0);
         this.getPage();
       });
@@ -55,22 +57,18 @@ export class TemporadaPlistFinder implements OnInit, OnDestroy {
   getPage(): void {
     this.loading.set(true);
 
-    let orderField = this.orderField();
-    if (orderField === 'club') {
-      orderField = 'club.id';
-    }
-
-    this.temporadaService
+    this.ligaService
       .getPage(
         this.numPage(),
         this.numRpp(),
-        orderField,
+        this.orderField(),
         this.orderDirection(),
-        this.descripcion(),
-        this.id_club(),
+        this.nombre(),
+        this.id_equipo(),
+        this.id_temporada(),
       )
       .subscribe({
-        next: (data: IPage<ITemporada>) => {
+        next: (data: IPage<ILiga>) => {
           this.oPage.set(data);
           if (this.numPage() > 0 && this.numPage() >= data.totalPages) {
             this.numPage.set(data.totalPages - 1);
@@ -79,7 +77,7 @@ export class TemporadaPlistFinder implements OnInit, OnDestroy {
           this.loading.set(false);
         },
         error: (err: HttpErrorResponse) => {
-          console.error('Error cargando temporadas:', err);
+          console.error('Error cargando ligas:', err);
           this.loading.set(false);
         },
       });
@@ -96,7 +94,7 @@ export class TemporadaPlistFinder implements OnInit, OnDestroy {
     this.getPage();
   }
 
-  onSearchDescription(value: string): void {
+  onSearchNombre(value: string): void {
     this.searchSubject.next(value);
   }
 
@@ -111,8 +109,8 @@ export class TemporadaPlistFinder implements OnInit, OnDestroy {
     this.getPage();
   }
 
-  onSelect(temporada: ITemporada): void {
-    this.modalRef?.close(temporada);
+  onSelect(liga: ILiga): void {
+    this.modalRef?.close(liga);
   }
 
   onCancel(): void {
