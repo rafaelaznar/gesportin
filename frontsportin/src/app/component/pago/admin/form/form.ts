@@ -12,7 +12,7 @@ import { ICuota } from '../../../../model/cuota';
 import { IJugador } from '../../../../model/jugador';
 import { SessionService } from '../../../../service/session';
 import { CuotaAdminPlist } from '../../../cuota/admin/plist/plist';
-import { JugadorAdminPlist } from '../../../jugador/admin/plist/plist';
+import { JugadorPlistFinder } from '../../../jugador/finder/plist';
 
 @Component({
   selector: 'app-pago-admin-form',
@@ -122,7 +122,7 @@ export class PagoAdminForm implements OnInit {
   }
 
   openJugadorFinderModal(): void {
-    const ref = this.modalService.open<unknown, IJugador | null>(JugadorAdminPlist);
+    const ref = this.modalService.open<unknown, IJugador | null>(JugadorPlistFinder);
     ref.afterClosed$.subscribe((jugador: IJugador | null) => {
       if (jugador?.id != null) {
         this.pagoForm.patchValue({ id_jugador: jugador.id });

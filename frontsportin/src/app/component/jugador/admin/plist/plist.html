@@ -18,19 +18,15 @@
     @if (showFilterInfo) {
       @if (id_usuario && id_usuario > 0) {
         <small class="text-muted ms-3">Filtro: id de usuario = {{ id_usuario }}</small>
-        @if (!isDialogMode()) {
-          <a class="ms-2" [routerLink]="strRole ? ['/jugador', strRole] : ['/jugador']" role="button" title="Quitar filtro">
-            <i class="bi bi-x-lg" aria-hidden="true"></i> Quitar filtro
-          </a>
-        }
+        <a class="ms-2" [routerLink]="strRole ? ['/jugador', strRole] : ['/jugador']" role="button" title="Quitar filtro">
+          <i class="bi bi-x-lg" aria-hidden="true"></i> Quitar filtro
+        </a>
       }
       @if (id_equipo && id_equipo > 0) {
         <small class="text-muted ms-3">Filtro: id de equipo = {{ id_equipo }}</small>
-        @if (!isDialogMode()) {
-          <a class="ms-2" [routerLink]="strRole ? ['/jugador', strRole] : ['/jugador']" role="button" title="Quitar filtro">
-            <i class="bi bi-x-lg" aria-hidden="true"></i> Quitar filtro
-          </a>
-        }
+        <a class="ms-2" [routerLink]="strRole ? ['/jugador', strRole] : ['/jugador']" role="button" title="Quitar filtro">
+          <i class="bi bi-x-lg" aria-hidden="true"></i> Quitar filtro
+        </a>
       }
     }
     @if (descripcion() && descripcion().length > 0) {
@@ -140,7 +136,7 @@
                   </thead>
                   <tbody>
                     @for (oJugador of oPage()?.content; track oJugador.id) {
-                      <tr (click)="onSelect(oJugador)" [style.cursor]="isDialogMode() ? 'pointer' : 'default'">
+                      <tr>
                         <th scope="row" class="text-center">{{ oJugador.id }}</th>
                         <td>{{ oJugador.dorsal }}</td>
                         <td>{{ oJugador.posicion }}</td>
@@ -152,42 +148,22 @@
                           }
                         </td>
                         <td>
-                          @if (isDialogMode()) {
-                            ({{ oJugador.usuario.id }}) {{ oJugador.usuario.nombre }} {{ oJugador.usuario.apellido1 }} {{ oJugador.usuario.apellido2 }}
-                          } @else {
-                            <a [routerLink]="strRole ? ['/usuario', strRole, 'view', oJugador.usuario.id] : ['/usuario/view', oJugador.usuario.id]">({{ oJugador.usuario.id }}) {{ oJugador.usuario.nombre }} {{ oJugador.usuario.apellido1 }} {{ oJugador.usuario.apellido2 }}</a>
-                            <a class="btn btn-warning btn-sm ms-2 float-end" [routerLink]="strRole ? ['/jugador', strRole, 'usuario', oJugador.usuario.id] : ['/jugador/usuario', oJugador.usuario.id]" role="button" title="Filtrar por usuario"><i class="bi bi-funnel-fill" aria-hidden="true"></i></a>
-                          }
+                          <a [routerLink]="strRole ? ['/usuario', strRole, 'view', oJugador.usuario.id] : ['/usuario/view', oJugador.usuario.id]">({{ oJugador.usuario.id }}) {{ oJugador.usuario.nombre }} {{ oJugador.usuario.apellido1 }} {{ oJugador.usuario.apellido2 }}</a>
+                          <a class="btn btn-warning btn-sm ms-2 float-end" [routerLink]="strRole ? ['/jugador', strRole, 'usuario', oJugador.usuario.id] : ['/jugador/usuario', oJugador.usuario.id]" role="button" title="Filtrar por usuario"><i class="bi bi-funnel-fill" aria-hidden="true"></i></a>
                         </td>
                         <td>
-                          @if (isDialogMode()) {
-                            {{ oJugador.equipo.nombre || 'N/A' }}
-                          } @else {
-                            <a [routerLink]="strRole ? ['/equipo', strRole, 'view', oJugador.equipo.id] : ['/equipo/view', oJugador.equipo.id]">{{ oJugador.equipo.nombre || 'N/A' }}</a>
-                            <a class="btn btn-warning btn-sm ms-2 float-end" [routerLink]="strRole ? ['/jugador', strRole, 'equipo', oJugador.equipo.id] : ['/jugador/equipo', oJugador.equipo.id]" role="button" title="Filtrar por equipo"><i class="bi bi-funnel-fill" aria-hidden="true"></i></a>
-                          }
+                          <a [routerLink]="strRole ? ['/equipo', strRole, 'view', oJugador.equipo.id] : ['/equipo/view', oJugador.equipo.id]">{{ oJugador.equipo.nombre || 'N/A' }}</a>
+                          <a class="btn btn-warning btn-sm ms-2 float-end" [routerLink]="strRole ? ['/jugador', strRole, 'equipo', oJugador.equipo.id] : ['/jugador/equipo', oJugador.equipo.id]" role="button" title="Filtrar por equipo"><i class="bi bi-funnel-fill" aria-hidden="true"></i></a>
                         </td>
                         <td class="text-center d-none d-md-table-cell">
-                          @if (isDialogMode()) {
-                            {{ oJugador.pagos || 0 }}
+                          @if (!oJugador.pagos || oJugador.pagos === 0) {
+                            <i class="bi bi-ban" aria-hidden="true"></i>
                           } @else {
-                            @if (!oJugador.pagos || oJugador.pagos === 0) {
-                              <i class="bi bi-ban" aria-hidden="true"></i>
-                            } @else {
-                              <a [routerLink]="strRole ? ['/pago', strRole, 'jugador', oJugador.id] : ['/pago/jugador', oJugador.id]">{{ oJugador.pagos }}</a>
-                            }
+                            <a [routerLink]="strRole ? ['/pago', strRole, 'jugador', oJugador.id] : ['/pago/jugador', oJugador.id]">{{ oJugador.pagos }}</a>
                           }
                         </td>
                         <td class="text-center">
-                          @if (isDialogMode()) {
-                            <div class="d-flex justify-content-center">
-                              <button class="btn btn-success btn-sm" (click)="onSelect(oJugador)" title="Seleccionar">
-                                <i class="bi bi-check-circle" aria-hidden="true"></i> Seleccionar
-                              </button>
-                            </div>
-                          } @else {
-                            <app-botonera-actions-plist [id]="oJugador.id" strEntity="jugador" [strRole]="strRole"></app-botonera-actions-plist>
-                          }
+                          <app-botonera-actions-plist [id]="oJugador.id" strEntity="jugador" [strRole]="strRole"></app-botonera-actions-plist>
                         </td>
                       </tr>
                     }

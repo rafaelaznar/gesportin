@@ -13,7 +13,7 @@ import { ICuota } from '../../../../model/cuota';
 import { IJugador } from '../../../../model/jugador';
 import { SessionService } from '../../../../service/session';
 import { CuotaAdminPlist } from '../../../cuota/admin/plist/plist';
-import { JugadorAdminPlist } from '../../../jugador/admin/plist/plist';
+import { JugadorPlistFinder } from '../../../jugador/finder/plist';
 
 @Component({
   selector: 'app-pago-teamadmin-form',
@@ -144,7 +144,7 @@ export class PagoTeamadminForm implements OnInit {
   openJugadorFinderModal(): void {
     const equipoId = this.selectedCuota()?.equipo?.id;
     const config = equipoId ? { data: { id_equipo: equipoId } } : undefined;
-    const ref = this.modalService.open<unknown, IJugador | null>(JugadorAdminPlist, config);
+    const ref = this.modalService.open<unknown, IJugador | null>(JugadorPlistFinder, config);
     ref.afterClosed$.subscribe((jugador: IJugador | null) => {
       if (jugador?.id != null) {
         this.pagoForm.patchValue({ id_jugador: jugador.id });
