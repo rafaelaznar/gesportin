@@ -30,12 +30,9 @@
     <small class="text-muted">Total registros: {{ totalRecords() || 0 }}</small>
     @if (club() > 0) {
       <small class="text-muted ms-3">Filtro: id de club = {{ club() }}</small>
-      @if (!isDialogMode()) {
-        <!-- quitar el filtro -->
-        <a class="ms-2" [routerLink]="['/noticia']" role="button" title="Quitar filtro"
-          ><i class="bi bi-x-lg" aria-hidden="true"></i> Quitar filtro</a
-        >
-      }
+      <a class="ms-2" [routerLink]="['/noticia']" role="button" title="Quitar filtro"
+        ><i class="bi bi-x-lg" aria-hidden="true"></i> Quitar filtro</a
+      >
     }
     @if (titulo().length > 0) {
       <small class="text-muted ms-3">Filtro: título contiene "{{ titulo() }}"</small>
@@ -44,11 +41,9 @@
 
   <div class="d-flex my-1">
     <div class="w-100 d-flex justify-content-center">
-      @if (!isDialogMode()) {
-        <a class="btn btn-primary new-btn" [routerLink]="['/noticia/new']" role="button">
-          <i class="bi bi-plus-circle me-2" aria-hidden="true"></i><span class="d-none d-sm-inline">Nueva noticia</span>
-        </a>
-      }
+      <a class="btn btn-primary new-btn" [routerLink]="['/noticia/new']" role="button">
+        <i class="bi bi-plus-circle me-2" aria-hidden="true"></i><span class="d-none d-sm-inline">Nueva noticia</span>
+      </a>
     </div>
   </div>
 
@@ -168,71 +163,43 @@
             <td class="align-middle text-truncate">{{ oNoticia.titulo | trim: 50 }}</td>
             <td class="align-middle d-none d-md-table-cell">{{ oNoticia.fecha | datetime }}</td>
             <td>
-              @if (isDialogMode()) {
+              <a [routerLink]="['/club/view', oNoticia.club.id]">
                 {{ oNoticia.club.nombre || 'Club ' + oNoticia.club.id | trim: 27 }}
                 {{ ' (' + oNoticia.club.id + ')' }}
+              </a>
+              <a
+                class="btn btn-warning btn-sm ms-2 float-end"
+                [routerLink]="['/noticia/club', oNoticia.club.id]"
+                role="button"
+                title="Filtrar por club"
+                ><i class="bi bi-funnel-fill" aria-hidden="true"></i
+              ></a>
+            </td>
+            <td style="text-align: center">
+              @if (!oNoticia.comentarios || oNoticia.comentarios === 0) {
+                <i class="bi bi-ban" aria-hidden="true"></i>
               } @else {
-                <a [routerLink]="['/club/view', oNoticia.club.id]">
-                  {{ oNoticia.club.nombre || 'Club ' + oNoticia.club.id | trim: 27 }}
-                  {{ ' (' + oNoticia.club.id + ')' }}
+                <a [routerLink]="['/comentario/noticia', oNoticia.id]">
+                  {{ oNoticia.comentarios }}
                 </a>
-                <!-- Botón alineado a la derecha para filtrar club -->
-                <a
-                  class="btn btn-warning btn-sm ms-2 float-end"
-                  [routerLink]="['/noticia/club', oNoticia.club.id]"
-                  role="button"
-                  title="Filtrar por club"
-                  ><i class="bi bi-funnel-fill" aria-hidden="true"></i
-                ></a>
               }
             </td>
             <td style="text-align: center">
-              @if (isDialogMode()) {
-                {{ oNoticia.comentarios || 0 }}
+              @if (!oNoticia.puntuaciones || oNoticia.puntuaciones === 0) {
+                <i class="bi bi-ban" aria-hidden="true"></i>
               } @else {
-                @if (!oNoticia.comentarios || oNoticia.comentarios === 0) {
-                  <i class="bi bi-ban" aria-hidden="true"></i>
-                } @else {
-                  <a [routerLink]="['/comentario/noticia', oNoticia.id]">
-                    {{ oNoticia.comentarios }}
-                  </a>
-                }
-              }
-            </td>
-            <td style="text-align: center">
-              @if (isDialogMode()) {
-                {{ oNoticia.puntuaciones || 0 }}
-              } @else {
-                @if (!oNoticia.puntuaciones || oNoticia.puntuaciones === 0) {
-                  <i class="bi bi-ban" aria-hidden="true"></i>
-                } @else {
-                  <a [routerLink]="['/puntuacion/noticia', oNoticia.id]">
-                    {{ oNoticia.puntuaciones }}
-                  </a>
-                }
+                <a [routerLink]="['/puntuacion/noticia', oNoticia.id]">
+                  {{ oNoticia.puntuaciones }}
+                </a>
               }
             </td>
             <!-- Acciones -->
             <td>
               <div class="d-flex justify-content-center">
-                @if (isDialogMode()) {
-                  <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
-                    <button
-                      class="btn btn-success btn-sm"
-                      (click)="onSelect(oNoticia)"
-                      title="Seleccionar"
-                    >
-                      <i class="bi bi-check-circle" aria-hidden="true"></i> Seleccionar
-                    </button>
-                  </div>
-                } @else {
-                  <div class="d-flex justify-content-center">
-                    <app-botonera-actions-plist
-                      [id]="oNoticia.id"
-                      strEntity="noticia"
-                    ></app-botonera-actions-plist>
-                  </div>
-                }
+                <app-botonera-actions-plist
+                  [id]="oNoticia.id"
+                  strEntity="noticia"
+                ></app-botonera-actions-plist>
               </div>
             </td>
           </tr>

@@ -1,0 +1,86 @@
+<div class="p-3">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="mb-0">
+      <i class="bi bi-calendar3 me-2" aria-hidden="true"></i>Seleccionar temporada
+    </h5>
+    <button type="button" class="btn-close" aria-label="Cerrar" (click)="onCancel()"></button>
+  </div>
+
+  <!-- Barra de búsqueda -->
+  <div class="mb-3">
+    <input type="text" class="form-control" placeholder="Buscar por descripción..." aria-label="Buscar temporada por descripción"
+      (input)="onSearchDescription($any($event.target).value)" />
+  </div>
+
+  <!-- Indicadores de filtro -->
+  @if (id_club() > 0) {
+    <div class="mb-2">
+      <span class="badge bg-info me-1">Club: {{ id_club() }}</span>
+    </div>
+  }
+
+  <!-- Contador de registros -->
+  <div class="mb-2">
+    <span class="text-muted small">
+      {{ totalRecords() }} temporada{{ totalRecords() !== 1 ? 's' : '' }}
+    </span>
+  </div>
+
+  <!-- Indicador de carga sutil mientras se mantienen los datos anteriores -->
+  @if (loading()) {
+    <div class="finder-loading-bar">
+      <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+      <small class="text-muted">Cargando...</small>
+    </div>
+  }
+
+  @if (oPage() && oPage()!.content.length > 0) {
+    <div class="table-responsive">
+      <table class="table table-hover table-sm align-middle">
+        <thead class="table-light">
+          <tr>
+            <th role="button" (click)="onOrder('id')" style="cursor:pointer; width:8%">
+              ID
+              @if (orderField() === 'id') {
+                <i class="bi" [class.bi-caret-up-fill]="orderDirection() === 'asc'"
+                  [class.bi-caret-down-fill]="orderDirection() === 'desc'" aria-hidden="true"></i>
+              }
+            </th>
+            <th role="button" (click)="onOrder('descripcion')" style="cursor:pointer">
+              Descripción
+              @if (orderField() === 'descripcion') {
+                <i class="bi" [class.bi-caret-up-fill]="orderDirection() === 'asc'"
+                  [class.bi-caret-down-fill]="orderDirection() === 'desc'" aria-hidden="true"></i>
+              }
+            </th>
+            <th style="width:22%">Club</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (temporada of oPage()!.content; track temporada.id) {
+            <tr style="cursor: pointer" title="Seleccionar {{ temporada.descripcion }}"
+              (click)="onSelect(temporada)">
+              <td>{{ temporada.id }}</td>
+              <td class="text-truncate">{{ temporada.descripcion }}</td>
+              <td>{{ temporada.club?.nombre || 'Club ' + temporada.club?.id }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    @if (oPage()!.totalPages > 1) {
+      <div class="d-flex justify-content-center mt-3">
+        <app-paginacion [numPage]="numPage()" [numPages]="oPage()!.totalPages" (pageChange)="goToPage($event)" />
+      </div>
+    }
+  } @else if (!loading()) {
+    <div class="alert alert-info" role="alert">
+      <i class="bi bi-info-circle me-2" aria-hidden="true"></i>
+      No se encontraron temporadas.
+    </div>
+  } @else {
+    <div class="text-center py-3" role="status">
+      <span class="spinner-border spinner-border-sm me-2"></span>Cargando...
+    </div>
+  }
+</div>

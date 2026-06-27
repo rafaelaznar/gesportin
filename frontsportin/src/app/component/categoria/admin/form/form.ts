@@ -10,7 +10,7 @@ import { TemporadaService } from '../../../../service/temporada';
 import { SessionService } from '../../../../service/session';
 import { ICategoria } from '../../../../model/categoria';
 import { ITemporada } from '../../../../model/temporada';
-import { TemporadaAdminPlist } from '../../../temporada/admin/plist/plist';
+import { TemporadaPlistFinder } from '../../../temporada/finder/plist';
 
 @Component({
   selector: 'app-categoria-admin-form',
@@ -100,7 +100,7 @@ export class CategoriaAdminForm implements OnInit {
   }
 
   openTemporadaFinderModal(): void {
-    const ref = this.modalService.open<unknown, ITemporada | null>(TemporadaAdminPlist);
+    const ref = this.modalService.open<unknown, ITemporada | null>(TemporadaPlistFinder);
 
     ref.afterClosed$.subscribe((temporada: ITemporada | null) => {
       if (temporada) {

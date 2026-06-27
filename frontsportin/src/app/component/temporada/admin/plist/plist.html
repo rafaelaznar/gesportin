@@ -17,11 +17,9 @@
     <small class="text-muted">Total registros: {{ totalRecords() || 0 }}</small>
     @if (club() > 0) {
       <small class="text-muted ms-3">Filtro: id de club = {{ club() }}</small>
-      @if (!isDialogMode()) {
-        <a class="ms-2" [routerLink]="['/temporada']" role="button" title="Quitar filtro">
-          <i class="bi bi-x-lg" aria-hidden="true"></i> Quitar filtro
-        </a>
-      }
+      <a class="ms-2" [routerLink]="['/temporada']" role="button" title="Quitar filtro">
+        <i class="bi bi-x-lg" aria-hidden="true"></i> Quitar filtro
+      </a>
     }
     @if (descripcion() && descripcion().length > 0) {
       <small class="text-muted ms-3">Filtro: búsqueda contiene "{{ descripcion() }}"</small>
@@ -30,11 +28,9 @@
 
   <div class="d-flex my-1">
     <div class="w-100 d-flex justify-content-center">
-      @if (!isDialogMode()) {
-        <a class="btn btn-primary new-btn" [routerLink]="['/temporada/new']" role="button">
-          <i class="bi bi-plus-circle me-2" aria-hidden="true"></i><span class="d-none d-sm-inline">Nueva Temporada</span>
-        </a>
-      }
+      <a class="btn btn-primary new-btn" [routerLink]="['/temporada/new']" role="button">
+        <i class="bi bi-plus-circle me-2" aria-hidden="true"></i><span class="d-none d-sm-inline">Nueva Temporada</span>
+      </a>
     </div>
   </div>
 
@@ -128,80 +124,51 @@
                           <th scope="row" style="text-align: center">{{ oTemporada.id }}</th>
                           <td class="align-middle text-truncate">{{ oTemporada.descripcion }}</td>
                           <td class="align-middle d-none d-md-table-cell">
-                            @if (isDialogMode()) {
+                            <a [routerLink]="['/club/view', oTemporada.club.id]">
                               {{ oTemporada.club.nombre | trim: 27 }}
                               {{ ' (' + oTemporada.club.id + ')' }}
+                            </a>
+                            <a
+                              class="btn btn-warning btn-sm ms-2 float-end"
+                              [routerLink]="['/temporada/club', oTemporada.club.id]"
+                              role="button"
+                              title="Filtrar por club"
+                              ><i class="bi bi-funnel-fill" aria-hidden="true"></i
+                            ></a>
+                          </td>
+                          <td style="text-align: center" class="d-none d-md-table-cell">
+                            @if (oTemporada.categorias === 0) {
+                              <i class="bi bi-ban" aria-hidden="true"></i>
                             } @else {
-                              <a [routerLink]="['/club/view', oTemporada.club.id]">
-                                {{ oTemporada.club.nombre | trim: 27 }}
-                                {{ ' (' + oTemporada.club.id + ')' }}
+                              <a [routerLink]="['/categoria/temporada', oTemporada.id]">
+                                {{ oTemporada.categorias }}
                               </a>
-                              <a
-                                class="btn btn-warning btn-sm ms-2 float-end"
-                                [routerLink]="['/temporada/club', oTemporada.club.id]"
-                                role="button"
-                                title="Filtrar por club"
-                                ><i class="bi bi-funnel-fill" aria-hidden="true"></i
-                              ></a>
                             }
                           </td>
                           <td style="text-align: center" class="d-none d-md-table-cell">
-                            @if (isDialogMode()) {
-                              {{ oTemporada.categorias }}
+                            @if (oTemporada.equipos === 0) {
+                              <i class="bi bi-ban" aria-hidden="true"></i>
                             } @else {
-                              @if (oTemporada.categorias === 0) {
-                                <i class="bi bi-ban" aria-hidden="true"></i>
-                              } @else {
-                                <a [routerLink]="['/categoria/temporada', oTemporada.id]">
-                                  {{ oTemporada.categorias }}
-                                </a>
-                              }
+                              <a [routerLink]="['/equipo/temporada', oTemporada.id]">
+                                {{ oTemporada.equipos }}
+                              </a>
                             }
                           </td>
                           <td style="text-align: center" class="d-none d-md-table-cell">
-                            @if (isDialogMode()) {
-                              {{ oTemporada.equipos }}
+                            @if (oTemporada.ligas === 0) {
+                              <i class="bi bi-ban" aria-hidden="true"></i>
                             } @else {
-                              @if (oTemporada.equipos === 0) {
-                                <i class="bi bi-ban" aria-hidden="true"></i>
-                              } @else {
-                                <a [routerLink]="['/equipo/temporada', oTemporada.id]">
-                                  {{ oTemporada.equipos }}
-                                </a>
-                              }
-                            }
-                          </td>
-                          <td style="text-align: center" class="d-none d-md-table-cell">
-                            @if (isDialogMode()) {
-                              {{ oTemporada.ligas }}
-                            } @else {
-                              @if (oTemporada.ligas === 0) {
-                                <i class="bi bi-ban" aria-hidden="true"></i>
-                              } @else {
-                                <a [routerLink]="['/liga/temporada', oTemporada.id]">
-                                  {{ oTemporada.ligas }}
-                                </a>
-                              }
+                              <a [routerLink]="['/liga/temporada', oTemporada.id]">
+                                {{ oTemporada.ligas }}
+                              </a>
                             }
                           </td>
                           <td>
                             <div class="d-flex justify-content-center">
-                              @if (isDialogMode()) {
-                                <button
-                                  class="btn btn-success btn-sm"
-                                  (click)="onSelect(oTemporada)"
-                                  title="Seleccionar"
-                                >
-                                  <i class="bi bi-check-circle" aria-hidden="true"></i> Seleccionar
-                                </button>
-                              } @else {
-                                <div class="d-flex justify-content-center">
-                                  <app-botonera-actions-plist
-                                    [id]="oTemporada.id"
-                                    strEntity="temporada"
-                                  ></app-botonera-actions-plist>
-                                </div>
-                              }
+                              <app-botonera-actions-plist
+                                [id]="oTemporada.id"
+                                strEntity="temporada"
+                              ></app-botonera-actions-plist>
                             </div>
                           </td>
                         </tr>

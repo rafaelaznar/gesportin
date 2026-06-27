@@ -12,8 +12,6 @@ import { TrimPipe } from '../../../../pipe/trim-pipe';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { debounceTimeSearch } from '../../../../environment/environment';
-import { ModalRef } from '../../../shared/modal/modal-ref';
-import { MODAL_REF } from '../../../shared/modal/modal.tokens';
 import { BotoneraActionsPlist } from '../../../shared/botonera-actions-plist/botonera-actions-plist';
 
 @Component({
@@ -45,7 +43,6 @@ export class NoticiaAdminPlist {
   private oNoticiaService = inject(NoticiaService);
   private route = inject(ActivatedRoute);
   private cdr = inject(ChangeDetectorRef);
-  private modalRef = inject(MODAL_REF, { optional: true });
 
   ngOnInit() {
     if (this.id_club) {
@@ -136,13 +133,5 @@ export class NoticiaAdminPlist {
 
   onSearchTitulo(value: string) {
     this.searchSubject.next(value);
-  }
-
-  isDialogMode(): boolean {
-    return !!this.modalRef;
-  }
-
-  onSelect(noticia: INoticia): void {
-    this.modalRef?.close(noticia);
   }
 }

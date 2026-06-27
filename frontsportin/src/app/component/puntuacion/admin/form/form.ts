@@ -10,7 +10,7 @@ import { UsuarioService } from '../../../../service/usuarioService';
 import { IPuntuacion } from '../../../../model/puntuacion';
 import { INoticia } from '../../../../model/noticia';
 import { IUsuario } from '../../../../model/usuario';
-import { NoticiaAdminPlist } from '../../../noticia/admin/plist/plist';
+import { NoticiaPlistFinder } from '../../../noticia/finder/plist';
 import { UsuarioPlistFinder } from '../../../usuario/finder/plist';
 
 @Component({
@@ -101,7 +101,7 @@ export class PuntuacionAdminForm implements OnInit {
   }
 
   openNoticiaFinderModal(): void {
-    const ref = this.modalService.open<unknown, INoticia | null>(NoticiaAdminPlist);
+    const ref = this.modalService.open<unknown, INoticia | null>(NoticiaPlistFinder);
     ref.afterClosed$.subscribe((noticia: INoticia | null) => {
       if (noticia?.id != null) {
         this.puntuacionForm.patchValue({ id_noticia: noticia.id });

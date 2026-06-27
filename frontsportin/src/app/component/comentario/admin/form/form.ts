@@ -11,7 +11,7 @@ import { IComentario } from '../../../../model/comentario';
 import { IUsuario } from '../../../../model/usuario';
 import { INoticia } from '../../../../model/noticia';
 import { UsuarioPlistFinder } from '../../../usuario/finder/plist';
-import { NoticiaAdminPlist } from '../../../noticia/admin/plist/plist';
+import { NoticiaPlistFinder } from '../../../noticia/finder/plist';
 
 @Component({
   standalone: true,
@@ -116,7 +116,7 @@ export class ComentarioAdminForm implements OnInit {
   }
 
   openNoticiaFinderModal(): void {
-    const ref = this.modalService.open<unknown, INoticia | null>(NoticiaAdminPlist);
+    const ref = this.modalService.open<unknown, INoticia | null>(NoticiaPlistFinder);
     ref.afterClosed$.subscribe((noticia: INoticia | null) => {
       if (noticia) {
         this.comentarioForm.patchValue({ id_noticia: noticia.id });
