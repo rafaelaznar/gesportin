@@ -116,8 +116,9 @@ export class FacturaTeamadminForm implements OnInit {
 
     this.submitting.set(true);
 
+    const rawFecha = this.facturaForm.value.fecha;
     const facturaData: any = {
-      fecha: this.facturaForm.value.fecha,
+      fecha: rawFecha && !rawFecha.includes('T') ? rawFecha + 'T00:00:00' : rawFecha,
       usuario: { id: Number(this.facturaForm.value.id_usuario) },
     };
 
