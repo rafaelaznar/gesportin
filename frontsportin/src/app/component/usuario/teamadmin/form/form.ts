@@ -16,7 +16,7 @@ import { IClub } from '../../../../model/club';
 import { ITipousuario } from '../../../../model/tipousuario';
 import { IRolusuario } from '../../../../model/rolusuario';
 import { SessionService } from '../../../../service/session';
-import { ClubAdminPlist } from '../../../club/admin/plist/plist';
+import { ClubPlistFinder } from '../../../club/finder/plist';
 import { TipousuarioAdminPlist } from '../../../tipousuario/admin/plist/plist';
 import { RolusuarioAdminPlist } from '../../../rolusuario/admin/plist/plist';
 
@@ -212,7 +212,7 @@ export class UsuarioTeamadminForm implements OnInit {
   }
 
   openClubFinderModal(): void {
-    const ref = this.modalService.open<unknown, IClub | null>(ClubAdminPlist);
+    const ref = this.modalService.open<unknown, IClub | null>(ClubPlistFinder);
     ref.afterClosed$.subscribe((club: IClub | null) => {
       if (club?.id != null) {
         this.usuarioForm.patchValue({ id_club: club.id });

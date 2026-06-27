@@ -9,7 +9,7 @@ import { NotificacionService } from '../../../../service/notificacion';
 import { IClub } from '../../../../model/club';
 import { ModalService } from '../../../shared/modal/modal.service';
 import { ClubService } from '../../../../service/club';
-import { ClubAdminPlist } from '../../../club/admin/plist/plist';
+import { ClubPlistFinder } from '../../../club/finder/plist';
 
 @Component({
   selector: 'app-temporada-admin-form',
@@ -138,7 +138,7 @@ export class TemporadaAdminForm implements OnInit {
   }
 
   openClubFinderModal(): void {
-    const ref = this.modalService.open<unknown, IClub | null>(ClubAdminPlist);
+    const ref = this.modalService.open<unknown, IClub | null>(ClubPlistFinder);
 
     ref.afterClosed$.subscribe((club: IClub | null) => {
       if (club) {

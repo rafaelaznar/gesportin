@@ -42,11 +42,15 @@
 
   <!-- Tabla con altura fija para evitar cambio de tamaño al paginar -->
   <div class="table-container">
+    <!-- Indicador de carga sutil mientras se mantienen los datos anteriores -->
     @if (loading()) {
-      <div class="text-center py-3" role="status">
-        <span class="spinner-border spinner-border-sm me-2"></span>Cargando...
+      <div class="finder-loading-bar">
+        <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+        <small class="text-muted">Cargando...</small>
       </div>
-    } @else if (oPage() && oPage()!.content.length > 0) {
+    }
+
+    @if (oPage() && oPage()!.content.length > 0) {
       <div class="table-responsive">
         <table class="table table-hover table-sm align-middle">
           <thead class="table-light sticky-top">
@@ -97,7 +101,7 @@
           <app-paginacion [numPage]="numPage()" [numPages]="oPage()!.totalPages" (pageChange)="goToPage($event)" />
         </div>
       }
-    } @else {
+    } @else if (!loading()) {
       <div class="alert alert-info" role="alert">
         <i class="bi bi-info-circle me-2" aria-hidden="true"></i>
         @if (id_equipo() > 0) {
@@ -105,6 +109,10 @@
         } @else {
           No se encontraron usuarios.
         }
+      </div>
+    } @else {
+      <div class="text-center py-3" role="status">
+        <span class="spinner-border spinner-border-sm me-2"></span>Cargando...
       </div>
     }
   </div>

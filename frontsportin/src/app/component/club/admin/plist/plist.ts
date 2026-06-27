@@ -2,8 +2,6 @@ import { Component, signal, computed, inject } from '@angular/core';
 import { IPage } from '../../../../model/plist';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
-import { ModalRef } from '../../../shared/modal/modal-ref';
-import { MODAL_REF } from '../../../shared/modal/modal.tokens';
 import { BotoneraRpp } from '../../../shared/botonera-rpp/botonera-rpp';
 import { Paginacion } from '../../../shared/paginacion/paginacion';
 import { BotoneraActionsPlist } from '../../../shared/botonera-actions-plist/botonera-actions-plist';
@@ -34,7 +32,6 @@ export class ClubAdminPlist {
 
   private oClubService = inject(ClubService);
   private route = inject(ActivatedRoute);
-  private modalRef = inject(MODAL_REF, { optional: true });
   session: SessionService = inject(SessionService);
   imageUpload = inject(ImageUploadService);
 
@@ -94,13 +91,5 @@ export class ClubAdminPlist {
     this.numRpp.set(n);
     this.numPage.set(0);
     this.getPage();
-  }
-
-  isDialogMode(): boolean {
-    return !!this.modalRef;
-  }
-
-  onSelect(club: IClub): void {
-    this.modalRef?.close(club);
   }
 }

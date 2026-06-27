@@ -10,7 +10,7 @@ import { INoticia } from '../../../../model/noticia';
 import { IClub } from '../../../../model/club';
 import { ClubService } from '../../../../service/club';
 import { NoticiaService } from '../../../../service/noticia';
-import { ClubAdminPlist } from '../../../club/admin/plist/plist';
+import { ClubPlistFinder } from '../../../club/finder/plist';
 
 @Component({
   selector: 'app-noticia-admin-form',
@@ -192,7 +192,7 @@ export class NoticiaAdminForm implements OnInit {
   }
 
   openClubFinderModal(): void {
-    const ref = this.modalService.open<unknown, IClub | null>(ClubAdminPlist);
+    const ref = this.modalService.open<unknown, IClub | null>(ClubPlistFinder);
 
     ref.afterClosed$.subscribe((club: IClub | null) => {
       if (club) {

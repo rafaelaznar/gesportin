@@ -1,4 +1,4 @@
-.user-img-thumb {
+.club-logo-img {
   width: 40px;
   height: 40px;
   object-fit: cover;
@@ -11,17 +11,4 @@
   justify-content: center;
   padding: 0.25rem 0;
   opacity: 0.7;
-}
-
-.finder-container {
-  min-height: 400px;
-  max-height: 70vh;
-  display: flex;
-  flex-direction: column;
-}
-
-.table-container {
-  flex: 1;
-  min-height: 200px;
-  overflow-y: auto;
 }

@@ -1,0 +1,79 @@
+<div class="p-3">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="mb-0">
+      <i class="bi bi-building me-2" aria-hidden="true"></i>Seleccionar club
+    </h5>
+    <button type="button" class="btn-close" aria-label="Cerrar" (click)="onCancel()"></button>
+  </div>
+
+  <!-- Contador de registros -->
+  <div class="mb-2">
+    <span class="text-muted small">
+      {{ totalRecords() }} club{{ totalRecords() !== 1 ? 'es' : '' }}
+    </span>
+  </div>
+
+  <!-- Indicador de carga sutil mientras se mantienen los datos anteriores -->
+  @if (loading()) {
+    <div class="finder-loading-bar">
+      <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+      <small class="text-muted">Cargando...</small>
+    </div>
+  }
+
+  @if (oPage() && oPage()!.content.length > 0) {
+    <div class="table-responsive">
+      <table class="table table-hover table-sm align-middle">
+        <thead class="table-light">
+          <tr>
+            <th role="button" (click)="onOrder('id')" style="cursor:pointer; width:8%">
+              ID
+              @if (orderField() === 'id') {
+                <i class="bi" [class.bi-caret-up-fill]="orderDirection() === 'asc'"
+                  [class.bi-caret-down-fill]="orderDirection() === 'desc'" aria-hidden="true"></i>
+              }
+            </th>
+            <th style="width:8%">Logo</th>
+            <th role="button" (click)="onOrder('nombre')" style="cursor:pointer">
+              Nombre
+              @if (orderField() === 'nombre') {
+                <i class="bi" [class.bi-caret-up-fill]="orderDirection() === 'asc'"
+                  [class.bi-caret-down-fill]="orderDirection() === 'desc'" aria-hidden="true"></i>
+              }
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (club of oPage()!.content; track club.id) {
+            <tr style="cursor: pointer" title="Seleccionar {{ club.nombre }}"
+              (click)="onSelect(club)">
+              <td>{{ club.id }}</td>
+              <td class="text-center align-middle">
+                @if (imageUpload.toPreviewSrc(club.imagen)) {
+                  <img [src]="imageUpload.toPreviewSrc(club.imagen)" alt="Logo" class="club-logo-img" />
+                } @else {
+                  <img src="no-img.jpg" alt="Sin logo" class="club-logo-img" />
+                }
+              </td>
+              <td class="text-truncate">{{ club.nombre }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    @if (oPage()!.totalPages > 1) {
+      <div class="d-flex justify-content-center mt-3">
+        <app-paginacion [numPage]="numPage()" [numPages]="oPage()!.totalPages" (pageChange)="goToPage($event)" />
+      </div>
+    }
+  } @else if (!loading()) {
+    <div class="alert alert-info" role="alert">
+      <i class="bi bi-info-circle me-2" aria-hidden="true"></i>
+      No se encontraron clubes.
+    </div>
+  } @else {
+    <div class="text-center py-3" role="status">
+      <span class="spinner-border spinner-border-sm me-2"></span>Cargando...
+    </div>
+  }
+</div>
