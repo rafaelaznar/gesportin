@@ -134,7 +134,7 @@ export class ComentarioTeamadminForm implements OnInit {
         },
         error: (err: HttpErrorResponse) => {
           this.error.set('Error actualizando el comentario');
-          this.notificacion.success('Error al actualizar el comentario');
+          this.notificacion.error('Error al actualizar el comentario');
           console.error(err);
           this.submitting.set(false);
         },
@@ -153,7 +153,7 @@ export class ComentarioTeamadminForm implements OnInit {
         },
         error: (err: HttpErrorResponse) => {
           this.error.set('Error creando el comentario');
-          this.notificacion.success('Error al crear el comentario');
+          this.notificacion.error('Error al crear el comentario');
           console.error(err);
           this.submitting.set(false);
         },

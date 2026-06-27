@@ -133,7 +133,7 @@ export class CuotaAdminForm implements OnInit {
         },
         error: (err: HttpErrorResponse) => {
           this.error.set('Error actualizando la cuota');
-          this.notificacion.success('Error actualizando la cuota');
+          this.notificacion.error('Error actualizando la cuota');
           console.error(err);
           this.submitting.set(false);
         },
@@ -147,7 +147,7 @@ export class CuotaAdminForm implements OnInit {
         },
         error: (err: HttpErrorResponse) => {
           this.error.set('Error creando la cuota');
-          this.notificacion.success('Error creando la cuota');
+          this.notificacion.error('Error creando la cuota');
           console.error(err);
           this.submitting.set(false);
         },

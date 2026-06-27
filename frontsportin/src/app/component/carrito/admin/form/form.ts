@@ -12,7 +12,7 @@ import { IArticulo } from '../../../../model/articulo';
 import { IUsuario } from '../../../../model/usuario';
 import { SessionService } from '../../../../service/session';
 import { ArticuloAdminPlist } from '../../../articulo/admin/plist/plist';
-import { UsuarioAdminPlist } from '../../../usuario/admin/plist/plist';
+import { UsuarioPlistFinder } from '../../../usuario/finder/plist';
 
 @Component({
   selector: 'app-carrito-admin-form',
@@ -116,7 +116,7 @@ export class CarritoAdminForm implements OnInit {
   }
 
   openUsuarioFinderModal(): void {
-    const ref = this.modalService.open<unknown, IUsuario | null>(UsuarioAdminPlist);
+    const ref = this.modalService.open<unknown, IUsuario | null>(UsuarioPlistFinder);
     ref.afterClosed$.subscribe((usuario: IUsuario | null) => {
       if (usuario?.id != null) {
         this.carritoForm.patchValue({ id_usuario: usuario.id });

@@ -12,7 +12,7 @@ import { ICategoria } from '../../../../model/categoria';
 import { IUsuario } from '../../../../model/usuario';
 import { IEquipo } from '../../../../model/equipo';
 import { CategoriaAdminPlist } from '../../../categoria/admin/plist/plist';
-import { UsuarioAdminPlist } from '../../../usuario/admin/plist/plist';
+import { UsuarioPlistFinder } from '../../../usuario/finder/plist';
 
 @Component({
   selector: 'app-equipo-teamadmin-form',
@@ -114,7 +114,7 @@ export class EquipoTeamadminForm implements OnInit {
       error: (err: HttpErrorResponse) => {
         this.selectedCategoria.set(null);
         console.error('Error al sincronizar categoría:', err);
-        this.notificacion.success('Error al cargar la categoría seleccionada');
+        this.notificacion.error('Error al cargar la categoría seleccionada');
       },
     });
   }
@@ -132,7 +132,7 @@ export class EquipoTeamadminForm implements OnInit {
       error: (err: HttpErrorResponse) => {
         this.selectedEntrenador.set(null);
         console.error('Error al sincronizar entrenador:', err);
-        this.notificacion.success('Error al cargar el entrenador seleccionado');
+        this.notificacion.error('Error al cargar el entrenador seleccionado');
       },
     });
   }
@@ -152,7 +152,7 @@ export class EquipoTeamadminForm implements OnInit {
   }
 
   openEntrenadorFinderModal(): void {
-    const ref = this.modalService.open<unknown, IUsuario | null>(UsuarioAdminPlist);
+    const ref = this.modalService.open<unknown, IUsuario | null>(UsuarioPlistFinder);
 
     ref.afterClosed$.subscribe((entrenador: IUsuario | null) => {
       if (entrenador) {
@@ -236,7 +236,7 @@ export class EquipoTeamadminForm implements OnInit {
       },
       error: (err: HttpErrorResponse) => {
         this.error.set('Error creando el equipo');
-        this.notificacion.success('Error creando el equipo');
+        this.notificacion.error('Error creando el equipo');
         console.error(err);
         this.submitting.set(false);
       },
@@ -252,7 +252,7 @@ export class EquipoTeamadminForm implements OnInit {
       },
       error: (err: HttpErrorResponse) => {
         this.error.set('Error actualizando el equipo');
-        this.notificacion.success('Error actualizando el equipo');
+        this.notificacion.error('Error actualizando el equipo');
         console.error(err);
         this.submitting.set(false);
       },

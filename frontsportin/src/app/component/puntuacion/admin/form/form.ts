@@ -11,7 +11,7 @@ import { IPuntuacion } from '../../../../model/puntuacion';
 import { INoticia } from '../../../../model/noticia';
 import { IUsuario } from '../../../../model/usuario';
 import { NoticiaAdminPlist } from '../../../noticia/admin/plist/plist';
-import { UsuarioAdminPlist } from '../../../usuario/admin/plist/plist';
+import { UsuarioPlistFinder } from '../../../usuario/finder/plist';
 
 @Component({
   standalone: true,
@@ -112,7 +112,7 @@ export class PuntuacionAdminForm implements OnInit {
   }
 
   openUsuarioFinderModal(): void {
-    const ref = this.modalService.open<unknown, IUsuario | null>(UsuarioAdminPlist);
+    const ref = this.modalService.open<unknown, IUsuario | null>(UsuarioPlistFinder);
     ref.afterClosed$.subscribe((usuario: IUsuario | null) => {
       if (usuario?.id != null) {
         this.puntuacionForm.patchValue({ id_usuario: usuario.id });
@@ -158,7 +158,7 @@ export class PuntuacionAdminForm implements OnInit {
         },
         error: (err: HttpErrorResponse) => {
           this.error.set('Error actualizando la puntuación');
-          this.notificacion.success('Error actualizando la puntuación');
+          this.notificacion.error('Error actualizando la puntuación');
           console.error(err);
           this.submitting.set(false);
         },
@@ -172,7 +172,7 @@ export class PuntuacionAdminForm implements OnInit {
         },
         error: (err: HttpErrorResponse) => {
           this.error.set('Error creando la puntuación');
-          this.notificacion.success('Error creando la puntuación');
+          this.notificacion.error('Error creando la puntuación');
           console.error(err);
           this.submitting.set(false);
         },

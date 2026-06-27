@@ -6,8 +6,7 @@ export interface IJugador {
   id: number;
   dorsal: number;
   posicion: string;
-  capitan: boolean;
-  imagen: string | null;
+  capitan: boolean;  
   usuario: IUsuario;
   equipo: IEquipo;
   pagos: number;

@@ -52,7 +52,7 @@ export class ClubAdminEditPage implements OnInit {
       },
       error: (err: HttpErrorResponse) => {
         this.error.set('Error cargando el club');
-        this.notificacion.success('Error cargando el club');
+        this.notificacion.error('Error cargando el club');
         console.error(err);
         this.loading.set(false);
       },

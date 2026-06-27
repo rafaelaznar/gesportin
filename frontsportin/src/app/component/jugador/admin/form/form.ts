@@ -12,9 +12,7 @@ import { IEquipo } from '../../../../model/equipo';
 import { IUsuario } from '../../../../model/usuario';
 import { SessionService } from '../../../../service/session';
 import { EquipoAdminPlist } from '../../../equipo/admin/plist/plist';
-import { UsuarioAdminPlist } from '../../../usuario/admin/plist/plist';
-import { ImageUploadService } from '../../../../service/image-upload';
-
+import { UsuarioPlistFinder } from '../../../usuario/finder/plist';
 @Component({
   selector: 'app-jugador-admin-form',
   standalone: true,
@@ -35,14 +33,12 @@ export class JugadorAdminForm implements OnInit {
   private oUsuarioService = inject(UsuarioService);
   private modalService = inject(ModalService);
   private sessionService = inject(SessionService);
-  imageUpload: ImageUploadService = inject(ImageUploadService);
 
   jugadorForm!: FormGroup;
   error = signal<string | null>(null);
   submitting = signal(false);
   selectedEquipo = signal<IEquipo | null>(null);
   selectedUsuario = signal<IUsuario | null>(null);
-  selectedImage = signal<string | null>(null);
 
   constructor() {
     effect(() => {
@@ -69,7 +65,6 @@ export class JugadorAdminForm implements OnInit {
       capitan: [false, Validators.required],
       id_equipo: [null, Validators.required],
       id_usuario: [null, Validators.required],
-      imagen: [null],
     });
   }
 
@@ -81,13 +76,9 @@ export class JugadorAdminForm implements OnInit {
       capitan: jugador.capitan,
       id_equipo: jugador.equipo?.id,
       id_usuario: jugador.usuario?.id,
-      imagen: jugador.imagen || null,
     });
     if (jugador.equipo?.id) this.loadEquipo(jugador.equipo.id);
     if (jugador.usuario?.id) this.loadUsuario(jugador.usuario.id);
-    if (jugador.imagen) {
-      this.selectedImage.set(this.imageUpload.toPreviewSrc(jugador.imagen));
-    }
   }
 
   private loadEquipo(idEquipo: number): void {
@@ -124,21 +115,6 @@ export class JugadorAdminForm implements OnInit {
     return this.jugadorForm.get('id_usuario');
   }
 
-  async onFileSelected(event: Event): Promise<void> {
-    const input = event.target as HTMLInputElement;
-    if (!input.files || input.files.length === 0) {
-      return;
-    }
-    const file = input.files[0];
-    try {
-      const base64 = await this.imageUpload.fileToBase64(file);
-      this.jugadorForm.patchValue({ imagen: base64 });
-      this.selectedImage.set(this.imageUpload.toPreviewSrc(base64));
-    } catch (err: any) {
-      this.notificacion.error(err.message || 'Error al cargar la imagen');
-    }
-  }
-
   openEquipoFinderModal(): void {
     const ref = this.modalService.open<unknown, IEquipo | null>(EquipoAdminPlist);
     ref.afterClosed$.subscribe((equipo: IEquipo | null) => {
@@ -151,7 +127,7 @@ export class JugadorAdminForm implements OnInit {
   }
 
   openUsuarioFinderModal(): void {
-    const ref = this.modalService.open<unknown, IUsuario | null>(UsuarioAdminPlist);
+    const ref = this.modalService.open<unknown, IUsuario | null>(UsuarioPlistFinder);
     ref.afterClosed$.subscribe((usuario: IUsuario | null) => {
       if (usuario?.id != null) {
         this.jugadorForm.patchValue({ id_usuario: usuario.id });
@@ -175,7 +151,6 @@ export class JugadorAdminForm implements OnInit {
       capitan: Boolean(this.jugadorForm.value.capitan),
       equipo: { id: Number(this.jugadorForm.value.id_equipo) },
       usuario: { id: Number(this.jugadorForm.value.id_usuario) },
-      imagen: this.jugadorForm.value.imagen || null,
     };
 
     if (this.isEditMode && this.jugador?.id) {

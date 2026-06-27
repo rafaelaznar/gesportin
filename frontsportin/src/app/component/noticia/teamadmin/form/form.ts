@@ -180,7 +180,7 @@ export class NoticiaTeamadminForm implements OnInit {
           this.router.navigate([this.returnUrl()]);
         },
         error: (err: HttpErrorResponse) => {
-          this.notificacion.success('Error actualizando la noticia');
+          this.notificacion.error('Error actualizando la noticia');
           console.error(err);
           this.submitting.set(false);
         },
@@ -193,7 +193,7 @@ export class NoticiaTeamadminForm implements OnInit {
           this.router.navigate([this.returnUrl()]);
         },
         error: (err: HttpErrorResponse) => {
-          this.notificacion.success('Error creando la noticia');
+          this.notificacion.error('Error creando la noticia');
           console.error(err);
           this.submitting.set(false);
         },

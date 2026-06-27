@@ -138,7 +138,7 @@ export class TipoarticuloTeamadminForm implements OnInit {
         },
         error: (err: HttpErrorResponse) => {
           this.error.set('Error actualizando el tipo de artículo');
-          this.notificacion.success('Error actualizando el tipo de artículo');
+          this.notificacion.error('Error actualizando el tipo de artículo');
           console.error(err);
           this.submitting.set(false);
         },
@@ -152,7 +152,7 @@ export class TipoarticuloTeamadminForm implements OnInit {
         },
         error: (err: HttpErrorResponse) => {
           this.error.set('Error creando el tipo de artículo');
-          this.notificacion.success('Error creando el tipo de artículo');
+          this.notificacion.error('Error creando el tipo de artículo');
           console.error(err);
           this.submitting.set(false);
         },

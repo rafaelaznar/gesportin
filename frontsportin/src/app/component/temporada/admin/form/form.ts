@@ -103,7 +103,7 @@ export class TemporadaAdminForm implements OnInit {
         error: (err: HttpErrorResponse) => {
           this.submitting.set(false);
           this.error.set('Error al guardar el registro');
-          this.notificacion.success('Error al guardar el registro');
+          this.notificacion.error('Error al guardar el registro');
           console.error(err);
         },
       });
@@ -118,7 +118,7 @@ export class TemporadaAdminForm implements OnInit {
         error: (err: HttpErrorResponse) => {
           this.submitting.set(false);
           this.error.set('Error al crear el registro');
-          this.notificacion.success('Error al crear el registro');
+          this.notificacion.error('Error al crear el registro');
           console.error(err);
         },
       });
@@ -132,7 +132,7 @@ export class TemporadaAdminForm implements OnInit {
       },
       error: (err: HttpErrorResponse) => {
         console.error('Error al sincronizar club:', err);
-        this.notificacion.success('Error al cargar el club seleccionado');
+        this.notificacion.error('Error al cargar el club seleccionado');
       },
     });
   }

@@ -5,9 +5,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Column;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
@@ -38,10 +36,6 @@ public class JugadorEntity {
     @NotNull
     @BooleanFlag
     private Boolean capitan;
-
-    @Lob
-    @Column(nullable = true)
-    private byte[] imagen;
 
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER)

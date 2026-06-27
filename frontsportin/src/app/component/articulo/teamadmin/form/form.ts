@@ -152,7 +152,7 @@ export class ArticuloTeamadminForm implements OnInit {
         },
         error: (err: HttpErrorResponse) => {
           this.error.set('Error actualizando el artículo');
-          this.notificacion.success('Error actualizando el artículo');
+          this.notificacion.error('Error actualizando el artículo');
           console.error(err);
           this.submitting.set(false);
         },
@@ -166,7 +166,7 @@ export class ArticuloTeamadminForm implements OnInit {
         },
         error: (err: HttpErrorResponse) => {
           this.error.set('Error creando el artículo');
-          this.notificacion.success('Error creando el artículo');
+          this.notificacion.error('Error creando el artículo');
           console.error(err);
           this.submitting.set(false);
         },

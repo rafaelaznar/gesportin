@@ -15,27 +15,21 @@
     <small class="text-muted">Total registros: {{ totalRecords() || 0 }}</small>
     @if (id_tipousuario && id_tipousuario > 0) {
       <small class="text-muted ms-3">Filtro: id de tipo de usuario = {{ id_tipousuario }}</small>
-      @if (!isDialogMode()) {
-        <a class="ms-2" [routerLink]="['/usuario']" role="button" title="Quitar filtro">
-          <i class="bi bi-x-lg" aria-hidden="true"></i> Quitar filtro
-        </a>
-      }
+      <a class="ms-2" [routerLink]="['/usuario']" role="button" title="Quitar filtro">
+        <i class="bi bi-x-lg" aria-hidden="true"></i> Quitar filtro
+      </a>
     }
     @if (id_rol && id_rol > 0) {
       <small class="text-muted ms-3">Filtro: id de rol = {{ id_rol }}</small>
-      @if (!isDialogMode()) {
-        <a class="ms-2" [routerLink]="['/usuario']" role="button" title="Quitar filtro">
-          <i class="bi bi-x-lg" aria-hidden="true"></i> Quitar filtro
-        </a>
-      }
+      <a class="ms-2" [routerLink]="['/usuario']" role="button" title="Quitar filtro">
+        <i class="bi bi-x-lg" aria-hidden="true"></i> Quitar filtro
+      </a>
     }
     @if (id_club && id_club > 0) {
       <small class="text-muted ms-3">Filtro: id de club = {{ id_club }}</small>
-      @if (!isDialogMode()) {
-        <a class="ms-2" [routerLink]="['/usuario']" role="button" title="Quitar filtro">
-          <i class="bi bi-x-lg" aria-hidden="true"></i> Quitar filtro
-        </a>
-      }
+      <a class="ms-2" [routerLink]="['/usuario']" role="button" title="Quitar filtro">
+        <i class="bi bi-x-lg" aria-hidden="true"></i> Quitar filtro
+      </a>
     }
     @if (nombre() && nombre().length > 0) {
       <small class="text-muted ms-3">Filtro: búsqueda contiene "{{ nombre() }}"</small>
@@ -44,11 +38,9 @@
 
   <div class="d-flex my-1">
     <div class="w-100 d-flex justify-content-center">
-      @if (!isDialogMode()) {
-        <a class="btn btn-primary new-btn" [routerLink]="['/usuario/new']" role="button">
-          <i class="bi bi-plus-circle me-2" aria-hidden="true"></i><span class="d-none d-sm-inline">Crear usuario</span>
-        </a>
-      }
+      <a class="btn btn-primary new-btn" [routerLink]="['/usuario/new']" role="button">
+        <i class="bi bi-plus-circle me-2" aria-hidden="true"></i><span class="d-none d-sm-inline">Crear usuario</span>
+      </a>
     </div>
   </div>
 
@@ -198,7 +190,7 @@
                   </thead>
                   <tbody>
                     @for (oUsuario of oPage()?.content; track oUsuario.id) {
-                      <tr (click)="onSelect(oUsuario)" [style.cursor]="isDialogMode() ? 'pointer' : 'default'">
+                      <tr>
                         <th scope="row" class="text-center">{{ oUsuario.id }}</th>
                         <td class="text-center align-middle">
                           @if (imageUpload.toPreviewSrc(oUsuario.imagen)) {
@@ -211,116 +203,68 @@
                         <td>{{ oUsuario.apellido1 }}</td>
                         <td>{{ oUsuario.username }}</td>
                         <td>
-                          @if (isDialogMode()) {
-                            {{ oUsuario.club.nombre || 'N/A' }}
-                          } @else {
-                            <a [routerLink]="['/club/view', oUsuario.club.id]">{{ oUsuario.club.nombre || 'N/A' }}</a>
-                            <a class="btn btn-warning btn-sm ms-2 float-end" [routerLink]="['/usuario/club', oUsuario.club.id]" role="button" title="Filtrar por club"><i class="bi bi-funnel-fill" aria-hidden="true"></i></a>
-                          }
+                          <a [routerLink]="['/club/view', oUsuario.club.id]">{{ oUsuario.club.nombre || 'N/A' }}</a>
+                          <a class="btn btn-warning btn-sm ms-2 float-end" [routerLink]="['/usuario/club', oUsuario.club.id]" role="button" title="Filtrar por club"><i class="bi bi-funnel-fill" aria-hidden="true"></i></a>
                         </td>
                         <td>
-                          @if (isDialogMode()) {
-                            {{ oUsuario.tipousuario.descripcion || '-' }}
-                          } @else {
-                            <a [routerLink]="['/tipousuario/view', oUsuario.tipousuario.id]">{{ oUsuario.tipousuario.descripcion || '-' }}</a>
-                            <a class="btn btn-warning btn-sm ms-2 float-end" [routerLink]="['/usuario/tipousuario', oUsuario.tipousuario.id]" role="button" title="Filtrar por tipo de usuario"><i class="bi bi-funnel-fill" aria-hidden="true"></i></a>
-                          }
+                          <a [routerLink]="['/tipousuario/view', oUsuario.tipousuario.id]">{{ oUsuario.tipousuario.descripcion || '-' }}</a>
+                          <a class="btn btn-warning btn-sm ms-2 float-end" [routerLink]="['/usuario/tipousuario', oUsuario.tipousuario.id]" role="button" title="Filtrar por tipo de usuario"><i class="bi bi-funnel-fill" aria-hidden="true"></i></a>
                         </td>
                         <td class="d-none d-md-table-cell">
-                          @if (isDialogMode()) {
-                            {{ oUsuario.rolusuario.descripcion || '-' }}
+                          <a [routerLink]="['/rolusuario/view', oUsuario.rolusuario.id]">{{ oUsuario.rolusuario.descripcion || '-' }}</a>
+                          <a class="btn btn-warning btn-sm ms-2 float-end" [routerLink]="['/usuario/rol', oUsuario.rolusuario.id]" role="button" title="Filtrar por rol"><i class="bi bi-funnel-fill" aria-hidden="true"></i></a>
+                        </td>
+                        <td class="text-center d-none d-md-table-cell">
+                          @if (!oUsuario.facturas || oUsuario.facturas === 0) {
+                            <i class="bi bi-ban" aria-hidden="true"></i>
                           } @else {
-                            <a [routerLink]="['/rolusuario/view', oUsuario.rolusuario.id]">{{ oUsuario.rolusuario.descripcion || '-' }}</a>
-                            <a class="btn btn-warning btn-sm ms-2 float-end" [routerLink]="['/usuario/rol', oUsuario.rolusuario.id]" role="button" title="Filtrar por rol"><i class="bi bi-funnel-fill" aria-hidden="true"></i></a>
+                            <a [routerLink]="['/factura/usuario', oUsuario.id]">{{ oUsuario.facturas }}</a>
                           }
                         </td>
                         <td class="text-center d-none d-md-table-cell">
-                          @if (isDialogMode()) {
-                            {{ oUsuario.facturas || 0 }}
+                          @if (!oUsuario.jugadores || oUsuario.jugadores === 0) {
+                            <i class="bi bi-ban" aria-hidden="true"></i>
                           } @else {
-                            @if (!oUsuario.facturas || oUsuario.facturas === 0) {
-                              <i class="bi bi-ban" aria-hidden="true"></i>
-                            } @else {
-                              <a [routerLink]="['/factura/usuario', oUsuario.id]">{{ oUsuario.facturas }}</a>
-                            }
-                          }
-                        </td>
-                        <td class="text-center d-none d-md-table-cell">
-                          @if (isDialogMode()) {
-                            {{ oUsuario.jugadores || 0 }}
-                          } @else {
-                            @if (!oUsuario.jugadores || oUsuario.jugadores === 0) {
-                              <i class="bi bi-ban" aria-hidden="true"></i>
-                            } @else {
-                              <a [routerLink]="['/jugador/usuario', oUsuario.id]">{{ oUsuario.jugadores }}</a>
-                            }
+                            <a [routerLink]="['/jugador/usuario', oUsuario.id]">{{ oUsuario.jugadores }}</a>
                           }
                         </td>
                         <td class="text-center d-none d-lg-table-cell">
-                          @if (isDialogMode()) {
-                            {{ oUsuario.equiposentrenados || 0 }}
+                          @if (!oUsuario.equiposentrenados || oUsuario.equiposentrenados === 0) {
+                            <i class="bi bi-ban" aria-hidden="true"></i>
                           } @else {
-                            @if (!oUsuario.equiposentrenados || oUsuario.equiposentrenados === 0) {
-                              <i class="bi bi-ban" aria-hidden="true"></i>
-                            } @else {
-                              <a [routerLink]="['/equipo/usuario', oUsuario.id]">{{ oUsuario.equiposentrenados }}</a>
-                            }
+                            <a [routerLink]="['/equipo/usuario', oUsuario.id]">{{ oUsuario.equiposentrenados }}</a>
                           }
                         </td>
                         <td class="text-center d-none d-lg-table-cell">
-                          @if (isDialogMode()) {
-                            {{ oUsuario.comentarios || 0 }}
+                          @if (!oUsuario.comentarios || oUsuario.comentarios === 0) {
+                            <i class="bi bi-ban" aria-hidden="true"></i>
                           } @else {
-                            @if (!oUsuario.comentarios || oUsuario.comentarios === 0) {
-                              <i class="bi bi-ban" aria-hidden="true"></i>
-                            } @else {
-                              <a [routerLink]="['/comentario/usuario', oUsuario.id]">{{ oUsuario.comentarios }}</a>
-                            }
+                            <a [routerLink]="['/comentario/usuario', oUsuario.id]">{{ oUsuario.comentarios }}</a>
                           }
                         </td>
                         <td class="text-center d-none d-lg-table-cell">
-                          @if (isDialogMode()) {
-                            {{ oUsuario.puntuaciones || 0 }}
+                          @if (!oUsuario.puntuaciones || oUsuario.puntuaciones === 0) {
+                            <i class="bi bi-ban" aria-hidden="true"></i>
                           } @else {
-                            @if (!oUsuario.puntuaciones || oUsuario.puntuaciones === 0) {
-                              <i class="bi bi-ban" aria-hidden="true"></i>
-                            } @else {
-                              <a [routerLink]="['/puntuacion/usuario', oUsuario.id]">{{ oUsuario.puntuaciones }}</a>
-                            }
+                            <a [routerLink]="['/puntuacion/usuario', oUsuario.id]">{{ oUsuario.puntuaciones }}</a>
                           }
                         </td>
                         <td class="text-center d-none d-lg-table-cell">
-                          @if (isDialogMode()) {
-                            {{ oUsuario.comentarioarts || 0 }}
+                          @if (!oUsuario.comentarioarts || oUsuario.comentarioarts === 0) {
+                            <i class="bi bi-ban" aria-hidden="true"></i>
                           } @else {
-                            @if (!oUsuario.comentarioarts || oUsuario.comentarioarts === 0) {
-                              <i class="bi bi-ban" aria-hidden="true"></i>
-                            } @else {
-                              <a [routerLink]="['/comentarioart/usuario', oUsuario.id]">{{ oUsuario.comentarioarts }}</a>
-                            }
+                            <a [routerLink]="['/comentarioart/usuario', oUsuario.id]">{{ oUsuario.comentarioarts }}</a>
                           }
                         </td>
                         <td class="text-center d-none d-lg-table-cell">
-                          @if (isDialogMode()) {
-                            {{ oUsuario.carritos || 0 }}
+                          @if (!oUsuario.carritos || oUsuario.carritos === 0) {
+                            <i class="bi bi-ban" aria-hidden="true"></i>
                           } @else {
-                            @if (!oUsuario.carritos || oUsuario.carritos === 0) {
-                              <i class="bi bi-ban" aria-hidden="true"></i>
-                            } @else {
-                              <a [routerLink]="['/carrito/usuario', oUsuario.id]">{{ oUsuario.carritos }}</a>
-                            }
+                            <a [routerLink]="['/carrito/usuario', oUsuario.id]">{{ oUsuario.carritos }}</a>
                           }
                         </td>
                         <td class="text-center">
-                          @if (isDialogMode()) {
-                            <div class="d-flex justify-content-center">
-                              <button class="btn btn-success btn-sm" (click)="onSelect(oUsuario)" title="Seleccionar">
-                                <i class="bi bi-check-circle" aria-hidden="true"></i> Seleccionar
-                              </button>
-                            </div>
-                          } @else {
-                            <app-botonera-actions-plist [id]="oUsuario.id" strEntity="usuario"></app-botonera-actions-plist>
-                          }
+                          <app-botonera-actions-plist [id]="oUsuario.id" strEntity="usuario"></app-botonera-actions-plist>
                         </td>
                       </tr>
                     }

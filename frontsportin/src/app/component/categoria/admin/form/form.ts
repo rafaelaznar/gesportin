@@ -93,7 +93,7 @@ export class CategoriaAdminForm implements OnInit {
       },
       error: (err: HttpErrorResponse) => {
         console.error('Error al sincronizar temporada:', err);
-        this.notificacion.success('Error al cargar la temporada seleccionada');
+        this.notificacion.error('Error al cargar la temporada seleccionada');
         this.selectedTemporada.set(null);
       }
     });
@@ -119,7 +119,7 @@ export class CategoriaAdminForm implements OnInit {
         next: (page) => this.temporadas.set(page.content),
         error: (err: HttpErrorResponse) => {
           console.error(err);
-          this.notificacion.success('Error cargando temporadas');
+          this.notificacion.error('Error cargando temporadas');
         }
       });
   }

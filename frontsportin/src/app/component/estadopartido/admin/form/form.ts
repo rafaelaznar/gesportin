@@ -79,7 +79,7 @@ export class EstadopartidoAdminForm implements OnInit {
         },
         error: (err: HttpErrorResponse) => {
           this.error.set('Error actualizando el estado de partido');
-          this.notificacion.success('Error actualizando el estado de partido');
+          this.notificacion.error('Error actualizando el estado de partido');
           console.error(err);
           this.submitting.set(false);
         },
@@ -93,7 +93,7 @@ export class EstadopartidoAdminForm implements OnInit {
         },
         error: (err: HttpErrorResponse) => {
           this.error.set('Error creando el estado de partido');
-          this.notificacion.success('Error creando el estado de partido');
+          this.notificacion.error('Error creando el estado de partido');
           console.error(err);
           this.submitting.set(false);
         },

@@ -6,7 +6,7 @@ import { NotificacionService } from '../../../../service/notificacion';
 import { ModalService } from '../../../shared/modal/modal.service';
 import { FacturaService } from '../../../../service/factura-service';
 import { UsuarioService } from '../../../../service/usuarioService';
-import { UsuarioAdminPlist } from '../../../usuario/admin/plist/plist';
+import { UsuarioPlistFinder } from '../../../usuario/finder/plist';
 import { IFactura } from '../../../../model/factura';
 import { IUsuario } from '../../../../model/usuario';
 import { SessionService } from '../../../../service/session';
@@ -80,7 +80,7 @@ export class FacturaAdminForm implements OnInit {
   }
 
   openUsuarioFinderModal(): void {
-    const ref = this.modalService.open<unknown, IUsuario | null>(UsuarioAdminPlist);
+    const ref = this.modalService.open<unknown, IUsuario | null>(UsuarioPlistFinder);
     ref.afterClosed$.subscribe((usuario: IUsuario | null) => {
       if (usuario?.id != null) {
         this.facturaForm.patchValue({ id_usuario: usuario.id });
@@ -121,7 +121,7 @@ export class FacturaAdminForm implements OnInit {
         },
         error: (err: HttpErrorResponse) => {
           this.error.set('Error actualizando la factura');
-          this.notificacion.success('Error actualizando la factura');
+          this.notificacion.error('Error actualizando la factura');
           console.error(err);
           this.submitting.set(false);
         },
@@ -135,7 +135,7 @@ export class FacturaAdminForm implements OnInit {
         },
         error: (err: HttpErrorResponse) => {
           this.error.set('Error creando la factura');
-          this.notificacion.success('Error creando la factura');
+          this.notificacion.error('Error creando la factura');
           console.error(err);
           this.submitting.set(false);
         },

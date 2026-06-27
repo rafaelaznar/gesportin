@@ -276,7 +276,7 @@ export class UsuarioTeamadminForm implements OnInit {
         },
         error: (err: HttpErrorResponse) => {
           this.error.set('Error actualizando el usuario');
-          this.notificacion.success('Error actualizando el usuario');
+          this.notificacion.error('Error actualizando el usuario');
           console.error(err);
           this.submitting.set(false);
         },
@@ -290,7 +290,7 @@ export class UsuarioTeamadminForm implements OnInit {
         },
         error: (err: HttpErrorResponse) => {
           this.error.set('Error creando el usuario');
-          this.notificacion.success('Error creando el usuario');
+          this.notificacion.error('Error creando el usuario');
           console.error(err);
           this.submitting.set(false);
         },

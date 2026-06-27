@@ -82,12 +82,6 @@
                           <span>ID</span>
                         </div>
                       </th>
-                      <th scope="col" style="width: 8%">
-                        <div class="header-stacked">
-                          <div class="header-top"><i class="bi bi-image" aria-hidden="true"></i></div>
-                          <span>Imagen</span>
-                        </div>
-                      </th>
                       <th scope="col" (click)="onOrder('dorsal')" style="cursor: pointer; width: 8%">
                         <div class="header-stacked">
                           <div class="header-top">
@@ -148,13 +142,6 @@
                     @for (oJugador of oPage()?.content; track oJugador.id) {
                       <tr (click)="onSelect(oJugador)" [style.cursor]="isDialogMode() ? 'pointer' : 'default'">
                         <th scope="row" class="text-center">{{ oJugador.id }}</th>
-                        <td class="text-center">
-                          @if (imageUpload.toPreviewSrc(oJugador.imagen)) {
-                            <img [src]="imageUpload.toPreviewSrc(oJugador.imagen)" alt="Jugador" class="club-logo-img" />
-                          } @else {
-                            <i class="bi bi-person-slash text-muted" style="font-size: 1.2rem"></i>
-                          }
-                        </td>
                         <td>{{ oJugador.dorsal }}</td>
                         <td>{{ oJugador.posicion }}</td>
                         <td>

@@ -8,7 +8,7 @@ import { ComentarioartService } from '../../../../service/comentarioart';
 import { ArticuloService } from '../../../../service/articulo';
 import { UsuarioService } from '../../../../service/usuarioService';
 import { ArticuloAdminPlist } from '../../../articulo/admin/plist/plist';
-import { UsuarioAdminPlist } from '../../../usuario/admin/plist/plist';
+import { UsuarioPlistFinder } from '../../../usuario/finder/plist';
 import { IComentarioart } from '../../../../model/comentarioart';
 import { IArticulo } from '../../../../model/articulo';
 import { IUsuario } from '../../../../model/usuario';
@@ -108,7 +108,7 @@ export class ComentarioartAdminForm implements OnInit {
   }
 
   openUsuarioFinderModal(): void {
-    const ref = this.modalService.open<unknown, IUsuario | null>(UsuarioAdminPlist);
+    const ref = this.modalService.open<unknown, IUsuario | null>(UsuarioPlistFinder);
     ref.afterClosed$.subscribe((usuario: IUsuario | null) => {
       if (usuario?.id != null) {
         this.comentarioartForm.patchValue({ id_usuario: usuario.id });

@@ -86,7 +86,7 @@ export class RolusuarioAdminForm implements OnInit {
         },
         error: (err: HttpErrorResponse) => {
           this.error.set('Error actualizando el rol de usuario');
-          this.notificacion.success('Error actualizando el rol de usuario');
+          this.notificacion.error('Error actualizando el rol de usuario');
           console.error(err);
           this.submitting.set(false);
         },
@@ -100,7 +100,7 @@ export class RolusuarioAdminForm implements OnInit {
         },
         error: (err: HttpErrorResponse) => {
           this.error.set('Error creando el rol de usuario');
-          this.notificacion.success('Error creando el rol de usuario');
+          this.notificacion.error('Error creando el rol de usuario');
           console.error(err);
           this.submitting.set(false);
         },

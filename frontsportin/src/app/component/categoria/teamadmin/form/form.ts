@@ -80,7 +80,7 @@ export class CategoriaTeamadminForm implements OnInit {
       },
       error: (err: HttpErrorResponse) => {
         this.error.set('Error cargando la categoría');
-        this.notificacion.success('Error cargando la categoría');
+        this.notificacion.error('Error cargando la categoría');
         console.error(err);
         this.loading.set(false);
       }
@@ -100,7 +100,7 @@ export class CategoriaTeamadminForm implements OnInit {
       },
       error: (err: HttpErrorResponse) => {
         console.error('Error al sincronizar temporada:', err);
-        this.notificacion.success('Error al cargar la temporada seleccionada');
+        this.notificacion.error('Error al cargar la temporada seleccionada');
         this.selectedTemporada.set(null);
       }
     });
@@ -126,7 +126,7 @@ export class CategoriaTeamadminForm implements OnInit {
         next: (page) => this.temporadas.set(page.content),
         error: (err: HttpErrorResponse) => {
           console.error(err);
-          this.notificacion.success('Error cargando temporadas');
+          this.notificacion.error('Error cargando temporadas');
         }
       });
   }
@@ -157,7 +157,7 @@ export class CategoriaTeamadminForm implements OnInit {
         },
         error: (err: HttpErrorResponse) => {
           this.error.set('Error actualizando la categoría');
-          this.notificacion.success('Error actualizando la categoría');
+          this.notificacion.error('Error actualizando la categoría');
           console.error(err);
           this.submitting.set(false);
         }
@@ -171,7 +171,7 @@ export class CategoriaTeamadminForm implements OnInit {
         },
         error: (err: HttpErrorResponse) => {
           this.error.set('Error creando la categoría');
-          this.notificacion.success('Error creando la categoría');
+          this.notificacion.error('Error creando la categoría');
           console.error(err);
           this.submitting.set(false);
         }

@@ -10,7 +10,7 @@ import { NoticiaService } from '../../../../service/noticia';
 import { IComentario } from '../../../../model/comentario';
 import { IUsuario } from '../../../../model/usuario';
 import { INoticia } from '../../../../model/noticia';
-import { UsuarioAdminPlist } from '../../../usuario/admin/plist/plist';
+import { UsuarioPlistFinder } from '../../../usuario/finder/plist';
 import { NoticiaAdminPlist } from '../../../noticia/admin/plist/plist';
 
 @Component({
@@ -86,7 +86,7 @@ export class ComentarioAdminForm implements OnInit {
       next: (usuario) => this.selectedUsuario.set(usuario),
       error: (err: HttpErrorResponse) => {
         console.error(err);
-        this.notificacion.success('Error al cargar el usuario seleccionado');
+        this.notificacion.error('Error al cargar el usuario seleccionado');
         this.selectedUsuario.set(null);
       }
     });
@@ -98,14 +98,14 @@ export class ComentarioAdminForm implements OnInit {
       next: (noticia) => this.selectedNoticia.set(noticia),
       error: (err: HttpErrorResponse) => {
         console.error(err);
-        this.notificacion.success('Error al cargar la noticia seleccionada');
+        this.notificacion.error('Error al cargar la noticia seleccionada');
         this.selectedNoticia.set(null);
       }
     });
   }
 
   openUsuarioFinderModal(): void {
-    const ref = this.modalService.open<unknown, IUsuario | null>(UsuarioAdminPlist);
+    const ref = this.modalService.open<unknown, IUsuario | null>(UsuarioPlistFinder);
     ref.afterClosed$.subscribe((usuario: IUsuario | null) => {
       if (usuario) {
         this.comentarioForm.patchValue({ id_usuario: usuario.id });
@@ -148,12 +148,12 @@ export class ComentarioAdminForm implements OnInit {
       comentarioData.id = this.comentario.id;
       this.oComentarioService.update(comentarioData).subscribe({
         next: () => { this.notificacion.success('Comentario actualizado exitosamente'); this.submitting.set(false); this.formSuccess.emit(); },
-        error: (err: HttpErrorResponse) => { this.error.set('Error actualizando el comentario'); this.notificacion.success('Error actualizando el comentario'); console.error(err); this.submitting.set(false); }
+        error: (err: HttpErrorResponse) => { this.error.set('Error actualizando el comentario'); this.notificacion.error('Error actualizando el comentario'); console.error(err); this.submitting.set(false); }
       });
     } else {
       this.oComentarioService.create(comentarioData).subscribe({
         next: () => { this.notificacion.success('Comentario creado exitosamente'); this.submitting.set(false); this.formSuccess.emit(); },
-        error: (err: HttpErrorResponse) => { this.error.set('Error creando el comentario'); this.notificacion.success('Error creando el comentario'); console.error(err); this.submitting.set(false); }
+        error: (err: HttpErrorResponse) => { this.error.set('Error creando el comentario'); this.notificacion.error('Error creando el comentario'); console.error(err); this.submitting.set(false); }
       });
     }
   }

@@ -189,7 +189,7 @@ export class PartidoTeamadminForm implements OnInit {
         },
         error: (err: HttpErrorResponse) => {
           this.error.set('Error actualizando el partido');
-          this.notificacion.success('Error actualizando el partido');
+          this.notificacion.error('Error actualizando el partido');
           console.error(err);
           this.submitting.set(false);
         },
@@ -203,7 +203,7 @@ export class PartidoTeamadminForm implements OnInit {
         },
         error: (err: HttpErrorResponse) => {
           this.error.set('Error creando el partido');
-          this.notificacion.success('Error creando el partido');
+          this.notificacion.error('Error creando el partido');
           console.error(err);
           this.submitting.set(false);
         },

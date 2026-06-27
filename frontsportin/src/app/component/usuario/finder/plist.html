@@ -1,0 +1,111 @@
+<div class="finder-container p-3">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="mb-0">
+      <i class="bi bi-people me-2" aria-hidden="true"></i>
+      @if (id_equipo() > 0) {
+        Usuarios disponibles para el equipo
+      } @else {
+        Seleccionar usuario
+      }
+    </h5>
+    <button type="button" class="btn-close" aria-label="Cerrar" (click)="onCancel()"></button>
+  </div>
+
+  <!-- Barra de búsqueda -->
+  <div class="mb-3">
+    <input type="text" class="form-control" placeholder="Buscar por nombre..." aria-label="Buscar usuario por nombre"
+      (input)="onSearchNombre($any($event.target).value)" />
+  </div>
+
+  <!-- Indicadores de filtro -->
+  @if (id_tipousuario() > 0 || id_club() > 0 || id_equipo() > 0) {
+    <div class="mb-2">
+      @if (id_tipousuario() > 0) {
+        <span class="badge bg-info me-1">Tipo: {{ id_tipousuario() }}</span>
+      }
+      @if (id_club() > 0) {
+        <span class="badge bg-info me-1">Club: {{ id_club() }}</span>
+      }
+      @if (id_equipo() > 0) {
+        <span class="badge bg-info me-1">Equipo: {{ id_equipo() }}</span>
+      }
+    </div>
+  }
+
+  <!-- Contador de registros -->
+  <div class="mb-2">
+    <span class="text-muted small">
+      {{ totalRecords() }} usuario{{ totalRecords() !== 1 ? 's' : '' }}
+      @if (id_equipo() > 0) { disponible{{ totalRecords() !== 1 ? 's' : '' }} }
+    </span>
+  </div>
+
+  <!-- Tabla con altura fija para evitar cambio de tamaño al paginar -->
+  <div class="table-container">
+    @if (loading()) {
+      <div class="text-center py-3" role="status">
+        <span class="spinner-border spinner-border-sm me-2"></span>Cargando...
+      </div>
+    } @else if (oPage() && oPage()!.content.length > 0) {
+      <div class="table-responsive">
+        <table class="table table-hover table-sm align-middle">
+          <thead class="table-light sticky-top">
+            <tr>
+              <th role="button" (click)="onOrder('id')" style="cursor:pointer">
+                ID
+                @if (orderField() === 'id') {
+                  <i class="bi" [class.bi-sort-up]="orderDirection() === 'asc'"
+                    [class.bi-sort-down]="orderDirection() === 'desc'" aria-hidden="true"></i>
+                }
+              </th>
+              <th>Imagen</th>
+              <th role="button" (click)="onOrder('nombre')" style="cursor:pointer">
+                Nombre
+                @if (orderField() === 'nombre') {
+                  <i class="bi" [class.bi-sort-up]="orderDirection() === 'asc'"
+                    [class.bi-sort-down]="orderDirection() === 'desc'" aria-hidden="true"></i>
+                }
+              </th>
+              <th>Username</th>
+              <th>Tipo</th>
+              <th>Rol</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (usuario of oPage()!.content; track usuario.id) {
+              <tr style="cursor: pointer" title="Seleccionar a {{ usuario.nombre }} {{ usuario.apellido1 }}"
+                (click)="onSelect(usuario)">
+                <td>{{ usuario.id }}</td>
+                <td class="text-center align-middle">
+                  @if (imageUpload.toPreviewSrc(usuario.imagen)) {
+                    <img [src]="imageUpload.toPreviewSrc(usuario.imagen)" alt="Foto" class="user-img-thumb" />
+                  } @else {
+                    <img src="no-img.jpg" alt="Sin foto" class="user-img-thumb" />
+                  }
+                </td>
+                <td>{{ usuario.nombre }} {{ usuario.apellido1 }} {{ usuario.apellido2 }}</td>
+                <td>{{ usuario.username }}</td>
+                <td>{{ usuario.tipousuario?.descripcion || '-' }}</td>
+                <td>{{ usuario.rolusuario?.descripcion || '-' }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      @if (oPage()!.totalPages > 1) {
+        <div class="d-flex justify-content-center mt-2 pb-2">
+          <app-paginacion [numPage]="numPage()" [numPages]="oPage()!.totalPages" (pageChange)="goToPage($event)" />
+        </div>
+      }
+    } @else {
+      <div class="alert alert-info" role="alert">
+        <i class="bi bi-info-circle me-2" aria-hidden="true"></i>
+        @if (id_equipo() > 0) {
+          No hay usuarios disponibles para este equipo.
+        } @else {
+          No se encontraron usuarios.
+        }
+      </div>
+    }
+  </div>
+</div>

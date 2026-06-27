@@ -1,0 +1,19 @@
+.user-img-thumb {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.finder-container {
+  min-height: 400px;
+  max-height: 70vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.table-container {
+  flex: 1;
+  min-height: 200px;
+  overflow-y: auto;
+}

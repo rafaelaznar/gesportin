@@ -13,7 +13,7 @@ import { IEquipo } from '../../../../model/equipo';
 import { IUsuario } from '../../../../model/usuario';
 import { SessionService } from '../../../../service/session';
 import { EquipoAdminPlist } from '../../../equipo/admin/plist/plist';
-import { UsuarioDisponiblePlist } from '../../../usuario/teamadmin/usuario-disponible-plist/plist';
+import { UsuarioPlistFinder } from '../../../usuario/finder/plist';
 
 @Component({
   selector: 'app-jugador-teamadmin-form',
@@ -149,7 +149,7 @@ export class JugadorTeamadminForm implements OnInit {
   openUsuarioFinderModal(): void {
     const idEquipo = this.selectedEquipo()?.id ?? (Number(this.jugadorForm.get('id_equipo')?.value) || 0);
     const ref = this.modalService.open<{ idEquipo: number }, IUsuario | null>(
-      UsuarioDisponiblePlist,
+      UsuarioPlistFinder,
       { data: { idEquipo } },
     );
     ref.afterClosed$.subscribe((usuario: IUsuario | null) => {
@@ -187,7 +187,7 @@ export class JugadorTeamadminForm implements OnInit {
         },
         error: (err: HttpErrorResponse) => {
           this.error.set('Error actualizando el jugador');
-          this.notificacion.success('Error actualizando el jugador');
+          this.notificacion.error('Error actualizando el jugador');
           console.error(err);
           this.submitting.set(false);
         },
@@ -201,7 +201,7 @@ export class JugadorTeamadminForm implements OnInit {
         },
         error: (err: HttpErrorResponse) => {
           this.error.set('Error creando el jugador');
-          this.notificacion.success('Error creando el jugador');
+          this.notificacion.error('Error creando el jugador');
           console.error(err);
           this.submitting.set(false);
         },

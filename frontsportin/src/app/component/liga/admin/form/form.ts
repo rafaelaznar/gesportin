@@ -83,7 +83,7 @@ export class LigaAdminForm implements OnInit {
           next: (page) => this.equipos.set(page.content),
           error: (err: HttpErrorResponse) => {
             console.error(err);
-            this.notificacion.success('Error cargando equipos del club');
+            this.notificacion.error('Error cargando equipos del club');
           },
         });
       return;
@@ -95,7 +95,7 @@ export class LigaAdminForm implements OnInit {
         next: (page) => this.equipos.set(page.content),
         error: (err: HttpErrorResponse) => {
           console.error(err);
-          this.notificacion.success('Error cargando equipos');
+          this.notificacion.error('Error cargando equipos');
         },
       });
   }
@@ -170,7 +170,7 @@ export class LigaAdminForm implements OnInit {
           this.formSuccess.emit();
         },
         error: (err: HttpErrorResponse) => {
-          this.notificacion.success('Error actualizando la liga');
+          this.notificacion.error('Error actualizando la liga');
           console.error(err);
           this.submitting.set(false);
         },
@@ -183,7 +183,7 @@ export class LigaAdminForm implements OnInit {
           this.formSuccess.emit();
         },
         error: (err: HttpErrorResponse) => {
-          this.notificacion.success('Error creando la liga');
+          this.notificacion.error('Error creando la liga');
           console.error(err);
           this.submitting.set(false);
         },

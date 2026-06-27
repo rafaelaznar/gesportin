@@ -50,19 +50,6 @@
           <div class="col-7 fw-semibold small">{{ oJugador()?.posicion }}</div>
           <div class="col-5 text-muted small text-uppercase">Capitán</div>
           <div class="col-7 fw-semibold small">{{ oJugador()?.capitan ? 'Sí' : 'No' }}</div>
-          <div class="col-5 text-muted small text-uppercase">Imagen</div>
-          <div class="col-7 fw-semibold small">
-            @if (imageUpload.toPreviewSrc(oJugador()?.imagen)) {
-              <img
-                [src]="imageUpload.toPreviewSrc(oJugador()?.imagen)"
-                class="img-thumbnail"
-                style="max-height: 80px"
-                alt="jugador"
-              />
-            } @else {
-              Sin imagen
-            }
-          </div>
           <div class="col-5 text-muted small text-uppercase">Pagos</div>
           <div class="col-7 fw-semibold small">
             @if ((oJugador()?.pagos ?? 0) > 0) {

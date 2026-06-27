@@ -159,7 +159,7 @@ export class PagoAdminForm implements OnInit {
         },
         error: (err: HttpErrorResponse) => {
           this.error.set('Error actualizando el pago');
-          this.notificacion.success('Error actualizando el pago');
+          this.notificacion.error('Error actualizando el pago');
           console.error(err);
           this.submitting.set(false);
         },
@@ -173,7 +173,7 @@ export class PagoAdminForm implements OnInit {
         },
         error: (err: HttpErrorResponse) => {
           this.error.set('Error creando el pago');
-          this.notificacion.success('Error creando el pago');
+          this.notificacion.error('Error creando el pago');
           console.error(err);
           this.submitting.set(false);
         },

@@ -17,7 +17,6 @@ public class JugadorDTO extends JugadorEntity {
         setDorsal(entity.getDorsal());
         setPosicion(entity.getPosicion());
         setCapitan(entity.getCapitan());
-        setImagen(entity.getImagen());
         setUsuario(entity.getUsuario());
         setEquipo(entity.getEquipo());
         this.pagos = pagos;
