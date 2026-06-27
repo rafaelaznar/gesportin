@@ -11,7 +11,7 @@ import { ICompra } from '../../../../model/compra';
 import { IArticulo } from '../../../../model/articulo';
 import { IFactura } from '../../../../model/factura';
 import { SessionService } from '../../../../service/session';
-import { ArticuloAdminPlist } from '../../../articulo/admin/plist/plist';
+import { ArticuloPlistFinder } from '../../../articulo/finder/plist';
 import { FacturaAdminPlist } from '../../../factura/admin/plist/plist';
 
 @Component({
@@ -111,7 +111,7 @@ export class CompraAdminForm implements OnInit {
   }
 
   openArticuloFinderModal(): void {
-    const ref = this.modalService.open<unknown, IArticulo | null>(ArticuloAdminPlist);
+    const ref = this.modalService.open<unknown, IArticulo | null>(ArticuloPlistFinder);
     ref.afterClosed$.subscribe((articulo: IArticulo | null) => {
       if (articulo?.id != null) {
         this.compraForm.patchValue({ id_articulo: articulo.id });

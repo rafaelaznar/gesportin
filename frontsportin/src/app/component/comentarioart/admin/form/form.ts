@@ -7,7 +7,7 @@ import { ModalService } from '../../../shared/modal/modal.service';
 import { ComentarioartService } from '../../../../service/comentarioart';
 import { ArticuloService } from '../../../../service/articulo';
 import { UsuarioService } from '../../../../service/usuarioService';
-import { ArticuloAdminPlist } from '../../../articulo/admin/plist/plist';
+import { ArticuloPlistFinder } from '../../../articulo/finder/plist';
 import { UsuarioPlistFinder } from '../../../usuario/finder/plist';
 import { IComentarioart } from '../../../../model/comentarioart';
 import { IArticulo } from '../../../../model/articulo';
@@ -97,7 +97,7 @@ export class ComentarioartAdminForm implements OnInit {
   }
 
   openArticuloFinderModal(): void {
-    const ref = this.modalService.open<unknown, IArticulo | null>(ArticuloAdminPlist);
+    const ref = this.modalService.open<unknown, IArticulo | null>(ArticuloPlistFinder);
     ref.afterClosed$.subscribe((articulo: IArticulo | null) => {
       if (articulo?.id != null) {
         this.comentarioartForm.patchValue({ id_articulo: articulo.id });

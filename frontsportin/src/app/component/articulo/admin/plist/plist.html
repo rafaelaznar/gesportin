@@ -17,11 +17,9 @@
     <small class="text-muted">Total registros: {{ totalRecords() || 0 }}</small>
     @if (showFilterInfo && id_tipoarticulo && id_tipoarticulo > 0) {
       <small class="text-muted ms-3">Filtro: id de tipo de artículo = {{ id_tipoarticulo }}</small>
-      @if (!isDialogMode()) {
-        <a class="ms-2" [routerLink]="session.isClubAdmin() ? '/articulo/teamadmin' : '/articulo'" role="button" title="Quitar filtro">
-          <i class="bi bi-x-lg" aria-hidden="true"></i> Quitar filtro
-        </a>
-      }
+      <a class="ms-2" [routerLink]="session.isClubAdmin() ? '/articulo/teamadmin' : '/articulo'" role="button" title="Quitar filtro">
+        <i class="bi bi-x-lg" aria-hidden="true"></i> Quitar filtro
+      </a>
     }
     @if (descripcion() && descripcion().length > 0) {
       <small class="text-muted ms-3">Filtro: búsqueda contiene "{{ descripcion() }}"</small>
@@ -148,28 +146,20 @@
                   </thead>
                   <tbody>
                     @for (oArticulo of oPage()?.content; track oArticulo.id) {
-                      <tr (click)="onSelect(oArticulo)" [style.cursor]="isDialogMode() ? 'pointer' : 'default'">
+                      <tr>
                         <th scope="row" class="text-center">{{ oArticulo.id }}</th>
                         <td>{{ oArticulo.descripcion }}</td>
                         <td class="text-end">{{ oArticulo.precio }}</td>
                         <td class="text-end">{{ oArticulo.descuento }}%</td>
                         <td>
-                          @if (isDialogMode()) {
-                            {{ oArticulo.tipoarticulo.descripcion || 'N/A' }}
-                          } @else {
-                            <a [routerLink]="strRole ? ['/tipoarticulo', strRole, 'view', oArticulo.tipoarticulo.id] : ['/tipoarticulo/view', oArticulo.tipoarticulo.id]">{{ oArticulo.tipoarticulo.descripcion || 'N/A' }}</a>
-                            <a class="btn btn-warning btn-sm ms-2 float-end" [routerLink]="strRole ? ['/articulo', strRole, 'tipoarticulo', oArticulo.tipoarticulo.id] : ['/articulo/tipoarticulo', oArticulo.tipoarticulo.id]" role="button" title="Filtrar por tipo artículo"><i class="bi bi-funnel-fill" aria-hidden="true"></i></a>
-                          }
+                          <a [routerLink]="strRole ? ['/tipoarticulo', strRole, 'view', oArticulo.tipoarticulo.id] : ['/tipoarticulo/view', oArticulo.tipoarticulo.id]">{{ oArticulo.tipoarticulo.descripcion || 'N/A' }}</a>
+                          <a class="btn btn-warning btn-sm ms-2 float-end" [routerLink]="strRole ? ['/articulo', strRole, 'tipoarticulo', oArticulo.tipoarticulo.id] : ['/articulo/tipoarticulo', oArticulo.tipoarticulo.id]" role="button" title="Filtrar por tipo artículo"><i class="bi bi-funnel-fill" aria-hidden="true"></i></a>
                         </td>
                         <td class="text-center d-none d-md-table-cell">
-                          @if (isDialogMode()) {
-                            {{ oArticulo.comentarioarts || 0 }}
+                          @if (!oArticulo.comentarioarts || oArticulo.comentarioarts === 0) {
+                            <i class="bi bi-ban" aria-hidden="true"></i>
                           } @else {
-                            @if (!oArticulo.comentarioarts || oArticulo.comentarioarts === 0) {
-                              <i class="bi bi-ban" aria-hidden="true"></i>
-                            } @else {
-                              <a [routerLink]="strRole ? ['/comentarioart', strRole, 'articulo', oArticulo.id] : ['/comentarioart/articulo', oArticulo.id]">{{ oArticulo.comentarioarts }}</a>
-                            }
+                            <a [routerLink]="strRole ? ['/comentarioart', strRole, 'articulo', oArticulo.id] : ['/comentarioart/articulo', oArticulo.id]">{{ oArticulo.comentarioarts }}</a>
                           }
                         </td>
                         <td class="text-center d-none d-md-table-cell">
@@ -180,37 +170,21 @@
                           }
                         </td>
                         <td class="text-center d-none d-md-table-cell">
-                          @if (isDialogMode()) {
-                            {{ oArticulo.compras || 0 }}
+                          @if (!oArticulo.compras || oArticulo.compras === 0) {
+                            <i class="bi bi-ban" aria-hidden="true"></i>
                           } @else {
-                            @if (!oArticulo.compras || oArticulo.compras === 0) {
-                              <i class="bi bi-ban" aria-hidden="true"></i>
-                            } @else {
-                              <a [routerLink]="strRole ? ['/compra', strRole, 'articulo', oArticulo.id] : ['/compra/articulo', oArticulo.id]">{{ oArticulo.compras }}</a>
-                            }
+                            <a [routerLink]="strRole ? ['/compra', strRole, 'articulo', oArticulo.id] : ['/compra/articulo', oArticulo.id]">{{ oArticulo.compras }}</a>
                           }
                         </td>
                         <td class="text-center d-none d-md-table-cell">
-                          @if (isDialogMode()) {
-                            {{ oArticulo.carritos || 0 }}
+                          @if (!oArticulo.carritos || oArticulo.carritos === 0) {
+                            <i class="bi bi-ban" aria-hidden="true"></i>
                           } @else {
-                            @if (!oArticulo.carritos || oArticulo.carritos === 0) {
-                              <i class="bi bi-ban" aria-hidden="true"></i>
-                            } @else {
-                              <a [routerLink]="strRole ? ['/carrito', strRole, 'articulo', oArticulo.id] : ['/carrito/articulo', oArticulo.id]">{{ oArticulo.carritos }}</a>
-                            }
+                            <a [routerLink]="strRole ? ['/carrito', strRole, 'articulo', oArticulo.id] : ['/carrito/articulo', oArticulo.id]">{{ oArticulo.carritos }}</a>
                           }
                         </td>
                         <td class="text-center">
-                          @if (isDialogMode()) {
-                            <div class="d-flex justify-content-center">
-                              <button class="btn btn-success btn-sm" (click)="onSelect(oArticulo)" title="Seleccionar">
-                                <i class="bi bi-check-circle" aria-hidden="true"></i> Seleccionar
-                              </button>
-                            </div>
-                          } @else {
-                            <app-botonera-actions-plist [id]="oArticulo.id" strEntity="articulo" [strRole]="strRole"></app-botonera-actions-plist>
-                          }
+                          <app-botonera-actions-plist [id]="oArticulo.id" strEntity="articulo"></app-botonera-actions-plist>
                         </td>
                       </tr>
                     }

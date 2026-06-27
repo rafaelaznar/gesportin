@@ -11,7 +11,7 @@ import { ICarrito } from '../../../../model/carrito';
 import { IArticulo } from '../../../../model/articulo';
 import { IUsuario } from '../../../../model/usuario';
 import { SessionService } from '../../../../service/session';
-import { ArticuloAdminPlist } from '../../../articulo/admin/plist/plist';
+import { ArticuloPlistFinder } from '../../../articulo/finder/plist';
 import { UsuarioPlistFinder } from '../../../usuario/finder/plist';
 
 @Component({
@@ -105,7 +105,7 @@ export class CarritoAdminForm implements OnInit {
   }
 
   openArticuloFinderModal(): void {
-    const ref = this.modalService.open<unknown, IArticulo | null>(ArticuloAdminPlist);
+    const ref = this.modalService.open<unknown, IArticulo | null>(ArticuloPlistFinder);
     ref.afterClosed$.subscribe((articulo: IArticulo | null) => {
       if (articulo?.id != null) {
         this.carritoForm.patchValue({ id_articulo: articulo.id });
