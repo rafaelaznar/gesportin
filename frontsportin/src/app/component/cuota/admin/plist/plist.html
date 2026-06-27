@@ -17,11 +17,9 @@
     <small class="text-muted">Total registros: {{ totalRecords() || 0 }}</small>
     @if (showFilterInfo && id_equipo && id_equipo > 0) {
       <small class="text-muted ms-3">Filtro: id de equipo = {{ id_equipo }}</small>
-      @if (!isDialogMode()) {
-        <a class="ms-2" [routerLink]="['/cuota']" role="button" title="Quitar filtro">
-          <i class="bi bi-x-lg" aria-hidden="true"></i> Quitar filtro
-        </a>
-      }
+      <a class="ms-2" [routerLink]="['/cuota']" role="button" title="Quitar filtro">
+        <i class="bi bi-x-lg" aria-hidden="true"></i> Quitar filtro
+      </a>
     }
     @if (descripcion() && descripcion().length > 0) {
       <small class="text-muted ms-3">Filtro: búsqueda contiene "{{ descripcion() }}"</small>
@@ -130,44 +128,28 @@
                   </thead>
                   <tbody>
                     @for (oCuota of oPage()?.content; track oCuota.id) {
-                      <tr (click)="onSelect(oCuota)" [style.cursor]="isDialogMode() ? 'pointer' : 'default'">
+                      <tr>
                         <th scope="row" class="text-center">{{ oCuota.id }}</th>
                         <td>{{ oCuota.descripcion }}</td>
                         <td class="text-end">{{ oCuota.cantidad }}</td>
                         <td>{{ oCuota.fecha }}</td>
                         <td>
-                          @if (isDialogMode()) {
-                            {{ oCuota.equipo.nombre || 'N/A' }}
-                          } @else {
-                            <a [routerLink]="['/equipo/view', oCuota.equipo.id]">{{ oCuota.equipo.nombre || 'N/A' }}</a>
-                            <a class="btn btn-warning btn-sm ms-2 float-end" [routerLink]="[session.isClubAdmin() ? '/cuota/teamadmin/equipo' : '/cuota/equipo', oCuota.equipo.id]" role="button" title="Filtrar por equipo"><i class="bi bi-funnel-fill" aria-hidden="true"></i></a>
-                          }
+                          <a [routerLink]="['/equipo/view', oCuota.equipo.id]">{{ oCuota.equipo.nombre || 'N/A' }}</a>
+                          <a class="btn btn-warning btn-sm ms-2 float-end" [routerLink]="[session.isClubAdmin() ? '/cuota/teamadmin/equipo' : '/cuota/equipo', oCuota.equipo.id]" role="button" title="Filtrar por equipo"><i class="bi bi-funnel-fill" aria-hidden="true"></i></a>
                         </td>
                         <td class="text-center d-none d-md-table-cell">
-                          @if (isDialogMode()) {
-                            {{ oCuota.pagos || 0 }}
-                          } @else {
-                            @if (!oCuota.pagos || oCuota.pagos === 0) {
-                              @if (strRole === 'teamadmin') {
-                                <a [routerLink]="['/pago/teamadmin/new']" [queryParams]="{ id_cuota: oCuota.id }" class="text-warning" title="Crear primer pago"><i class="bi bi-plus-circle" aria-hidden="true"></i></a>
-                              } @else {
-                                <i class="bi bi-ban" aria-hidden="true"></i>
-                              }
+                          @if (!oCuota.pagos || oCuota.pagos === 0) {
+                            @if (strRole === 'teamadmin') {
+                              <a [routerLink]="['/pago/teamadmin/new']" [queryParams]="{ id_cuota: oCuota.id }" class="text-warning" title="Crear primer pago"><i class="bi bi-plus-circle" aria-hidden="true"></i></a>
                             } @else {
-                              <a [routerLink]="[session.isClubAdmin() ? '/pago/teamadmin/cuota' : '/pago/cuota', oCuota.id]">{{ oCuota.pagos }}</a>
+                              <i class="bi bi-ban" aria-hidden="true"></i>
                             }
+                          } @else {
+                            <a [routerLink]="[session.isClubAdmin() ? '/pago/teamadmin/cuota' : '/pago/cuota', oCuota.id]">{{ oCuota.pagos }}</a>
                           }
                         </td>
                         <td class="text-center">
-                          @if (isDialogMode()) {
-                            <div class="d-flex justify-content-center">
-                              <button class="btn btn-success btn-sm" (click)="onSelect(oCuota)" title="Seleccionar">
-                                <i class="bi bi-check-circle" aria-hidden="true"></i> Seleccionar
-                              </button>
-                            </div>
-                          } @else {
-                            <app-botonera-actions-plist [id]="oCuota.id" strEntity="cuota"></app-botonera-actions-plist>
-                          }
+                          <app-botonera-actions-plist [id]="oCuota.id" strEntity="cuota"></app-botonera-actions-plist>
                         </td>
                       </tr>
                     }
