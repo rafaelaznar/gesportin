@@ -1,5 +1,5 @@
 import { Component, computed, inject, input, OnDestroy, OnInit, signal } from '@angular/core';
-import { CommonModule, DecimalPipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Subject, Subscription, debounceTime, distinctUntilChanged } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MODAL_REF } from '../../shared/modal/modal.tokens';
@@ -13,7 +13,7 @@ import { Paginacion } from '../../shared/paginacion/paginacion';
 @Component({
   selector: 'app-articulo-plist-finder',
   standalone: true,
-  imports: [CommonModule, Paginacion, DecimalPipe],
+  imports: [CommonModule, Paginacion],
   templateUrl: './plist.html',
   styleUrl: './plist.css',
 })
