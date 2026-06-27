@@ -9,7 +9,7 @@ import { EquipoService } from '../../../../service/equipo';
 import { SessionService } from '../../../../service/session';
 import { ILiga } from '../../../../model/liga';
 import { IEquipo } from '../../../../model/equipo';
-import { EquipoAdminPlist } from '../../../equipo/admin/plist/plist';
+import { EquipoPlistFinder } from '../../../equipo/finder/plist';
 
 @Component({
   selector: 'app-liga-admin-form',
@@ -128,7 +128,7 @@ export class LigaAdminForm implements OnInit {
   }
 
   openEquipoFinderModal(): void {
-    const ref = this.modalService.open<unknown, IEquipo | null>(EquipoAdminPlist);
+    const ref = this.modalService.open<unknown, IEquipo | null>(EquipoPlistFinder);
 
     ref.afterClosed$.subscribe((equipo: IEquipo | null) => {
       if (equipo && equipo.id != null) {

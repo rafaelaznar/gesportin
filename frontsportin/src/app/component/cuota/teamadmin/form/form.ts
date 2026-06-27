@@ -10,7 +10,7 @@ import { EquipoService } from '../../../../service/equipo';
 import { ICuota } from '../../../../model/cuota';
 import { IEquipo } from '../../../../model/equipo';
 import { SessionService } from '../../../../service/session';
-import { EquipoAdminPlist } from '../../../equipo/admin/plist/plist';
+import { EquipoPlistFinder } from '../../../equipo/finder/plist';
 
 @Component({
   selector: 'app-cuota-teamadmin-form',
@@ -119,7 +119,7 @@ export class CuotaTeamadminForm implements OnInit {
   }
 
   openEquipoFinderModal(): void {
-    const ref = this.modalService.open<unknown, IEquipo | null>(EquipoAdminPlist);
+    const ref = this.modalService.open<unknown, IEquipo | null>(EquipoPlistFinder);
     ref.afterClosed$.subscribe((equipo: IEquipo | null) => {
       if (equipo?.id != null) {
         this.cuotaForm.patchValue({ id_equipo: equipo.id });

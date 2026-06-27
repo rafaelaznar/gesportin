@@ -12,7 +12,7 @@ import { IJugador } from '../../../../model/jugador';
 import { IEquipo } from '../../../../model/equipo';
 import { IUsuario } from '../../../../model/usuario';
 import { SessionService } from '../../../../service/session';
-import { EquipoAdminPlist } from '../../../equipo/admin/plist/plist';
+import { EquipoPlistFinder } from '../../../equipo/finder/plist';
 import { UsuarioPlistFinder } from '../../../usuario/finder/plist';
 
 @Component({
@@ -136,7 +136,7 @@ export class JugadorTeamadminForm implements OnInit {
   }
 
   openEquipoFinderModal(): void {
-    const ref = this.modalService.open<unknown, IEquipo | null>(EquipoAdminPlist);
+    const ref = this.modalService.open<unknown, IEquipo | null>(EquipoPlistFinder);
     ref.afterClosed$.subscribe((equipo: IEquipo | null) => {
       if (equipo?.id != null) {
         this.jugadorForm.patchValue({ id_equipo: equipo.id });

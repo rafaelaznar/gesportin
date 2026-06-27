@@ -2,8 +2,6 @@ import { Component, computed, inject, Input, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Subject, Subscription, debounceTime, distinctUntilChanged } from 'rxjs';
-import { ModalRef } from '../../../shared/modal/modal-ref';
-import { MODAL_REF } from '../../../shared/modal/modal.tokens';
 import { SecurityService } from '../../../../service/security.service';
 import { debounceTimeSearch } from '../../../../environment/environment';
 import { ICategoria } from '../../../../model/categoria';
@@ -42,7 +40,6 @@ export class CategoriaAdminPlist {
   private searchSubscription?: Subscription;
 
   private oCategoriaService = inject(CategoriaService);
-  private modalRef = inject(MODAL_REF, { optional: true });
   private security = inject(SecurityService);
 
   ngOnInit(): void {
@@ -118,14 +115,6 @@ export class CategoriaAdminPlist {
     }
     this.numPage.set(0);
     this.getPage();
-  }
-
-  isDialogMode(): boolean {
-    return !!this.modalRef;
-  }
-
-  onSelect(categoria: ICategoria): void {
-    this.modalRef?.close(categoria);
   }
 
   ngOnDestroy(): void {

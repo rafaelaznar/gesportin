@@ -11,7 +11,7 @@ import { UsuarioService } from '../../../../service/usuarioService';
 import { ICategoria } from '../../../../model/categoria';
 import { IUsuario } from '../../../../model/usuario';
 import { IEquipo } from '../../../../model/equipo';
-import { CategoriaAdminPlist } from '../../../categoria/admin/plist/plist';
+import { CategoriaPlistFinder } from '../../../categoria/finder/plist';
 import { UsuarioPlistFinder } from '../../../usuario/finder/plist';
 
 @Component({
@@ -138,7 +138,7 @@ export class EquipoTeamadminForm implements OnInit {
   }
 
   openCategoriaFinderModal(): void {
-    const ref = this.modalService.open<unknown, ICategoria | null>(CategoriaAdminPlist);
+    const ref = this.modalService.open<unknown, ICategoria | null>(CategoriaPlistFinder);
 
     ref.afterClosed$.subscribe((categoria: ICategoria | null) => {
       if (categoria) {
