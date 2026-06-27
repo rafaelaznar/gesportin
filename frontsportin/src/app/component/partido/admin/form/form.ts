@@ -13,6 +13,7 @@ import { ILiga } from '../../../../model/liga';
 import { IEstadopartido } from '../../../../model/estadopartido';
 import { SessionService } from '../../../../service/session';
 import { LigaPlistFinder } from '../../../liga/finder/plist';
+import { EstadopartidoPlistFinder } from '../../../estadopartido/finder/plist';
 
 @Component({
   selector: 'app-partido-admin-form',
@@ -39,7 +40,7 @@ export class PartidoAdminForm implements OnInit {
   error = signal<string | null>(null);
   submitting = signal(false);
   selectedLiga = signal<ILiga | null>(null);
-  estadopartidoList = signal<IEstadopartido[]>([]);
+  selectedEstadopartido = signal<IEstadopartido | null>(null);
 
   constructor() {
     effect(() => {
@@ -52,7 +53,6 @@ export class PartidoAdminForm implements OnInit {
 
   ngOnInit(): void {
     this.initForm();
-    this.oEstadopartidoService.getAll().subscribe({ next: (list) => this.estadopartidoList.set(list) });
 
     if (this.partido) {
       this.loadPartidoData(this.partido);
@@ -86,12 +86,20 @@ export class PartidoAdminForm implements OnInit {
       comentario: partido.comentario ?? '',
     });
     if (partido.liga?.id) this.loadLiga(partido.liga.id);
+    if (partido.estadopartido?.id) this.loadEstadopartido(partido.estadopartido.id);
   }
 
   private loadLiga(idLiga: number): void {
     this.oLigaService.get(idLiga).subscribe({
       next: (liga) => this.selectedLiga.set(liga),
       error: () => this.selectedLiga.set(null),
+    });
+  }
+
+  private loadEstadopartido(idEstadopartido: number): void {
+    this.oEstadopartidoService.get(idEstadopartido).subscribe({
+      next: (estado) => this.selectedEstadopartido.set(estado),
+      error: () => this.selectedEstadopartido.set(null),
     });
   }
 
@@ -134,6 +142,17 @@ export class PartidoAdminForm implements OnInit {
         this.partidoForm.patchValue({ id_liga: liga.id });
         this.selectedLiga.set(liga);
         this.notificacion.success(`Liga seleccionada: ${liga.nombre}`);
+      }
+    });
+  }
+
+  openEstadopartidoFinderModal(): void {
+    const ref = this.modalService.open<unknown, IEstadopartido | null>(EstadopartidoPlistFinder);
+    ref.afterClosed$.subscribe((estado: IEstadopartido | null) => {
+      if (estado?.id != null) {
+        this.partidoForm.patchValue({ id_estadopartido: estado.id });
+        this.selectedEstadopartido.set(estado);
+        this.notificacion.success(`Estado seleccionado: ${estado.descripcion}`);
       }
     });
   }

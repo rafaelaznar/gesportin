@@ -20,12 +20,10 @@
 
   <div class="d-flex my-1">
     <div class="w-100 d-flex justify-content-center">
-      @if (!isDialogMode()) {
-        <a class="btn btn-primary new-btn" [routerLink]="['/estadopartido/new']" role="button">
-          <i class="bi bi-plus-circle me-2" aria-hidden="true"></i>
-          <span class="d-none d-sm-inline">Crear estado</span>
-        </a>
-      }
+      <a class="btn btn-primary new-btn" [routerLink]="['/estadopartido/new']" role="button">
+        <i class="bi bi-plus-circle me-2" aria-hidden="true"></i>
+        <span class="d-none d-sm-inline">Crear estado</span>
+      </a>
     </div>
   </div>
 
@@ -91,30 +89,18 @@
         </thead>
         <tbody>
           @for (oEstadopartido of oPage()?.content; track oEstadopartido.id) {
-            <tr (click)="onSelect(oEstadopartido)" [style.cursor]="isDialogMode() ? 'pointer' : 'default'">
+            <tr>
               <th scope="row" class="text-center">{{ oEstadopartido.id }}</th>
               <td>{{ oEstadopartido.descripcion }}</td>
               <td class="text-center d-none d-md-table-cell">
-                @if (isDialogMode()) {
-                  {{ oEstadopartido.partidos || 0 }}
+                @if (!oEstadopartido.partidos || oEstadopartido.partidos === 0) {
+                  <i class="bi bi-ban" aria-hidden="true"></i>
                 } @else {
-                  @if (!oEstadopartido.partidos || oEstadopartido.partidos === 0) {
-                    <i class="bi bi-ban" aria-hidden="true"></i>
-                  } @else {
-                    {{ oEstadopartido.partidos }}
-                  }
+                  {{ oEstadopartido.partidos }}
                 }
               </td>
               <td class="text-center">
-                @if (isDialogMode()) {
-                  <div class="d-flex justify-content-center">
-                    <button class="btn btn-success btn-sm" (click)="onSelect(oEstadopartido)" title="Seleccionar">
-                      <i class="bi bi-check-circle" aria-hidden="true"></i> Seleccionar
-                    </button>
-                  </div>
-                } @else {
-                  <app-botonera-actions-plist [id]="oEstadopartido.id" strEntity="estadopartido"></app-botonera-actions-plist>
-                }
+                <app-botonera-actions-plist [id]="oEstadopartido.id" strEntity="estadopartido"></app-botonera-actions-plist>
               </td>
             </tr>
           }

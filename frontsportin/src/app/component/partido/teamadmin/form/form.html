@@ -152,12 +152,23 @@
 
             <div class="mb-3">
               <label for="id_estadopartido" class="form-label">Estado</label>
-              <select id="id_estadopartido" class="form-select" formControlName="id_estadopartido">
-                <option [value]="null">— Sin estado —</option>
-                @for (estado of estadopartidoList(); track estado.id) {
-                  <option [value]="estado.id">{{ estado.descripcion }}</option>
-                }
-              </select>
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  [value]="selectedEstadopartido()?.descripcion || ''"
+                  placeholder="Seleccionar estado..."
+                  readonly
+                />
+                <button
+                  class="btn btn-outline-secondary"
+                  type="button"
+                  (click)="openEstadopartidoFinderModal()"
+                  title="Buscar estado"
+                >
+                  <i class="bi bi-search" aria-hidden="true"></i>
+                </button>
+              </div>
             </div>
 
             <div class="mb-3">

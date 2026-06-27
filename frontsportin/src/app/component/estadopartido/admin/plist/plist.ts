@@ -2,8 +2,6 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Subject, Subscription, debounceTime, distinctUntilChanged } from 'rxjs';
-import { ModalRef } from '../../../shared/modal/modal-ref';
-import { MODAL_REF } from '../../../shared/modal/modal.tokens';
 import { debounceTimeSearch } from '../../../../environment/environment';
 import { IEstadopartido } from '../../../../model/estadopartido';
 import { IPage } from '../../../../model/plist';
@@ -31,7 +29,6 @@ export class EstadopartidoAdminPlist {
   orderDirection = signal<'asc' | 'desc'>('asc');
 
   private estadopartidoService = inject(EstadopartidoService);
-  private modalRef = inject(MODAL_REF, { optional: true });
 
   ngOnInit() {
     this.searchSubscription = this.searchSubject
@@ -110,13 +107,5 @@ export class EstadopartidoAdminPlist {
     }
     this.numPage.set(0);
     this.getPage();
-  }
-
-  isDialogMode(): boolean {
-    return !!this.modalRef;
-  }
-
-  onSelect(estadopartido: IEstadopartido): void {
-    this.modalRef?.close(estadopartido);
   }
 }
