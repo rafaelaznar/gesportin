@@ -10,6 +10,7 @@ import { IClub } from '../../../../model/club';
 import { ModalService } from '../../../shared/modal/modal.service';
 import { ClubService } from '../../../../service/club';
 import { ClubPlistFinder } from '../../../club/finder/plist';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
   selector: 'app-temporada-admin-form',
@@ -35,6 +36,7 @@ export class TemporadaAdminForm implements OnInit {
   submitting = signal<boolean>(false);
   temporada = signal<ITemporada | null>(null);
   selectedClub = signal<IClub | null>(null);
+  clubError = signal(false);
 
   ngOnInit(): void {
     this.initForm();
@@ -57,6 +59,21 @@ export class TemporadaAdminForm implements OnInit {
         this.temporadaForm.patchValue({ id_club: cid });
       }
     }
+
+    this.temporadaForm.get('id_club')?.valueChanges.pipe(
+      debounceTime(800),
+      distinctUntilChanged()
+    ).subscribe((id) => {
+      if (id) {
+        const idNumero = typeof id === 'string' ? parseInt(id, 10) : id;
+        if (!isNaN(idNumero)) {
+          this.syncClub(idNumero);
+        }
+      } else {
+        this.selectedClub.set(null);
+        this.clubError.set(false);
+      }
+    });
   }
 
   getTemporada(id: number): void {
@@ -126,13 +143,21 @@ export class TemporadaAdminForm implements OnInit {
   }
 
   private syncClub(idClub: number): void {
+    this.clubError.set(false);
     this.oClubService.get(idClub).subscribe({
       next: (club: IClub) => {
         this.selectedClub.set(club);
+        this.clubError.set(false);
+        if (this.id_club?.hasError('clubNotFound')) {
+          const errors = { ...this.id_club.errors };
+          delete (errors as any)['clubNotFound'];
+          this.id_club?.setErrors(Object.keys(errors).length > 0 ? errors : null);
+        }
       },
-      error: (err: HttpErrorResponse) => {
-        console.error('Error al sincronizar club:', err);
-        this.notificacion.error('Error al cargar el club seleccionado');
+      error: () => {
+        this.selectedClub.set(null);
+        this.clubError.set(true);
+        this.id_club?.setErrors({ clubNotFound: true });
       },
     });
   }

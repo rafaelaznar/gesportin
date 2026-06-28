@@ -11,6 +11,7 @@ import { IArticulo } from '../../../../model/articulo';
 import { ITipoarticulo } from '../../../../model/tipoarticulo';
 import { SessionService } from '../../../../service/session';
 import { TipoarticuloPlistFinder } from '../../../tipoarticulo/finder/plist';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
   selector: 'app-articulo-teamadmin-form',
@@ -37,6 +38,7 @@ export class ArticuloTeamadminForm implements OnInit {
   loading = signal<boolean>(false);
   submitting = signal(false);
   selectedTipoarticulo = signal<ITipoarticulo | null>(null);
+  tipoarticuloError = signal(false);
 
   ngOnInit(): void {
     this.initForm();
@@ -59,6 +61,11 @@ export class ArticuloTeamadminForm implements OnInit {
       precio: [0, [Validators.required, Validators.min(0)]],
       descuento: [0, [Validators.min(0), Validators.max(100)]],
       id_tipoarticulo: [null, Validators.required],
+    });
+
+    this.articuloForm.get('id_tipoarticulo')?.valueChanges.pipe(debounceTime(800), distinctUntilChanged()).subscribe((id) => {
+      if (id) { const n = typeof id === 'string' ? parseInt(id, 10) : id; if (!isNaN(n)) this.loadTipoarticulo(n); }
+      else { this.selectedTipoarticulo.set(null); this.tipoarticuloError.set(false); }
     });
   }
 
@@ -90,13 +97,10 @@ export class ArticuloTeamadminForm implements OnInit {
   }
 
   private loadTipoarticulo(idTipoarticulo: number): void {
+    this.tipoarticuloError.set(false);
     this.oTipoarticuloService.get(idTipoarticulo).subscribe({
-      next: (tipoarticulo) => {
-        this.selectedTipoarticulo.set(tipoarticulo);
-        if (this.id() === 0) {
-        }
-      },
-      error: () => this.selectedTipoarticulo.set(null),
+      next: (tipoarticulo) => { this.selectedTipoarticulo.set(tipoarticulo); this.tipoarticuloError.set(false); if (this.id_tipoarticulo?.hasError('notFound')) { const e={...this.id_tipoarticulo.errors}; delete (e as any)['notFound']; this.id_tipoarticulo?.setErrors(Object.keys(e).length>0?e:null); } },
+      error: () => { this.selectedTipoarticulo.set(null); this.tipoarticuloError.set(true); this.id_tipoarticulo?.setErrors({ notFound: true }); },
     });
   }
 

@@ -23,28 +23,17 @@
       }
     </div>
 
-    <div class="p-3 rounded mb-3" style="background-color: #f8f9fa; border-left: 4px solid #0d6efd;">
-      <div class="mb-2">
-        <label class="form-label">Liga <span class="text-danger">*</span></label>
-        <input type="text" class="form-control" [value]="selectedLiga()?.nombre || ''" readonly />
+    <div class="mb-4">
+      <label class="form-label">Liga <span class="text-danger">*</span></label>
+      <div class="input-group">
+        <span class="input-group-text" [class.text-danger]="ligaError()" [class.text-success]="selectedLiga() && !ligaError()">
+          @if (ligaError()) { Liga no encontrada } @else { {{ selectedLiga()?.nombre || 'Sin seleccionar' }} }
+        </span>
+        <input type="number" class="form-control" formControlName="id_liga" [class.is-invalid]="(id_liga?.invalid && id_liga?.touched) || ligaError()" placeholder="ID de la liga" />
+        <button type="button" class="btn btn-outline-secondary" (click)="openLigaFinderModal()"><i class="bi bi-search"></i></button>
       </div>
-      <div class="d-flex gap-3 align-items-end">
-        <button type="button" class="btn btn-info" (click)="openLigaFinderModal()">
-          <i class="bi bi-search me-2"></i>Buscar
-        </button>
-        <div>
-          <label class="form-label">ID Liga</label>
-          <input type="text" class="form-control" [value]="id_liga?.value || ''" readonly />
-        </div>
-        @if (selectedLiga()) {
-          <div class="flex-grow-1">
-            <label class="form-label">Nombre</label>
-            <p class="form-control-plaintext fw-semibold mb-0">{{ selectedLiga()?.nombre }}</p>
-          </div>
-        }
-      </div>
-      @if (id_liga?.invalid && id_liga?.touched) {
-        <div class="text-danger small mt-1">La liga es obligatoria.</div>
+      @if ((id_liga?.invalid && id_liga?.touched) || ligaError()) {
+        <div class="text-danger small mt-1">@if (ligaError()) { La liga con ese ID no existe. } @else { La liga es obligatoria. }</div>
       }
     </div>
 

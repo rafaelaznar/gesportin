@@ -13,6 +13,7 @@ import { IComentarioart } from '../../../../model/comentarioart';
 import { IArticulo } from '../../../../model/articulo';
 import { IUsuario } from '../../../../model/usuario';
 import { SessionService } from '../../../../service/session';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
   selector: 'app-comentarioart-admin-form',
@@ -40,6 +41,8 @@ export class ComentarioartAdminForm implements OnInit {
   submitting = signal(false);
   selectedArticulo = signal<IArticulo | null>(null);
   selectedUsuario = signal<IUsuario | null>(null);
+  articuloError = signal(false);
+  usuarioError = signal(false);
 
   constructor() {
     effect(() => {
@@ -65,6 +68,15 @@ export class ComentarioartAdminForm implements OnInit {
       id_articulo: [null, Validators.required],
       id_usuario: [null, Validators.required],
     });
+
+    this.comentarioartForm.get('id_articulo')?.valueChanges.pipe(debounceTime(800), distinctUntilChanged()).subscribe((id) => {
+      if (id) { const n = typeof id === 'string' ? parseInt(id, 10) : id; if (!isNaN(n)) this.loadArticulo(n); }
+      else { this.selectedArticulo.set(null); this.articuloError.set(false); }
+    });
+    this.comentarioartForm.get('id_usuario')?.valueChanges.pipe(debounceTime(800), distinctUntilChanged()).subscribe((id) => {
+      if (id) { const n = typeof id === 'string' ? parseInt(id, 10) : id; if (!isNaN(n)) this.loadUsuario(n); }
+      else { this.selectedUsuario.set(null); this.usuarioError.set(false); }
+    });
   }
 
   private loadComentarioartData(comentarioart: IComentarioart): void {
@@ -83,16 +95,18 @@ export class ComentarioartAdminForm implements OnInit {
   }
 
   private loadArticulo(idArticulo: number): void {
+    this.articuloError.set(false);
     this.oArticuloService.get(idArticulo).subscribe({
-      next: (articulo) => this.selectedArticulo.set(articulo),
-      error: () => this.selectedArticulo.set(null),
+      next: (articulo) => { this.selectedArticulo.set(articulo); this.articuloError.set(false); if (this.id_articulo?.hasError('notFound')) { const e={...this.id_articulo.errors}; delete (e as any)['notFound']; this.id_articulo?.setErrors(Object.keys(e).length>0?e:null); } },
+      error: () => { this.selectedArticulo.set(null); this.articuloError.set(true); this.id_articulo?.setErrors({ notFound: true }); },
     });
   }
 
   private loadUsuario(idUsuario: number): void {
+    this.usuarioError.set(false);
     this.oUsuarioService.get(idUsuario).subscribe({
-      next: (usuario) => this.selectedUsuario.set(usuario),
-      error: () => this.selectedUsuario.set(null),
+      next: (usuario) => { this.selectedUsuario.set(usuario); this.usuarioError.set(false); if (this.id_usuario?.hasError('notFound')) { const e={...this.id_usuario.errors}; delete (e as any)['notFound']; this.id_usuario?.setErrors(Object.keys(e).length>0?e:null); } },
+      error: () => { this.selectedUsuario.set(null); this.usuarioError.set(true); this.id_usuario?.setErrors({ notFound: true }); },
     });
   }
 

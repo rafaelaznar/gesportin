@@ -11,6 +11,7 @@ import { UsuarioPlistFinder } from '../../../usuario/finder/plist';
 import { IFactura } from '../../../../model/factura';
 import { IUsuario } from '../../../../model/usuario';
 import { SessionService } from '../../../../service/session';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
   selector: 'app-factura-teamadmin-form',
@@ -36,6 +37,7 @@ export class FacturaTeamadminForm implements OnInit {
   loading = signal<boolean>(false);
   submitting = signal(false);
   selectedUsuario = signal<IUsuario | null>(null);
+  usuarioError = signal(false);
 
   ngOnInit(): void {
     this.initForm();
@@ -52,6 +54,11 @@ export class FacturaTeamadminForm implements OnInit {
       id: [{ value: 0, disabled: true }],
       fecha: ['', Validators.required],
       id_usuario: [null, Validators.required],
+    });
+
+    this.facturaForm.get('id_usuario')?.valueChanges.pipe(debounceTime(800), distinctUntilChanged()).subscribe((id) => {
+      if (id) { const n = typeof id === 'string' ? parseInt(id, 10) : id; if (!isNaN(n)) this.loadUsuario(n); }
+      else { this.selectedUsuario.set(null); this.usuarioError.set(false); }
     });
   }
 
@@ -83,9 +90,10 @@ export class FacturaTeamadminForm implements OnInit {
   }
 
   private loadUsuario(idUsuario: number): void {
+    this.usuarioError.set(false);
     this.oUsuarioService.get(idUsuario).subscribe({
-      next: (usuario) => this.selectedUsuario.set(usuario),
-      error: () => this.selectedUsuario.set(null),
+      next: (usuario) => { this.selectedUsuario.set(usuario); this.usuarioError.set(false); if (this.id_usuario?.hasError('notFound')) { const e={...this.id_usuario.errors}; delete (e as any)['notFound']; this.id_usuario?.setErrors(Object.keys(e).length>0?e:null); } },
+      error: () => { this.selectedUsuario.set(null); this.usuarioError.set(true); this.id_usuario?.setErrors({ notFound: true }); },
     });
   }
 

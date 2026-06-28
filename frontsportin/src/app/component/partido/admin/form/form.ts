@@ -14,6 +14,7 @@ import { IEstadopartido } from '../../../../model/estadopartido';
 import { SessionService } from '../../../../service/session';
 import { LigaPlistFinder } from '../../../liga/finder/plist';
 import { EstadopartidoPlistFinder } from '../../../estadopartido/finder/plist';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
   selector: 'app-partido-admin-form',
@@ -41,6 +42,7 @@ export class PartidoAdminForm implements OnInit {
   submitting = signal(false);
   selectedLiga = signal<ILiga | null>(null);
   selectedEstadopartido = signal<IEstadopartido | null>(null);
+  ligaError = signal(false);
 
   constructor() {
     effect(() => {
@@ -71,6 +73,11 @@ export class PartidoAdminForm implements OnInit {
       id_estadopartido: [null],
       comentario: [''],
     });
+
+    this.partidoForm.get('id_liga')?.valueChanges.pipe(debounceTime(800), distinctUntilChanged()).subscribe((id) => {
+      if (id) { const n = typeof id === 'string' ? parseInt(id, 10) : id; if (!isNaN(n)) this.loadLiga(n); }
+      else { this.selectedLiga.set(null); this.ligaError.set(false); }
+    });
   }
 
   private loadPartidoData(partido: IPartido): void {
@@ -90,9 +97,10 @@ export class PartidoAdminForm implements OnInit {
   }
 
   private loadLiga(idLiga: number): void {
+    this.ligaError.set(false);
     this.oLigaService.get(idLiga).subscribe({
-      next: (liga) => this.selectedLiga.set(liga),
-      error: () => this.selectedLiga.set(null),
+      next: (liga) => { this.selectedLiga.set(liga); this.ligaError.set(false); if (this.id_liga?.hasError('notFound')) { const e={...this.id_liga.errors}; delete (e as any)['notFound']; this.id_liga?.setErrors(Object.keys(e).length>0?e:null); } },
+      error: () => { this.selectedLiga.set(null); this.ligaError.set(true); this.id_liga?.setErrors({ notFound: true }); },
     });
   }
 

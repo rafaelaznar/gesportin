@@ -10,6 +10,7 @@ import { SessionService } from '../../../../service/session';
 import { ILiga } from '../../../../model/liga';
 import { IEquipo } from '../../../../model/equipo';
 import { EquipoPlistFinder } from '../../../equipo/finder/plist';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
   selector: 'app-liga-admin-form',
@@ -37,6 +38,7 @@ export class LigaAdminForm implements OnInit {
   error = signal<string | null>(null);
   equipos = signal<IEquipo[]>([]);
   selectedEquipo = signal<IEquipo | null>(null);
+  equipoError = signal(false);
 
   constructor() {
     effect(() => {
@@ -63,12 +65,9 @@ export class LigaAdminForm implements OnInit {
       id_equipo: [null, Validators.required],
     });
 
-    this.ligaForm.get('id_equipo')?.valueChanges.subscribe((id) => {
-      if (id) {
-        this.loadEquipo(Number(id));
-      } else {
-        this.selectedEquipo.set(null);
-      }
+    this.ligaForm.get('id_equipo')?.valueChanges.pipe(debounceTime(800), distinctUntilChanged()).subscribe((id) => {
+      if (id) { const n = typeof id === 'string' ? parseInt(id, 10) : id; if (!isNaN(n)) this.loadEquipo(n); }
+      else { this.selectedEquipo.set(null); this.equipoError.set(false); }
     });
   }
 
@@ -112,14 +111,10 @@ export class LigaAdminForm implements OnInit {
   }
 
   private loadEquipo(idEquipo: number): void {
+    this.equipoError.set(false);
     this.equipoService.get(idEquipo).subscribe({
-      next: (equipo: IEquipo) => {
-        this.selectedEquipo.set(equipo);
-      },
-      error: (err: HttpErrorResponse) => {
-        this.selectedEquipo.set(null);
-        console.error(err);
-      },
+      next: (equipo) => { this.selectedEquipo.set(equipo); this.equipoError.set(false); if (this.id_equipo?.hasError('notFound')) { const e={...this.id_equipo.errors}; delete (e as any)['notFound']; this.id_equipo?.setErrors(Object.keys(e).length>0?e:null); } },
+      error: () => { this.selectedEquipo.set(null); this.equipoError.set(true); this.id_equipo?.setErrors({ notFound: true }); },
     });
   }
 

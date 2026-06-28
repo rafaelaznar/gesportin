@@ -24,29 +24,18 @@
       }
     </div>
 
-    <div class="p-4 rounded mb-4" style="background-color: #f8f9fa; border-left: 4px solid #0d6efd;">
-      <div class="mb-3">
-        <label for="equipo" class="form-label">Equipo <span class="text-danger">*</span></label>
-        <input id="equipo" type="text" class="form-control" [value]="selectedEquipo()?.nombre" readonly />
+    <div class="mb-4">
+      <label class="form-label">Equipo <span class="text-danger">*</span></label>
+      <div class="input-group">
+        <span class="input-group-text" [class.text-danger]="equipoError()" [class.text-success]="selectedEquipo() && !equipoError()">
+          @if (equipoError()) { Equipo no encontrado } @else { {{ selectedEquipo()?.nombre || 'Sin seleccionar' }} }
+        </span>
+        <input type="number" class="form-control" formControlName="id_equipo" [class.is-invalid]="(id_equipo?.invalid && id_equipo?.touched) || equipoError()" placeholder="ID del equipo" />
+        <button type="button" class="btn btn-outline-secondary" (click)="openEquipoFinderModal()"><i class="bi bi-search"></i></button>
       </div>
-
-      <div class="d-flex gap-3 align-items-end">
-        <button type="button" class="btn btn-info" (click)="openEquipoFinderModal()">
-          <i class="bi bi-search me-2"></i>Buscar
-        </button>
-
-        <div>
-          <label for="display_id_equipo" class="form-label">ID Equipo</label>
-          <input id="display_id_equipo" type="text" class="form-control" [value]="id_equipo?.value" readonly />
-        </div>
-
-        @if (selectedEquipo()) {
-          <div class="flex-grow-1">
-            <label class="form-label">Nombre equipo</label>
-            <p class="form-control-plaintext fw-semibold mb-0">{{ selectedEquipo()?.nombre }}</p>
-          </div>
-        }
-      </div>
+      @if ((id_equipo?.invalid && id_equipo?.touched) || equipoError()) {
+        <div class="text-danger small mt-1">@if (equipoError()) { El equipo con ese ID no existe. } @else { Debe seleccionar un equipo. }</div>
+      }
     </div>
 
     <div class="d-flex justify-content-between align-items-center mt-4">

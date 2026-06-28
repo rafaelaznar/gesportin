@@ -12,6 +12,7 @@ import { IUsuario } from '../../../../model/usuario';
 import { IEquipo } from '../../../../model/equipo';
 import { CategoriaPlistFinder } from '../../../categoria/finder/plist';
 import { UsuarioPlistFinder } from '../../../usuario/finder/plist';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
   selector: 'app-equipo-admin-form',
@@ -39,6 +40,8 @@ export class EquipoAdminForm implements OnInit {
   submitting = signal(false);
   selectedCategoria = signal<ICategoria | null>(null);
   selectedEntrenador = signal<IUsuario | null>(null);
+  categoriaError = signal(false);
+  entrenadorError = signal(false);
 
   constructor() {
     effect(() => {
@@ -64,6 +67,15 @@ export class EquipoAdminForm implements OnInit {
       id_categoria: [null, Validators.required],
       id_entrenador: [null, Validators.required],
     });
+
+    this.equipoForm.get('id_categoria')?.valueChanges.pipe(debounceTime(800), distinctUntilChanged()).subscribe((id) => {
+      if (id) { const n = typeof id === 'string' ? parseInt(id, 10) : id; if (!isNaN(n)) this.syncCategoria(n); }
+      else { this.selectedCategoria.set(null); this.categoriaError.set(false); }
+    });
+    this.equipoForm.get('id_entrenador')?.valueChanges.pipe(debounceTime(800), distinctUntilChanged()).subscribe((id) => {
+      if (id) { const n = typeof id === 'string' ? parseInt(id, 10) : id; if (!isNaN(n)) this.syncEntrenador(n); }
+      else { this.selectedEntrenador.set(null); this.entrenadorError.set(false); }
+    });
   }
 
   private loadEquipoData(equipo: IEquipo): void {
@@ -86,38 +98,20 @@ export class EquipoAdminForm implements OnInit {
   }
 
   private syncCategoria(idCategoria: number | null): void {
-    if (!idCategoria) {
-      this.selectedCategoria.set(null);
-      return;
-    }
-
+    if (!idCategoria) { this.selectedCategoria.set(null); this.categoriaError.set(false); return; }
+    this.categoriaError.set(false);
     this.oCategoriaService.get(idCategoria).subscribe({
-      next: (categoria: ICategoria) => {
-        this.selectedCategoria.set(categoria);
-      },
-      error: (err: HttpErrorResponse) => {
-        this.selectedCategoria.set(null);
-        console.error('Error al sincronizar categoría:', err);
-        this.notificacion.error('Error al cargar la categoría seleccionada');
-      },
+      next: (categoria) => { this.selectedCategoria.set(categoria); this.categoriaError.set(false); if (this.id_categoria?.hasError('notFound')) { const e={...this.id_categoria.errors}; delete (e as any)['notFound']; this.id_categoria?.setErrors(Object.keys(e).length>0?e:null); } },
+      error: () => { this.selectedCategoria.set(null); this.categoriaError.set(true); this.id_categoria?.setErrors({ notFound: true }); },
     });
   }
 
   private syncEntrenador(idEntrenador: number | null): void {
-    if (!idEntrenador) {
-      this.selectedEntrenador.set(null);
-      return;
-    }
-
+    if (!idEntrenador) { this.selectedEntrenador.set(null); this.entrenadorError.set(false); return; }
+    this.entrenadorError.set(false);
     this.oUsuarioService.get(idEntrenador).subscribe({
-      next: (entrenador: IUsuario) => {
-        this.selectedEntrenador.set(entrenador);
-      },
-      error: (err: HttpErrorResponse) => {
-        this.selectedEntrenador.set(null);
-        console.error('Error al sincronizar entrenador:', err);
-        this.notificacion.error('Error al cargar el entrenador seleccionado');
-      },
+      next: (entrenador) => { this.selectedEntrenador.set(entrenador); this.entrenadorError.set(false); if (this.id_entrenador?.hasError('notFound')) { const e={...this.id_entrenador.errors}; delete (e as any)['notFound']; this.id_entrenador?.setErrors(Object.keys(e).length>0?e:null); } },
+      error: () => { this.selectedEntrenador.set(null); this.entrenadorError.set(true); this.id_entrenador?.setErrors({ notFound: true }); },
     });
   }
 

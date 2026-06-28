@@ -14,6 +14,7 @@ import { IFactura } from '../../../../model/factura';
 import { SessionService } from '../../../../service/session';
 import { ArticuloPlistFinder } from '../../../articulo/finder/plist';
 import { FacturaPlistFinder } from '../../../factura/finder/plist';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
   selector: 'app-compra-teamadmin-form',
@@ -42,6 +43,8 @@ export class CompraTeamadminForm implements OnInit {
   submitting = signal(false);
   selectedArticulo = signal<IArticulo | null>(null);
   selectedFactura = signal<IFactura | null>(null);
+  articuloError = signal(false);
+  facturaError = signal(false);
 
   ngOnInit(): void {
     this.initForm();
@@ -64,6 +67,15 @@ export class CompraTeamadminForm implements OnInit {
       precio: [0, [Validators.required, Validators.min(0)]],
       id_articulo: [null, Validators.required],
       id_factura: [null, Validators.required],
+    });
+
+    this.compraForm.get('id_articulo')?.valueChanges.pipe(debounceTime(800), distinctUntilChanged()).subscribe((id) => {
+      if (id) { const n = typeof id === 'string' ? parseInt(id, 10) : id; if (!isNaN(n)) this.loadArticulo(n); }
+      else { this.selectedArticulo.set(null); this.articuloError.set(false); }
+    });
+    this.compraForm.get('id_factura')?.valueChanges.pipe(debounceTime(800), distinctUntilChanged()).subscribe((id) => {
+      if (id) { const n = typeof id === 'string' ? parseInt(id, 10) : id; if (!isNaN(n)) this.loadFactura(n); }
+      else { this.selectedFactura.set(null); this.facturaError.set(false); }
     });
   }
 
@@ -95,20 +107,22 @@ export class CompraTeamadminForm implements OnInit {
   }
 
   private loadArticulo(idArticulo: number): void {
+    this.articuloError.set(false);
     this.oArticuloService.get(idArticulo).subscribe({
       next: (articulo) => {
         this.selectedArticulo.set(articulo);
-        const tipo = articulo.tipoarticulo;
-        const isEdit = this.id() > 0;
+        this.articuloError.set(false);
+        if (this.id_articulo?.hasError('notFound')) { const e = {...this.id_articulo.errors}; delete (e as any)['notFound']; this.id_articulo?.setErrors(Object.keys(e).length > 0 ? e : null); }
       },
-      error: () => this.selectedArticulo.set(null),
+      error: () => { this.selectedArticulo.set(null); this.articuloError.set(true); this.id_articulo?.setErrors({ notFound: true }); },
     });
   }
 
   private loadFactura(idFactura: number): void {
+    this.facturaError.set(false);
     this.oFacturaService.get(idFactura).subscribe({
-      next: (factura) => this.selectedFactura.set(factura),
-      error: () => this.selectedFactura.set(null),
+      next: (factura) => { this.selectedFactura.set(factura); this.facturaError.set(false); if (this.id_factura?.hasError('notFound')) { const e = {...this.id_factura.errors}; delete (e as any)['notFound']; this.id_factura?.setErrors(Object.keys(e).length > 0 ? e : null); } },
+      error: () => { this.selectedFactura.set(null); this.facturaError.set(true); this.id_factura?.setErrors({ notFound: true }); },
     });
   }
 

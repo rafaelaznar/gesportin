@@ -11,6 +11,7 @@ import { ClubPlistFinder } from '../../../club/finder/plist';
 import { ITipoarticulo } from '../../../../model/tipoarticulo';
 import { IClub } from '../../../../model/club';
 import { SessionService } from '../../../../service/session';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
   selector: 'app-tipoarticulo-teamadmin-form',
@@ -36,6 +37,7 @@ export class TipoarticuloTeamadminForm implements OnInit {
   loading = signal<boolean>(false);
   submitting = signal(false);
   selectedClub = signal<IClub | null>(null);
+  clubError = signal(false);
 
   ngOnInit(): void {
     this.initForm();
@@ -59,6 +61,21 @@ export class TipoarticuloTeamadminForm implements OnInit {
       id: [{ value: 0, disabled: true }],
       descripcion: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(255)]],
       id_club: [null, Validators.required],
+    });
+
+    this.tipoarticuloForm.get('id_club')?.valueChanges.pipe(
+      debounceTime(800),
+      distinctUntilChanged()
+    ).subscribe((id) => {
+      if (id) {
+        const idNumero = typeof id === 'string' ? parseInt(id, 10) : id;
+        if (!isNaN(idNumero)) {
+          this.loadClub(idNumero);
+        }
+      } else {
+        this.selectedClub.set(null);
+        this.clubError.set(false);
+      }
     });
   }
 
@@ -90,9 +107,22 @@ export class TipoarticuloTeamadminForm implements OnInit {
   }
 
   private loadClub(idClub: number): void {
+    this.clubError.set(false);
     this.oClubService.get(idClub).subscribe({
-      next: (club) => this.selectedClub.set(club),
-      error: () => this.selectedClub.set(null),
+      next: (club) => {
+        this.selectedClub.set(club);
+        this.clubError.set(false);
+        if (this.id_club?.hasError('clubNotFound')) {
+          const errors = { ...this.id_club.errors };
+          delete (errors as any)['clubNotFound'];
+          this.id_club?.setErrors(Object.keys(errors).length > 0 ? errors : null);
+        }
+      },
+      error: () => {
+        this.selectedClub.set(null);
+        this.clubError.set(true);
+        this.id_club?.setErrors({ clubNotFound: true });
+      },
     });
   }
 

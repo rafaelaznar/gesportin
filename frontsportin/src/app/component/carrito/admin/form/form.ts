@@ -13,6 +13,7 @@ import { IUsuario } from '../../../../model/usuario';
 import { SessionService } from '../../../../service/session';
 import { ArticuloPlistFinder } from '../../../articulo/finder/plist';
 import { UsuarioPlistFinder } from '../../../usuario/finder/plist';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
   selector: 'app-carrito-admin-form',
@@ -40,6 +41,8 @@ export class CarritoAdminForm implements OnInit {
   submitting = signal(false);
   selectedArticulo = signal<IArticulo | null>(null);
   selectedUsuario = signal<IUsuario | null>(null);
+  articuloError = signal(false);
+  usuarioError = signal(false);
 
   constructor() {
     effect(() => {
@@ -65,6 +68,16 @@ export class CarritoAdminForm implements OnInit {
       id_articulo: [null, Validators.required],
       id_usuario: [null, Validators.required],
     });
+
+    this.carritoForm.get('id_articulo')?.valueChanges.pipe(debounceTime(800), distinctUntilChanged()).subscribe((id) => {
+      if (id) { const n = typeof id === 'string' ? parseInt(id, 10) : id; if (!isNaN(n)) this.loadArticulo(n); }
+      else { this.selectedArticulo.set(null); this.articuloError.set(false); }
+    });
+
+    this.carritoForm.get('id_usuario')?.valueChanges.pipe(debounceTime(800), distinctUntilChanged()).subscribe((id) => {
+      if (id) { const n = typeof id === 'string' ? parseInt(id, 10) : id; if (!isNaN(n)) this.loadUsuario(n); }
+      else { this.selectedUsuario.set(null); this.usuarioError.set(false); }
+    });
   }
 
   private loadCarritoData(carrito: ICarrito): void {
@@ -79,16 +92,34 @@ export class CarritoAdminForm implements OnInit {
   }
 
   private loadArticulo(idArticulo: number): void {
+    this.articuloError.set(false);
     this.oArticuloService.get(idArticulo).subscribe({
-      next: (articulo) => this.selectedArticulo.set(articulo),
-      error: () => this.selectedArticulo.set(null),
+      next: (articulo) => {
+        this.selectedArticulo.set(articulo);
+        this.articuloError.set(false);
+        if (this.id_articulo?.hasError('notFound')) {
+          const errors = { ...this.id_articulo.errors };
+          delete (errors as any)['notFound'];
+          this.id_articulo?.setErrors(Object.keys(errors).length > 0 ? errors : null);
+        }
+      },
+      error: () => { this.selectedArticulo.set(null); this.articuloError.set(true); this.id_articulo?.setErrors({ notFound: true }); },
     });
   }
 
   private loadUsuario(idUsuario: number): void {
+    this.usuarioError.set(false);
     this.oUsuarioService.get(idUsuario).subscribe({
-      next: (usuario) => this.selectedUsuario.set(usuario),
-      error: () => this.selectedUsuario.set(null),
+      next: (usuario) => {
+        this.selectedUsuario.set(usuario);
+        this.usuarioError.set(false);
+        if (this.id_usuario?.hasError('notFound')) {
+          const errors = { ...this.id_usuario.errors };
+          delete (errors as any)['notFound'];
+          this.id_usuario?.setErrors(Object.keys(errors).length > 0 ? errors : null);
+        }
+      },
+      error: () => { this.selectedUsuario.set(null); this.usuarioError.set(true); this.id_usuario?.setErrors({ notFound: true }); },
     });
   }
 

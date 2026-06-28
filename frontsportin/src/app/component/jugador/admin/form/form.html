@@ -56,53 +56,31 @@
       }
     </div>
 
-    <div class="p-3 rounded mb-3" style="background-color: #f8f9fa; border-left: 4px solid #0d6efd;">
-      <div class="mb-2">
-        <label class="form-label">Equipo <span class="text-danger">*</span></label>
-        <input type="text" class="form-control" [value]="selectedEquipo()?.nombre || ''" readonly />
+    <div class="mb-4">
+      <label class="form-label">Equipo <span class="text-danger">*</span></label>
+      <div class="input-group">
+        <span class="input-group-text" [class.text-danger]="equipoError()" [class.text-success]="selectedEquipo() && !equipoError()">
+          @if (equipoError()) { Equipo no encontrado } @else { {{ selectedEquipo()?.nombre || 'Sin seleccionar' }} }
+        </span>
+        <input type="number" class="form-control" formControlName="id_equipo" [class.is-invalid]="(id_equipo?.invalid && id_equipo?.touched) || equipoError()" placeholder="ID del equipo" />
+        <button type="button" class="btn btn-outline-secondary" (click)="openEquipoFinderModal()"><i class="bi bi-search"></i></button>
       </div>
-      <div class="d-flex gap-3 align-items-end">
-        <button type="button" class="btn btn-info" (click)="openEquipoFinderModal()">
-          <i class="bi bi-search me-2"></i>Buscar
-        </button>
-        <div>
-          <label class="form-label">ID Equipo</label>
-          <input type="text" class="form-control" [value]="id_equipo?.value || ''" readonly />
-        </div>
-        @if (selectedEquipo()) {
-          <div class="flex-grow-1">
-            <label class="form-label">Nombre</label>
-            <p class="form-control-plaintext fw-semibold mb-0">{{ selectedEquipo()?.nombre }}</p>
-          </div>
-        }
-      </div>
-      @if (id_equipo?.invalid && id_equipo?.touched) {
-        <div class="text-danger small mt-1">El equipo es obligatorio.</div>
+      @if ((id_equipo?.invalid && id_equipo?.touched) || equipoError()) {
+        <div class="text-danger small mt-1">@if (equipoError()) { El equipo con ese ID no existe. } @else { El equipo es obligatorio. }</div>
       }
     </div>
 
-    <div class="p-3 rounded mb-3" style="background-color: #f8f9fa; border-left: 4px solid #0d6efd;">
-      <div class="mb-2">
-        <label class="form-label">Usuario <span class="text-danger">*</span></label>
-        <input type="text" class="form-control" [value]="selectedUsuario() ? (selectedUsuario()?.nombre + ' ' + selectedUsuario()?.apellido1) : ''" readonly />
+    <div class="mb-4">
+      <label class="form-label">Usuario <span class="text-danger">*</span></label>
+      <div class="input-group">
+        <span class="input-group-text" [class.text-danger]="usuarioError()" [class.text-success]="selectedUsuario() && !usuarioError()">
+          @if (usuarioError()) { Usuario no encontrado } @else { {{ selectedUsuario() ? (selectedUsuario()!.nombre + ' ' + (selectedUsuario()!.apellido1 || '')) : 'Sin seleccionar' }} }
+        </span>
+        <input type="number" class="form-control" formControlName="id_usuario" [class.is-invalid]="(id_usuario?.invalid && id_usuario?.touched) || usuarioError()" placeholder="ID del usuario" />
+        <button type="button" class="btn btn-outline-secondary" (click)="openUsuarioFinderModal()"><i class="bi bi-search"></i></button>
       </div>
-      <div class="d-flex gap-3 align-items-end">
-        <button type="button" class="btn btn-info" (click)="openUsuarioFinderModal()">
-          <i class="bi bi-search me-2"></i>Buscar
-        </button>
-        <div>
-          <label class="form-label">ID Usuario</label>
-          <input type="text" class="form-control" [value]="id_usuario?.value || ''" readonly />
-        </div>
-        @if (selectedUsuario()) {
-          <div class="flex-grow-1">
-            <label class="form-label">Nombre</label>
-            <p class="form-control-plaintext fw-semibold mb-0">{{ selectedUsuario()?.nombre }} {{ selectedUsuario()?.apellido1 }}</p>
-          </div>
-        }
-      </div>
-      @if (id_usuario?.invalid && id_usuario?.touched) {
-        <div class="text-danger small mt-1">El usuario es obligatorio.</div>
+      @if ((id_usuario?.invalid && id_usuario?.touched) || usuarioError()) {
+        <div class="text-danger small mt-1">@if (usuarioError()) { El usuario con ese ID no existe. } @else { El usuario es obligatorio. }</div>
       }
     </div>
 

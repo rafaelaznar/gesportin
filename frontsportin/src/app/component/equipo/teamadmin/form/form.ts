@@ -13,6 +13,7 @@ import { IUsuario } from '../../../../model/usuario';
 import { IEquipo } from '../../../../model/equipo';
 import { CategoriaPlistFinder } from '../../../categoria/finder/plist';
 import { UsuarioPlistFinder } from '../../../usuario/finder/plist';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
   selector: 'app-equipo-teamadmin-form',
@@ -40,6 +41,8 @@ export class EquipoTeamadminForm implements OnInit {
   submitting = signal(false);
   selectedCategoria = signal<ICategoria | null>(null);
   selectedEntrenador = signal<IUsuario | null>(null);
+  categoriaError = signal(false);
+  entrenadorError = signal(false);
 
   ngOnInit(): void {
     this.initForm();
@@ -61,6 +64,32 @@ export class EquipoTeamadminForm implements OnInit {
       nombre: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(255)]],
       id_categoria: [null, Validators.required],
       id_entrenador: [null, Validators.required],
+    });
+
+    this.equipoForm.get('id_categoria')?.valueChanges.pipe(
+      debounceTime(800),
+      distinctUntilChanged()
+    ).subscribe((id) => {
+      if (id) {
+        const idNumero = typeof id === 'string' ? parseInt(id, 10) : id;
+        if (!isNaN(idNumero)) this.syncCategoria(idNumero);
+      } else {
+        this.selectedCategoria.set(null);
+        this.categoriaError.set(false);
+      }
+    });
+
+    this.equipoForm.get('id_entrenador')?.valueChanges.pipe(
+      debounceTime(800),
+      distinctUntilChanged()
+    ).subscribe((id) => {
+      if (id) {
+        const idNumero = typeof id === 'string' ? parseInt(id, 10) : id;
+        if (!isNaN(idNumero)) this.syncEntrenador(idNumero);
+      } else {
+        this.selectedEntrenador.set(null);
+        this.entrenadorError.set(false);
+      }
     });
   }
 
@@ -101,20 +130,24 @@ export class EquipoTeamadminForm implements OnInit {
   private syncCategoria(idCategoria: number | null): void {
     if (!idCategoria) {
       this.selectedCategoria.set(null);
+      this.categoriaError.set(false);
       return;
     }
-
+    this.categoriaError.set(false);
     this.oCategoriaService.get(idCategoria).subscribe({
       next: (categoria: ICategoria) => {
         this.selectedCategoria.set(categoria);
-        const temp = categoria.temporada;
-        const isEdit = this.id() > 0;
-        const nombre = this.equipoForm.get('nombre')?.value ?? '';
+        this.categoriaError.set(false);
+        if (this.equipoForm.get('id_categoria')?.hasError('categoriaNotFound')) {
+          const errors = { ...this.equipoForm.get('id_categoria')?.errors };
+          delete (errors as any)['categoriaNotFound'];
+          this.equipoForm.get('id_categoria')?.setErrors(Object.keys(errors).length > 0 ? errors : null);
+        }
       },
-      error: (err: HttpErrorResponse) => {
+      error: () => {
         this.selectedCategoria.set(null);
-        console.error('Error al sincronizar categoría:', err);
-        this.notificacion.error('Error al cargar la categoría seleccionada');
+        this.categoriaError.set(true);
+        this.equipoForm.get('id_categoria')?.setErrors({ categoriaNotFound: true });
       },
     });
   }
@@ -122,17 +155,24 @@ export class EquipoTeamadminForm implements OnInit {
   private syncEntrenador(idEntrenador: number | null): void {
     if (!idEntrenador) {
       this.selectedEntrenador.set(null);
+      this.entrenadorError.set(false);
       return;
     }
-
+    this.entrenadorError.set(false);
     this.oUsuarioService.get(idEntrenador).subscribe({
       next: (entrenador: IUsuario) => {
         this.selectedEntrenador.set(entrenador);
+        this.entrenadorError.set(false);
+        if (this.equipoForm.get('id_entrenador')?.hasError('entrenadorNotFound')) {
+          const errors = { ...this.equipoForm.get('id_entrenador')?.errors };
+          delete (errors as any)['entrenadorNotFound'];
+          this.equipoForm.get('id_entrenador')?.setErrors(Object.keys(errors).length > 0 ? errors : null);
+        }
       },
-      error: (err: HttpErrorResponse) => {
+      error: () => {
         this.selectedEntrenador.set(null);
-        console.error('Error al sincronizar entrenador:', err);
-        this.notificacion.error('Error al cargar el entrenador seleccionado');
+        this.entrenadorError.set(true);
+        this.equipoForm.get('id_entrenador')?.setErrors({ entrenadorNotFound: true });
       },
     });
   }

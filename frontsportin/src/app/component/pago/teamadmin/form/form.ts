@@ -14,6 +14,7 @@ import { IJugador } from '../../../../model/jugador';
 import { SessionService } from '../../../../service/session';
 import { CuotaPlistFinder } from '../../../cuota/finder/plist';
 import { JugadorPlistFinder } from '../../../jugador/finder/plist';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
   selector: 'app-pago-teamadmin-form',
@@ -42,6 +43,8 @@ export class PagoTeamadminForm implements OnInit {
   submitting = signal(false);
   selectedCuota = signal<ICuota | null>(null);
   selectedJugador = signal<IJugador | null>(null);
+  cuotaError = signal(false);
+  jugadorError = signal(false);
 
   ngOnInit(): void {
     this.initForm();
@@ -64,6 +67,15 @@ export class PagoTeamadminForm implements OnInit {
       id_jugador: [null, Validators.required],
       abonado: [0, [Validators.required, Validators.min(0)]],
       fecha: ['', Validators.required],
+    });
+
+    this.pagoForm.get('id_cuota')?.valueChanges.pipe(debounceTime(800), distinctUntilChanged()).subscribe((id) => {
+      if (id) { const n = typeof id === 'string' ? parseInt(id, 10) : id; if (!isNaN(n)) this.loadCuota(n); }
+      else { this.selectedCuota.set(null); this.cuotaError.set(false); }
+    });
+    this.pagoForm.get('id_jugador')?.valueChanges.pipe(debounceTime(800), distinctUntilChanged()).subscribe((id) => {
+      if (id) { const n = typeof id === 'string' ? parseInt(id, 10) : id; if (!isNaN(n)) this.loadJugador(n); }
+      else { this.selectedJugador.set(null); this.jugadorError.set(false); }
     });
   }
 
@@ -95,22 +107,18 @@ export class PagoTeamadminForm implements OnInit {
   }
 
   private loadCuota(idCuota: number): void {
+    this.cuotaError.set(false);
     this.oCuotaService.get(idCuota).subscribe({
-      next: (cuota) => {
-        this.selectedCuota.set(cuota);
-        const equipo = cuota.equipo;
-        const cat = equipo?.categoria;
-        const temp = cat?.temporada;
-        const isEdit = this.id() > 0;
-      },
-      error: () => this.selectedCuota.set(null),
+      next: (cuota) => { this.selectedCuota.set(cuota); this.cuotaError.set(false); if (this.id_cuota?.hasError('notFound')) { const e={...this.id_cuota.errors}; delete (e as any)['notFound']; this.id_cuota?.setErrors(Object.keys(e).length>0?e:null); } },
+      error: () => { this.selectedCuota.set(null); this.cuotaError.set(true); this.id_cuota?.setErrors({ notFound: true }); },
     });
   }
 
   private loadJugador(idJugador: number): void {
+    this.jugadorError.set(false);
     this.oJugadorService.getById(idJugador).subscribe({
-      next: (jugador) => this.selectedJugador.set(jugador),
-      error: () => this.selectedJugador.set(null),
+      next: (jugador) => { this.selectedJugador.set(jugador); this.jugadorError.set(false); if (this.id_jugador?.hasError('notFound')) { const e={...this.id_jugador.errors}; delete (e as any)['notFound']; this.id_jugador?.setErrors(Object.keys(e).length>0?e:null); } },
+      error: () => { this.selectedJugador.set(null); this.jugadorError.set(true); this.id_jugador?.setErrors({ notFound: true }); },
     });
   }
 

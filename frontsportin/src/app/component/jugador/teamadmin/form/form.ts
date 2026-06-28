@@ -14,6 +14,7 @@ import { IUsuario } from '../../../../model/usuario';
 import { SessionService } from '../../../../service/session';
 import { EquipoPlistFinder } from '../../../equipo/finder/plist';
 import { UsuarioPlistFinder } from '../../../usuario/finder/plist';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
   selector: 'app-jugador-teamadmin-form',
@@ -42,6 +43,8 @@ export class JugadorTeamadminForm implements OnInit {
   submitting = signal(false);
   selectedEquipo = signal<IEquipo | null>(null);
   selectedUsuario = signal<IUsuario | null>(null);
+  equipoError = signal(false);
+  usuarioError = signal(false);
 
   ngOnInit(): void {
     this.initForm();
@@ -65,6 +68,15 @@ export class JugadorTeamadminForm implements OnInit {
       capitan: [false, Validators.required],
       id_equipo: [null, Validators.required],
       id_usuario: [null, Validators.required],
+    });
+
+    this.jugadorForm.get('id_equipo')?.valueChanges.pipe(debounceTime(800), distinctUntilChanged()).subscribe((id) => {
+      if (id) { const n = typeof id === 'string' ? parseInt(id, 10) : id; if (!isNaN(n)) this.loadEquipo(n); }
+      else { this.selectedEquipo.set(null); this.equipoError.set(false); }
+    });
+    this.jugadorForm.get('id_usuario')?.valueChanges.pipe(debounceTime(800), distinctUntilChanged()).subscribe((id) => {
+      if (id) { const n = typeof id === 'string' ? parseInt(id, 10) : id; if (!isNaN(n)) this.loadUsuario(n); }
+      else { this.selectedUsuario.set(null); this.usuarioError.set(false); }
     });
   }
 
@@ -97,21 +109,18 @@ export class JugadorTeamadminForm implements OnInit {
   }
 
   private loadEquipo(idEquipo: number): void {
+    this.equipoError.set(false);
     this.oEquipoService.get(idEquipo).subscribe({
-      next: (equipo) => {
-        this.selectedEquipo.set(equipo);
-        const cat = equipo.categoria;
-        const temp = cat?.temporada;
-        const isEdit = this.id() > 0;
-      },
-      error: () => this.selectedEquipo.set(null),
+      next: (equipo) => { this.selectedEquipo.set(equipo); this.equipoError.set(false); if (this.id_equipo?.hasError('notFound')) { const e={...this.id_equipo.errors}; delete (e as any)['notFound']; this.id_equipo?.setErrors(Object.keys(e).length>0?e:null); } },
+      error: () => { this.selectedEquipo.set(null); this.equipoError.set(true); this.id_equipo?.setErrors({ notFound: true }); },
     });
   }
 
   private loadUsuario(idUsuario: number): void {
+    this.usuarioError.set(false);
     this.oUsuarioService.get(idUsuario).subscribe({
-      next: (usuario) => this.selectedUsuario.set(usuario),
-      error: () => this.selectedUsuario.set(null),
+      next: (usuario) => { this.selectedUsuario.set(usuario); this.usuarioError.set(false); if (this.id_usuario?.hasError('notFound')) { const e={...this.id_usuario.errors}; delete (e as any)['notFound']; this.id_usuario?.setErrors(Object.keys(e).length>0?e:null); } },
+      error: () => { this.selectedUsuario.set(null); this.usuarioError.set(true); this.id_usuario?.setErrors({ notFound: true }); },
     });
   }
 

@@ -11,6 +11,7 @@ import { SessionService } from '../../../../service/session';
 import { ICategoria } from '../../../../model/categoria';
 import { ITemporada } from '../../../../model/temporada';
 import { TemporadaPlistFinder } from '../../../temporada/finder/plist';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
   selector: 'app-categoria-admin-form',
@@ -37,6 +38,7 @@ export class CategoriaAdminForm implements OnInit {
   submitting = signal(false);
   temporadas = signal<ITemporada[]>([]);
   selectedTemporada = signal<ITemporada | null>(null);
+  temporadaError = signal(false);
 
   get mode(): 'create' | 'edit' {
     return this.id() > 0 ? 'edit' : 'create';
@@ -57,6 +59,21 @@ export class CategoriaAdminForm implements OnInit {
       id: [{ value: 0, disabled: true }],
       nombre: ['', [Validators.required, Validators.minLength(4), Validators.maxLength(255)]],
       id_temporada: [null, Validators.required]
+    });
+
+    this.categoriaForm.get('id_temporada')?.valueChanges.pipe(
+      debounceTime(800),
+      distinctUntilChanged()
+    ).subscribe((id) => {
+      if (id) {
+        const idNumero = typeof id === 'string' ? parseInt(id, 10) : id;
+        if (!isNaN(idNumero)) {
+          this.syncTemporada(idNumero);
+        }
+      } else {
+        this.selectedTemporada.set(null);
+        this.temporadaError.set(false);
+      }
     });
   }
 
@@ -85,16 +102,24 @@ export class CategoriaAdminForm implements OnInit {
   private syncTemporada(id: number | null): void {
     if (!id) {
       this.selectedTemporada.set(null);
+      this.temporadaError.set(false);
       return;
     }
+    this.temporadaError.set(false);
     this.oTemporadaService.get(id).subscribe({
       next: (temporada) => {
         this.selectedTemporada.set(temporada);
+        this.temporadaError.set(false);
+        if (this.id_temporada?.hasError('temporadaNotFound')) {
+          const errors = { ...this.id_temporada.errors };
+          delete (errors as any)['temporadaNotFound'];
+          this.id_temporada?.setErrors(Object.keys(errors).length > 0 ? errors : null);
+        }
       },
-      error: (err: HttpErrorResponse) => {
-        console.error('Error al sincronizar temporada:', err);
-        this.notificacion.error('Error al cargar la temporada seleccionada');
+      error: () => {
         this.selectedTemporada.set(null);
+        this.temporadaError.set(true);
+        this.id_temporada?.setErrors({ temporadaNotFound: true });
       }
     });
   }

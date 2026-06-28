@@ -12,6 +12,7 @@ import { INoticia } from '../../../../model/noticia';
 import { IUsuario } from '../../../../model/usuario';
 import { NoticiaPlistFinder } from '../../../noticia/finder/plist';
 import { UsuarioPlistFinder } from '../../../usuario/finder/plist';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
   standalone: true,
@@ -39,6 +40,8 @@ export class PuntuacionAdminForm implements OnInit {
   submitting = signal(false);
   selectedNoticia = signal<INoticia | null>(null);
   selectedUsuario = signal<IUsuario | null>(null);
+  noticiaError = signal(false);
+  usuarioError = signal(false);
 
   constructor() {
     effect(() => {
@@ -64,6 +67,15 @@ export class PuntuacionAdminForm implements OnInit {
       id_noticia: [null, Validators.required],
       id_usuario: [null, Validators.required],
     });
+
+    this.puntuacionForm.get('id_noticia')?.valueChanges.pipe(debounceTime(800), distinctUntilChanged()).subscribe((id) => {
+      if (id) { const n = typeof id === 'string' ? parseInt(id, 10) : id; if (!isNaN(n)) this.loadNoticia(n); }
+      else { this.selectedNoticia.set(null); this.noticiaError.set(false); }
+    });
+    this.puntuacionForm.get('id_usuario')?.valueChanges.pipe(debounceTime(800), distinctUntilChanged()).subscribe((id) => {
+      if (id) { const n = typeof id === 'string' ? parseInt(id, 10) : id; if (!isNaN(n)) this.loadUsuario(n); }
+      else { this.selectedUsuario.set(null); this.usuarioError.set(false); }
+    });
   }
 
   private loadPuntuacionData(puntuacion: IPuntuacion): void {
@@ -87,16 +99,18 @@ export class PuntuacionAdminForm implements OnInit {
   }
 
   private loadNoticia(idNoticia: number): void {
+    this.noticiaError.set(false);
     this.oNoticiaService.getById(idNoticia).subscribe({
-      next: (noticia) => this.selectedNoticia.set(noticia),
-      error: () => this.selectedNoticia.set(null),
+      next: (noticia) => { this.selectedNoticia.set(noticia); this.noticiaError.set(false); if (this.id_noticia?.hasError('notFound')) { const e={...this.id_noticia.errors}; delete (e as any)['notFound']; this.id_noticia?.setErrors(Object.keys(e).length>0?e:null); } },
+      error: () => { this.selectedNoticia.set(null); this.noticiaError.set(true); this.id_noticia?.setErrors({ notFound: true }); },
     });
   }
 
   private loadUsuario(idUsuario: number): void {
+    this.usuarioError.set(false);
     this.oUsuarioService.get(idUsuario).subscribe({
-      next: (usuario) => this.selectedUsuario.set(usuario),
-      error: () => this.selectedUsuario.set(null),
+      next: (usuario) => { this.selectedUsuario.set(usuario); this.usuarioError.set(false); if (this.id_usuario?.hasError('notFound')) { const e={...this.id_usuario.errors}; delete (e as any)['notFound']; this.id_usuario?.setErrors(Object.keys(e).length>0?e:null); } },
+      error: () => { this.selectedUsuario.set(null); this.usuarioError.set(true); this.id_usuario?.setErrors({ notFound: true }); },
     });
   }
 

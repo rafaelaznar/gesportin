@@ -59,28 +59,17 @@
       }
     </div>
 
-    <div class="p-3 rounded mb-3" style="background-color: #f8f9fa; border-left: 4px solid #0d6efd;">
-      <div class="mb-2">
-        <label class="form-label">Tipo de Artículo <span class="text-danger">*</span></label>
-        <input type="text" class="form-control" [value]="selectedTipoarticulo()?.descripcion || ''" readonly />
+    <div class="mb-4">
+      <label class="form-label">Tipo de Artículo <span class="text-danger">*</span></label>
+      <div class="input-group">
+        <span class="input-group-text" [class.text-danger]="tipoarticuloError()" [class.text-success]="selectedTipoarticulo() && !tipoarticuloError()">
+          @if (tipoarticuloError()) { Tipo no encontrado } @else { {{ selectedTipoarticulo()?.descripcion || 'Sin seleccionar' }} }
+        </span>
+        <input type="number" class="form-control" formControlName="id_tipoarticulo" [class.is-invalid]="(id_tipoarticulo?.invalid && id_tipoarticulo?.touched) || tipoarticuloError()" placeholder="ID del tipo" />
+        <button type="button" class="btn btn-outline-secondary" (click)="openTipoarticuloFinderModal()"><i class="bi bi-search"></i></button>
       </div>
-      <div class="d-flex gap-3 align-items-end">
-        <button type="button" class="btn btn-info" (click)="openTipoarticuloFinderModal()">
-          <i class="bi bi-search me-2"></i>Buscar
-        </button>
-        <div>
-          <label class="form-label">ID Tipo</label>
-          <input type="text" class="form-control" [value]="id_tipoarticulo?.value || ''" readonly />
-        </div>
-        @if (selectedTipoarticulo()) {
-          <div class="flex-grow-1">
-            <label class="form-label">Descripción</label>
-            <p class="form-control-plaintext fw-semibold mb-0">{{ selectedTipoarticulo()?.descripcion }}</p>
-          </div>
-        }
-      </div>
-      @if (id_tipoarticulo?.invalid && id_tipoarticulo?.touched) {
-        <div class="text-danger small mt-1">El tipo de artículo es obligatorio.</div>
+      @if ((id_tipoarticulo?.invalid && id_tipoarticulo?.touched) || tipoarticuloError()) {
+        <div class="text-danger small mt-1">@if (tipoarticuloError()) { El tipo con ese ID no existe. } @else { El tipo de artículo es obligatorio. }</div>
       }
     </div>
 

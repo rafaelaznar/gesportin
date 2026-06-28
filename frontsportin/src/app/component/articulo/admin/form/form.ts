@@ -10,6 +10,7 @@ import { IArticulo } from '../../../../model/articulo';
 import { ITipoarticulo } from '../../../../model/tipoarticulo';
 import { SessionService } from '../../../../service/session';
 import { TipoarticuloPlistFinder } from '../../../tipoarticulo/finder/plist';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
   selector: 'app-articulo-admin-form',
@@ -35,6 +36,7 @@ export class ArticuloAdminForm implements OnInit {
   error = signal<string | null>(null);
   submitting = signal(false);
   selectedTipoarticulo = signal<ITipoarticulo | null>(null);
+  tipoarticuloError = signal(false);
 
   constructor() {
     effect(() => {
@@ -61,6 +63,11 @@ export class ArticuloAdminForm implements OnInit {
       descuento: [0, [Validators.min(0), Validators.max(100)]],
       id_tipoarticulo: [null, Validators.required],
     });
+
+    this.articuloForm.get('id_tipoarticulo')?.valueChanges.pipe(debounceTime(800), distinctUntilChanged()).subscribe((id) => {
+      if (id) { const n = typeof id === 'string' ? parseInt(id, 10) : id; if (!isNaN(n)) this.loadTipoarticulo(n); }
+      else { this.selectedTipoarticulo.set(null); this.tipoarticuloError.set(false); }
+    });
   }
 
   private loadArticuloData(articulo: IArticulo): void {
@@ -75,9 +82,10 @@ export class ArticuloAdminForm implements OnInit {
   }
 
   private loadTipoarticulo(idTipoarticulo: number): void {
+    this.tipoarticuloError.set(false);
     this.oTipoarticuloService.get(idTipoarticulo).subscribe({
-      next: (tipoarticulo) => this.selectedTipoarticulo.set(tipoarticulo),
-      error: () => this.selectedTipoarticulo.set(null),
+      next: (tipoarticulo) => { this.selectedTipoarticulo.set(tipoarticulo); this.tipoarticuloError.set(false); if (this.id_tipoarticulo?.hasError('notFound')) { const e={...this.id_tipoarticulo.errors}; delete (e as any)['notFound']; this.id_tipoarticulo?.setErrors(Object.keys(e).length>0?e:null); } },
+      error: () => { this.selectedTipoarticulo.set(null); this.tipoarticuloError.set(true); this.id_tipoarticulo?.setErrors({ notFound: true }); },
     });
   }
 

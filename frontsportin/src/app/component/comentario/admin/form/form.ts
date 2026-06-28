@@ -12,6 +12,7 @@ import { IUsuario } from '../../../../model/usuario';
 import { INoticia } from '../../../../model/noticia';
 import { UsuarioPlistFinder } from '../../../usuario/finder/plist';
 import { NoticiaPlistFinder } from '../../../noticia/finder/plist';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
   standalone: true,
@@ -39,6 +40,8 @@ export class ComentarioAdminForm implements OnInit {
   submitting = signal(false);
   selectedUsuario = signal<IUsuario | null>(null);
   selectedNoticia = signal<INoticia | null>(null);
+  usuarioError = signal(false);
+  noticiaError = signal(false);
 
   constructor() {
     effect(() => {
@@ -63,6 +66,15 @@ export class ComentarioAdminForm implements OnInit {
       id_usuario: [null, [Validators.required]],
       id_noticia: [null, [Validators.required]],
     });
+
+    this.comentarioForm.get('id_usuario')?.valueChanges.pipe(debounceTime(800), distinctUntilChanged()).subscribe((id) => {
+      if (id) { const n = typeof id === 'string' ? parseInt(id, 10) : id; if (!isNaN(n)) this.syncUsuario(n); }
+      else { this.selectedUsuario.set(null); this.usuarioError.set(false); }
+    });
+    this.comentarioForm.get('id_noticia')?.valueChanges.pipe(debounceTime(800), distinctUntilChanged()).subscribe((id) => {
+      if (id) { const n = typeof id === 'string' ? parseInt(id, 10) : id; if (!isNaN(n)) this.syncNoticia(n); }
+      else { this.selectedNoticia.set(null); this.noticiaError.set(false); }
+    });
   }
 
   private loadComentarioData(comentario: IComentario): void {
@@ -81,26 +93,20 @@ export class ComentarioAdminForm implements OnInit {
   }
 
   private syncUsuario(idUsuario: number | null): void {
-    if (!idUsuario) { this.selectedUsuario.set(null); return; }
+    if (!idUsuario) { this.selectedUsuario.set(null); this.usuarioError.set(false); return; }
+    this.usuarioError.set(false);
     this.oUsuarioService.get(idUsuario).subscribe({
-      next: (usuario) => this.selectedUsuario.set(usuario),
-      error: (err: HttpErrorResponse) => {
-        console.error(err);
-        this.notificacion.error('Error al cargar el usuario seleccionado');
-        this.selectedUsuario.set(null);
-      }
+      next: (usuario) => { this.selectedUsuario.set(usuario); this.usuarioError.set(false); if (this.id_usuario?.hasError('notFound')) { const e={...this.id_usuario.errors}; delete (e as any)['notFound']; this.id_usuario?.setErrors(Object.keys(e).length>0?e:null); } },
+      error: () => { this.selectedUsuario.set(null); this.usuarioError.set(true); this.id_usuario?.setErrors({ notFound: true }); },
     });
   }
 
   private syncNoticia(idNoticia: number | null): void {
-    if (!idNoticia) { this.selectedNoticia.set(null); return; }
+    if (!idNoticia) { this.selectedNoticia.set(null); this.noticiaError.set(false); return; }
+    this.noticiaError.set(false);
     this.oNoticiaService.getById(idNoticia).subscribe({
-      next: (noticia) => this.selectedNoticia.set(noticia),
-      error: (err: HttpErrorResponse) => {
-        console.error(err);
-        this.notificacion.error('Error al cargar la noticia seleccionada');
-        this.selectedNoticia.set(null);
-      }
+      next: (noticia) => { this.selectedNoticia.set(noticia); this.noticiaError.set(false); if (this.id_noticia?.hasError('notFound')) { const e={...this.id_noticia.errors}; delete (e as any)['notFound']; this.id_noticia?.setErrors(Object.keys(e).length>0?e:null); } },
+      error: () => { this.selectedNoticia.set(null); this.noticiaError.set(true); this.id_noticia?.setErrors({ notFound: true }); },
     });
   }
 

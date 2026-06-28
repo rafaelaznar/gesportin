@@ -55,27 +55,40 @@
               }
             </div>
 
-            <div class="p-4 rounded mb-4" style="background-color: #e4e4e4; border-left: 4px solid #0d6efd;">
-              <div class="mb-4">
-                <label for="temporada" class="form-label">Temporada <span class="text-danger">*</span></label>
-                <input id="temporada" type="text" class="form-control" [value]="selectedTemporada()?.descripcion" readonly />
-              </div>
-
-              <div class="d-flex gap-3 align-items-end">
-                <button type="button" class="btn btn-info" (click)="openTemporadaFinderModal()">
-                  <i class="bi bi-search me-2"></i>Buscar
+            <div class="mb-4">
+              <label class="form-label">Temporada <span class="text-danger">*</span></label>
+              <div class="input-group">
+                <span
+                  class="input-group-text"
+                  [class.text-danger]="temporadaError()"
+                  [class.text-success]="selectedTemporada() && !temporadaError()"
+                >
+                  @if (temporadaError()) {
+                    Temporada no encontrada
+                  } @else {
+                    {{ selectedTemporada()?.descripcion || 'Sin seleccionar' }}
+                  }
+                </span>
+                <input
+                  type="number"
+                  class="form-control"
+                  formControlName="id_temporada"
+                  [class.is-invalid]="(id_temporada?.invalid && id_temporada?.touched) || temporadaError()"
+                  placeholder="ID de la temporada"
+                />
+                <button type="button" class="btn btn-outline-secondary" (click)="openTemporadaFinderModal()">
+                  <i class="bi bi-search"></i>
                 </button>
-                <div>
-                  <label for="display_id_temporada" class="form-label">ID Temporada</label>
-                  <input type="text" class="form-control" id="display_id_temporada" formControlName="id_temporada" readonly />
-                </div>
-                @if (selectedTemporada()) {
-                  <div class="grow">
-                    <label class="form-label">Información</label>
-                    <p class="form-control-plaintext fw-semibold mb-0">{{ selectedTemporada()?.descripcion }}</p>
-                  </div>
-                }
               </div>
+              @if ((id_temporada?.invalid && id_temporada?.touched) || temporadaError()) {
+                <div class="text-danger small mt-1">
+                  @if (temporadaError()) {
+                    La temporada con ese ID no existe.
+                  } @else {
+                    Debe seleccionar una temporada.
+                  }
+                </div>
+              }
             </div>
 
             <div class="d-flex justify-content-between align-items-center mt-4">

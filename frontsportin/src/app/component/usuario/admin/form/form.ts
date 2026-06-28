@@ -18,6 +18,7 @@ import { SessionService } from '../../../../service/session';
 import { ClubPlistFinder } from '../../../club/finder/plist';
 import { TipousuarioPlistFinder } from '../../../tipousuario/finder/plist';
 import { RolusuarioPlistFinder } from '../../../rolusuario/finder/plist';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 @Component({
   selector: 'app-usuario-admin-form',
@@ -50,6 +51,9 @@ export class UsuarioAdminForm implements OnInit {
   selectedClub = signal<IClub | null>(null);
   selectedTipousuario = signal<ITipousuario | null>(null);
   selectedRolusuario = signal<IRolusuario | null>(null);
+  clubError = signal(false);
+  tipousuarioError = signal(false);
+  rolusuarioError = signal(false);
 
   constructor() {
     effect(() => {
@@ -89,6 +93,19 @@ export class UsuarioAdminForm implements OnInit {
       this.usuarioForm.get('password')?.clearValidators();
       this.usuarioForm.get('password')?.updateValueAndValidity();
     }
+
+    this.usuarioForm.get('id_tipousuario')?.valueChanges.pipe(debounceTime(800), distinctUntilChanged()).subscribe((id) => {
+      if (id) { const n = typeof id === 'string' ? parseInt(id, 10) : id; if (!isNaN(n)) this.loadTipousuario(n); }
+      else { this.selectedTipousuario.set(null); this.tipousuarioError.set(false); }
+    });
+    this.usuarioForm.get('id_rolusuario')?.valueChanges.pipe(debounceTime(800), distinctUntilChanged()).subscribe((id) => {
+      if (id) { const n = typeof id === 'string' ? parseInt(id, 10) : id; if (!isNaN(n)) this.loadRolusuario(n); }
+      else { this.selectedRolusuario.set(null); this.rolusuarioError.set(false); }
+    });
+    this.usuarioForm.get('id_club')?.valueChanges.pipe(debounceTime(800), distinctUntilChanged()).subscribe((id) => {
+      if (id) { const n = typeof id === 'string' ? parseInt(id, 10) : id; if (!isNaN(n)) this.loadClub(n); }
+      else { this.selectedClub.set(null); this.clubError.set(false); }
+    });
   }
 
   private loadUsuarioData(usuario: IUsuario): void {
@@ -113,23 +130,26 @@ export class UsuarioAdminForm implements OnInit {
   }
 
   private loadClub(idClub: number): void {
+    this.clubError.set(false);
     this.oClubService.get(idClub).subscribe({
-      next: (club) => this.selectedClub.set(club),
-      error: () => this.selectedClub.set(null),
+      next: (club) => { this.selectedClub.set(club); this.clubError.set(false); if (this.id_club?.hasError('notFound')) { const e={...this.id_club.errors}; delete (e as any)['notFound']; this.id_club?.setErrors(Object.keys(e).length>0?e:null); } },
+      error: () => { this.selectedClub.set(null); this.clubError.set(true); this.id_club?.setErrors({ notFound: true }); },
     });
   }
 
   private loadTipousuario(idTipousuario: number): void {
+    this.tipousuarioError.set(false);
     this.oTipousuarioService.get(idTipousuario).subscribe({
-      next: (tipo) => this.selectedTipousuario.set(tipo),
-      error: () => this.selectedTipousuario.set(null),
+      next: (tipo) => { this.selectedTipousuario.set(tipo); this.tipousuarioError.set(false); if (this.id_tipousuario?.hasError('notFound')) { const e={...this.id_tipousuario.errors}; delete (e as any)['notFound']; this.id_tipousuario?.setErrors(Object.keys(e).length>0?e:null); } },
+      error: () => { this.selectedTipousuario.set(null); this.tipousuarioError.set(true); this.id_tipousuario?.setErrors({ notFound: true }); },
     });
   }
 
   private loadRolusuario(idRolusuario: number): void {
+    this.rolusuarioError.set(false);
     this.oRolusuarioService.get(idRolusuario).subscribe({
-      next: (rol) => this.selectedRolusuario.set(rol),
-      error: () => this.selectedRolusuario.set(null),
+      next: (rol) => { this.selectedRolusuario.set(rol); this.rolusuarioError.set(false); if (this.id_rolusuario?.hasError('notFound')) { const e={...this.id_rolusuario.errors}; delete (e as any)['notFound']; this.id_rolusuario?.setErrors(Object.keys(e).length>0?e:null); } },
+      error: () => { this.selectedRolusuario.set(null); this.rolusuarioError.set(true); this.id_rolusuario?.setErrors({ notFound: true }); },
     });
   }
 

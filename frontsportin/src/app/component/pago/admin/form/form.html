@@ -5,53 +5,31 @@
       <input id="id" type="text" class="form-control" formControlName="id" readonly />
     </div>
 
-    <div class="p-3 rounded mb-3" style="background-color: #f8f9fa; border-left: 4px solid #0d6efd;">
-      <div class="mb-2">
-        <label class="form-label">Cuota <span class="text-danger">*</span></label>
-        <input type="text" class="form-control" [value]="selectedCuota()?.descripcion || ''" readonly />
+    <div class="mb-4">
+      <label class="form-label">Cuota <span class="text-danger">*</span></label>
+      <div class="input-group">
+        <span class="input-group-text" [class.text-danger]="cuotaError()" [class.text-success]="selectedCuota() && !cuotaError()">
+          @if (cuotaError()) { Cuota no encontrada } @else { {{ selectedCuota()?.descripcion || 'Sin seleccionar' }} }
+        </span>
+        <input type="number" class="form-control" formControlName="id_cuota" [class.is-invalid]="(id_cuota?.invalid && id_cuota?.touched) || cuotaError()" placeholder="ID de la cuota" />
+        <button type="button" class="btn btn-outline-secondary" (click)="openCuotaFinderModal()"><i class="bi bi-search"></i></button>
       </div>
-      <div class="d-flex gap-3 align-items-end">
-        <button type="button" class="btn btn-info" (click)="openCuotaFinderModal()">
-          <i class="bi bi-search me-2"></i>Buscar
-        </button>
-        <div>
-          <label class="form-label">ID Cuota</label>
-          <input type="text" class="form-control" [value]="id_cuota?.value || ''" readonly />
-        </div>
-        @if (selectedCuota()) {
-          <div class="flex-grow-1">
-            <label class="form-label">Descripción</label>
-            <p class="form-control-plaintext fw-semibold mb-0">{{ selectedCuota()?.descripcion }}</p>
-          </div>
-        }
-      </div>
-      @if (id_cuota?.invalid && id_cuota?.touched) {
-        <div class="text-danger small mt-1">La cuota es obligatoria.</div>
+      @if ((id_cuota?.invalid && id_cuota?.touched) || cuotaError()) {
+        <div class="text-danger small mt-1">@if (cuotaError()) { La cuota con ese ID no existe. } @else { La cuota es obligatoria. }</div>
       }
     </div>
 
-    <div class="p-3 rounded mb-3" style="background-color: #f8f9fa; border-left: 4px solid #0d6efd;">
-      <div class="mb-2">
-        <label class="form-label">Jugador <span class="text-danger">*</span></label>
-        <input type="text" class="form-control" [value]="selectedJugador() ? (selectedJugador()?.usuario?.nombre + ' ' + selectedJugador()?.usuario?.apellido1 + ' — Dorsal ' + selectedJugador()?.dorsal) : ''" readonly />
+    <div class="mb-4">
+      <label class="form-label">Jugador <span class="text-danger">*</span></label>
+      <div class="input-group">
+        <span class="input-group-text" [class.text-danger]="jugadorError()" [class.text-success]="selectedJugador() && !jugadorError()">
+          @if (jugadorError()) { Jugador no encontrado } @else { {{ selectedJugador() ? (selectedJugador()?.usuario?.nombre + ' ' + selectedJugador()?.usuario?.apellido1 + ' — Dorsal ' + selectedJugador()?.dorsal) : 'Sin seleccionar' }} }
+        </span>
+        <input type="number" class="form-control" formControlName="id_jugador" [class.is-invalid]="(id_jugador?.invalid && id_jugador?.touched) || jugadorError()" placeholder="ID del jugador" />
+        <button type="button" class="btn btn-outline-secondary" (click)="openJugadorFinderModal()"><i class="bi bi-search"></i></button>
       </div>
-      <div class="d-flex gap-3 align-items-end">
-        <button type="button" class="btn btn-info" (click)="openJugadorFinderModal()">
-          <i class="bi bi-search me-2"></i>Buscar
-        </button>
-        <div>
-          <label class="form-label">ID Jugador</label>
-          <input type="text" class="form-control" [value]="id_jugador?.value || ''" readonly />
-        </div>
-        @if (selectedJugador()) {
-          <div class="flex-grow-1">
-            <label class="form-label">Nombre</label>
-            <p class="form-control-plaintext fw-semibold mb-0">{{ selectedJugador()?.usuario?.nombre }} {{ selectedJugador()?.usuario?.apellido1 }}</p>
-          </div>
-        }
-      </div>
-      @if (id_jugador?.invalid && id_jugador?.touched) {
-        <div class="text-danger small mt-1">El jugador es obligatorio.</div>
+      @if ((id_jugador?.invalid && id_jugador?.touched) || jugadorError()) {
+        <div class="text-danger small mt-1">@if (jugadorError()) { El jugador con ese ID no existe. } @else { El jugador es obligatorio. }</div>
       }
     </div>
 

@@ -23,28 +23,39 @@
       }
     </div>
 
-    <div class="p-3 rounded mb-3" style="background-color: #f8f9fa; border-left: 4px solid #0d6efd;">
-      <div class="mb-2">
-        <label class="form-label">Club <span class="text-danger">*</span></label>
-        <input type="text" class="form-control" [value]="selectedClub()?.nombre || ''" readonly />
-      </div>
-      <div class="d-flex gap-3 align-items-end">
-        <button type="button" class="btn btn-info" (click)="openClubFinderModal()">
-          <i class="bi bi-search me-2"></i>Buscar
+    <div class="mb-4">
+      <label class="form-label">Club <span class="text-danger">*</span></label>
+      <div class="input-group">
+        <span
+          class="input-group-text"
+          [class.text-danger]="clubError()"
+          [class.text-success]="selectedClub() && !clubError()"
+        >
+          @if (clubError()) {
+            Club no encontrado
+          } @else {
+            {{ selectedClub()?.nombre || 'Sin seleccionar' }}
+          }
+        </span>
+        <input
+          type="number"
+          class="form-control"
+          formControlName="id_club"
+          [class.is-invalid]="(id_club?.invalid && id_club?.touched) || clubError()"
+          placeholder="ID del club"
+        />
+        <button type="button" class="btn btn-outline-secondary" (click)="openClubFinderModal()">
+          <i class="bi bi-search"></i>
         </button>
-        <div>
-          <label class="form-label">ID Club</label>
-          <input type="text" class="form-control" [value]="id_club?.value || ''" readonly />
-        </div>
-        @if (selectedClub()) {
-          <div class="flex-grow-1">
-            <label class="form-label">Nombre</label>
-            <p class="form-control-plaintext fw-semibold mb-0">{{ selectedClub()?.nombre }}</p>
-          </div>
-        }
       </div>
-      @if (id_club?.invalid && id_club?.touched) {
-        <div class="text-danger small mt-1">El club es obligatorio.</div>
+      @if ((id_club?.invalid && id_club?.touched) || clubError()) {
+        <div class="text-danger small mt-1">
+          @if (clubError()) {
+            El club con ese ID no existe.
+          } @else {
+            El club es obligatorio.
+          }
+        </div>
       }
     </div>
 
