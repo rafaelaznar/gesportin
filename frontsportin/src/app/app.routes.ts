@@ -127,6 +127,7 @@ import { UsuarioAdminPlistPage } from './page/usuario/admin/plist/plist';
 import { UsuarioAdminViewPage } from './page/usuario/admin/view/view';
 import { UsuarioAdminNewPage } from './page/usuario/admin/new/new';
 import { UsuarioAdminEditPage } from './page/usuario/admin/edit/edit';
+import { UsuarioAdminDeletePage } from './page/usuario/admin/delete/delete';
 import { UsuarioTeamadminPlistPage } from './page/usuario/teamadmin/plist/plist';
 import { TemporadaTeamadminViewPage } from './page/temporada/teamadmin/view/view';
 import { TemporadaTeamadminNewPage } from './page/temporada/teamadmin/new/new';
@@ -223,6 +224,7 @@ const protectedRoutes: Routes = [
   { path: 'usuario/view/:id', component: UsuarioAdminViewPage },
   { path: 'usuario/new', component: UsuarioAdminNewPage },
   { path: 'usuario/edit/:id', component: UsuarioAdminEditPage },
+  { path: 'usuario/delete/:id', component: UsuarioAdminDeletePage },
   { path: 'temporada', component: TemporadaAdminPlistPage },
 
   { path: 'temporada/club/:id_club', component: TemporadaAdminPlistPage, data: { allowClubAdmin: true } },
