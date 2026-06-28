@@ -20,11 +20,9 @@
 
   <div class="d-flex my-1">
     <div class="w-100 d-flex justify-content-center">
-      @if (!isDialogMode()) {
-        <a class="btn btn-primary new-btn" [routerLink]="['/rolusuario/new']" role="button">
-          <i class="bi bi-plus-circle me-2" aria-hidden="true"></i><span class="d-none d-sm-inline">Crear rol de usuario</span>
-        </a>
-      }
+      <a class="btn btn-primary new-btn" [routerLink]="['/rolusuario/new']" role="button">
+        <i class="bi bi-plus-circle me-2" aria-hidden="true"></i><span class="d-none d-sm-inline">Crear rol de usuario</span>
+      </a>
     </div>
   </div>
 
@@ -90,30 +88,18 @@
                   </thead>
                   <tbody>
                     @for (oRolusuario of oPage()?.content; track oRolusuario.id) {
-                      <tr (click)="onSelect(oRolusuario)" [style.cursor]="isDialogMode() ? 'pointer' : 'default'">
+                      <tr>
                         <th scope="row" class="text-center">{{ oRolusuario.id }}</th>
                         <td>{{ oRolusuario.descripcion }}</td>
                         <td class="text-center d-none d-md-table-cell">
-                          @if (isDialogMode()) {
-                            {{ oRolusuario.usuarios || 0 }}
+                          @if (!oRolusuario.usuarios || oRolusuario.usuarios === 0) {
+                            <i class="bi bi-ban" aria-hidden="true"></i>
                           } @else {
-                            @if (!oRolusuario.usuarios || oRolusuario.usuarios === 0) {
-                              <i class="bi bi-ban" aria-hidden="true"></i>
-                            } @else {
-                              <a [routerLink]="['/usuario/rol', oRolusuario.id]">{{ oRolusuario.usuarios }}</a>
-                            }
+                            <a [routerLink]="['/usuario/rol', oRolusuario.id]">{{ oRolusuario.usuarios }}</a>
                           }
                         </td>
                         <td class="text-center">
-                          @if (isDialogMode()) {
-                            <div class="d-flex justify-content-center">
-                              <button class="btn btn-success btn-sm" (click)="onSelect(oRolusuario)" title="Seleccionar">
-                                <i class="bi bi-check-circle" aria-hidden="true"></i> Seleccionar
-                              </button>
-                            </div>
-                          } @else {
-                            <app-botonera-actions-plist [id]="oRolusuario.id" strEntity="rolusuario"></app-botonera-actions-plist>
-                          }
+                          <app-botonera-actions-plist [id]="oRolusuario.id" strEntity="rolusuario"></app-botonera-actions-plist>
                         </td>
                       </tr>
                     }

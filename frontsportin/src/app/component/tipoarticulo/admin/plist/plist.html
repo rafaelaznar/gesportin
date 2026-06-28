@@ -17,11 +17,9 @@
     <small class="text-muted">Total registros: {{ totalRecords() || 0 }}</small>
     @if (id_club && id_club > 0) {
       <small class="text-muted ms-3">Filtro: id de club = {{ id_club }}</small>
-      @if (!isDialogMode()) {
-        <a class="ms-2" [routerLink]="session.isClubAdmin() ? '/tipoarticulo/teamadmin' : '/tipoarticulo'" role="button" title="Quitar filtro">
-          <i class="bi bi-x-lg" aria-hidden="true"></i> Quitar filtro
-        </a>
-      }
+      <a class="ms-2" [routerLink]="session.isClubAdmin() ? '/tipoarticulo/teamadmin' : '/tipoarticulo'" role="button" title="Quitar filtro">
+        <i class="bi bi-x-lg" aria-hidden="true"></i> Quitar filtro
+      </a>
     }
     @if (descripcion() && descripcion().length > 0) {
       <small class="text-muted ms-3">Filtro: búsqueda contiene "{{ descripcion() }}"</small>
@@ -106,42 +104,26 @@
                   </thead>
                   <tbody>
                     @for (oTipoarticulo of oPage()?.content; track oTipoarticulo.id) {
-                      <tr (click)="onSelect(oTipoarticulo)" [style.cursor]="isDialogMode() ? 'pointer' : 'default'">
+                      <tr>
                         <th scope="row" class="text-center">{{ oTipoarticulo.id }}</th>
                         <td>{{ oTipoarticulo.descripcion }}</td>
                         <td>
-                          @if (isDialogMode()) {
-                            {{ oTipoarticulo.club.nombre || 'N/A' }}
-                          } @else {
-                            <a [routerLink]="['/club/view', oTipoarticulo.club.id]">{{ oTipoarticulo.club.nombre || 'N/A' }}</a>
-                            <a class="btn btn-warning btn-sm ms-2 float-end" [routerLink]="[session.isClubAdmin() ? '/tipoarticulo/teamadmin/club' : '/tipoarticulo/club', oTipoarticulo.club.id]" role="button" title="Filtrar por club"><i class="bi bi-funnel-fill" aria-hidden="true"></i></a>
-                          }
+                          <a [routerLink]="['/club/view', oTipoarticulo.club.id]">{{ oTipoarticulo.club.nombre || 'N/A' }}</a>
+                          <a class="btn btn-warning btn-sm ms-2 float-end" [routerLink]="[session.isClubAdmin() ? '/tipoarticulo/teamadmin/club' : '/tipoarticulo/club', oTipoarticulo.club.id]" role="button" title="Filtrar por club"><i class="bi bi-funnel-fill" aria-hidden="true"></i></a>
                         </td>
                         <td class="text-center">
-                          @if (isDialogMode()) {
-                            {{ oTipoarticulo.articulos || 0 }}
-                          } @else {
-                            @if (!oTipoarticulo.articulos || oTipoarticulo.articulos === 0) {
-                              @if (strRole === 'teamadmin') {
-                                <a [routerLink]="['/articulo/teamadmin/new']" [queryParams]="{ id_tipoarticulo: oTipoarticulo.id }" class="text-warning" title="Crear primer artículo"><i class="bi bi-plus-circle" aria-hidden="true"></i></a>
-                              } @else {
-                                <i class="bi bi-ban" aria-hidden="true"></i>
-                              }
+                          @if (!oTipoarticulo.articulos || oTipoarticulo.articulos === 0) {
+                            @if (strRole === 'teamadmin') {
+                              <a [routerLink]="['/articulo/teamadmin/new']" [queryParams]="{ id_tipoarticulo: oTipoarticulo.id }" class="text-warning" title="Crear primer artículo"><i class="bi bi-plus-circle" aria-hidden="true"></i></a>
                             } @else {
-                              <a [routerLink]="[session.isClubAdmin() ? '/articulo/teamadmin/tipoarticulo' : '/articulo/tipoarticulo', oTipoarticulo.id]">{{ oTipoarticulo.articulos }}</a>
+                              <i class="bi bi-ban" aria-hidden="true"></i>
                             }
+                          } @else {
+                            <a [routerLink]="[session.isClubAdmin() ? '/articulo/teamadmin/tipoarticulo' : '/articulo/tipoarticulo', oTipoarticulo.id]">{{ oTipoarticulo.articulos }}</a>
                           }
                         </td>
                         <td class="text-center">
-                          @if (isDialogMode()) {
-                            <div class="d-flex justify-content-center">
-                              <button class="btn btn-success btn-sm" (click)="onSelect(oTipoarticulo)" title="Seleccionar">
-                                <i class="bi bi-check-circle" aria-hidden="true"></i> Seleccionar
-                              </button>
-                            </div>
-                          } @else {
-                            <app-botonera-actions-plist [id]="oTipoarticulo.id" strEntity="tipoarticulo"></app-botonera-actions-plist>
-                          }
+                          <app-botonera-actions-plist [id]="oTipoarticulo.id" strEntity="tipoarticulo"></app-botonera-actions-plist>
                         </td>
                       </tr>
                     }

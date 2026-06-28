@@ -85,30 +85,18 @@
                   </thead>
                   <tbody>
                     @for (oTipousuario of oPage()?.content; track oTipousuario.id) {
-                      <tr (click)="onSelect(oTipousuario)" [style.cursor]="isDialogMode() ? 'pointer' : 'default'">
+                      <tr>
                         <th scope="row" class="text-center">{{ oTipousuario.id }}</th>
                         <td>{{ oTipousuario.descripcion }}</td>
                         <td class="text-center d-none d-md-table-cell">
-                          @if (isDialogMode()) {
-                            {{ oTipousuario.usuarios || 0 }}
+                          @if (!oTipousuario.usuarios || oTipousuario.usuarios === 0) {
+                            <i class="bi bi-ban" aria-hidden="true"></i>
                           } @else {
-                            @if (!oTipousuario.usuarios || oTipousuario.usuarios === 0) {
-                              <i class="bi bi-ban" aria-hidden="true"></i>
-                            } @else {
-                              <a [routerLink]="['/usuario/tipousuario', oTipousuario.id]">{{ oTipousuario.usuarios }}</a>
-                            }
+                            <a [routerLink]="['/usuario/tipousuario', oTipousuario.id]">{{ oTipousuario.usuarios }}</a>
                           }
                         </td>
                         <td class="text-center">
-                          @if (isDialogMode()) {
-                            <div class="d-flex justify-content-center">
-                              <button class="btn btn-success btn-sm" (click)="onSelect(oTipousuario)" title="Seleccionar">
-                                <i class="bi bi-check-circle" aria-hidden="true"></i> Seleccionar
-                              </button>
-                            </div>
-                          } @else {
-                            <app-botonera-actions-plist [id]="oTipousuario.id" strEntity="tipousuario"></app-botonera-actions-plist>
-                          }
+                          <app-botonera-actions-plist [id]="oTipousuario.id" strEntity="tipousuario"></app-botonera-actions-plist>
                         </td>
                       </tr>
                     }

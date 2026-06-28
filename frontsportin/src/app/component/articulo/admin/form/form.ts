@@ -9,7 +9,7 @@ import { TipoarticuloService } from '../../../../service/tipoarticulo';
 import { IArticulo } from '../../../../model/articulo';
 import { ITipoarticulo } from '../../../../model/tipoarticulo';
 import { SessionService } from '../../../../service/session';
-import { TipoarticuloAdminPlist } from '../../../tipoarticulo/admin/plist/plist';
+import { TipoarticuloPlistFinder } from '../../../tipoarticulo/finder/plist';
 
 @Component({
   selector: 'app-articulo-admin-form',
@@ -98,7 +98,7 @@ export class ArticuloAdminForm implements OnInit {
   }
 
   openTipoarticuloFinderModal(): void {
-    const ref = this.modalService.open<unknown, ITipoarticulo | null>(TipoarticuloAdminPlist);
+    const ref = this.modalService.open<unknown, ITipoarticulo | null>(TipoarticuloPlistFinder);
     ref.afterClosed$.subscribe((tipoarticulo: ITipoarticulo | null) => {
       if (tipoarticulo?.id != null) {
         this.articuloForm.patchValue({ id_tipoarticulo: tipoarticulo.id });

@@ -2,8 +2,6 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Subject, Subscription, debounceTime, distinctUntilChanged } from 'rxjs';
-import { ModalRef } from '../../../shared/modal/modal-ref';
-import { MODAL_REF } from '../../../shared/modal/modal.tokens';
 import { debounceTimeSearch } from '../../../../environment/environment';
 import { SessionService } from '../../../../service/session';
 import { IRolusuario } from '../../../../model/rolusuario';
@@ -33,7 +31,6 @@ export class RolusuarioAdminPlist {
 
   private rolusuarioService = inject(RolusuarioService);
   private route = inject(ActivatedRoute);
-  private modalRef = inject(MODAL_REF, { optional: true });
   session = inject(SessionService);
 
   ngOnInit() {
@@ -99,13 +96,5 @@ export class RolusuarioAdminPlist {
     }
     this.numPage.set(0);
     this.getPage();
-  }
-
-  isDialogMode(): boolean {
-    return !!this.modalRef;
-  }
-
-  onSelect(rolusuario: IRolusuario): void {
-    this.modalRef?.close(rolusuario);
   }
 }

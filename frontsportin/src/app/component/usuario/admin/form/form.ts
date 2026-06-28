@@ -16,8 +16,8 @@ import { ITipousuario } from '../../../../model/tipousuario';
 import { IRolusuario } from '../../../../model/rolusuario';
 import { SessionService } from '../../../../service/session';
 import { ClubPlistFinder } from '../../../club/finder/plist';
-import { TipousuarioAdminPlist } from '../../../tipousuario/admin/plist/plist';
-import { RolusuarioAdminPlist } from '../../../rolusuario/admin/plist/plist';
+import { TipousuarioPlistFinder } from '../../../tipousuario/finder/plist';
+import { RolusuarioPlistFinder } from '../../../rolusuario/finder/plist';
 
 @Component({
   selector: 'app-usuario-admin-form',
@@ -170,7 +170,7 @@ export class UsuarioAdminForm implements OnInit {
   }
 
   openTipousuarioFinderModal(): void {
-    const ref = this.modalService.open<unknown, ITipousuario | null>(TipousuarioAdminPlist);
+    const ref = this.modalService.open<unknown, ITipousuario | null>(TipousuarioPlistFinder);
     ref.afterClosed$.subscribe((tipo: ITipousuario | null) => {
       if (tipo?.id != null) {
         this.usuarioForm.patchValue({ id_tipousuario: tipo.id });
@@ -181,7 +181,7 @@ export class UsuarioAdminForm implements OnInit {
   }
 
   openRolusuarioFinderModal(): void {
-    const ref = this.modalService.open<unknown, IRolusuario | null>(RolusuarioAdminPlist);
+    const ref = this.modalService.open<unknown, IRolusuario | null>(RolusuarioPlistFinder);
     ref.afterClosed$.subscribe((rol: IRolusuario | null) => {
       if (rol?.id != null) {
         this.usuarioForm.patchValue({ id_rolusuario: rol.id });

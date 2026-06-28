@@ -1,0 +1,19 @@
+<div class="p-3">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="mb-0"><i class="bi bi-shield me-2" aria-hidden="true"></i>Seleccionar rol de usuario</h5>
+    <button type="button" class="btn-close" aria-label="Cerrar" (click)="onCancel()"></button>
+  </div>
+  <div class="mb-3"><input type="text" class="form-control" placeholder="Buscar por descripción..." (input)="onSearchDescripcion($any($event.target).value)" /></div>
+  <div class="mb-2"><span class="text-muted small">{{ totalRecords() }} rol{{ totalRecords() !== 1 ? 'es' : '' }}</span></div>
+  @if (loading()) { <div class="finder-loading-bar"><span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span><small class="text-muted">Cargando...</small></div> }
+  @if (oPage() && oPage()!.content.length > 0) {
+    <div class="table-responsive"><table class="table table-hover table-sm align-middle"><thead class="table-light"><tr>
+      <th role="button" (click)="onOrder('id')" style="cursor:pointer;width:12%">ID @if (orderField()==='id') { <i class="bi" [class.bi-caret-up-fill]="orderDirection()==='asc'" [class.bi-caret-down-fill]="orderDirection()==='desc'" aria-hidden="true"></i> }</th>
+      <th role="button" (click)="onOrder('descripcion')" style="cursor:pointer">Descripción @if (orderField()==='descripcion') { <i class="bi" [class.bi-caret-up-fill]="orderDirection()==='asc'" [class.bi-caret-down-fill]="orderDirection()==='desc'" aria-hidden="true"></i> }</th>
+    </tr></thead><tbody>
+      @for (r of oPage()!.content; track r.id) { <tr style="cursor:pointer" (click)="onSelect(r)"><td>{{ r.id }}</td><td>{{ r.descripcion }}</td></tr> }
+    </tbody></table></div>
+    @if (oPage()!.totalPages > 1) { <div class="d-flex justify-content-center mt-3"><app-paginacion [numPage]="numPage()" [numPages]="oPage()!.totalPages" (pageChange)="goToPage($event)" /></div> }
+  } @else if (!loading()) { <div class="alert alert-info"><i class="bi bi-info-circle me-2"></i>No se encontraron roles de usuario.</div> }
+  @else { <div class="text-center py-3" role="status"><span class="spinner-border spinner-border-sm me-2"></span>Cargando...</div> }
+</div>
