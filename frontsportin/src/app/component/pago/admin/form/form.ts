@@ -134,7 +134,7 @@ export class PagoAdminForm implements OnInit {
 
   onSubmit(): void {
     if (this.pagoForm.invalid) {
-      this.notificacion.success('Por favor, complete todos los campos correctamente');
+      this.notificacion.info('Por favor, complete todos los campos correctamente');
       return;
     }
 
@@ -153,7 +153,7 @@ export class PagoAdminForm implements OnInit {
       pagoData.id = this.pago.id;
       this.oPagoService.update(pagoData).subscribe({
         next: () => {
-          this.notificacion.success('Pago actualizado exitosamente');
+          this.notificacion.info('Pago actualizado exitosamente');
           this.submitting.set(false);
           this.formSuccess.emit();
         },
@@ -167,7 +167,7 @@ export class PagoAdminForm implements OnInit {
     } else {
       this.oPagoService.create(pagoData).subscribe({
         next: () => {
-          this.notificacion.success('Pago creado exitosamente');
+          this.notificacion.info('Pago creado exitosamente');
           this.submitting.set(false);
           this.formSuccess.emit();
         },

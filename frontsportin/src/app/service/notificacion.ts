@@ -5,6 +5,7 @@ import {
   NotificacionData,
   NotificacionTipo,
 } from '../component/shared/notificacion/notificacion.component';
+import { notificationSuccessDuration, notificationInfoDuration } from '../environment/environment';
 
 @Injectable({ providedIn: 'root' })
 export class NotificacionService {
@@ -15,7 +16,7 @@ export class NotificacionService {
   }
 
   success(mensaje: string, titulo = '¡Operación exitosa!', opts?: Partial<NotificacionData>): void {
-    this.show({ tipo: 'success', titulo, mensaje, ...opts });
+    this.show({ tipo: 'success', titulo, mensaje, autoCierre: notificationSuccessDuration, ...opts });
   }
 
   error(mensaje: string, titulo = 'Ha ocurrido un error', opts?: Partial<NotificacionData>): void {
@@ -27,6 +28,6 @@ export class NotificacionService {
   }
 
   info(mensaje: string, titulo?: string, opts?: Partial<NotificacionData>): void {
-    this.show({ tipo: 'info', titulo, mensaje, ...opts });
+    this.show({ tipo: 'info', titulo, mensaje, autoCierre: notificationInfoDuration, ...opts });
   }
 }

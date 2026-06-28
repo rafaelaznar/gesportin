@@ -48,7 +48,7 @@ export class TipousuarioAdminEditPage implements OnInit {
   }
 
   onFormSuccess(): void {
-    this.notificacion.success('Tipo de usuario actualizado exitosamente');
+    this.notificacion.info('Tipo de usuario actualizado exitosamente');
     this.router.navigate(['/tipousuario']);
   }
 

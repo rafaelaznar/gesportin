@@ -166,7 +166,7 @@ export class LigaTeamadminForm implements OnInit {
 
   onSubmit(): void {
     if (this.ligaForm.invalid) {
-      this.notificacion.success('Por favor, complete todos los campos correctamente');
+      this.notificacion.info('Por favor, complete todos los campos correctamente');
       this.ligaForm.markAllAsTouched();
       return;
     }
@@ -182,7 +182,7 @@ export class LigaTeamadminForm implements OnInit {
       ligaData.id = this.id();
       this.ligaService.update(ligaData).subscribe({
         next: () => {
-          this.notificacion.success('Liga actualizada');
+          this.notificacion.info('Liga actualizada');
           this.submitting.set(false);
           this.router.navigate([this.returnUrl()]);
         },
@@ -195,7 +195,7 @@ export class LigaTeamadminForm implements OnInit {
     } else {
       this.ligaService.create(ligaData).subscribe({
         next: () => {
-          this.notificacion.success('Liga creada');
+          this.notificacion.info('Liga creada');
           this.submitting.set(false);
           this.router.navigate([this.returnUrl()]);
         },

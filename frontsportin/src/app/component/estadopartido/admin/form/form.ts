@@ -63,7 +63,7 @@ export class EstadopartidoAdminForm implements OnInit {
 
   onSubmit(): void {
     if (this.estadopartidoForm.invalid) {
-      this.notificacion.success('Por favor, complete todos los campos correctamente');
+      this.notificacion.info('Por favor, complete todos los campos correctamente');
       return;
     }
     this.submitting.set(true);
@@ -73,7 +73,7 @@ export class EstadopartidoAdminForm implements OnInit {
       data.id = this.estadopartido.id;
       this.oEstadopartidoService.update(data).subscribe({
         next: () => {
-          this.notificacion.success('Estado de partido actualizado exitosamente');
+          this.notificacion.info('Estado de partido actualizado exitosamente');
           this.submitting.set(false);
           this.formSuccess.emit();
         },
@@ -87,7 +87,7 @@ export class EstadopartidoAdminForm implements OnInit {
     } else {
       this.oEstadopartidoService.create(data).subscribe({
         next: () => {
-          this.notificacion.success('Estado de partido creado exitosamente');
+          this.notificacion.info('Estado de partido creado exitosamente');
           this.submitting.set(false);
           this.formSuccess.emit();
         },

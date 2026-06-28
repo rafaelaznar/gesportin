@@ -48,7 +48,7 @@ export class RolusuarioAdminEditPage implements OnInit {
   }
 
   onFormSuccess(): void {
-    this.notificacion.success('Rol de usuario actualizado exitosamente');
+    this.notificacion.info('Rol de usuario actualizado exitosamente');
     this.router.navigate(['/rolusuario']);
   }
 

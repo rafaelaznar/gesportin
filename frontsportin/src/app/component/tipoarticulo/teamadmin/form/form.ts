@@ -117,7 +117,7 @@ export class TipoarticuloTeamadminForm implements OnInit {
 
   onSubmit(): void {
     if (this.tipoarticuloForm.invalid) {
-      this.notificacion.success('Por favor, complete todos los campos correctamente');
+      this.notificacion.info('Por favor, complete todos los campos correctamente');
       return;
     }
 
@@ -132,7 +132,7 @@ export class TipoarticuloTeamadminForm implements OnInit {
       tipoarticuloData.id = this.id();
       this.oTipoarticuloService.update(tipoarticuloData).subscribe({
         next: () => {
-          this.notificacion.success('Tipo de artículo actualizado exitosamente');
+          this.notificacion.info('Tipo de artículo actualizado exitosamente');
           this.submitting.set(false);
           this.router.navigate([this.returnUrl()]);
         },
@@ -146,7 +146,7 @@ export class TipoarticuloTeamadminForm implements OnInit {
     } else {
       this.oTipoarticuloService.create(tipoarticuloData).subscribe({
         next: () => {
-          this.notificacion.success('Tipo de artículo creado exitosamente');
+          this.notificacion.info('Tipo de artículo creado exitosamente');
           this.submitting.set(false);
           this.router.navigate([this.returnUrl()]);
         },

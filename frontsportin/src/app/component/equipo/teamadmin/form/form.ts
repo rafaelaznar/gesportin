@@ -188,7 +188,7 @@ export class EquipoTeamadminForm implements OnInit {
 
   onSubmit(): void {
     if (this.equipoForm.invalid) {
-      this.notificacion.success('Por favor, complete todos los campos correctamente');
+      this.notificacion.info('Por favor, complete todos los campos correctamente');
       return;
     }
 
@@ -196,12 +196,12 @@ export class EquipoTeamadminForm implements OnInit {
     const selectedEntrenadorId = this.equipoForm.value.id_entrenador;
 
     if (!selectedCategoriaId) {
-      this.notificacion.success('Debe seleccionar una categoría');
+      this.notificacion.info('Debe seleccionar una categoría');
       return;
     }
 
     if (!selectedEntrenadorId) {
-      this.notificacion.success('Debe seleccionar un entrenador');
+      this.notificacion.info('Debe seleccionar un entrenador');
       return;
     }
 
@@ -230,7 +230,7 @@ export class EquipoTeamadminForm implements OnInit {
   private saveCreate(equipoData: any): void {
     this.oEquipoService.create(equipoData).subscribe({
       next: (id: number) => {
-        this.notificacion.success('Equipo creado exitosamente');
+        this.notificacion.info('Equipo creado exitosamente');
         this.submitting.set(false);
         this.router.navigate([this.returnUrl()]);
       },
@@ -246,7 +246,7 @@ export class EquipoTeamadminForm implements OnInit {
   private saveUpdate(equipoData: any): void {
     this.oEquipoService.update(equipoData).subscribe({
       next: (id: number) => {
-        this.notificacion.success('Equipo actualizado exitosamente');
+        this.notificacion.info('Equipo actualizado exitosamente');
         this.submitting.set(false);
         this.router.navigate([this.returnUrl()]);
       },

@@ -53,7 +53,7 @@ export class RolusuarioAdminDeletePage implements OnInit {
     this.deleting.set(true);
     this.rolusuarioService.delete(this.rolusuario()!.id).subscribe({
       next: () => {
-        this.notificacion.success('Rol de usuario eliminado exitosamente');
+        this.notificacion.info('Rol de usuario eliminado exitosamente');
         this.router.navigate(['/rolusuario']);
       },
       error: (err: HttpErrorResponse) => {

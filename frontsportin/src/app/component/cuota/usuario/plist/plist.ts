@@ -153,7 +153,7 @@ export class CuotaUsuarioPlist implements OnInit {
               };
             }),
           );
-          this.notificacion.success('Pago registrado correctamente');
+          this.notificacion.info('Pago registrado correctamente');
         },
         error: () => {
           this.pagando.update((s) => { s.delete(cuotaId); return new Set(s); });

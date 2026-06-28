@@ -148,7 +148,7 @@ export class NoticiaTeamadminForm implements OnInit {
 
   onSubmit(): void {
     if (this.noticiaForm.invalid) {
-      this.notificacion.success('Por favor, complete todos los campos correctamente');
+      this.notificacion.info('Por favor, complete todos los campos correctamente');
       this.noticiaForm.markAllAsTouched();
       return;
     }
@@ -175,7 +175,7 @@ export class NoticiaTeamadminForm implements OnInit {
       noticiaData.id = this.id();
       this.oNoticiaService.update(noticiaData).subscribe({
         next: () => {
-          this.notificacion.success('Noticia actualizada');
+          this.notificacion.info('Noticia actualizada');
           this.submitting.set(false);
           this.router.navigate([this.returnUrl()]);
         },
@@ -188,7 +188,7 @@ export class NoticiaTeamadminForm implements OnInit {
     } else {
       this.oNoticiaService.create(noticiaData).subscribe({
         next: () => {
-          this.notificacion.success('Noticia creada');
+          this.notificacion.info('Noticia creada');
           this.submitting.set(false);
           this.router.navigate([this.returnUrl()]);
         },

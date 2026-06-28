@@ -136,7 +136,7 @@ export class PuntuacionAdminForm implements OnInit {
 
   onSubmit(): void {
     if (this.puntuacionForm.invalid) {
-      this.notificacion.success('Por favor, complete todos los campos correctamente');
+      this.notificacion.info('Por favor, complete todos los campos correctamente');
       return;
     }
 
@@ -152,7 +152,7 @@ export class PuntuacionAdminForm implements OnInit {
       puntuacionData.id = this.puntuacion.id;
       this.oPuntuacionService.update(puntuacionData).subscribe({
         next: () => {
-          this.notificacion.success('Puntuación actualizada exitosamente');
+          this.notificacion.info('Puntuación actualizada exitosamente');
           this.submitting.set(false);
           this.formSuccess.emit();
         },
@@ -166,7 +166,7 @@ export class PuntuacionAdminForm implements OnInit {
     } else {
       this.oPuntuacionService.create(puntuacionData).subscribe({
         next: () => {
-          this.notificacion.success('Puntuación creada exitosamente');
+          this.notificacion.info('Puntuación creada exitosamente');
           this.submitting.set(false);
           this.formSuccess.emit();
         },

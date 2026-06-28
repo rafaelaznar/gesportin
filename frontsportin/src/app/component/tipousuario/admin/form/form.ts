@@ -66,7 +66,7 @@ export class TipousuarioAdminForm implements OnInit {
 
   onSubmit(): void {
     if (this.tipousuarioForm.invalid) {
-      this.notificacion.success('Por favor, complete todos los campos correctamente');
+      this.notificacion.info('Por favor, complete todos los campos correctamente');
       return;
     }
 
@@ -80,7 +80,7 @@ export class TipousuarioAdminForm implements OnInit {
       tipousuarioData.id = this.tipousuario.id;
       this.oTipousuarioService.update(tipousuarioData).subscribe({
         next: () => {
-          this.notificacion.success('Tipo de usuario actualizado exitosamente');
+          this.notificacion.info('Tipo de usuario actualizado exitosamente');
           this.submitting.set(false);
           this.formSuccess.emit();
         },
@@ -94,7 +94,7 @@ export class TipousuarioAdminForm implements OnInit {
     } else {
       this.oTipousuarioService.create(tipousuarioData).subscribe({
         next: () => {
-          this.notificacion.success('Tipo de usuario creado exitosamente');
+          this.notificacion.info('Tipo de usuario creado exitosamente');
           this.submitting.set(false);
           this.formSuccess.emit();
         },

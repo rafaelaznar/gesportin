@@ -98,7 +98,7 @@ export class TemporadaTeamadminForm implements OnInit {
         next: () => {
           this.submitting.set(false);
           if (this.temporadaForm) this.temporadaForm.markAsPristine();
-          this.notificacion.success('Se ha guardado correctamente');
+          this.notificacion.info('Se ha guardado correctamente');
           this.router.navigate([this.returnUrl()]);
         },
         error: (err: HttpErrorResponse) => {
@@ -113,7 +113,7 @@ export class TemporadaTeamadminForm implements OnInit {
         next: () => {
           this.submitting.set(false);
           if (this.temporadaForm) this.temporadaForm.markAsPristine();
-          this.notificacion.success('Se ha creado correctamente');
+          this.notificacion.info('Se ha creado correctamente');
           this.router.navigate([this.returnUrl()]);
         },
         error: (err: HttpErrorResponse) => {
@@ -145,7 +145,7 @@ export class TemporadaTeamadminForm implements OnInit {
       if (club) {
         this.temporadaForm.patchValue({ id_club: club.id });
         this.syncClub(club.id);
-        this.notificacion.info(`Club seleccionado: ${club.nombre}`);
+        this.notificacion.success(`Club seleccionado: ${club.nombre}`);
       }
     });
   }

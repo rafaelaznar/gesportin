@@ -179,7 +179,7 @@ export class PartidoTeamadminForm implements OnInit {
 
   onSubmit(): void {
     if (this.partidoForm.invalid) {
-      this.notificacion.success('Por favor, complete todos los campos correctamente');
+      this.notificacion.info('Por favor, complete todos los campos correctamente');
       return;
     }
 
@@ -202,7 +202,7 @@ export class PartidoTeamadminForm implements OnInit {
       partidoData.id = this.id();
       this.oPartidoService.update(partidoData).subscribe({
         next: () => {
-          this.notificacion.success('Partido actualizado exitosamente');
+          this.notificacion.info('Partido actualizado exitosamente');
           this.submitting.set(false);
           this.router.navigate([this.returnUrl()]);
         },
@@ -216,7 +216,7 @@ export class PartidoTeamadminForm implements OnInit {
     } else {
       this.oPartidoService.create(partidoData).subscribe({
         next: () => {
-          this.notificacion.success('Partido creado exitosamente');
+          this.notificacion.info('Partido creado exitosamente');
           this.submitting.set(false);
           this.router.navigate([this.returnUrl()]);
         },

@@ -110,7 +110,7 @@ export class CuotaAdminForm implements OnInit {
 
   onSubmit(): void {
     if (this.cuotaForm.invalid) {
-      this.notificacion.success('Por favor, complete todos los campos correctamente');
+      this.notificacion.info('Por favor, complete todos los campos correctamente');
       return;
     }
 
@@ -127,7 +127,7 @@ export class CuotaAdminForm implements OnInit {
       cuotaData.id = this.cuota.id;
       this.oCuotaService.update(cuotaData).subscribe({
         next: () => {
-          this.notificacion.success('Cuota actualizada exitosamente');
+          this.notificacion.info('Cuota actualizada exitosamente');
           this.submitting.set(false);
           this.formSuccess.emit();
         },
@@ -141,7 +141,7 @@ export class CuotaAdminForm implements OnInit {
     } else {
       this.oCuotaService.create(cuotaData).subscribe({
         next: () => {
-          this.notificacion.success('Cuota creada exitosamente');
+          this.notificacion.info('Cuota creada exitosamente');
           this.submitting.set(false);
           this.formSuccess.emit();
         },

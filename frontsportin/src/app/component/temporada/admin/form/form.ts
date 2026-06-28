@@ -97,7 +97,7 @@ export class TemporadaAdminForm implements OnInit {
         next: () => {
           this.submitting.set(false);
           if (this.temporadaForm) this.temporadaForm.markAsPristine();
-          this.notificacion.success('Se ha guardado correctamente');
+          this.notificacion.info('Se ha guardado correctamente');
           this.router.navigate([this.returnUrl()]);
         },
         error: (err: HttpErrorResponse) => {
@@ -112,7 +112,7 @@ export class TemporadaAdminForm implements OnInit {
         next: () => {
           this.submitting.set(false);
           if (this.temporadaForm) this.temporadaForm.markAsPristine();
-          this.notificacion.success('Se ha creado correctamente');
+          this.notificacion.info('Se ha creado correctamente');
           this.router.navigate([this.returnUrl()]);
         },
         error: (err: HttpErrorResponse) => {

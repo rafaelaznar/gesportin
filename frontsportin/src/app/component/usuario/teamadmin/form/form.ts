@@ -237,7 +237,7 @@ export class UsuarioTeamadminForm implements OnInit {
 
   async onSubmit(): Promise<void> {
     if (this.usuarioForm.invalid) {
-      this.notificacion.success('Por favor, complete todos los campos correctamente');
+      this.notificacion.info('Por favor, complete todos los campos correctamente');
       return;
     }
 
@@ -270,7 +270,7 @@ export class UsuarioTeamadminForm implements OnInit {
       usuarioData.id = this.id();
       this.oUsuarioService.update(usuarioData).subscribe({
         next: () => {
-          this.notificacion.success('Usuario actualizado exitosamente');
+          this.notificacion.info('Usuario actualizado exitosamente');
           this.submitting.set(false);
           this.router.navigate([this.returnUrl()]);
         },
@@ -284,7 +284,7 @@ export class UsuarioTeamadminForm implements OnInit {
     } else {
       this.oUsuarioService.create(usuarioData).subscribe({
         next: () => {
-          this.notificacion.success('Usuario creado exitosamente');
+          this.notificacion.info('Usuario creado exitosamente');
           this.submitting.set(false);
           this.router.navigate([this.returnUrl()]);
         },

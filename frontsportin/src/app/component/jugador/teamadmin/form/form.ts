@@ -163,7 +163,7 @@ export class JugadorTeamadminForm implements OnInit {
 
   onSubmit(): void {
     if (this.jugadorForm.invalid) {
-      this.notificacion.success('Por favor, complete todos los campos correctamente');
+      this.notificacion.info('Por favor, complete todos los campos correctamente');
       return;
     }
 
@@ -181,7 +181,7 @@ export class JugadorTeamadminForm implements OnInit {
       jugadorData.id = this.id();
       this.oJugadorService.update(jugadorData).subscribe({
         next: () => {
-          this.notificacion.success('Jugador actualizado exitosamente');
+          this.notificacion.info('Jugador actualizado exitosamente');
           this.submitting.set(false);
           this.router.navigate([this.returnUrl()]);
         },
@@ -195,7 +195,7 @@ export class JugadorTeamadminForm implements OnInit {
     } else {
       this.oJugadorService.create(jugadorData).subscribe({
         next: () => {
-          this.notificacion.success('Jugador creado exitosamente');
+          this.notificacion.info('Jugador creado exitosamente');
           this.submitting.set(false);
           this.router.navigate([this.returnUrl()]);
         },

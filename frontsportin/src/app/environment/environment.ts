@@ -7,3 +7,9 @@ export const rpp = [5, 10, 20, 50, 100];
 export const debug = true; // Activar o desactivar el modo de depuración
 
 export const debounceTimeSearch = 800; // Tiempo de espera en ms para la búsqueda con debounce
+
+/** Duración en ms de las notificaciones de éxito (selecciones, login) — 0 = indefinido */
+export const notificationSuccessDuration = 600;
+
+/** Duración en ms de las notificaciones informativas (resultados de operaciones) — 0 = indefinido */
+export const notificationInfoDuration = 2500;

@@ -134,7 +134,7 @@ export class NoticiaAdminForm implements OnInit {
 
   onSubmit(): void {
     if (this.noticiaForm.invalid) {
-      this.notificacion.success('Por favor, complete todos los campos correctamente');
+      this.notificacion.info('Por favor, complete todos los campos correctamente');
       this.noticiaForm.markAllAsTouched();
       return;
     }

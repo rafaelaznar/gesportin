@@ -100,7 +100,7 @@ export class FacturaAdminForm implements OnInit {
 
   onSubmit(): void {
     if (this.facturaForm.invalid) {
-      this.notificacion.success('Por favor, complete todos los campos correctamente');
+      this.notificacion.info('Por favor, complete todos los campos correctamente');
       return;
     }
 
@@ -116,7 +116,7 @@ export class FacturaAdminForm implements OnInit {
       facturaData.id = this.factura.id;
       this.oFacturaService.update(facturaData).subscribe({
         next: () => {
-          this.notificacion.success('Factura actualizada exitosamente');
+          this.notificacion.info('Factura actualizada exitosamente');
           this.submitting.set(false);
           this.formSuccess.emit();
         },
@@ -130,7 +130,7 @@ export class FacturaAdminForm implements OnInit {
     } else {
       this.oFacturaService.create(facturaData).subscribe({
         next: () => {
-          this.notificacion.success('Factura creada exitosamente');
+          this.notificacion.info('Factura creada exitosamente');
           this.submitting.set(false);
           this.formSuccess.emit();
         },

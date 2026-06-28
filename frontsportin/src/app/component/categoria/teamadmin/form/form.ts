@@ -136,7 +136,7 @@ export class CategoriaTeamadminForm implements OnInit {
 
   onSubmit(): void {
     if (this.categoriaForm.invalid) {
-      this.notificacion.success('Por favor, complete todos los campos correctamente');
+      this.notificacion.info('Por favor, complete todos los campos correctamente');
       return;
     }
 
@@ -151,7 +151,7 @@ export class CategoriaTeamadminForm implements OnInit {
       categoriaData.id = this.id();
       this.oCategoriaService.update(categoriaData).subscribe({
         next: () => {
-          this.notificacion.success('Categoría actualizada exitosamente');
+          this.notificacion.info('Categoría actualizada exitosamente');
           this.submitting.set(false);
           this.router.navigate([this.returnUrl()]);
         },
@@ -165,7 +165,7 @@ export class CategoriaTeamadminForm implements OnInit {
     } else {
       this.oCategoriaService.create(categoriaData).subscribe({
         next: () => {
-          this.notificacion.success('Categoría creada exitosamente');
+          this.notificacion.info('Categoría creada exitosamente');
           this.submitting.set(false);
           this.router.navigate([this.returnUrl()]);
         },

@@ -66,7 +66,7 @@ export class RolusuarioAdminForm implements OnInit {
 
   onSubmit(): void {
     if (this.rolusuarioForm.invalid) {
-      this.notificacion.success('Por favor, complete todos los campos correctamente');
+      this.notificacion.info('Por favor, complete todos los campos correctamente');
       return;
     }
 
@@ -80,7 +80,7 @@ export class RolusuarioAdminForm implements OnInit {
       rolusuarioData.id = this.rolusuario.id;
       this.oRolusuarioService.update(rolusuarioData).subscribe({
         next: () => {
-          this.notificacion.success('Rol de usuario actualizado exitosamente');
+          this.notificacion.info('Rol de usuario actualizado exitosamente');
           this.submitting.set(false);
           this.formSuccess.emit();
         },
@@ -94,7 +94,7 @@ export class RolusuarioAdminForm implements OnInit {
     } else {
       this.oRolusuarioService.create(rolusuarioData).subscribe({
         next: () => {
-          this.notificacion.success('Rol de usuario creado exitosamente');
+          this.notificacion.info('Rol de usuario creado exitosamente');
           this.submitting.set(false);
           this.formSuccess.emit();
         },

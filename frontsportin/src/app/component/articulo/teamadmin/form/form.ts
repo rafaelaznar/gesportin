@@ -129,7 +129,7 @@ export class ArticuloTeamadminForm implements OnInit {
 
   onSubmit(): void {
     if (this.articuloForm.invalid) {
-      this.notificacion.success('Por favor, complete todos los campos correctamente');
+      this.notificacion.info('Por favor, complete todos los campos correctamente');
       return;
     }
 
@@ -146,7 +146,7 @@ export class ArticuloTeamadminForm implements OnInit {
       articuloData.id = this.id();
       this.oArticuloService.update(articuloData).subscribe({
         next: () => {
-          this.notificacion.success('Artículo actualizado exitosamente');
+          this.notificacion.info('Artículo actualizado exitosamente');
           this.submitting.set(false);
           this.router.navigate([this.returnUrl()]);
         },
@@ -160,7 +160,7 @@ export class ArticuloTeamadminForm implements OnInit {
     } else {
       this.oArticuloService.create(articuloData).subscribe({
         next: () => {
-          this.notificacion.success('Artículo creado exitosamente');
+          this.notificacion.info('Artículo creado exitosamente');
           this.submitting.set(false);
           this.router.navigate([this.returnUrl()]);
         },

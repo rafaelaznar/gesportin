@@ -132,7 +132,7 @@ export class ComentarioAdminForm implements OnInit {
 
   onSubmit(): void {
     if (this.comentarioForm.invalid) {
-      this.notificacion.success('Por favor, complete todos los campos correctamente');
+      this.notificacion.info('Por favor, complete todos los campos correctamente');
       return;
     }
 
@@ -147,12 +147,12 @@ export class ComentarioAdminForm implements OnInit {
     if (this.isEditMode && this.comentario?.id) {
       comentarioData.id = this.comentario.id;
       this.oComentarioService.update(comentarioData).subscribe({
-        next: () => { this.notificacion.success('Comentario actualizado exitosamente'); this.submitting.set(false); this.formSuccess.emit(); },
+        next: () => { this.notificacion.info('Comentario actualizado exitosamente'); this.submitting.set(false); this.formSuccess.emit(); },
         error: (err: HttpErrorResponse) => { this.error.set('Error actualizando el comentario'); this.notificacion.error('Error actualizando el comentario'); console.error(err); this.submitting.set(false); }
       });
     } else {
       this.oComentarioService.create(comentarioData).subscribe({
-        next: () => { this.notificacion.success('Comentario creado exitosamente'); this.submitting.set(false); this.formSuccess.emit(); },
+        next: () => { this.notificacion.info('Comentario creado exitosamente'); this.submitting.set(false); this.formSuccess.emit(); },
         error: (err: HttpErrorResponse) => { this.error.set('Error creando el comentario'); this.notificacion.error('Error creando el comentario'); console.error(err); this.submitting.set(false); }
       });
     }

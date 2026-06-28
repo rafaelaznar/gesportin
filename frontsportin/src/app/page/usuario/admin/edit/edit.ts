@@ -48,7 +48,7 @@ export class UsuarioAdminEditPage implements OnInit {
   }
 
   onFormSuccess(): void {
-    this.notificacion.success('Usuario actualizado exitosamente');
+    this.notificacion.info('Usuario actualizado exitosamente');
     this.router.navigate(['/usuario']);
   }
 

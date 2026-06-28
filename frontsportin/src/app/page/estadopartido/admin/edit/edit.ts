@@ -48,7 +48,7 @@ export class EstadopartidoAdminEditPage implements OnInit {
   }
 
   onFormSuccess(): void {
-    this.notificacion.success('Estado de partido actualizado exitosamente');
+    this.notificacion.info('Estado de partido actualizado exitosamente');
     this.router.navigate(['/estadopartido']);
   }
 

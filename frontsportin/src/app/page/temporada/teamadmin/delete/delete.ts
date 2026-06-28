@@ -53,7 +53,7 @@ export class TemporadaTeamadminDeletePage implements OnInit {
   doDelete(): void {
     this.temporadaService.delete(this.id_temporada()).subscribe({
       next: () => {
-        this.notificacion.success('Temporada eliminada correctamente');
+        this.notificacion.info('Temporada eliminada correctamente');
         this.router.navigate([this.returnUrlAfterDelete]);
       },
       error: (err: HttpErrorResponse) => {

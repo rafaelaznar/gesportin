@@ -112,7 +112,7 @@ export class ComentarioTeamadminForm implements OnInit {
 
   onSubmit(): void {
     if (this.comentarioForm.invalid) {
-      this.notificacion.success('Por favor, complete el comentario');
+      this.notificacion.info('Por favor, complete el comentario');
       return;
     }
 
@@ -128,7 +128,7 @@ export class ComentarioTeamadminForm implements OnInit {
       comentarioData.id = this.id();
       this.oComentarioService.update(comentarioData).subscribe({
         next: () => {
-          this.notificacion.success('Comentario actualizado exitosamente');
+          this.notificacion.info('Comentario actualizado exitosamente');
           this.submitting.set(false);
           this.router.navigate([this.returnUrl()]);
         },
@@ -142,7 +142,7 @@ export class ComentarioTeamadminForm implements OnInit {
     } else {
       this.oComentarioService.create(comentarioData).subscribe({
         next: () => {
-          this.notificacion.success('Comentario creado exitosamente');
+          this.notificacion.info('Comentario creado exitosamente');
           this.submitting.set(false);
           const idNoticia = this.idNoticia();
           if (idNoticia > 0) {
