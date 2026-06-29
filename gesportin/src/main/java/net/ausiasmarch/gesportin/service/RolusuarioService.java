@@ -24,26 +24,8 @@ public class RolusuarioService {
     @Autowired
     private RolusuarioConverter oRolusuarioConverter;
 
-    // private final Random random = new Random();
-    private final String[] descripciones = {
-            "Presidente", "Vicepresidente", "Secretario", "Jugador",
-            "Tesorero", "Vocal", "Coordinador", "Director Deportivo",
-            "Entrenador", "Delegado", "Socio Honorífico",
-            "Miembro del Comité", "Asesor Legal", "Responsable de Marketing", "Encargado de Eventos", "Jefe de Prensa",
-            "Coordinador de Voluntarios",
-            "Responsable de Infraestructuras", "Director de Comunicación", "Coordinador de Patrocinios",
-            "Responsable de Relaciones Institucionales",
-            "Patrocinador", "Colaborador", "Miembro del Consejo", "Responsable de Formación",
-            "Encargado de Redes Sociales",
-            "Responsable de Seguridad", "Coordinador de Actividades", "Jefe de Proyectos", "Responsable de Tecnología",
-            "Encargado de Logística",
-            "Árbitro", "Médico", "Fisioterapeuta", "Nutricionista", "Psicólogo Deportivo",
-            "Analista de Datos", "Preparador Físico",
-            "Scout", "Fotógrafo", "Videógrafo",
-            "Periodista Deportivo", "Community Manager", "Diseñador Gráfico", "Desarrollador Web",
-            "Administrador de Sistemas", "Especialista en SEO",
-            "Consultor de Negocios", "Asistente Administrativo"
-    };
+    @Autowired
+    private AleatorioService oAleatorioService;
 
     public RolusuarioDTO get(Long id) {
         RolusuarioEntity entity = oRolusuarioRepository.findById(id)
@@ -103,6 +85,7 @@ public class RolusuarioService {
 
     public Long fill() {
         oSessionService.requireAdmin();
+        String[] descripciones = oAleatorioService.getDescripcionesRoles();
         for (int i = 0; i < descripciones.length; i++) {
             RolusuarioEntity oRolusuario = new RolusuarioEntity();
             oRolusuario.setDescripcion(descripciones[i % descripciones.length]);

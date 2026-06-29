@@ -48,30 +48,6 @@ public class UsuarioService {
 
     private final Random random = new Random();
 
-    private final String[] nombresVaron = {
-            "Juan", "Carlos", "Luis", "Pedro", "José",
-            "Francisco", "Antonio", "Manuel", "David", "Javier",
-            "Miguel", "Alejandro", "Rafael", "Daniel", "Fernando",
-            "Sergio", "Jorge", "Alberto", "Raúl", "Pablo",
-            "Rubén", "Adrián", "Diego", "Iván", "Óscar"
-    };
-
-    private final String[] nombresMujer = {
-            "María", "Carmen", "Ana", "Laura", "Isabel",
-            "Patricia", "Sofía", "Lucía", "Marta", "Elena",
-            "Sara", "Cristina", "Raquel", "Beatriz", "Julia",
-            "Victoria", "Claudia", "Andrea", "Alba", "Noelia",
-            "Silvia", "Natalia", "Irene", "Carla", "Lorena"
-    };
-
-    private final String[] apellidos = {
-            "García", "Rodríguez", "González", "Fernández", "López", "Martínez", "Sánchez", "Pérez", "Gómez", "Martín",
-            "Jiménez", "Ruiz", "Hernández", "Díaz", "Moreno", "Muñoz", "Álvarez", "Romero", "Alonso", "Gutiérrez",
-            "Navarro", "Torres", "Domínguez", "Vázquez", "Ramos", "Gil", "Ramírez", "Serrano", "Blanco", "Suárez",
-            "Molina", "Castro", "Ortega", "Rubio", "Morales", "Delgado", "Ortiz", "Marín", "Iglesias", "Santos",
-            "Castillo", "Garrido", "Calvo", "Peña", "Cruz", "Cano", "Núñez", "Prieto", "Díez", "Lozano"
-    };
-
     public UsuarioDTO get(Long id) {
         UsuarioEntity e = oUsuarioRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con id: " + id));
@@ -303,8 +279,9 @@ public class UsuarioService {
             oUsuario = new UsuarioEntity();
             // Generar género aleatorio: 0 para masculino, 1 para femenino
             int genero = random.nextInt(2);
-            String[] nombres = (genero == 0) ? nombresVaron : nombresMujer;
+            String[] nombres = (genero == 0) ? oAleatorioService.getNombresVaron() : oAleatorioService.getNombresMujer();
             oUsuario.setNombre(nombres[random.nextInt(nombres.length)]);
+            String[] apellidos = oAleatorioService.getApellidos();
             oUsuario.setApellido1(apellidos[random.nextInt(apellidos.length)]);
             oUsuario.setApellido2(apellidos[random.nextInt(apellidos.length)]);
             // sin acentos y minúsculas

@@ -27,34 +27,8 @@ public class TemporadaService {
     @Autowired
     private TemporadaConverter oTemporadaConverter;
 
-    private final String[] años = {
-            "2019/2020",
-            "2020/2021",
-            "2021/2022",
-            "2022/2023",
-            "2023/2024",
-            "2024/2025",
-    };
-
-    private final String[] categorias = {
-            "Infantil",
-            "Junior",
-            "Senior",
-            "Femenino",
-            "Masculino",
-            "Unisex",
-            "Escolar",
-            "Competición",
-            "Ocio"
-    };
-
-    private final String[] estacion = {
-            "Primavera",
-            "Otoño",
-            "Verano",
-            "Invierno",
-            "Todo el año"
-    };
+    @Autowired
+    private AleatorioService oAleatorioService;
 
     public TemporadaDTO get(Long id) {
         TemporadaEntity e = oTemporadaRepository.findById(id)
@@ -143,10 +117,13 @@ public class TemporadaService {
 
     public Long fill(Long cantidad) {
         oSessionService.requireAdmin();
+        String[] años = oAleatorioService.getAñosTemporada();
+        String[] categorias = oAleatorioService.getCategoriasTemporada();
+        String[] estaciones = oAleatorioService.getEstaciones();
         for (long i = 0; i < cantidad; i++) {
             TemporadaEntity oTemporada = new TemporadaEntity();
             String nombre = "Temporada " + categorias[(int) (Math.random() * categorias.length)] + " de " +
-                    estacion[(int) (Math.random() * estacion.length)] + " en " +
+                    estaciones[(int) (Math.random() * estaciones.length)] + " en " +
                     años[(int) (Math.random() * años.length)];
             oTemporada.setDescripcion(nombre);
             oTemporada.setClub(oClubService.getOneRandom());

@@ -27,18 +27,8 @@ public class LigaService {
     @Autowired
     private LigaConverter oLigaConverter;
 
-    private final String[] nombres = {
-            "Liga", "Copa", "Supercopa", "Liga de Campeones", "Liga Europa", "Torneo",
-            "Trofeo", "Campeonato", "Playoff", "Liguilla Clasificatoria", "Liguilla Eliminatoria"
-    };
-
-    private final String[] nombres2 = {
-        "Primera División", "Segunda División", "Tercera División", "División de Honor",
-        "División de Plata", "División de Bronce", "Nacional", "Regional", "Provincial", "Local",
-        "Amateur", "de Campeones", "Outdoor", "Indoor", "de Verano", "de Invierno", 
-        "Internacional", "de Clubes", "de Selecciones", "de ascenso", "de descenso", "de élite",
-        "de Honor", "de Plata", "de Bronce"
-    };
+    @Autowired
+    private AleatorioService oAleatorioService;
 
 
 
@@ -135,6 +125,8 @@ public class LigaService {
 
     public Long fill(Long cantidad) {
         oSessionService.requireAdmin();
+        String[] nombres = oAleatorioService.getNombresLigas();
+        String[] nombres2 = oAleatorioService.getNombresLigas2();
         for (int i = 0; i < cantidad; i++) {
             LigaEntity oLiga = new LigaEntity();
             String nombre = nombres[(int) (Math.random() * nombres.length)] + " " +

@@ -32,19 +32,8 @@ public class TipoarticuloService {
     @Autowired
     private TipoarticuloConverter oTipoarticuloConverter;
 
-    //private final Random random = new Random();
-    private final String[] descripciones = {
-        "Material deportivo", "Accesorios", "Calzado deportivo", "Ropa de entrenamiento",
-        "Complementos", "Merchandising", "Artículos de portería", "Equipamiento técnico", "Protecciones",
-        "Hidratación", "Balones", "Conos y marcadores", "Redes", "Arbitraje",
-        "Gimnasio", "Fisioterapia", "Nutrición", "Tecnología deportiva", "Textil técnico",
-        "Ropa casual", "Infantil", "Junior", "Senior", "Femenino",
-        "Masculino", "Unisex", "Outlet", "Novedades", "Ofertas",
-        "Premium", "Básico", "Profesional", "Amateur", "Escolar",
-        "Competición", "Ocio", "Verano", "Invierno", "Todo el año",
-        "Personalizable", "Edición limitada", "Coleccionismo", "Regalos", "Packs",
-        "Temporal", "Permanente", "Exclusivo", "Popular", "Especial"
-    };
+    @Autowired
+    private AleatorioService oAleatorioService;
 
 
     public TipoarticuloDTO get(Long id) {
@@ -126,6 +115,7 @@ public class TipoarticuloService {
 
     public Long fill(Long cantidad) {
         oSessionService.requireAdmin();
+        String[] descripciones = oAleatorioService.getDescripcionesTipoArticulo();
         for (int i = 0; i < cantidad; i++) {
             TipoarticuloEntity oTipoarticulo = new TipoarticuloEntity();
             oTipoarticulo.setDescripcion(descripciones[i % descripciones.length]);
