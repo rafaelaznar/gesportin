@@ -48,7 +48,7 @@
     </div>
   }
 
-  <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
+  <div class="row row-cols-1 row-cols-md-2 row-cols-xl-2 g-4">
     @for (oLiga of oPage()?.content; track oLiga.id) {
       <div class="col">
         <div class="card h-100 shadow-sm">
@@ -83,6 +83,38 @@
                 </a>
               }
             </div>
+            @if (getPartidosForLiga(oLiga.id).length > 0) {
+              <div class="mt-2">
+                <table class="table table-sm table-borderless mb-0 w-100">
+                  <thead>
+                    <tr class="border-bottom">
+                      <th class="ps-0 text-muted fw-normal" style="font-size: 0.72rem">Rival</th>
+                      <th class="text-muted fw-normal" style="font-size: 0.72rem">L/V</th>
+                      <th class="text-muted fw-normal" style="font-size: 0.72rem">Resultado</th>
+                      <th class="text-muted fw-normal" style="font-size: 0.72rem">Fecha</th>
+                      <th class="text-end pe-0 text-muted fw-normal" style="font-size: 0.72rem">Estado</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (partido of getPartidosForLiga(oLiga.id); track partido.id) {
+                      <tr>
+                        <td class="ps-0 py-1" style="font-size: 0.75rem">{{ partido.rival }}</td>
+                        <td class="py-1" style="font-size: 0.75rem">
+                          @if (partido.local) {
+                            <span class="badge bg-success">L</span>
+                          } @else {
+                            <span class="badge bg-warning text-dark">V</span>
+                          }
+                        </td>
+                        <td class="py-1" style="font-size: 0.75rem">{{ partido.resultado || '—' }}</td>
+                        <td class="py-1" style="font-size: 0.75rem">{{ partido.fecha ? (partido.fecha | datetime: 'solofechacompleta') : '—' }}</td>
+                        <td class="text-end pe-0 py-1" style="font-size: 0.75rem">{{ partido.estadopartido?.descripcion || '—' }}</td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+            }
           </div>
           <div class="card-footer d-flex justify-content-between">
             <a [routerLink]="['/liga/view', oLiga.id]" class="btn btn-outline-secondary btn-sm">Ver</a>

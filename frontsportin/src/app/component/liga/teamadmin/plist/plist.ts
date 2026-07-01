@@ -1,20 +1,24 @@
 import { Component, computed, inject, Input, OnInit, OnDestroy, OnChanges, signal, SimpleChanges } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Subject, Subscription, debounceTime, distinctUntilChanged } from 'rxjs';
 import { MODAL_REF } from '../../../shared/modal/modal.tokens';
 import { debounceTimeSearch } from '../../../../environment/environment';
 import { ILiga } from '../../../../model/liga';
+import { IPartido } from '../../../../model/partido';
 import { IPage } from '../../../../model/plist';
 import { LigaService } from '../../../../service/liga';
+import { PartidoService } from '../../../../service/partido';
 import { BotoneraRpp } from '../../../shared/botonera-rpp/botonera-rpp';
 import { Paginacion } from '../../../shared/paginacion/paginacion';
 import { BotoneraActionsPlist } from '../../../shared/botonera-actions-plist/botonera-actions-plist';
+import { DatetimePipe } from '../../../../pipe/datetime-pipe';
 
 @Component({
   standalone: true,
   selector: 'app-liga-teamadmin-plist',
-  imports: [BotoneraRpp, Paginacion, RouterLink, BotoneraActionsPlist],
+  imports: [CommonModule, BotoneraRpp, Paginacion, RouterLink, BotoneraActionsPlist, DatetimePipe],
   templateUrl: './plist.html',
   styleUrl: './plist.css',
 })
@@ -37,8 +41,11 @@ export class LigaTeamadminPlist implements OnInit, OnChanges, OnDestroy {
   private searchSubscription?: Subscription;
 
   private oLigaService = inject(LigaService);
+  private oPartidoService = inject(PartidoService);
   private route = inject(ActivatedRoute);
   private modalRef = inject(MODAL_REF, { optional: true });
+
+  partidosByLiga = signal<Map<number, IPartido[]>>(new Map());
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['id_equipo'] && this.id_equipo != null) {
@@ -86,6 +93,19 @@ export class LigaTeamadminPlist implements OnInit, OnChanges, OnDestroy {
       .subscribe({
         next: (data: IPage<ILiga>) => {
           this.oPage.set(data);
+          this.partidosByLiga.set(new Map());
+          data.content.forEach((liga) => {
+            this.oPartidoService.getPage(0, 100, 'id', 'asc', '', liga.id).subscribe({
+              next: (partidosPage: IPage<IPartido>) => {
+                this.partidosByLiga.update((map) => {
+                  const newMap = new Map(map);
+                  newMap.set(liga.id, partidosPage.content);
+                  return newMap;
+                });
+              },
+              error: (err: HttpErrorResponse) => console.error(err),
+            });
+          });
           if (this.numPage() > 0 && this.numPage() >= data.totalPages) {
             this.numPage.set(data.totalPages - 1);
             this.getPage();
@@ -125,6 +145,10 @@ export class LigaTeamadminPlist implements OnInit, OnChanges, OnDestroy {
 
   isDialogMode(): boolean {
     return !!this.modalRef;
+  }
+
+  getPartidosForLiga(ligaId: number): IPartido[] {
+    return this.partidosByLiga().get(ligaId) ?? [];
   }
 
   onSelect(liga: ILiga): void {

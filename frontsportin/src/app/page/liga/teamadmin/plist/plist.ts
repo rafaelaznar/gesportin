@@ -12,6 +12,7 @@ import { EquipoService } from '../../../../service/equipo';
 })
 export class LigaTeamadminPlistPage implements OnInit {
   id_equipo = signal<number | undefined>(undefined);
+  equipoNombre = signal<string>('');
 
   breadcrumbItems = signal<BreadcrumbItem[]>([
     { label: 'Mis Clubes', route: '/club/teamadmin' },
@@ -30,6 +31,7 @@ export class LigaTeamadminPlistPage implements OnInit {
       this.id_equipo.set(id);
       this.equipoService.get(id).subscribe({
         next: (equipo) => {
+          this.equipoNombre.set(equipo.nombre || '');
           const cat = equipo.categoria;
           const temp = cat?.temporada;
           const items: BreadcrumbItem[] = [
