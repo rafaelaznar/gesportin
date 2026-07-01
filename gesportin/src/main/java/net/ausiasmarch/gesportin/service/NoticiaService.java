@@ -120,15 +120,13 @@ public class NoticiaService {
 
     public Long fill(Long cantidad) {
         oSessionService.requireAdmin();
-        String[] frases = oAleatorioService.getFrasesNoticias();
         for (long j = 0; j < cantidad; j++) {
             NoticiaEntity oNoticia = new NoticiaEntity();
-            oNoticia.setTitulo(
-                    frases[oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, frases.length - 1)]);
+            oNoticia.setTitulo(oAleatorioService.getFraseNoticiaAleatoria());
             String contenidoGenerado = "";
             int numFrases = oAleatorioService.generarNumeroAleatorioEnteroEnRango(1, 30);
             for (int i = 1; i <= numFrases; i++) {
-                contenidoGenerado += frases[oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, frases.length - 1)] + " ";
+                contenidoGenerado += oAleatorioService.getFraseNoticiaAleatoria() + " ";
                 if (oAleatorioService.generarNumeroAleatorioEnteroEnRango(0, 10) == 1) {
                     contenidoGenerado += "\n";
                 }

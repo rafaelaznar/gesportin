@@ -279,11 +279,9 @@ public class UsuarioService {
             oUsuario = new UsuarioEntity();
             // Generar género aleatorio: 0 para masculino, 1 para femenino
             int genero = random.nextInt(2);
-            String[] nombres = (genero == 0) ? oAleatorioService.getNombresVaron() : oAleatorioService.getNombresMujer();
-            oUsuario.setNombre(nombres[random.nextInt(nombres.length)]);
-            String[] apellidos = oAleatorioService.getApellidos();
-            oUsuario.setApellido1(apellidos[random.nextInt(apellidos.length)]);
-            oUsuario.setApellido2(apellidos[random.nextInt(apellidos.length)]);
+            oUsuario.setNombre((genero == 0) ? oAleatorioService.getNombreVaronAleatorio() : oAleatorioService.getNombreMujerAleatorio());
+            oUsuario.setApellido1(oAleatorioService.getApellidoAleatorio());
+            oUsuario.setApellido2(oAleatorioService.getApellidoAleatorio());
             // sin acentos y minúsculas
             String username = oAleatorioService.eliminarAcentos(oUsuario.getNombre().substring(0, 3).toLowerCase()
                     + oUsuario.getApellido1().substring(0, 2).toLowerCase()

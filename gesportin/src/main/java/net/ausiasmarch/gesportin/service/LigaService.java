@@ -125,12 +125,9 @@ public class LigaService {
 
     public Long fill(Long cantidad) {
         oSessionService.requireAdmin();
-        String[] nombres = oAleatorioService.getNombresLigas();
-        String[] nombres2 = oAleatorioService.getNombresLigas2();
         for (int i = 0; i < cantidad; i++) {
             LigaEntity oLiga = new LigaEntity();
-            String nombre = nombres[(int) (Math.random() * nombres.length)] + " " +
-                    nombres2[(int) (Math.random() * nombres2.length)];
+            String nombre = oAleatorioService.getNombreLigaCompuestoAleatorio();
             oLiga.setNombre(nombre);
             oLiga.setEquipo(oEquipoService.getOneRandom());
             oLigaRepository.save(oLiga);

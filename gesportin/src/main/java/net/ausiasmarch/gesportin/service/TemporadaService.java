@@ -117,14 +117,11 @@ public class TemporadaService {
 
     public Long fill(Long cantidad) {
         oSessionService.requireAdmin();
-        String[] años = oAleatorioService.getAñosTemporada();
-        String[] categorias = oAleatorioService.getCategoriasTemporada();
-        String[] estaciones = oAleatorioService.getEstaciones();
         for (long i = 0; i < cantidad; i++) {
             TemporadaEntity oTemporada = new TemporadaEntity();
-            String nombre = "Temporada " + categorias[(int) (Math.random() * categorias.length)] + " de " +
-                    estaciones[(int) (Math.random() * estaciones.length)] + " en " +
-                    años[(int) (Math.random() * años.length)];
+            String nombre = "Temporada " + oAleatorioService.getCategoriaTemporadaAleatoria() + " de " +
+                    oAleatorioService.getEstacionAleatoria() + " en " +
+                    oAleatorioService.getAnoTemporadaAleatorio();
             oTemporada.setDescripcion(nombre);
             oTemporada.setClub(oClubService.getOneRandom());
             oTemporadaRepository.save(oTemporada);

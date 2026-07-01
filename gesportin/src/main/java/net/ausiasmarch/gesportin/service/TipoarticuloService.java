@@ -115,10 +115,10 @@ public class TipoarticuloService {
 
     public Long fill(Long cantidad) {
         oSessionService.requireAdmin();
-        String[] descripciones = oAleatorioService.getDescripcionesTipoArticulo();
+        int numTipos = oAleatorioService.getNumDescripcionesTipoArticulo();
         for (int i = 0; i < cantidad; i++) {
             TipoarticuloEntity oTipoarticulo = new TipoarticuloEntity();
-            oTipoarticulo.setDescripcion(descripciones[i % descripciones.length]);
+            oTipoarticulo.setDescripcion(oAleatorioService.getDescripcionTipoArticulo(i % numTipos));
             oTipoarticulo.setClub(oClubService.getOneRandom());
             oTipoarticuloRepository.save(oTipoarticulo);
         }

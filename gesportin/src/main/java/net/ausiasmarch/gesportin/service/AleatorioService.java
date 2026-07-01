@@ -186,50 +186,75 @@ public class AleatorioService {
             "Campo de Fútbol Municipal", "Piscina Cubierta", "Velódromo Municipal"
     };
 
-    // Getters de arrays
+    // Elementos aleatorios individuales
 
-    public String[] getNombresVaron() {
-        return nombresVaron;
+    public String getNombreVaronAleatorio() {
+        return nombresVaron[random.nextInt(nombresVaron.length)];
     }
 
-    public String[] getNombresMujer() {
-        return nombresMujer;
+    public String getNombreMujerAleatorio() {
+        return nombresMujer[random.nextInt(nombresMujer.length)];
     }
 
-    public String[] getApellidos() {
-        return apellidos;
+    public String getApellidoAleatorio() {
+        return apellidos[random.nextInt(apellidos.length)];
     }
 
-    public String[] getNombresLigas() {
-        return nombresLigas;
+    public String getNombreLigaAleatorio() {
+        return nombresLigas[random.nextInt(nombresLigas.length)];
     }
 
-    public String[] getNombresLigas2() {
-        return nombresLigas2;
+    public String getNombreLiga2Aleatorio() {
+        return nombresLigas2[random.nextInt(nombresLigas2.length)];
     }
 
-    public String[] getAñosTemporada() {
-        return añosTemporada;
+    public String getNombreLigaCompuestoAleatorio() {
+        return nombresLigas[random.nextInt(nombresLigas.length)] + " "
+                + nombresLigas2[random.nextInt(nombresLigas2.length)];
     }
 
-    public String[] getCategoriasTemporada() {
-        return categoriasTemporada;
+    public String getAnoTemporadaAleatorio() {
+        return añosTemporada[random.nextInt(añosTemporada.length)];
     }
 
-    public String[] getEstaciones() {
-        return estaciones;
+    public String getCategoriaTemporadaAleatoria() {
+        return categoriasTemporada[random.nextInt(categoriasTemporada.length)];
     }
 
-    public String[] getDescripcionesRoles() {
-        return descripcionesRoles;
+    public String getEstacionAleatoria() {
+        return estaciones[random.nextInt(estaciones.length)];
     }
 
-    public String[] getDescripcionesTipoArticulo() {
-        return descripcionesTipoArticulo;
+    public String getDescripcionRolAleatoria() {
+        return descripcionesRoles[random.nextInt(descripcionesRoles.length)];
     }
 
-    public String[] getFrasesNoticias() {
-        return frasesNoticias;
+    public String getDescripcionRol(int index) {
+        return descripcionesRoles[index];
+    }
+
+    public int getNumDescripcionesRoles() {
+        return descripcionesRoles.length;
+    }
+
+    public String getDescripcionTipoArticuloAleatoria() {
+        return descripcionesTipoArticulo[random.nextInt(descripcionesTipoArticulo.length)];
+    }
+
+    public String getDescripcionTipoArticulo(int index) {
+        return descripcionesTipoArticulo[index];
+    }
+
+    public int getNumDescripcionesTipoArticulo() {
+        return descripcionesTipoArticulo.length;
+    }
+
+    public String getFraseNoticiaAleatoria() {
+        return frasesNoticias[random.nextInt(frasesNoticias.length)];
+    }
+
+    public String getLugarAleatorio() {
+        return LUGARES[random.nextInt(LUGARES.length)];
     }
 
     // Generación aleatoria compuesta
@@ -244,26 +269,26 @@ public class AleatorioService {
     }
 
     public String generarNombreEquipoAleatorio() {
-        String nombre = eq1[(int) (Math.random() * eq1.length)] + " "
-                + eq2[(int) (Math.random() * eq2.length)];
-        if (Math.random() < 0.3) {
-            nombre += " " + eq3[(int) (Math.random() * eq3.length)];
+        String nombre = eq1[random.nextInt(eq1.length)] + " "
+                + eq2[random.nextInt(eq2.length)];
+        if (random.nextDouble() < 0.3) {
+            nombre += " " + eq3[random.nextInt(eq3.length)];
         }
         return primeraMayuscuString(nombre);
     }
 
     public String generarNombreLugarAleatorio() {
-        return LUGARES[(int) (Math.random() * LUGARES.length)];
+        return getLugarAleatorio();
     }
 
     // Números aleatorios
 
     public int generarNumeroAleatorioEnteroEnRango(int min, int max) {
-        return (int) (Math.random() * (max - min + 1)) + min;
+        return random.nextInt(max - min + 1) + min;
     }
 
     public double generarNumeroAleatorioDecimalEnRango(double min, double max) {
-        return Math.round((Math.random() * (max - min) + min) * 100.0) / 100.0;
+        return Math.round((random.nextDouble() * (max - min) + min) * 100.0) / 100.0;
     }
 
     // Utilidades

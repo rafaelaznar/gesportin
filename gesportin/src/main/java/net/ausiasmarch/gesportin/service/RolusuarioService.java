@@ -85,13 +85,13 @@ public class RolusuarioService {
 
     public Long fill() {
         oSessionService.requireAdmin();
-        String[] descripciones = oAleatorioService.getDescripcionesRoles();
-        for (int i = 0; i < descripciones.length; i++) {
+        int numRoles = oAleatorioService.getNumDescripcionesRoles();
+        for (int i = 0; i < numRoles; i++) {
             RolusuarioEntity oRolusuario = new RolusuarioEntity();
-            oRolusuario.setDescripcion(descripciones[i % descripciones.length]);
+            oRolusuario.setDescripcion(oAleatorioService.getDescripcionRol(i));
             oRolusuarioRepository.save(oRolusuario);
         }
-        return (long) descripciones.length;
+        return (long) numRoles;
     }
 
     public RolusuarioEntity getOneRandom() {
