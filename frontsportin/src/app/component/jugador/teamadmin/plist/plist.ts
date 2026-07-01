@@ -1,12 +1,15 @@
 import { Component, computed, inject, Input, OnInit, OnDestroy, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Subject, Subscription, debounceTime, distinctUntilChanged } from 'rxjs';
 import { MODAL_REF } from '../../../shared/modal/modal.tokens';
 import { debounceTimeSearch } from '../../../../environment/environment';
 import { IJugador } from '../../../../model/jugador';
+import { IPago } from '../../../../model/pago';
 import { IPage } from '../../../../model/plist';
 import { JugadorService } from '../../../../service/jugador-service';
+import { PagoService } from '../../../../service/pago';
 import { Paginacion } from '../../../shared/paginacion/paginacion';
 import { BotoneraRpp } from '../../../shared/botonera-rpp/botonera-rpp';
 import { BotoneraActionsPlist } from '../../../shared/botonera-actions-plist/botonera-actions-plist';
@@ -14,7 +17,7 @@ import { BotoneraActionsPlist } from '../../../shared/botonera-actions-plist/bot
 @Component({
   standalone: true,
   selector: 'app-jugador-teamadmin-plist',
-  imports: [RouterLink, Paginacion, BotoneraRpp, BotoneraActionsPlist],
+  imports: [CommonModule, RouterLink, Paginacion, BotoneraRpp, BotoneraActionsPlist],
   templateUrl: './plist.html',
   styleUrl: './plist.css',
 })
@@ -29,11 +32,13 @@ export class JugadorTeamadminPlist implements OnInit, OnDestroy {
   orderField = signal<string>('id');
   orderDirection = signal<'asc' | 'desc'>('asc');
   totalRecords = computed(() => this.oPage()?.totalElements ?? 0);
+  pagosByJugador = signal<Map<number, IPago[]>>(new Map());
 
   private searchSubject = new Subject<string>();
   private searchSubscription?: Subscription;
 
   private jugadorService = inject(JugadorService);
+  private pagoService = inject(PagoService);
   private modalRef = inject(MODAL_REF, { optional: true });
 
   ngOnInit(): void {
@@ -65,6 +70,19 @@ export class JugadorTeamadminPlist implements OnInit, OnDestroy {
       .subscribe({
         next: (data: IPage<IJugador>) => {
           this.oPage.set(data);
+          this.pagosByJugador.set(new Map());
+          data.content.forEach((jugador) => {
+            this.pagoService.getPage(0, 100, 'id', 'asc', 0, jugador.id).subscribe({
+              next: (pagosPage: IPage<IPago>) => {
+                this.pagosByJugador.update((map) => {
+                  const newMap = new Map(map);
+                  newMap.set(jugador.id, pagosPage.content);
+                  return newMap;
+                });
+              },
+              error: (err: HttpErrorResponse) => console.error(err),
+            });
+          });
           if (this.numPage() > 0 && this.numPage() >= data.totalPages) {
             this.numPage.set(data.totalPages - 1);
             this.getPage();
@@ -72,6 +90,10 @@ export class JugadorTeamadminPlist implements OnInit, OnDestroy {
         },
         error: (err: HttpErrorResponse) => console.error(err),
       });
+  }
+
+  getPagosForJugador(jugadorId: number): IPago[] {
+    return this.pagosByJugador().get(jugadorId) ?? [];
   }
 
   onRppChange(n: number): void { this.numRpp.set(n); this.numPage.set(0); this.getPage(); }

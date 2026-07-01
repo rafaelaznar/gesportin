@@ -4,7 +4,10 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { JugadorService } from '../../../../service/jugador-service';
 import { IJugador } from '../../../../model/jugador';
+import { IPago } from '../../../../model/pago';
+import { IPage } from '../../../../model/plist';
 import { SessionService } from '../../../../service/session';
+import { PagoService } from '../../../../service/pago';
 import { DatetimePipe } from '../../../../pipe/datetime-pipe';
 import { ImageUploadService } from '../../../../service/image-upload';
 
@@ -19,6 +22,7 @@ export class JugadorTeamadminDetail implements OnInit {
   @Input() id: Signal<number> = signal(0);
 
   private jugadorService = inject(JugadorService);
+  private pagoService = inject(PagoService);
   session = inject(SessionService);
   imageUpload: ImageUploadService = inject(ImageUploadService);
 
@@ -37,6 +41,8 @@ export class JugadorTeamadminDetail implements OnInit {
   showEquipoUsuarioTipousuario = signal(false);
   showEquipoUsuarioRolusuario = signal(false);
   showEquipoUsuarioClub = signal(false);
+  showPagos = signal(false);
+  pagos = signal<IPago[]>([]);
 
   ngOnInit(): void {
     const idJugador = this.id();
@@ -53,6 +59,12 @@ export class JugadorTeamadminDetail implements OnInit {
       next: (data: IJugador) => {
         this.oJugador.set(data);
         this.loading.set(false);
+        this.pagoService.getPage(0, 100, 'id', 'asc', 0, id).subscribe({
+          next: (pagosPage: IPage<IPago>) => {
+            this.pagos.set(pagosPage.content);
+          },
+          error: (err: HttpErrorResponse) => console.error(err),
+        });
         const equipo = data.equipo;
         const cat = equipo?.categoria;
         const temp = cat?.temporada;
