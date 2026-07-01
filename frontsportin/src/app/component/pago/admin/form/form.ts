@@ -136,7 +136,11 @@ export class PagoAdminForm implements OnInit {
   }
 
   openJugadorFinderModal(): void {
-    const ref = this.modalService.open<unknown, IJugador | null>(JugadorPlistFinder);
+    // Filtrar jugadores del mismo equipo que la cuota seleccionada
+    const cuota = this.selectedCuota();
+    const idEquipo = cuota?.equipo?.id;
+    const config = idEquipo ? { data: { id_equipo: idEquipo } } : undefined;
+    const ref = this.modalService.open<unknown, IJugador | null>(JugadorPlistFinder, config);
     ref.afterClosed$.subscribe((jugador: IJugador | null) => {
       if (jugador?.id != null) {
         this.pagoForm.patchValue({ id_jugador: jugador.id });

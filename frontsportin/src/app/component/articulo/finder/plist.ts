@@ -21,6 +21,8 @@ export class ArticuloPlistFinder implements OnInit, OnDestroy {
 
   /** Filtro por tipo de artículo — recibido via modalService.open(..., { data: { id_tipoarticulo } }) */
   id_tipoarticulo = input<number>(0);
+  /** Filtro por club — recibido via modalService.open(..., { data: { id_club } }) */
+  id_club = input<number>(0);
 
   private readonly modalRef = inject(MODAL_REF, { optional: true }) as ModalRef<unknown, IArticulo | null> | null;
   private readonly articuloService = inject(ArticuloService);
@@ -68,6 +70,7 @@ export class ArticuloPlistFinder implements OnInit, OnDestroy {
         this.orderDirection(),
         this.descripcion(),
         this.id_tipoarticulo(),
+        this.id_club(),
       )
       .subscribe({
         next: (data: IPage<IArticulo>) => {

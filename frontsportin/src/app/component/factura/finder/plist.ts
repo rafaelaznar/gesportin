@@ -19,6 +19,8 @@ export class FacturaPlistFinder implements OnInit {
 
   /** Filtro por usuario — recibido via modalService.open(..., { data: { id_usuario } }) */
   id_usuario = input<number>(0);
+  /** Filtro por club — recibido via modalService.open(..., { data: { id_club } }) */
+  id_club = input<number>(0);
 
   private readonly modalRef = inject(MODAL_REF, { optional: true }) as ModalRef<unknown, IFactura | null> | null;
   private readonly facturaService = inject(FacturaService);
@@ -50,6 +52,7 @@ export class FacturaPlistFinder implements OnInit {
         orderField,
         this.orderDirection(),
         this.id_usuario(),
+        this.id_club(),
       )
       .subscribe({
         next: (data: IPage<IFactura>) => {

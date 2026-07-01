@@ -115,7 +115,11 @@ export class PuntuacionAdminForm implements OnInit {
   }
 
   openNoticiaFinderModal(): void {
-    const ref = this.modalService.open<unknown, INoticia | null>(NoticiaPlistFinder);
+    // Filtrar noticias del mismo club que el usuario seleccionado
+    const usuario = this.selectedUsuario();
+    const idClub = usuario?.club?.id;
+    const config = idClub ? { data: { id_club: idClub } } : undefined;
+    const ref = this.modalService.open<unknown, INoticia | null>(NoticiaPlistFinder, config);
     ref.afterClosed$.subscribe((noticia: INoticia | null) => {
       if (noticia?.id != null) {
         this.puntuacionForm.patchValue({ id_noticia: noticia.id });
@@ -126,7 +130,11 @@ export class PuntuacionAdminForm implements OnInit {
   }
 
   openUsuarioFinderModal(): void {
-    const ref = this.modalService.open<unknown, IUsuario | null>(UsuarioPlistFinder);
+    // Filtrar usuarios del mismo club que la noticia seleccionada
+    const noticia = this.selectedNoticia();
+    const idClub = noticia?.club?.id;
+    const config = idClub ? { data: { id_club: idClub } } : undefined;
+    const ref = this.modalService.open<unknown, IUsuario | null>(UsuarioPlistFinder, config);
     ref.afterClosed$.subscribe((usuario: IUsuario | null) => {
       if (usuario?.id != null) {
         this.puntuacionForm.patchValue({ id_usuario: usuario.id });

@@ -46,7 +46,7 @@ public class ArticuloService {
         return oArticuloConverter.toDTO(e);
     }
 
-    public Page<ArticuloDTO> getPage(Pageable pageable, String descripcion, Long id_tipoarticulo) {
+    public Page<ArticuloDTO> getPage(Pageable pageable, String descripcion, Long id_tipoarticulo, Long id_club) {
         if (oSessionService.isEquipoAdmin() || oSessionService.isUsuario()) {
             Long myClub = oSessionService.getIdClub();
             if (id_tipoarticulo != null) {
@@ -55,13 +55,20 @@ public class ArticuloService {
                     throw new UnauthorizedException("Acceso denegado: solo articulos de su club");
                 }
             }
-            if (descripcion != null && !descripcion.isEmpty() && id_tipoarticulo == null) {
-                return oArticuloConverter.toPageDTO(oArticuloRepository.findByDescripcionContainingIgnoreCaseAndTipoarticuloClubId(descripcion, myClub, pageable));
+            if (id_club != null && !myClub.equals(id_club)) {
+                throw new UnauthorizedException("Acceso denegado: solo articulos de su club");
             }
-            if (descripcion == null || descripcion.isEmpty()) {
-                if (id_tipoarticulo == null) {
-                    return oArticuloConverter.toPageDTO(oArticuloRepository.findByTipoarticuloClubId(myClub, pageable));
-                }
+            // For non-admin users, always filter by their club
+            id_club = myClub;
+        }
+        // Filter by club if specified (for admin users who want to filter)
+        if (id_club != null) {
+            if (descripcion != null && !descripcion.isEmpty()) {
+                return oArticuloConverter.toPageDTO(oArticuloRepository.findByDescripcionContainingIgnoreCaseAndTipoarticuloClubId(descripcion, id_club, pageable));
+            } else if (id_tipoarticulo != null) {
+                return oArticuloConverter.toPageDTO(oArticuloRepository.findByTipoarticuloId(id_tipoarticulo, pageable));
+            } else {
+                return oArticuloConverter.toPageDTO(oArticuloRepository.findByTipoarticuloClubId(id_club, pageable));
             }
         }
         if (descripcion != null && !descripcion.isEmpty()) {

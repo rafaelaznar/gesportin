@@ -98,7 +98,10 @@ export class FacturaTeamadminForm implements OnInit {
   }
 
   openUsuarioFinderModal(): void {
-    const ref = this.modalService.open<unknown, IUsuario | null>(UsuarioPlistFinder);
+    // Filtrar usuarios del club del administrador (backend ya fuerza el filtro para teamadmin)
+    const clubId = this.sessionService.getClubId();
+    const config = clubId ? { data: { id_club: clubId } } : undefined;
+    const ref = this.modalService.open<unknown, IUsuario | null>(UsuarioPlistFinder, config);
     ref.afterClosed$.subscribe((usuario: IUsuario | null) => {
       if (usuario?.id != null) {
         this.facturaForm.patchValue({ id_usuario: usuario.id });

@@ -141,7 +141,14 @@ export class JugadorAdminForm implements OnInit {
   }
 
   openUsuarioFinderModal(): void {
-    const ref = this.modalService.open<unknown, IUsuario | null>(UsuarioPlistFinder);
+    // Filtrar usuarios del mismo club que el equipo seleccionado, solo tipousuario=3
+    const equipo = this.selectedEquipo();
+    const idClub = equipo?.categoria?.temporada?.club?.id;
+    const data: any = { id_tipousuario: 3 };
+    if (idClub) {
+      data.id_club = idClub;
+    }
+    const ref = this.modalService.open<unknown, IUsuario | null>(UsuarioPlistFinder, { data });
     ref.afterClosed$.subscribe((usuario: IUsuario | null) => {
       if (usuario?.id != null) {
         this.jugadorForm.patchValue({ id_usuario: usuario.id });

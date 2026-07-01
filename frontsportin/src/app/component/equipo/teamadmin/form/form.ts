@@ -192,7 +192,14 @@ export class EquipoTeamadminForm implements OnInit {
   }
 
   openEntrenadorFinderModal(): void {
-    const ref = this.modalService.open<unknown, IUsuario | null>(UsuarioPlistFinder);
+    // Filtrar entrenadores del mismo club que la categoría seleccionada
+    const categoria = this.selectedCategoria();
+    const idClub = categoria?.temporada?.club?.id;
+    const data: any = {};
+    if (idClub) {
+      data.id_club = idClub;
+    }
+    const ref = this.modalService.open<unknown, IUsuario | null>(UsuarioPlistFinder, { data });
 
     ref.afterClosed$.subscribe((entrenador: IUsuario | null) => {
       if (entrenador) {

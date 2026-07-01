@@ -48,7 +48,7 @@ public class FacturaService {
         return oFacturaConverter.toDTO(e);
     }
 
-    public Page<FacturaDTO> getPage(Pageable pageable, Long id_usuario) {
+    public Page<FacturaDTO> getPage(Pageable pageable, Long id_usuario, Long id_club) {
         if (oSessionService.isEquipoAdmin()) {
             Long myClub = oSessionService.getIdClub();
             if (id_usuario != null) {
@@ -57,9 +57,11 @@ public class FacturaService {
                     throw new UnauthorizedException("Acceso denegado: solo facturas de su club");
                 }
             }
-            if (id_usuario == null) {
-                return oFacturaConverter.toPageDTO(oFacturaRepository.findByUsuarioClubId(myClub, pageable));
+            if (id_club != null && !myClub.equals(id_club)) {
+                throw new UnauthorizedException("Acceso denegado: solo facturas de su club");
             }
+            // For non-admin users, always filter by their club
+            id_club = myClub;
         }
         if (oSessionService.isUsuario()) {
             Long currentUserId = oSessionService.getIdUsuario();
@@ -67,6 +69,10 @@ public class FacturaService {
                 throw new UnauthorizedException("Acceso denegado: solo puede ver sus propias facturas");
             }
             return oFacturaConverter.toPageDTO(oFacturaRepository.findByUsuarioId(currentUserId, pageable));
+        }
+        // Filter by club if specified (for admin users)
+        if (id_club != null) {
+            return oFacturaConverter.toPageDTO(oFacturaRepository.findByUsuarioClubId(id_club, pageable));
         }
         if (id_usuario != null) {
             return oFacturaConverter.toPageDTO(oFacturaRepository.findByUsuarioId(id_usuario, pageable));

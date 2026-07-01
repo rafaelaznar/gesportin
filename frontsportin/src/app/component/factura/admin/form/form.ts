@@ -88,6 +88,7 @@ export class FacturaAdminForm implements OnInit {
   }
 
   openUsuarioFinderModal(): void {
+    // El admin puede seleccionar cualquier usuario; sin filtro adicional
     const ref = this.modalService.open<unknown, IUsuario | null>(UsuarioPlistFinder);
     ref.afterClosed$.subscribe((usuario: IUsuario | null) => {
       if (usuario?.id != null) {

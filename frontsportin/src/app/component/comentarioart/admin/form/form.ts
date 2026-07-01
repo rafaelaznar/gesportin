@@ -111,7 +111,13 @@ export class ComentarioartAdminForm implements OnInit {
   }
 
   openArticuloFinderModal(): void {
-    const ref = this.modalService.open<unknown, IArticulo | null>(ArticuloPlistFinder);
+    // Filtrar artículos del mismo club que el usuario seleccionado (vía tipoarticulo)
+    const usuario = this.selectedUsuario();
+    const idClub = usuario?.club?.id;
+    // Nota: ArticuloPlistFinder solo soporta id_tipoarticulo, no id_club directamente.
+    // Si no hay usuario seleccionado, se muestran todos los artículos.
+    const config = idClub ? { data: { id_club: idClub } } : undefined;
+    const ref = this.modalService.open<unknown, IArticulo | null>(ArticuloPlistFinder, config);
     ref.afterClosed$.subscribe((articulo: IArticulo | null) => {
       if (articulo?.id != null) {
         this.comentarioartForm.patchValue({ id_articulo: articulo.id });
@@ -122,7 +128,11 @@ export class ComentarioartAdminForm implements OnInit {
   }
 
   openUsuarioFinderModal(): void {
-    const ref = this.modalService.open<unknown, IUsuario | null>(UsuarioPlistFinder);
+    // Filtrar usuarios del mismo club que el artículo seleccionado
+    const articulo = this.selectedArticulo();
+    const idClub = articulo?.tipoarticulo?.club?.id;
+    const config = idClub ? { data: { id_club: idClub } } : undefined;
+    const ref = this.modalService.open<unknown, IUsuario | null>(UsuarioPlistFinder, config);
     ref.afterClosed$.subscribe((usuario: IUsuario | null) => {
       if (usuario?.id != null) {
         this.comentarioartForm.patchValue({ id_usuario: usuario.id });

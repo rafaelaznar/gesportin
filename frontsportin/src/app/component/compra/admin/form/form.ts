@@ -125,7 +125,11 @@ export class CompraAdminForm implements OnInit {
   }
 
   openArticuloFinderModal(): void {
-    const ref = this.modalService.open<unknown, IArticulo | null>(ArticuloPlistFinder);
+    // Filtrar artículos del mismo club que el usuario de la factura seleccionada
+    const factura = this.selectedFactura();
+    const idClub = factura?.usuario?.club?.id;
+    const config = idClub ? { data: { id_club: idClub } } : undefined;
+    const ref = this.modalService.open<unknown, IArticulo | null>(ArticuloPlistFinder, config);
     ref.afterClosed$.subscribe((articulo: IArticulo | null) => {
       if (articulo?.id != null) {
         this.compraForm.patchValue({ id_articulo: articulo.id });
@@ -136,7 +140,11 @@ export class CompraAdminForm implements OnInit {
   }
 
   openFacturaFinderModal(): void {
-    const ref = this.modalService.open<unknown, IFactura | null>(FacturaPlistFinder);
+    // Si hay un artículo seleccionado, filtrar facturas del mismo club
+    const articulo = this.selectedArticulo();
+    const idClub = articulo?.tipoarticulo?.club?.id;
+    const config = idClub ? { data: { id_club: idClub } } : undefined;
+    const ref = this.modalService.open<unknown, IFactura | null>(FacturaPlistFinder, config);
     ref.afterClosed$.subscribe((factura: IFactura | null) => {
       if (factura?.id != null) {
         this.compraForm.patchValue({ id_factura: factura.id });

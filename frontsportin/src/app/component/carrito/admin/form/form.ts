@@ -136,7 +136,11 @@ export class CarritoAdminForm implements OnInit {
   }
 
   openArticuloFinderModal(): void {
-    const ref = this.modalService.open<unknown, IArticulo | null>(ArticuloPlistFinder);
+    // Filtrar artículos del mismo club que el usuario seleccionado
+    const usuario = this.selectedUsuario();
+    const idClub = usuario?.club?.id;
+    const config = idClub ? { data: { id_club: idClub } } : undefined;
+    const ref = this.modalService.open<unknown, IArticulo | null>(ArticuloPlistFinder, config);
     ref.afterClosed$.subscribe((articulo: IArticulo | null) => {
       if (articulo?.id != null) {
         this.carritoForm.patchValue({ id_articulo: articulo.id });
@@ -147,7 +151,11 @@ export class CarritoAdminForm implements OnInit {
   }
 
   openUsuarioFinderModal(): void {
-    const ref = this.modalService.open<unknown, IUsuario | null>(UsuarioPlistFinder);
+    // Filtrar usuarios del mismo club que el artículo seleccionado
+    const articulo = this.selectedArticulo();
+    const idClub = articulo?.tipoarticulo?.club?.id;
+    const config = idClub ? { data: { id_club: idClub } } : undefined;
+    const ref = this.modalService.open<unknown, IUsuario | null>(UsuarioPlistFinder, config);
     ref.afterClosed$.subscribe((usuario: IUsuario | null) => {
       if (usuario?.id != null) {
         this.carritoForm.patchValue({ id_usuario: usuario.id });

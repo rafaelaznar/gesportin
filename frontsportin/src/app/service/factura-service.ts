@@ -15,22 +15,21 @@ export class FacturaService {
     private sanitizer: PayloadSanitizerService,
   ) {}
 
-  getPage(page: number, rpp: number, order: string = '', direction: string = '', id_usuario: number = 0): Observable<IPage<IFactura>> {
+  getPage(page: number, rpp: number, order: string = '', direction: string = '', id_usuario: number = 0, id_club: number = 0): Observable<IPage<IFactura>> {
     if (order === '') {
       order = 'id';
     }
     if (direction === '') {
       direction = 'asc';
     }
+    let strUrl = serverURL + `/factura?page=${page}&size=${rpp}&sort=${order},${direction}`;
     if (id_usuario > 0) {
-      return this.oHttp.get<IPage<IFactura>>(
-        serverURL + 
-        `/factura?page=${page}&size=${rpp}&sort=${order},${direction}&id_usuario=${id_usuario}`,
-      );
+      strUrl += `&id_usuario=${id_usuario}`;
     }
-    return this.oHttp.get<IPage<IFactura>>(
-      serverURL + `/factura?page=${page}&size=${rpp}&sort=${order},${direction}`
-    );
+    if (id_club > 0) {
+      strUrl += `&id_club=${id_club}`;
+    }
+    return this.oHttp.get<IPage<IFactura>>(strUrl);
   }
 
   get(id: number): Observable<IFactura> {
