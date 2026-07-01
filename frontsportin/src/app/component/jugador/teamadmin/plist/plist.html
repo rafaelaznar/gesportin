@@ -85,6 +85,16 @@
                   {{ oJugador.equipo.nombre }}
                 </a>
               </p>
+              @if (oJugador.equipo.categoria) {
+                <p class="mb-1">
+                  <strong>Categoría:</strong> {{ oJugador.equipo.categoria.nombre }}
+                </p>
+                @if (oJugador.equipo.categoria.temporada) {
+                  <p class="mb-1">
+                    <strong>Temporada:</strong> {{ oJugador.equipo.categoria.temporada.descripcion }}
+                  </p>
+                }
+              }
             }
             <div class="d-flex flex-wrap gap-2 mt-2">
               @if (!oJugador.pagos || oJugador.pagos === 0) {
