@@ -1,14 +1,18 @@
-import { CommonModule } from '@angular/common';
+import { DecimalPipe } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import {
   AdminDataToolsService,
+  COUNT_ORDER,
   DataEntityKey,
   EMPTY_ORDER,
   ENTITY_META,
-  FILL_ORDER,
   IEntityMeta,
+  IGenerateResult,
 } from '../../../service/admin-data-tools';
+import { ModalService } from '../../../component/shared/modal/modal.service';
+import { ConfirmDialogComponent, ConfirmDialogData } from '../../../component/shared/confirm-dialog/confirm-dialog.component';
+import { ResultDialogComponent, ResultDialogData } from '../../../component/shared/result-dialog/result-dialog.component';
 
 interface IEntityRow extends IEntityMeta {
   count: number | null;
@@ -18,20 +22,19 @@ interface IEntityRow extends IEntityMeta {
 @Component({
   selector: 'app-admin-data-tools-page',
   standalone: true,
-  imports: [CommonModule],
+  imports: [DecimalPipe],
   templateUrl: './data-tools.html',
   styleUrl: './data-tools.css',
 })
 export class AdminDataToolsPage implements OnInit {
   private svc = inject(AdminDataToolsService);
+  private modal = inject(ModalService);
 
   rows = signal<IEntityRow[]>(
-    FILL_ORDER.map((key) => ({ ...ENTITY_META[key], count: null, loading: false })),
+    COUNT_ORDER.map((key) => ({ ...ENTITY_META[key], count: null, loading: false })),
   );
 
-  selectedAmount = signal<number>(10);
   running = signal<boolean>(false);
-  logs = signal<string[]>([]);
 
   ngOnInit(): void {
     this.loadCounts();
@@ -44,11 +47,11 @@ export class AdminDataToolsPage implements OnInit {
     this.rows.set(updates);
 
     const settled = await Promise.allSettled(
-      FILL_ORDER.map((key) => firstValueFrom(this.svc.count(key))),
+      COUNT_ORDER.map((key) => firstValueFrom(this.svc.count(key))),
     );
 
     this.rows.set(
-      FILL_ORDER.map((key, i) => {
+      COUNT_ORDER.map((key, i) => {
         const meta = ENTITY_META[key];
         const result = settled[i];
         return {
@@ -60,96 +63,110 @@ export class AdminDataToolsPage implements OnInit {
     );
   }
 
-  setAmount(n: number): void {
-    this.selectedAmount.set(n);
+  // ── Reset ───────────────────────────────────────────────────────────────────
+
+  async confirmReset(): Promise<void> {
+    const confirmed = await firstValueFrom(
+      this.modal.open<ConfirmDialogData, boolean>(ConfirmDialogComponent, {
+        data: {
+          title: 'Confirmar reseteo',
+          message: '¿Estás seguro de que deseas resetear la base de datos?\n\n' +
+            'Esta acción eliminará TODOS los datos de todas las tablas y restaurará ' +
+            'únicamente los datos mínimos del sistema. Esta operación es IRREVERSIBLE.',
+        },
+      }).afterClosed$,
+    );
+
+    if (!confirmed) return;
+
+    await this.runReset();
   }
 
-  // ── Fill all ────────────────────────────────────────────────────────────────
-
-  async runFillAll(): Promise<void> {
-    if (this.running()) return;
-    const amount = this.selectedAmount();
+  async runReset(): Promise<void> {
     this.running.set(true);
-    this.clearLogs();
-
-    this.log('Paso 1/2 — Vaciando tablas y restableciendo contadores de ID a 1...');
-    try {
-      const seeded = await firstValueFrom(this.svc.resetComplete());
-      this.log(`  ✓ Tablas vaciadas, AUTO_INCREMENT restablecido. Datos mínimos insertados: ${seeded}`);
-    } catch (err) {
-      this.log(`ERROR al resetear: ${this.errMsg(err)}`);
-      this.running.set(false);
-      await this.loadCounts();
-      return;
-    }
-
-    this.log(`Paso 2/2 — Creando ${amount} registros por entidad en orden de dependencias...`);
-    this.log(`Orden: ${FILL_ORDER.map((k) => ENTITY_META[k].label).join(' → ')}`);
-
-    try {
-      for (const entity of FILL_ORDER) {
-        const label = ENTITY_META[entity].label;
-        this.log(`Creando ${label}...`);
-        const n = await firstValueFrom(this.svc.fill(entity, amount));
-        this.log(`  ✓ ${label}: ${n} registro(s) creado(s)`);
-      }
-      this.log('Proceso de creación finalizado correctamente. Los IDs empiezan desde 1.');
-    } catch (err) {
-      this.log(`ERROR en creación: ${this.errMsg(err)}`);
-    } finally {
-      this.running.set(false);
-      await this.loadCounts();
-    }
-  }
-
-  // ── Reset ────────────────────────────────────────────────────────────────────
-  // Single HTTP call → POST /admin/reset.  The backend performs the full
-  // operation in ONE transaction:
-  //   1. requireAdmin() check once (before any deletion)
-  //   2. deleteAllInBatch() in reverse FK order via repositories (no re-auth)
-  //   3. Re-seed: tipousuario, rolusuario, club, 3 usuarios
-  // This avoids the 401 that occurs when sequential empty() calls lose the
-  // admin user from the DB mid-way through the reset sequence.
-
-  async runResetAll(): Promise<void> {
-    if (this.running()) return;
-    this.running.set(true);
-    this.clearLogs();
-
-    this.log('Ejecutando reset completo (una sola transacción en el servidor)...');
-    this.log(`Orden de borrado: ${EMPTY_ORDER.map((k) => ENTITY_META[k].label).join(' → ')}`);
 
     try {
       const n = await firstValueFrom(this.svc.reset());
-      this.log(`  ✓ Reset completado. Registros creados en seed: ${n}`);
-      this.log('    · Tipo Usuario: 1-Administrador, 2-Administrador de club, 3-Usuario');
-      this.log('    · Rol Usuario:  1-Presidente');
-      this.log('    · Club:         1-Gesportin');
-      this.log('    · Usuarios:     admin / clubadmin / usuario  (contraseña: ausias)');
-      this.log('La aplicación conserva los datos mínimos del sistema.');
+      await this.loadCounts();
+
+      const details = [
+        `Se han restaurado ${n} registros del sistema.`,
+        '· Tipo Usuario: 1-Administrador, 2-Administrador de club, 3-Usuario',
+        '· Estado Partido: 1-No jugado, 2-Ganado, 3-Perdido, 4-Empatado, 5-Aplazado',
+        '· Rol Usuario: 1-Presidente',
+        '· Club: 1-Gesportin',
+        '· Usuarios: admin / clubadmin / usuario (contraseña: ausias)',
+      ];
+
+      this.modal.open<ResultDialogData, boolean>(ResultDialogComponent, {
+        data: {
+          title: '✅ Base de datos reseteada',
+          message: 'La base de datos ha sido reseteada correctamente. ' +
+            'Se han eliminado todos los datos y se han restaurado los datos mínimos del sistema.',
+          details,
+        },
+      });
     } catch (err) {
-      this.log(`ERROR en reset: ${this.errMsg(err)}`);
+      this.modal.open<ResultDialogData, boolean>(ResultDialogComponent, {
+        data: {
+          title: '❌ Error al resetear',
+          message: `Ocurrió un error al resetear la base de datos:<br><code>${this.errMsg(err)}</code>`,
+        },
+      });
     } finally {
       this.running.set(false);
       await this.loadCounts();
     }
   }
 
-  // ── Poblar Gesportin ────────────────────────────────────────────────────────
+  // ── Generate ────────────────────────────────────────────────────────────────
 
-  async runFillGesportin(): Promise<void> {
-    if (this.running()) return;
+  async confirmGenerate(): Promise<void> {
+    const confirmed = await firstValueFrom(
+      this.modal.open<ConfirmDialogData, boolean>(ConfirmDialogComponent, {
+        data: {
+          title: 'Confirmar generación de datos',
+          message: '¿Estás seguro de que deseas generar datos de prueba?\n\n' +
+            'Esta operación añadirá datos a los ya existentes. ' +
+            'Se asegurará de que haya 10 clubes (usando los existentes, incluido Gesportin) ' +
+            'y generará registros anidados congruentes en todas las tablas.\n\n' +
+            'La operación puede tardar varios segundos.',
+        },
+      }).afterClosed$,
+    );
+
+    if (!confirmed) return;
+
+    await this.runGenerate();
+  }
+
+  async runGenerate(): Promise<void> {
     this.running.set(true);
-    this.clearLogs();
-
-    this.log('Poblando Gesportin (club id=1) con entidades aleatorias...');
 
     try {
-      const n = await firstValueFrom(this.svc.fillGesportin());
-      this.log(`  ✓ Poblar Gesportin completado: ${n} registro(s) actualizados.`);
-      this.log('    Se han asignado hasta 5 entidades de cada tipo (noticia, tipo artículo, temporada, usuario) al club Gesportin.');
+      const result = await firstValueFrom(this.svc.generate());
+      await this.loadCounts();
+
+      const totalRecords = this.calcTotal(result);
+      const details = this.formatGenerateResult(result);
+
+      this.modal.open<ResultDialogData, boolean>(ResultDialogComponent, {
+        data: {
+          title: '✅ Datos generados correctamente',
+          message: `Se han generado <strong>${totalRecords.toLocaleString()} registros</strong> ` +
+            `en total, repartidos en <strong>10 clubes</strong>. ` +
+            `Cada club tiene al menos 10 registros en cada tabla, ` +
+            `respetando todas las restricciones de integridad referencial.`,
+          details,
+        },
+      });
     } catch (err) {
-      this.log(`ERROR en poblar Gesportin: ${this.errMsg(err)}`);
+      this.modal.open<ResultDialogData, boolean>(ResultDialogComponent, {
+        data: {
+          title: '❌ Error al generar datos',
+          message: `Ocurrió un error al generar los datos:<br><code>${this.errMsg(err)}</code>`,
+        },
+      });
     } finally {
       this.running.set(false);
       await this.loadCounts();
@@ -158,12 +175,38 @@ export class AdminDataToolsPage implements OnInit {
 
   // ── Helpers ─────────────────────────────────────────────────────────────────
 
-  private log(msg: string): void {
-    this.logs.update((prev) => [...prev, msg]);
+  private calcTotal(r: IGenerateResult): number {
+    return (
+      r.clubs + r.usuarios + r.temporadas + r.categorias + r.noticias +
+      r.tipoarticulos + r.articulos + r.equipos + r.ligas + r.jugadores +
+      r.cuotas + r.partidos + r.pagos + r.comentarios + r.puntuaciones +
+      r.comentarioarts + r.puntuacionarts + r.carritos + r.facturas + r.compras
+    );
   }
 
-  private clearLogs(): void {
-    this.logs.set([]);
+  private formatGenerateResult(r: IGenerateResult): string[] {
+    return [
+      `🏢 Clubs: ${r.clubs}`,
+      `👤 Usuarios: ${r.usuarios}`,
+      `📅 Temporadas: ${r.temporadas}`,
+      `📂 Categorías: ${r.categorias}`,
+      `📰 Noticias: ${r.noticias}`,
+      `🏷️ Tipos de artículo: ${r.tipoarticulos}`,
+      `🛒 Artículos: ${r.articulos}`,
+      `⚽ Equipos: ${r.equipos}`,
+      `🏆 Ligas: ${r.ligas}`,
+      `🎽 Jugadores: ${r.jugadores}`,
+      `💰 Cuotas: ${r.cuotas}`,
+      `📋 Partidos: ${r.partidos}`,
+      `💳 Pagos: ${r.pagos}`,
+      `💬 Comentarios: ${r.comentarios}`,
+      `⭐ Puntuaciones: ${r.puntuaciones}`,
+      `💬 Comentarios art.: ${r.comentarioarts}`,
+      `⭐ Puntuaciones art.: ${r.puntuacionarts}`,
+      `🛍️ Carritos: ${r.carritos}`,
+      `🧾 Facturas: ${r.facturas}`,
+      `📦 Compras: ${r.compras}`,
+    ];
   }
 
   private errMsg(err: unknown): string {

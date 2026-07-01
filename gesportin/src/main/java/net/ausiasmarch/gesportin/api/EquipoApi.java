@@ -57,17 +57,6 @@ public class EquipoApi {
     public ResponseEntity<Long> delete(@PathVariable Long id) {
         return ResponseEntity.ok(oEquipoService.delete(id));
     }
-
-    @PostMapping("/fill/{cantidad}")
-    public ResponseEntity<Long> fill(@PathVariable Long cantidad) {
-        return ResponseEntity.ok(oEquipoService.fill(cantidad));
-    }
-
-    @DeleteMapping("/empty")
-    public ResponseEntity<Long> empty() {
-        return ResponseEntity.ok(oEquipoService.empty());
-    }
-
     @GetMapping("/count")
     public ResponseEntity<Long> count() {
         return ResponseEntity.ok(oEquipoService.count());

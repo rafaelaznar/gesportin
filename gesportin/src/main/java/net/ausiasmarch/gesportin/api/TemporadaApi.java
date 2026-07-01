@@ -55,17 +55,6 @@ public class TemporadaApi {
     public ResponseEntity<Long> delete(@PathVariable Long id) {
         return ResponseEntity.ok(oTemporadaService.delete(id));
     }
-
-    @PostMapping("/fill/{cantidad}")
-    public ResponseEntity<Long> fill(@PathVariable Long cantidad) {
-        return ResponseEntity.ok(oTemporadaService.fill(cantidad));
-    }
-
-    @DeleteMapping("/empty")
-    public ResponseEntity<Long> empty() {
-        return ResponseEntity.ok(oTemporadaService.empty());
-    }
-
     @GetMapping("/count")
     public ResponseEntity<Long> count() {
         return ResponseEntity.ok(oTemporadaService.count());

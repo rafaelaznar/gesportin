@@ -5,6 +5,8 @@ import { MODAL_DATA, MODAL_REF } from '../modal/modal.tokens';
 export interface ConfirmDialogData {
   title?: string;
   message?: string;
+  confirmLabel?: string;
+  cancelLabel?: string;
 }
 
 @Component({
@@ -14,10 +16,10 @@ export interface ConfirmDialogData {
   template: `
     <div class="confirm-dialog">
       <h2 class="confirm-dialog__title">{{ data.title || 'Confirmar' }}</h2>
-      <p class="confirm-dialog__message">{{ data.message || '¿Confirmar la acción?' }}</p>
+      <p class="confirm-dialog__message" [innerHTML]="data.message || '¿Confirmar la acción?'"></p>
       <div class="confirm-dialog__actions">
-        <button class="btn btn-secondary" (click)="onCancel()">Cancelar</button>
-        <button class="btn btn-danger" (click)="onConfirm()">Borrar</button>
+        <button class="btn btn-secondary" (click)="onCancel()">{{ data.cancelLabel || 'Cancelar' }}</button>
+        <button class="btn btn-danger" (click)="onConfirm()">{{ data.confirmLabel || 'Confirmar' }}</button>
       </div>
     </div>
   `,

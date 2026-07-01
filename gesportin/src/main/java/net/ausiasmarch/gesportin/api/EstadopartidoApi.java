@@ -50,17 +50,6 @@ public class EstadopartidoApi {
     public ResponseEntity<Long> delete(@PathVariable Long id) {
         return ResponseEntity.ok(oEstadopartidoService.delete(id));
     }
-
-    @GetMapping("/fill")
-    public ResponseEntity<Long> fill() {
-        return ResponseEntity.ok(oEstadopartidoService.fill());
-    }
-
-    @DeleteMapping("/empty")
-    public ResponseEntity<Long> empty() {
-        return ResponseEntity.ok(oEstadopartidoService.empty());
-    }
-
     @GetMapping("/count")
     public ResponseEntity<Long> count() {
         return ResponseEntity.ok(oEstadopartidoService.count());

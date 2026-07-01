@@ -32,18 +32,6 @@ public class TipousuarioApi {
     public ResponseEntity<List<TipousuarioEntity>> getAll() {
         return ResponseEntity.ok(oTipousuarioService.getAll());
     }
-
-
-    @GetMapping("/fill")
-    public ResponseEntity<Long> fill() {
-        return ResponseEntity.ok(oTipousuarioService.fill());
-    }
-
-    @DeleteMapping("/empty")
-    public ResponseEntity<Long> empty() {
-        return ResponseEntity.ok(oTipousuarioService.empty());
-    }
-
     @GetMapping("/count")
     public ResponseEntity<Long> count() {
         return ResponseEntity.ok(oTipousuarioService.count());

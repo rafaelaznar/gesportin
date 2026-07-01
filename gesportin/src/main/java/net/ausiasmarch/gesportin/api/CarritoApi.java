@@ -52,17 +52,6 @@ public class CarritoApi {
     public ResponseEntity<FacturaEntity> comprar() {
         return ResponseEntity.ok(oCarritoService.comprar());
     }
-
-    @PostMapping("/fill/{cantidad}")
-    public ResponseEntity<Long> fill(@PathVariable Long cantidad) {
-        return ResponseEntity.ok(oCarritoService.fill(cantidad));
-    }
-
-    @DeleteMapping("/empty")
-    public ResponseEntity<Long> empty() {
-        return ResponseEntity.ok(oCarritoService.empty());
-    }
-
     @GetMapping("/count")
     public ResponseEntity<Long> count() {
         return ResponseEntity.ok(oCarritoService.count());

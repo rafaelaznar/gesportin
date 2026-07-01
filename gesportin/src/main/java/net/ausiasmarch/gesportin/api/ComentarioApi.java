@@ -56,17 +56,6 @@ public class ComentarioApi {
     public ResponseEntity<Long> delete(@PathVariable Long id) {
         return ResponseEntity.ok(oComentarioService.delete(id));
     }
-
-    @PostMapping("/fill/{cantidad}")
-    public ResponseEntity<Long> fill(@PathVariable Long cantidad) {
-        return ResponseEntity.ok(oComentarioService.fill(cantidad));
-    }
-
-    @DeleteMapping("/empty")
-    public ResponseEntity<Long> empty() {
-        return ResponseEntity.ok(oComentarioService.empty());
-    }
-
     @GetMapping("/count")
     public ResponseEntity<Long> count() {
         return ResponseEntity.ok(oComentarioService.count());

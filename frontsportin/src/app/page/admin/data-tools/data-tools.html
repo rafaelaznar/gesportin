@@ -1,5 +1,16 @@
 <div class="container-fluid my-3 px-3 px-md-4">
 
+  <!-- Spinner overlay -->
+  @if (running()) {
+    <div class="spinner-overlay">
+      <div class="spinner-box">
+        <div class="spinner-border text-primary mb-3" role="status" style="width:3rem;height:3rem;"></div>
+        <p class="fw-semibold mb-0">Procesando...</p>
+        <small class="text-muted">Esta operación puede tardar varios segundos</small>
+      </div>
+    </div>
+  }
+
   <!-- Header -->
   <div class="d-flex align-items-center gap-2 mb-3">
     <i class="bi bi-database-gear fs-2 text-primary" aria-hidden="true"></i>
@@ -25,15 +36,21 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let row of rows(); let i = index">
-            <td class="text-muted small">{{ i + 1 }}</td>
-            <td>{{ row.label }}</td>
-            <td class="text-end">
-              <span *ngIf="row.loading" class="spinner-border spinner-border-sm text-secondary" role="status"></span>
-              <span *ngIf="!row.loading && row.count !== null" class="badge text-bg-secondary">{{ row.count | number }}</span>
-              <span *ngIf="!row.loading && row.count === null" class="text-danger small">—</span>
-            </td>
-          </tr>
+          @for (row of rows(); track row.key; let i = $index) {
+            <tr>
+              <td class="text-muted small">{{ i + 1 }}</td>
+              <td>{{ row.label }}</td>
+              <td class="text-end">
+                @if (row.loading) {
+                  <span class="spinner-border spinner-border-sm text-secondary" role="status"></span>
+                } @else if (row.count !== null) {
+                  <span class="badge text-bg-secondary">{{ row.count | number }}</span>
+                } @else {
+                  <span class="text-danger small">—</span>
+                }
+              </td>
+            </tr>
+          }
         </tbody>
       </table>
     </div>
@@ -42,49 +59,7 @@
   <!-- Actions -->
   <div class="row g-3 mb-4">
 
-    <!-- Fill all -->
-    <div class="col-12 col-lg-6">
-      <div class="card shadow-sm h-100">
-        <div class="card-header fw-semibold text-success">
-          <i class="bi bi-plus-circle me-1"></i>Crear datos en todas las tablas
-        </div>
-        <div class="card-body">
-          <p class="small text-muted mb-3">
-            <strong>Vacía todas las tablas</strong>, restablece los contadores
-            <code>AUTO_INCREMENT</code> a 1 y vuelve a poblar cada entidad con
-            registros aleatorios respetando el orden de dependencias (FK).
-            Los IDs de los nuevos registros comenzarán desde 1.
-            La cantidad seleccionada se aplica a cada entidad que admite cantidad;
-            los datos de sistema (tipos de usuario, estados de partido y roles)
-            se crean con su fill estándar.
-          </p>
-          <p class="small mb-3 fw-semibold">Orden de creación:</p>
-          <div class="d-flex flex-wrap gap-1 mb-3">
-            <span *ngFor="let row of rows()" class="badge rounded-pill text-bg-success">{{ row.label }}</span>
-          </div>
-          <div class="d-flex align-items-center gap-2 flex-wrap">
-            <span class="fw-semibold small">Cantidad:</span>
-            <button type="button" class="btn btn-sm"
-              [class.btn-success]="selectedAmount() === 10"
-              [class.btn-outline-success]="selectedAmount() !== 10"
-              (click)="setAmount(10)" [disabled]="running()">10</button>
-            <button type="button" class="btn btn-sm"
-              [class.btn-success]="selectedAmount() === 100"
-              [class.btn-outline-success]="selectedAmount() !== 100"
-              (click)="setAmount(100)" [disabled]="running()">100</button>
-            <button type="button" class="btn btn-sm"
-              [class.btn-success]="selectedAmount() === 1000"
-              [class.btn-outline-success]="selectedAmount() !== 1000"
-              (click)="setAmount(1000)" [disabled]="running()">1000</button>
-            <button type="button" class="btn btn-success ms-auto" (click)="runFillAll()" [disabled]="running()">
-              <i class="bi bi-database-add me-1"></i>Crear {{ selectedAmount() }} registros
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Reset all -->
+    <!-- Reset -->
     <div class="col-12 col-lg-6">
       <div class="card shadow-sm h-100 border-danger">
         <div class="card-header fw-semibold text-danger">
@@ -92,88 +67,85 @@
         </div>
         <div class="card-body">
           <p class="small text-muted mb-3">
-            Vacía <strong>todas las tablas</strong> en orden inverso (hijos antes que padres)
-            para evitar errores de integridad referencial. Tras el borrado, restaura
-            automáticamente los datos mínimos del sistema:
+            <strong>Vacía completamente todas las tablas</strong> y restaura los datos
+            mínimos del sistema. Esta operación:
           </p>
           <ul class="small text-muted mb-3">
-            <li><strong>Tipos de usuario:</strong> 1-Administrador, 2-Administrador de club, 3-Usuario</li>
-            <li><strong>Rol de usuario:</strong> 1-Presidente</li>
-            <li><strong>Club:</strong> 1-Gesportin</li>
-            <li><strong>Usuarios:</strong> admin / clubadmin / usuario — contraseña: <code>ausias</code></li>
+            <li>Elimina <strong>todos los datos</strong> de todas las tablas en orden seguro
+              (hijos antes que padres) para evitar errores de integridad referencial.</li>
+            <li>Restablece los contadores <code>AUTO_INCREMENT</code> a 1.</li>
+            <li>Restaura los datos mínimos del sistema:
+              <ul>
+                <li><strong>Tipos de usuario:</strong> Administrador, Administrador de club, Usuario</li>
+                <li><strong>Estados de partido:</strong> No jugado, Ganado, Perdido, Empatado, Aplazado</li>
+                <li><strong>Rol de usuario:</strong> Presidente</li>
+                <li><strong>Club:</strong> Gesportin (id=1)</li>
+                <li><strong>Usuarios:</strong> admin / clubadmin / usuario (contraseña: <code>ausias</code>)</li>
+              </ul>
+            </li>
           </ul>
-          <p class="small mb-3 fw-semibold">Orden de borrado:</p>
-          <div class="d-flex flex-wrap gap-1 mb-3">
-            <span class="badge rounded-pill text-bg-danger">Compra</span>
-            <span class="badge rounded-pill text-bg-danger">Factura</span>
-            <span class="badge rounded-pill text-bg-danger">Carrito</span>
-            <span class="badge rounded-pill text-bg-danger">Pun. Artículo</span>
-            <span class="badge rounded-pill text-bg-danger">Com. Artículo</span>
-            <span class="badge rounded-pill text-bg-danger">Puntuación</span>
-            <span class="badge rounded-pill text-bg-danger">Comentario</span>
-            <span class="badge rounded-pill text-bg-danger">Pago</span>
-            <span class="badge rounded-pill text-bg-danger">Partido</span>
-            <span class="badge rounded-pill text-bg-danger">Cuota</span>
-            <span class="badge rounded-pill text-bg-danger">Jugador</span>
-            <span class="badge rounded-pill text-bg-danger">Liga</span>
-            <span class="badge rounded-pill text-bg-danger">Equipo</span>
-            <span class="badge rounded-pill text-bg-danger">Artículo</span>
-            <span class="badge rounded-pill text-bg-danger">Categoría</span>
-            <span class="badge rounded-pill text-bg-danger">Tipo Artículo</span>
-            <span class="badge rounded-pill text-bg-danger">Noticia</span>
-            <span class="badge rounded-pill text-bg-danger">Temporada</span>
-            <span class="badge rounded-pill text-bg-danger">Usuario</span>
-            <span class="badge rounded-pill text-bg-danger">Club</span>
-            <span class="badge rounded-pill text-bg-danger">Rol Usuario</span>
-            <span class="badge rounded-pill text-bg-danger">Estado de Partido</span>
-            <span class="badge rounded-pill text-bg-danger">Tipo Usuario</span>
-          </div>
+          <p class="small text-danger fw-semibold mb-3">
+            <i class="bi bi-exclamation-triangle-fill me-1"></i>
+            Esta acción es irreversible. Todos los datos serán eliminados permanentemente.
+          </p>
           <div class="d-flex justify-content-end">
-            <button type="button" class="btn btn-danger" (click)="runResetAll()" [disabled]="running()">
-              <i class="bi bi-database-x me-1"></i>Resetear todo
+            <button type="button" class="btn btn-danger" (click)="confirmReset()" [disabled]="running()">
+              <i class="bi bi-database-x me-1"></i>Resetear base de datos
             </button>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- Poblar Gesportin -->
-  <div class="row g-3 mb-4">
-    <div class="col-12">
-      <div class="card shadow-sm border-primary">
-        <div class="card-header fw-semibold text-primary">
-          <i class="bi bi-building-fill-check me-1"></i>Poblar Gesportin
+    <!-- Generate -->
+    <div class="col-12 col-lg-6">
+      <div class="card shadow-sm h-100 border-success">
+        <div class="card-header fw-semibold text-success">
+          <i class="bi bi-plus-circle me-1"></i>Generar datos de prueba
         </div>
         <div class="card-body">
           <p class="small text-muted mb-3">
-            Asigna al azar hasta <strong>5 entidades de cada tipo</strong>
-            (noticia, tipo artículo, temporada, usuario) al club
-            <strong>Gesportin (id=1)</strong>.
-            Útil para poblar el club de ejemplo con datos existentes.
+            <strong>Genera datos congruentes en cada tabla</strong> de forma
+            centralizada en el servidor <strong>sin borrar los datos existentes</strong>.
+            Los registros se reducen progresivamente según la profundidad desde Club:
+          </p>
+          <ul class="small text-muted mb-3">
+            <li><strong>Asegura que existen 10 clubes</strong> (usa los existentes,
+              incluido Gesportin id=1, y crea nuevos hasta alcanzar 10).</li>
+            <li><strong>Para cada club</strong>, genera datos anidados respetando
+              las restricciones de integridad referencial:</li>
+            <ul>
+              <li>10 usuarios (2 admin de club + 8 usuarios)</li>
+              <li>10 temporadas × <strong>4 categorías</strong> = 40 categorías/club</li>
+              <li>40 categorías × <strong>6 equipos</strong> = 240 equipos/club</li>
+              <li>240 equipos × 4 ligas = 960 ligas/club</li>
+              <li>240 equipos × 4 cuotas = 960 cuotas/club</li>
+              <li>240 equipos × <strong>2 jugadores</strong> = 480 jugadores/club (repartidos entre los 10 usuarios)</li>
+              <li>960 cuotas × 2 pagos = 1.920 pagos/club</li>
+              <li>960 ligas × 2 partidos = 1.920 partidos/club</li>
+              <li>10 noticias × 8 comentarios + 8 puntuaciones = 80 de cada/club</li>
+              <li>10 tipos art. × 8 artículos = 80 artículos/club</li>
+              <li>80 artículos × 6 comentarios/puntuaciones/carritos = 480 de cada/club</li>
+              <li>10 usuarios × 8 facturas = 80 facturas/club</li>
+              <li>80 facturas × 6 compras = 480 compras/club</li>
+            </ul>
+          </ul>
+          <p class="small text-success fw-semibold mb-3">
+            <i class="bi bi-check-circle-fill me-1"></i>
+            Todos los datos generados respetan las reglas de integridad referencial.
+            Se pueden ejecutar varias veces para acumular más datos.
+          </p>
+          <p class="small text-muted mb-3">
+            <i class="bi bi-info-circle me-1"></i>
+            <strong>Nota:</strong> Para empezar desde cero, usa primero el botón
+            <strong>"Resetear base de datos"</strong> y luego este botón.
           </p>
           <div class="d-flex justify-content-end">
-            <button type="button" class="btn btn-primary" (click)="runFillGesportin()" [disabled]="running()">
-              <i class="bi bi-building-fill-add me-1"></i>Poblar Gesportin
+            <button type="button" class="btn btn-success" (click)="confirmGenerate()" [disabled]="running()">
+              <i class="bi bi-database-add me-1"></i>Generar registros
             </button>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Execution log -->
-  <div class="card shadow-sm">
-    <div class="card-header fw-semibold d-flex align-items-center justify-content-between">
-      <span><i class="bi bi-terminal me-1"></i>Registro de ejecución</span>
-      <span *ngIf="running()" class="badge text-bg-warning gap-1">
-        <span class="spinner-border spinner-border-sm" role="status"></span> En curso
-      </span>
-    </div>
-    <div class="card-body p-0">
-      <div class="log-panel px-3 py-2">
-        <div *ngIf="logs().length === 0" class="text-muted small py-2">Sin ejecuciones todavía.</div>
-        <div *ngFor="let line of logs()" class="log-line" [class.log-ok]="line.startsWith('  ✓')" [class.log-err]="line.startsWith('ERROR')">{{ line }}</div>
       </div>
     </div>
   </div>

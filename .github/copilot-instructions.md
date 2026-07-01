@@ -17,9 +17,27 @@ Gesportín proporciona una plataforma integral para gestionar diversos aspectos 
 
 La aplicación Gesportín está construida utilizando una tecnología moderna, que incluye:
 
-- una base de datos relacional (MySQL) para almacenar y gestionar los datos de la aplicación, cuyo archivo de creación está situado en /.github/database.sql,
+- una base de datos relacional (MySQL) para almacenar y gestionar los datos de la aplicación, cuyo archivo de creación está situado en database.sql,
 - una API de backend desarrollada en java con Spring Boot, que accede a la base de datos relacional para almacenar y gestionar los datos de la aplicación, situada en el directorio /gesportin,
 - una interfaz de usuario frontend desarrollada en Angular y typescript, situada en el directorio /frontsportin.
+
+### Restricciones de integridad referencial para datos
+
+* Un jugador está asociado a un club mediante usuario. 
+* Un equipo está asociado a un club mediante categoría y temporada.
+* Un jugador no puede estar asociado a un club y jugar en un equipo de otro club.
+
+* Un equipo tiene cuotas.
+* Un jugador sólo puede realizar pagos de cuotas de su club.
+
+* Una noticia está asociada a un club.
+* Un usuario está asociado a un club.
+* Un usuario sólo puede comentar y valorar noticias de su club.
+
+* Un artículo de venta está asociado a un club emdiante el tipo de artículo.
+* Un usuario sólo puede meter en el carrito, comentar o comprar artículos de su club.
+* Una factura sólo puede contener artículos de un mismo usuario.
+* Las compras dentro de una factura sólo pueden ser de artículos del club del usuario de la factura.
 
 ### Compilación y ejecución del backend
 

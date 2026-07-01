@@ -57,25 +57,9 @@ public class ClubApi {
     public ResponseEntity<Long> delete(@PathVariable Long id) {
         return ResponseEntity.ok(oClubService.delete(id));
     }
-
-    @PostMapping("/fill/{cantidad}")
-    public ResponseEntity<Long> fill(@PathVariable Long cantidad) {
-        return ResponseEntity.ok(oClubService.fill(cantidad));
-    }
-
-    @DeleteMapping("/empty")
-    public ResponseEntity<Long> empty() {
-        return ResponseEntity.ok(oClubService.empty());
-    }
-
     @GetMapping("/count")
     public ResponseEntity<Long> count() {
         return ResponseEntity.ok(oClubService.count());
-    }
-
-    @GetMapping("/fillgesportin")
-    public ResponseEntity<Long> fillGesportin() {
-        return ResponseEntity.ok(oClubService.fillGesportin());
     }
 
 }

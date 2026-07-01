@@ -62,17 +62,6 @@ public class RolusuarioApi {
     public ResponseEntity<Long> delete(@PathVariable Long id) {
         return ResponseEntity.ok(oRolusuarioService.delete(id));
     }
-
-    @PostMapping("/fill")
-    public ResponseEntity<Long> fill() {
-        return ResponseEntity.ok(oRolusuarioService.fill());
-    }
-
-    @DeleteMapping("/empty")
-    public ResponseEntity<Long> empty() {
-        return ResponseEntity.ok(oRolusuarioService.empty());
-    }
-
     @GetMapping("/count")
     public ResponseEntity<Long> count() {
         return ResponseEntity.ok(oRolusuarioService.count());
