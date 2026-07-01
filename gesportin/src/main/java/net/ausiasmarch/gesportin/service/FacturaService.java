@@ -70,15 +70,15 @@ public class FacturaService {
             }
             return oFacturaConverter.toPageDTO(oFacturaRepository.findByUsuarioId(currentUserId, pageable));
         }
-        // Filter by club if specified (for admin users)
+        // Filter by usuario first (if specified, takes priority over club filter)
+        if (id_usuario != null) {
+            return oFacturaConverter.toPageDTO(oFacturaRepository.findByUsuarioId(id_usuario, pageable));
+        }
+        // Filter by club if specified (for admin users without a specific user)
         if (id_club != null) {
             return oFacturaConverter.toPageDTO(oFacturaRepository.findByUsuarioClubId(id_club, pageable));
         }
-        if (id_usuario != null) {
-            return oFacturaConverter.toPageDTO(oFacturaRepository.findByUsuarioId(id_usuario, pageable));
-        } else {
-            return oFacturaConverter.toPageDTO(oFacturaRepository.findAll(pageable));
-        }
+        return oFacturaConverter.toPageDTO(oFacturaRepository.findAll(pageable));
     }
 
     public FacturaDTO create(FacturaEntity oFacturaEntity) {
