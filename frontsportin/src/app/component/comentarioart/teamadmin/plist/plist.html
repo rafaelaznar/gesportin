@@ -27,7 +27,7 @@
           <app-paginacion [numPage]="numPage()" [numPages]="oPage()?.totalPages || 1" (pageChange)="goToPage($event)"></app-paginacion>
         </div>
         <div class="col-control right">
-          <app-botonera-rpp [numRpp]="numRpp()" (rppChange)="onRppChange($event)"></app-botonera-rpp>
+          <app-botonera-rpp [numRpp]="numRpp()" [options]="[6, 12, 60, 120]" (rppChange)="onRppChange($event)"></app-botonera-rpp>
         </div>
       </div>
     </div>

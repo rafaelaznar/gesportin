@@ -25,7 +25,7 @@ export class ComentarioartTeamadminPlist implements OnInit, OnDestroy {
 
   oPage = signal<IPage<IComentarioart> | null>(null);
   numPage = signal<number>(0);
-  numRpp = signal<number>(5);
+  numRpp = signal<number>(6);
   contenido = signal<string>('');
   orderField = signal<string>('id');
   orderDirection = signal<'asc' | 'desc'>('asc');
