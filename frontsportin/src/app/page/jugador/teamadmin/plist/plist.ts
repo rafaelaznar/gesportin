@@ -77,7 +77,7 @@ export class JugadorTeamadminPlistPage implements OnInit {
           if (usuario.club) {
             items.push({ label: usuario.club.nombre, route: `/club/teamadmin/view/${usuario.club.id}` });
           }
-          items.push({ label: 'Usuarios', route: '/usuario/teamadmin' });
+          items.push({ label: 'Usuarios', route: usuario.club ? `/usuario/teamadmin/club/${usuario.club.id}` : '/usuario/teamadmin' });
           items.push({ label: `${usuario.nombre} ${usuario.apellido1}`, route: `/usuario/teamadmin/view/${usuario.id}` });
           items.push({ label: 'Jugadores' });
           this.breadcrumbItems.set(items);
