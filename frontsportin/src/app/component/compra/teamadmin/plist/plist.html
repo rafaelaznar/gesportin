@@ -1,73 +1,152 @@
 <div>
-  <div class="d-flex justify-content-center my-1">
-    <small class="text-muted">Total registros: {{ totalRecords() || 0 }}</small>
-  </div>
-
-  @if (totalRecords() > 0) {
-    <div class="container-fluid p-0 my-1">
-      <div class="controls-row mb-2">
-        <div class="col-control left">
-          <app-paginacion [numPage]="numPage()" [numPages]="oPage()?.totalPages || 1" (pageChange)="goToPage($event)"></app-paginacion>
+  @if (isInvoiceMode()) {
+    <div class="card border-0 shadow-sm">
+      <div class="card-body">
+        <div class="row mb-4">
+          <div class="col-6">
+            @if (oFactura()?.usuario?.club) {
+              <h6 class="text-uppercase text-muted mb-1" style="font-size:0.75rem">Emisor</h6>
+              <p class="mb-0 fw-semibold">{{ oFactura()?.usuario?.club?.nombre }}</p>
+              <small class="text-muted">{{ oFactura()?.usuario?.club?.direccion }}</small>
+            }
+          </div>
+          <div class="col-6 text-end">
+            <h6 class="text-uppercase text-muted mb-1" style="font-size:0.75rem">Factura</h6>
+            <h4 class="mb-0 fw-bold">#{{ id_factura }}</h4>
+            <small class="text-muted">{{ oFactura()?.fecha | datetime }}</small>
+          </div>
         </div>
-        <div class="col-control right">
-          <app-botonera-rpp [numRpp]="numRpp()" (rppChange)="onRppChange($event)"></app-botonera-rpp>
+        <hr class="my-3">
+        <div class="row mb-3">
+          <div class="col-6">
+            <h6 class="text-uppercase text-muted mb-1" style="font-size:0.75rem">Cliente</h6>
+            @if (oFactura()?.usuario) {
+              <p class="mb-0 fw-semibold">{{ oFactura()?.usuario?.nombre }} {{ oFactura()?.usuario?.apellido1 }} {{ oFactura()?.usuario?.apellido2 }}</p>
+              <small class="text-muted d-block">@{{ oFactura()?.usuario?.username }}</small>
+            }
+          </div>
+          <div class="col-6 text-end">
+            <h6 class="text-uppercase text-muted mb-1" style="font-size:0.75rem">Artículos</h6>
+            <p class="mb-0 fw-semibold">{{ totalRecords() }} líneas</p>
+          </div>
+        </div>
+        <table class="table table-striped table-sm mb-0">
+          <thead class="table-light">
+            <tr>
+              <th class="ps-3">Artículo</th>
+              <th class="text-end">Cantidad</th>
+              <th class="text-end">Precio</th>
+              <th class="text-end pe-3">Subtotal</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (oCompra of oPage()?.content; track oCompra.id) {
+              <tr>
+                <td class="ps-3">{{ oCompra.articulo?.descripcion }}</td>
+                <td class="text-end">{{ oCompra.cantidad }}</td>
+                <td class="text-end">{{ oCompra.precio | number:'1.2-2' }} €</td>
+                <td class="text-end pe-3">{{ (oCompra.cantidad * oCompra.precio) | number:'1.2-2' }} €</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      <div class="card-footer">
+        <div class="row">
+          <div class="col-md-6 offset-md-6">
+            <table class="table table-sm table-borderless mb-0">
+              <tr>
+                <td class="text-end text-muted">Subtotal:</td>
+                <td class="text-end fw-semibold" style="width:100px">{{ subtotal() | number:'1.2-2' }} €</td>
+              </tr>
+              <tr>
+                <td class="text-end text-muted">IVA (21%):</td>
+                <td class="text-end fw-semibold">{{ iva() | number:'1.2-2' }} €</td>
+              </tr>
+              <tr class="border-top">
+                <td class="text-end fw-bold">Total:</td>
+                <td class="text-end fw-bold text-primary" style="font-size:1.1rem">{{ total() | number:'1.2-2' }} €</td>
+              </tr>
+            </table>
+          </div>
         </div>
       </div>
     </div>
+    @if (oPage() && oPage()!.totalPages > 1) {
+      <div class="d-flex justify-content-center my-2">
+        <app-paginacion [numPage]="numPage()" [numPages]="oPage()?.totalPages || 1" (pageChange)="goToPage($event)"></app-paginacion>
+      </div>
+    }
   }
-
-  <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
-    @for (oCompra of oPage()?.content; track oCompra.id) {
-      <div class="col">
-        <div class="card h-100 shadow-sm" (click)="onSelect(oCompra)" [style.cursor]="isDialogMode() ? 'pointer' : 'default'">
-          <div class="card-header d-flex align-items-center gap-2">
-            <i class="bi bi-cart-check fs-5" aria-hidden="true"></i>
-            <strong class="text-truncate">Compra #{{ oCompra.id }}</strong>
+  @if (!isInvoiceMode()) {
+    <div class="d-flex justify-content-center my-1">
+      <small class="text-muted">Total registros: {{ totalRecords() || 0 }}</small>
+    </div>
+    @if (totalRecords() > 0) {
+      <div class="container-fluid p-0 my-1">
+        <div class="controls-row mb-2">
+          <div class="col-control left">
+            <app-paginacion [numPage]="numPage()" [numPages]="oPage()?.totalPages || 1" (pageChange)="goToPage($event)"></app-paginacion>
           </div>
-          <div class="card-body pb-2">
-            <ul class="list-unstyled mb-3">
-              <li class="mb-1">
-                <i class="bi bi-hash text-muted me-1"></i>
-                <span class="text-muted">ID:</span> {{ oCompra.id }}
-              </li>
-              <li class="mb-1">
-                <i class="bi bi-123 text-muted me-1"></i>
-                <span class="text-muted">Cantidad:</span> {{ oCompra.cantidad }}
-              </li>
-              <li class="mb-1">
-                <i class="bi bi-tag text-muted me-1"></i>
-                <span class="text-muted">Precio:</span> {{ oCompra.precio | number:'1.2-2' }} €
-              </li>
-            </ul>
-            @if (oCompra.articulo) {
-              <p class="mb-1">
-                <strong>Artículo:</strong>
-                <a [routerLink]="['/articulo/teamadmin/view', oCompra.articulo.id]" class="ms-1">
-                  {{ oCompra.articulo.descripcion }}
-                </a>
-              </p>
-            }
-            @if (oCompra.factura && oCompra.factura.usuario) {
-              <p class="mb-1">
-                <strong>Usuario:</strong>
-                <a [routerLink]="['/usuario/teamadmin/view', oCompra.factura.usuario.id]" class="ms-1">
-                  {{ oCompra.factura.usuario.nombre }} {{ oCompra.factura.usuario.apellido1 }}
-                </a>
-              </p>
-            }
+          <div class="col-control right">
+            <app-botonera-rpp [numRpp]="numRpp()" (rppChange)="onRppChange($event)"></app-botonera-rpp>
           </div>
-          @if (!isDialogMode()) {
-            <div class="card-footer d-flex justify-content-end gap-2">
-              <a [routerLink]="['/compra/teamadmin/view', oCompra.id]" class="btn btn-outline-primary btn-sm">
-                <i class="bi bi-eye" aria-hidden="true"></i>
-                <span class="d-none d-sm-inline ms-1">Ver</span>
-              </a>
-              <app-botonera-actions-plist [id]="oCompra.id" strEntity="compra" strRole="teamadmin"></app-botonera-actions-plist>
-            </div>
-          }
         </div>
       </div>
     }
-  </div>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
+      @for (oCompra of oPage()?.content; track oCompra.id) {
+        <div class="col">
+          <div class="card h-100 shadow-sm" (click)="onSelect(oCompra)" [style.cursor]="isDialogMode() ? 'pointer' : 'default'">
+            <div class="card-header d-flex align-items-center gap-2">
+              <i class="bi bi-cart-check fs-5" aria-hidden="true"></i>
+              <strong class="text-truncate">Compra #{{ oCompra.id }}</strong>
+            </div>
+            <div class="card-body pb-2">
+              <ul class="list-unstyled mb-3">
+                <li class="mb-1">
+                  <i class="bi bi-hash text-muted me-1"></i>
+                  <span class="text-muted">ID:</span> {{ oCompra.id }}
+                </li>
+                <li class="mb-1">
+                  <i class="bi bi-123 text-muted me-1"></i>
+                  <span class="text-muted">Cantidad:</span> {{ oCompra.cantidad }}
+                </li>
+                <li class="mb-1">
+                  <i class="bi bi-tag text-muted me-1"></i>
+                  <span class="text-muted">Precio:</span> {{ oCompra.precio | number:'1.2-2' }} €
+                </li>
+              </ul>
+              @if (oCompra.articulo) {
+                <p class="mb-1">
+                  <strong>Artículo:</strong>
+                  <a [routerLink]="['/articulo/teamadmin/view', oCompra.articulo.id]" class="ms-1">
+                    {{ oCompra.articulo.descripcion }}
+                  </a>
+                </p>
+              }
+              @if (oCompra.factura && oCompra.factura.usuario) {
+                <p class="mb-1">
+                  <strong>Usuario:</strong>
+                  <a [routerLink]="['/usuario/teamadmin/view', oCompra.factura.usuario.id]" class="ms-1">
+                    {{ oCompra.factura.usuario.nombre }} {{ oCompra.factura.usuario.apellido1 }}
+                  </a>
+                </p>
+              }
+            </div>
+            @if (!isDialogMode()) {
+              <div class="card-footer d-flex justify-content-end gap-2">
+                <a [routerLink]="['/compra/teamadmin/view', oCompra.id]" class="btn btn-outline-primary btn-sm">
+                  <i class="bi bi-eye" aria-hidden="true"></i>
+                  <span class="d-none d-sm-inline ms-1">Ver</span>
+                </a>
+                <app-botonera-actions-plist [id]="oCompra.id" strEntity="compra" strRole="teamadmin"></app-botonera-actions-plist>
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
 </div>
 

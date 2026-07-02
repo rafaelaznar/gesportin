@@ -13,6 +13,9 @@ public interface CompraRepository extends JpaRepository<CompraEntity, Long> {
     @Query("SELECT COALESCE(SUM(c.cantidad * c.precio), 0.0) FROM CompraEntity c WHERE c.articulo.tipoarticulo.id = :id_tipoarticulo")
     Double sumVentasByTipoarticuloId(@Param("id_tipoarticulo") Long idTipoarticulo);
 
+    @Query("SELECT COALESCE(SUM(c.cantidad * c.precio), 0.0) FROM CompraEntity c WHERE c.factura.id = :idFactura")
+    Double sumByFacturaId(@Param("idFactura") Long idFactura);
+
     Page<CompraEntity> findByArticuloId(Long idArticulo, Pageable pageable);
 
     Page<CompraEntity> findByFacturaId(Long idFactura, Pageable pageable);

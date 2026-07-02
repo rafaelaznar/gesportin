@@ -27,7 +27,7 @@
           <div class="col-5 text-muted small text-uppercase">Fecha</div>
           <div class="col-7 fw-semibold small">{{ oFactura()?.fecha | datetime }}</div>
           <div class="col-5 text-muted small text-uppercase">Compras</div>
-          <div class="col-7 fw-semibold small">@if ((oFactura()?.compras ?? 0) > 0) { <a [routerLink]="['/compra/teamadmin/factura', oFactura()?.id]" class="text-decoration-none">{{ oFactura()?.compras }}</a> } @else { 0 }</div>
+          <div class="col-7 fw-semibold small">@if ((oFactura()?.compras ?? 0) > 0) { <a [routerLink]="['/compra/teamadmin/factura', oFactura()?.id]" class="badge bg-primary text-decoration-none"><i class="bi bi-bag me-1"></i>{{ oFactura()?.compras }} artículos</a> } @else { <span class="badge bg-secondary"><i class="bi bi-bag me-1"></i>0 artículos</span> }</div>
         </div>
         <div class="card border-start border-3 border-info mt-3">
           <div class="card-header py-1 d-flex align-items-center gap-2 bg-info bg-opacity-10" style="cursor:pointer" (click)="showUsuario.set(!showUsuario())">

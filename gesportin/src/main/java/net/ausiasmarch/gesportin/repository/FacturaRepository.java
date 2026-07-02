@@ -16,4 +16,7 @@ public interface FacturaRepository extends JpaRepository<FacturaEntity, Long> {
     
     @Query("SELECT COUNT(c) FROM CompraEntity c WHERE c.factura.id = :facturaId")
     int countComprasByFacturaId(@Param("facturaId") Long facturaId);
+
+    @Query("SELECT COALESCE(SUM(c.cantidad * c.precio), 0.0) FROM CompraEntity c WHERE c.factura.id = :facturaId")
+    Double sumComprasByFacturaId(@Param("facturaId") Long facturaId);
 }

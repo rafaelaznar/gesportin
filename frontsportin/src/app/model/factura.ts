@@ -5,4 +5,5 @@ export interface IFactura {
   fecha: string
   usuario: IUsuario
   compras: number
+  suma: number
 }

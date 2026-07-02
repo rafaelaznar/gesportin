@@ -28,7 +28,8 @@ public class FacturaConverter {
             return null;
         }
         int compras = repository.countComprasByFacturaId(entity.getId());
-        return new FacturaDTO(entity, compras);
+        Double suma = repository.sumComprasByFacturaId(entity.getId());
+        return new FacturaDTO(entity, compras, suma);
     }
 
     /**
